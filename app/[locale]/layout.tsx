@@ -1,10 +1,9 @@
+import { ibmPlexSansArabic, satoshi } from "@/assets/font"
+import { routing } from "@/lib/i18n/routing"
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { notFound } from "next/navigation"
 import "../globals.css"
-import { satoshi } from "@/assets/font"
-import { routing } from "@/lib/i18n/routing"
-import { getTranslations } from "next-intl/server"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,9 +24,17 @@ export default async function LocaleLayout({
     notFound()
   }
 
+  // Use IBM Plex Sans Arabic for Arabic locale, Satoshi for others
+  const fontVariable =
+    locale === "ar" ? ibmPlexSansArabic.variable : satoshi.variable
+
   return (
-    <html lang={locale} className={satoshi.variable}>
-      <body className={`${satoshi.variable} antialiased`}>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className={fontVariable}
+    >
+      <body className={`${fontVariable} antialiased`}>
         <NextIntlClientProvider locale={locale}>
           {children}
         </NextIntlClientProvider>

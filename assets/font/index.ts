@@ -1,4 +1,5 @@
 import localFont from "next/font/local"
+import { IBM_Plex_Sans_Arabic } from "next/font/google"
 
 export const satoshi = localFont({
   src: [
@@ -54,5 +55,12 @@ export const satoshi = localFont({
     },
   ],
   variable: "--font-satoshi",
+  display: "swap",
+})
+
+export const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic", "latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  variable: "--font-ibm-plex-sans-arabic",
   display: "swap",
 })
