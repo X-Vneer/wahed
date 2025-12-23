@@ -2,5 +2,15 @@
   "common": {
     "welcome": "Welcome",
     "hello": "Hello"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Log in to your account at Wahd Company",
+      "email": "Email",
+      "password": "Password",
+      "button": "Login",
+      "emailPlaceholder": "example@email.com"
+    }
   }
 }

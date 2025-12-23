@@ -2,5 +2,15 @@
   "common": {
     "welcome": "مرحباً",
     "hello": "مرحبا"
+  },
+  "auth": {
+    "login": {
+      "title": "مرحبا بعودتك",
+      "subtitle": "قم بتسجيل الدخول إلى حسابك في شركة وهد",
+      "email": "إيميل",
+      "password": "كلمة السر",
+      "button": "تسجيل الدخول",
+      "emailPlaceholder": "example@email.com"
+    }
   }
 }
