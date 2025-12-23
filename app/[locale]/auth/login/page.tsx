@@ -123,7 +123,6 @@ export default function LoginPage() {
                         onChange={(e) => field.handleChange(e.target.value)}
                         placeholder={t("emailPlaceholder")}
                         className="bg-white"
-                        disabled={form.state.isSubmitting}
                         aria-invalid={isInvalid}
                         autoComplete="email"
                       />
@@ -154,7 +153,6 @@ export default function LoginPage() {
                         onChange={(e) => field.handleChange(e.target.value)}
                         placeholder="••••••••"
                         className="bg-white"
-                        disabled={form.state.isSubmitting}
                         aria-invalid={isInvalid}
                         autoComplete="current-password"
                       />

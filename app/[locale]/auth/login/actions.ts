@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
 import db from "@/lib/db"
 import { SESSION_COOKIE_NAME } from "@/config"
+import { signToken } from "@/lib/jwt"
 
 export type LoginActionResult =
   | { success: true }
@@ -44,11 +45,16 @@ export async function loginAction(
       }
     }
 
-    // Set session cookie
-    // For now, we'll use the user ID as the token
-    // In production, you might want to use JWT or another token system
+    // Generate JWT token
+    const token = await signToken({
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    })
+
+    // Set session cookie with JWT token
     const cookiesStore = await cookies()
-    cookiesStore.set(SESSION_COOKIE_NAME, user.id, {
+    cookiesStore.set(SESSION_COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
