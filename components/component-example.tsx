@@ -460,7 +460,7 @@ function FormExample() {
         <CardContent>
           <form>
             <FieldGroup>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <Field>
                   <FieldLabel htmlFor="small-form-name">Name</FieldLabel>
                   <Input
