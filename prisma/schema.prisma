@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Direct connection for server hosting (not serverless)
+  // DATABASE_URL is configured in prisma.config.ts
+  // Connection pooling is handled by the application
+}
+
+// enums
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+enum PermissionKey {
+  PROJECT_CREATE
+  PROJECT_UPDATE
+  PROJECT_DELETE
+  TASK_CREATE
+  TASK_UPDATE
+  TASK_DELETE
+  TASK_ASSIGN
+  FILE_UPLOAD
+  FILE_DELETE
+}
+
+model User {
+  id       String   @id @default(cuid())
+  name     String
+  email    String   @unique
+  password String
+  role     UserRole @default(STAFF)
+
+  isActive Boolean @default(true)
+
+  permissions UserPermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Permission {
+  id   String        @id @default(cuid())
+  key  PermissionKey @unique
+  name String
+
+  users UserPermission[]
+}
+
+model UserPermission {
+  id           String @id @default(cuid())
+  userId       String
+  permissionId String
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, permissionId])
+}
