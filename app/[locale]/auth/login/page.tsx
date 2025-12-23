@@ -29,7 +29,7 @@ export default function LoginPage() {
       />
       <Image
         src={noise}
-        className="absolute h-full w-full object-cover opacity-15"
+        className="absolute h-full w-full object-cover opacity-10"
         alt="Noise"
       />
       <Image
