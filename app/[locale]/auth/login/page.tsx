@@ -21,20 +21,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center  ">
+    <div className="relative flex min-h-screen items-center justify-center">
       <Image
         src={loginBg}
-        className="absolute w-full h-full object-cover "
+        className="absolute h-full w-full object-cover"
         alt="bg"
       />
       <Image
         src={noise}
-        className="absolute w-full h-full object-cover  opacity-15 "
+        className="absolute h-full w-full object-cover opacity-15"
         alt="Noise"
       />
       <Image
         src={gridBg}
-        className="absolute w-full h-full object-cover   "
+        className="absolute h-full w-full object-cover"
         alt="grid"
       />
 
@@ -53,16 +53,16 @@ export default function LoginPage() {
         className="absolute inset-0 opacity-30"
       ></div>
       {/* Login Card */}
-      <Card className="relative  w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl">
-        <CardHeader className="flex flex-col items-center gap-6 ">
+      <Card className="relative mx-4 w-full max-w-md rounded-2xl bg-white shadow-2xl">
+        <CardHeader className="flex flex-col items-center gap-6">
           {/* Logo */}
-          <Image src={logo} className="w-32 mx-auto" alt="Wahd Logo" />
+          <Image src={logo} className="mx-auto w-32" alt="Wahd Logo" />
 
           {/* Welcome Message */}
-          <div className="text-center space-y-2">
-            <h1 className="text-2xl font-bold ">{t("title")}</h1>
+          <div className="space-y-2 text-center">
+            <h1 className="text-2xl font-bold">{t("title")}</h1>
 
-            <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
+            <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
           </div>
         </CardHeader>
 
@@ -99,7 +99,7 @@ export default function LoginPage() {
             </Field>
 
             {/* Login Button */}
-            <Button type="submit" className="w-full font-medium py-6 text-base">
+            <Button type="submit" className="w-full py-6 text-base font-medium">
               {t("button")}
             </Button>
           </form>
