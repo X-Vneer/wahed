@@ -1,4 +1,5 @@
 import { ibmPlexSansArabic, satoshi } from "@/assets/font"
+import { QueryProvider } from "@/components/providers/query-provider"
 import { routing } from "@/lib/i18n/routing"
 import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
@@ -35,9 +36,11 @@ export default async function LocaleLayout({
       className={fontVariable}
     >
       <body className={`${fontVariable} antialiased`}>
-        <NextIntlClientProvider locale={locale}>
-          {children}
-        </NextIntlClientProvider>
+        <QueryProvider>
+          <NextIntlClientProvider locale={locale}>
+            {children}
+          </NextIntlClientProvider>
+        </QueryProvider>
       </body>
     </html>
   )
