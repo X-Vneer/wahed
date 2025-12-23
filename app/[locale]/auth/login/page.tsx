@@ -2,23 +2,53 @@
 
 import { useTranslations } from "next-intl"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useTransition } from "react"
+import { useForm } from "@tanstack/react-form"
+import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { gridBg, loginBg, logo, noise } from "@/assets"
+import { loginAction } from "./actions"
+import { useRouter } from "next/navigation"
+import { Spinner } from "@/components/ui/spinner"
 
 export default function LoginPage() {
   const t = useTranslations("auth.login")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const tErrors = useTranslations("auth.login.errors")
+  const router = useRouter()
+  const [serverError, setServerError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle login logic here
-    console.log("Login attempt:", { email, password })
-  }
+  const formSchema = z.object({
+    email: z.email(tErrors("email.invalid")),
+    password: z.string().min(8, tErrors("password.minLength")),
+  })
+
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value }) => {
+      setServerError(null)
+      const result = await loginAction(value.email, value.password)
+      if (result.success) {
+        router.refresh()
+        router.push("/")
+      } else {
+        setServerError(result.error)
+      }
+    },
+  })
 
   return (
     <div className="relative flex min-h-screen items-center justify-center">
@@ -41,19 +71,19 @@ export default function LoginPage() {
       <div
         style={{
           background:
-            "radial-gradient(40.38% 50% at 50% 50%, #18181B 0%, rgba(24, 24, 27, 0.2) 100%);",
+            "radial-gradient(40.38% 50% at 50% 50%, #18181B 0%, rgba(24, 24, 27, 0.2) 100%)",
         }}
         className="absolute inset-0 opacity-35"
       ></div>
       <div
         style={{
           background:
-            "linear-gradient(116.56deg, rgba(255, 255, 255, 0) 24.66%, rgba(255, 94, 39, 0.2) 138.88%);",
+            "linear-gradient(116.56deg, rgba(255, 255, 255, 0) 24.66%, rgba(255, 94, 39, 0.2) 138.88%)",
         }}
         className="absolute inset-0 opacity-30"
       ></div>
       {/* Login Card */}
-      <Card className="relative mx-4 w-full max-w-md rounded-2xl bg-white shadow-2xl">
+      <Card className="relative z-1 mx-4 w-full max-w-md rounded-2xl bg-white shadow-2xl">
         <CardHeader className="flex flex-col items-center gap-6">
           {/* Logo */}
           <Image src={logo} className="mx-auto w-32" alt="Wahd Logo" />
@@ -67,41 +97,96 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent className="px-6 pb-3">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
-            <Field>
-              <FieldLabel>{t("email")}</FieldLabel>
-              <FieldContent>
-                <Input
-                  type="email"
-                  placeholder={t("emailPlaceholder")}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="bg-white"
-                />
-              </FieldContent>
-            </Field>
+          <form
+            id="login-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              form.handleSubmit()
+            }}
+          >
+            <FieldGroup>
+              {/* Email Field */}
+              <form.Field name="email">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>{t("email")}</FieldLabel>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        type="email"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder={t("emailPlaceholder")}
+                        className="bg-white"
+                        disabled={form.state.isSubmitting}
+                        aria-invalid={isInvalid}
+                        autoComplete="email"
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              </form.Field>
 
-            {/* Password Field */}
-            <Field>
-              <FieldLabel>{t("password")}</FieldLabel>
-              <FieldContent>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="bg-white"
-                />
-              </FieldContent>
-            </Field>
+              {/* Password Field */}
+              <form.Field name="password">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("password")}
+                      </FieldLabel>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        type="password"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="••••••••"
+                        className="bg-white"
+                        disabled={form.state.isSubmitting}
+                        aria-invalid={isInvalid}
+                        autoComplete="current-password"
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              </form.Field>
+            </FieldGroup>
+
+            {/* Server Error Message */}
+            {serverError && (
+              <div className="text-destructive mt-4 text-sm font-medium">
+                {tErrors(serverError)}
+              </div>
+            )}
 
             {/* Login Button */}
-            <Button type="submit" className="w-full py-6 text-base font-medium">
-              {t("button")}
-            </Button>
+            <div className="mt-6">
+              <Button
+                type="submit"
+                form="login-form"
+                className="w-full py-6 text-base font-medium"
+                disabled={form.state.isSubmitting}
+              >
+                {form.state.isSubmitting ? <Spinner /> : null}
+
+                {t("button")}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>

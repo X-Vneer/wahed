@@ -10,7 +10,21 @@
       "email": "إيميل",
       "password": "كلمة السر",
       "button": "تسجيل الدخول",
-      "emailPlaceholder": "example@email.com"
+      "buttonLoading": "جاري تسجيل الدخول...",
+      "emailPlaceholder": "example@email.com",
+      "errors": {
+        "email": {
+          "required": "البريد الإلكتروني مطلوب",
+          "invalid": "يرجى إدخال عنوان بريد إلكتروني صحيح"
+        },
+        "password": {
+          "required": "كلمة السر مطلوبة",
+          "minLength": "يجب أن تكون كلمة السر 8 أحرف على الأقل"
+        },
+        "invalid_credentials": "البريد الإلكتروني أو كلمة السر غير صحيحة",
+        "account_inactive": "حسابك غير نشط. يرجى الاتصال بالدعم.",
+        "server_error": "حدث خطأ. يرجى المحاولة مرة أخرى لاحقاً."
+      }
     }
   }
 }

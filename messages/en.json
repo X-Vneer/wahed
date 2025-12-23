@@ -10,7 +10,21 @@
       "email": "Email",
       "password": "Password",
       "button": "Login",
-      "emailPlaceholder": "example@email.com"
+      "buttonLoading": "Logging in...",
+      "emailPlaceholder": "example@email.com",
+      "errors": {
+        "email": {
+          "required": "Email is required",
+          "invalid": "Please enter a valid email address"
+        },
+        "password": {
+          "required": "Password is required",
+          "minLength": "Password must be at least 8 characters"
+        },
+        "invalid_credentials": "Invalid email or password",
+        "account_inactive": "Your account is inactive. Please contact support.",
+        "server_error": "An error occurred. Please try again later."
+      }
     }
   }
 }
