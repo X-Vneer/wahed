@@ -15,7 +15,7 @@ export default function SystemLayout({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="">
-        <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+        <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ms-1" />
           </div>

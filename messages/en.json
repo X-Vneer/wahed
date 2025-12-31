@@ -60,5 +60,11 @@
     "account_inactive": "Account is inactive",
     "internal_server_error": "Internal server error",
     "failed_to_fetch_user_data": "Failed to fetch user data"
+  },
+  "welcome": {
+    "title": "Welcome back",
+    "subtitle": "We're glad to see you again",
+    "description": "Get started by exploring the system features from the sidebar menu.",
+    "greeting": "Hello"
   }
 }
