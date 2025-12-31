@@ -5,6 +5,7 @@ import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { notFound } from "next/navigation"
 import "../globals.css"
+import { NuqsAdapter } from "nuqs/adapters/next/app"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -38,7 +39,7 @@ export default async function LocaleLayout({
       <body className={`${fontVariable} antialiased`}>
         <QueryProvider>
           <NextIntlClientProvider locale={locale}>
-            {children}
+            <NuqsAdapter>{children}</NuqsAdapter>
           </NextIntlClientProvider>
         </QueryProvider>
       </body>

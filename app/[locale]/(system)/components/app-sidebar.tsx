@@ -130,7 +130,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: t("usersPermissions"),
-        url: "/users-permissions",
+        url: "/employees",
         icon: Users,
       },
       {
