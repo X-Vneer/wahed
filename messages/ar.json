@@ -45,7 +45,12 @@
     "listsTaskStatuses": "حالات المهام",
     "listsTaskTypes": "انواع المهام",
     "usersPermissions": "المستخدمين وصلاحيات",
-    "website": "الموقع الاكتروني"
+    "website": "الموقع الاكتروني",
+    "logout": "تسجيل الخروج",
+    "loading": "جاري التحميل...",
+    "loadingSubtitle": "يرجى الانتظار",
+    "user": "المستخدم",
+    "notAvailable": "غير متاح"
   },
   "errors": {
     "unauthorized": "غير مصرح",

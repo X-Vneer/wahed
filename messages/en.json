@@ -45,7 +45,12 @@
     "listsTaskStatuses": "Task Statuses",
     "listsTaskTypes": "Task Types",
     "usersPermissions": "Users & Permissions",
-    "website": "Website"
+    "website": "Website",
+    "logout": "LogOut",
+    "loading": "Loading...",
+    "loadingSubtitle": "Please wait",
+    "user": "User",
+    "notAvailable": "Not available"
   },
   "errors": {
     "unauthorized": "Unauthorized",
