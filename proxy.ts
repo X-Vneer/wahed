@@ -24,12 +24,50 @@ export default async function middleware(request: NextRequest) {
   // Get the pathname
   const pathname = request.nextUrl.pathname
 
+  // Check if this is an API route
+  const isApiRoute = pathname.startsWith("/api")
+
   // Check if this is the login page
   const isLoginPage = pathname.includes("/auth/login")
+
+  // Public API routes that don't require authentication
+  const publicApiRoutes = ["/api/auth/logout", "/api/auth/login"]
+  const isPublicApiRoute = publicApiRoutes.some((route) =>
+    pathname.startsWith(route)
+  )
 
   // Get the access token from cookies
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value
 
+  // Handle API routes
+  if (isApiRoute) {
+    // Allow public API routes to pass through
+    if (isPublicApiRoute) {
+      return NextResponse.next()
+    }
+
+    // For protected API routes, verify authentication
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    // Verify token
+    const isValid = await verifyToken(token)
+    if (!isValid) {
+      // Clear invalid cookie
+      const response = NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      )
+      response.cookies.delete(SESSION_COOKIE_NAME)
+      return response
+    }
+
+    // Token is valid, allow request to proceed
+    return NextResponse.next()
+  }
+
+  // Handle page routes (existing logic)
   // If user is not authenticated and not on login page, redirect to login
   if (!isLoginPage) {
     if (!token) {
@@ -67,7 +105,8 @@ export default async function middleware(request: NextRequest) {
 
 export const config = {
   // Match all pathnames except for
-  // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
+  // - … if they start with `/trpc`, `/_next` or `/_vercel`
   // - … the ones containing a dot (e.g. `favicon.ico`)
-  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
+  // Note: API routes are now included for authentication
+  matcher: "/((?!trpc|_next|_vercel|.*\\..*).*)",
 }
