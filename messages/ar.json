@@ -26,5 +26,25 @@
         "server_error": "حدث خطأ. يرجى المحاولة مرة أخرى لاحقاً."
       }
     }
+  },
+  "sidebar": {
+    "home": "الرئيسية",
+    "projects": "المشاريع",
+    "projectsMain": "رئيسية",
+    "projectsArchive": "أرشيف",
+    "projectsAdd": "إضافة مشروع",
+    "tasks": "المهام",
+    "tasksMain": "رئيسية",
+    "tasksArchive": "أرشيف",
+    "tasksAdd": "إضافة مهمة",
+    "calendar": "تقويم",
+    "lists": "القوائم",
+    "listsProjectTypes": "انواع المشاريع",
+    "listsJobTitles": "مسمات الوظيفية",
+    "listsCities": "المدن",
+    "listsTaskStatuses": "حالات المهام",
+    "listsTaskTypes": "انواع المهام",
+    "usersPermissions": "المستخدمين وصلاحيات",
+    "website": "الموقع الاكتروني"
   }
 }

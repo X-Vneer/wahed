@@ -26,5 +26,25 @@
         "server_error": "An error occurred. Please try again later."
       }
     }
+  },
+  "sidebar": {
+    "home": "Home",
+    "projects": "Projects",
+    "projectsMain": "Main",
+    "projectsArchive": "Archive",
+    "projectsAdd": "Add Project",
+    "tasks": "Tasks",
+    "tasksMain": "Main",
+    "tasksArchive": "Archive",
+    "tasksAdd": "Add Task",
+    "calendar": "Calendar",
+    "lists": "Lists",
+    "listsProjectTypes": "Project Types",
+    "listsJobTitles": "Job Titles",
+    "listsCities": "Cities",
+    "listsTaskStatuses": "Task Statuses",
+    "listsTaskTypes": "Task Types",
+    "usersPermissions": "Users & Permissions",
+    "website": "Website"
   }
 }
