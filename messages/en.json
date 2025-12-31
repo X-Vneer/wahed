@@ -51,7 +51,8 @@
     "loadingSubtitle": "Please wait",
     "user": "User",
     "notAvailable": "Not available",
-    "system": "System"
+    "system": "System",
+    "companyName": "Wahed"
   },
   "errors": {
     "unauthorized": "Unauthorized",

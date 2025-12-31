@@ -1,19 +1,20 @@
 "use client"
 
-import * as React from "react"
 import {
-  Waves,
-  Home,
-  Settings,
-  CheckSquare,
   Calendar,
-  List,
-  Users,
-  Globe,
+  CheckSquare,
   Command,
+  Globe,
+  Home,
   Layout,
+  List,
+  Settings,
+  Users,
+  Waves,
 } from "lucide-react"
+import * as React from "react"
 
+import { logoSquare } from "@/assets"
 import {
   Sidebar,
   SidebarContent,
@@ -21,11 +22,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useLocale, useTranslations } from "next-intl"
+import Image from "next/image"
 import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
-import { TeamSwitcher } from "./team-switcher"
-import { useLocale, useTranslations } from "next-intl"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const locale = useLocale()
@@ -148,7 +149,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {...props}
     >
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <div className="flex items-center gap-2">
+          <Image src={logoSquare} alt="Logo" className="size-11 rounded-md" />
+          <div>
+            <p className="leading-none font-bold">{t("companyName")}</p>
+            <span className="text-sm text-gray-500">{t("companyName")}</span>
+          </div>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
