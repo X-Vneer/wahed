@@ -50,7 +50,8 @@
     "loading": "جاري التحميل...",
     "loadingSubtitle": "يرجى الانتظار",
     "user": "المستخدم",
-    "notAvailable": "غير متاح"
+    "notAvailable": "غير متاح",
+    "system": "النظام"
   },
   "errors": {
     "unauthorized": "غير مصرح",

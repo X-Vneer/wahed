@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useTranslations } from "next-intl"
 
 export function NavProjects({
   projects,
@@ -19,9 +20,10 @@ export function NavProjects({
     icon: IconDefinition
   }[]
 }) {
+  const t = useTranslations("sidebar")
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>{t("projects")}</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((project) => (
           <SidebarMenuItem key={project.name}>

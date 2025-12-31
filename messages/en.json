@@ -50,7 +50,8 @@
     "loading": "Loading...",
     "loadingSubtitle": "Please wait",
     "user": "User",
-    "notAvailable": "Not available"
+    "notAvailable": "Not available",
+    "system": "System"
   },
   "errors": {
     "unauthorized": "Unauthorized",

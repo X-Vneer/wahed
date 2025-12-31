@@ -18,6 +18,8 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { Link } from "@/lib/i18n/navigation"
+import { useTransition } from "react"
+import { useTranslations } from "next-intl"
 
 type IconDefinition = React.ElementType
 
@@ -35,9 +37,10 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const t = useTranslations("sidebar")
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>{t("system")}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           if (item.items && item.items.length > 0) {
@@ -52,7 +55,7 @@ export function NavMain({
                       <SidebarMenuButton tooltip={item.title}>
                         {item.icon && <item.icon className="size-4" />}
                         <span>{item.title}</span>
-                        <ChevronRight className="ms-auto size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        <ChevronRight className="ms-auto size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180" />
                       </SidebarMenuButton>
                     }
                   />
