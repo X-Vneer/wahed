@@ -66,5 +66,65 @@
     "subtitle": "We're glad to see you again",
     "description": "Get started by exploring the system features from the sidebar menu.",
     "greeting": "Hello"
+  },
+  "employees": {
+    "title": "Users & Permissions",
+    "userDetails": "User Details",
+    "users": "Users",
+    "addNew": "Add New",
+    "add": "Add",
+    "update": "Update",
+    "search": "Search for.......",
+    "form": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Ab...",
+      "phoneNumber": "Phone Number",
+      "phonePlaceholder": "Mobile Number",
+      "jobTitle": "Job Title",
+      "jobTitlePlaceholder": "Choose from options",
+      "email": "Email Address",
+      "emailPlaceholder": "example@gmail.com",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "allowAllPermissions": "Allow all permissions",
+      "permissions": "Permissions"
+    },
+    "errors": {
+      "fullName": {
+        "required": "Full name is required"
+      },
+      "phoneNumber": {
+        "required": "Phone number is required",
+        "invalid": "Invalid phone number"
+      },
+      "jobTitle": {
+        "required": "Job title is required"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Please enter a valid email address"
+      },
+      "password": {
+        "required": "Password is required",
+        "minLength": "Password must be at least 8 characters"
+      },
+      "confirmPassword": {
+        "required": "Confirm password is required",
+        "mismatch": "Passwords do not match"
+      },
+      "user_email_exists": "User with this email already exists",
+      "create_failed": "Failed to create user",
+      "user_not_found": "User not found",
+      "email_taken": "Email already taken",
+      "update_failed": "Failed to update user",
+      "fetch_permissions_failed": "Failed to fetch permissions"
+    },
+    "permissions": {
+      "manageUsers": "Manage Users",
+      "manageTasks": "Manage Tasks",
+      "manageLists": "Manage Lists",
+      "manageProjects": "Manage Projects",
+      "manageWebsite": "Manage Website"
+    }
   }
 }

@@ -66,5 +66,65 @@
     "subtitle": "نحن سعداء لرؤيتك مرة أخرى",
     "description": "ابدأ باستكشاف ميزات النظام من قائمة الشريط الجانبي.",
     "greeting": "مرحباً"
+  },
+  "employees": {
+    "title": "المستخدمين وصلاحيات",
+    "userDetails": "تفاصيل المستخدم",
+    "users": "المستخدمين",
+    "addNew": "اضافة جديد",
+    "add": "اضافة",
+    "update": "تحديث",
+    "search": "البحث على.......",
+    "form": {
+      "fullName": "اسم كامل",
+      "fullNamePlaceholder": "اب...",
+      "phoneNumber": "رقم الهاتف",
+      "phonePlaceholder": "رقم الجوال",
+      "jobTitle": "مسمى الوظيفي",
+      "jobTitlePlaceholder": "أختار من الخيارات",
+      "email": "البريد الاكتروني",
+      "emailPlaceholder": "example@gmail.com",
+      "password": "كلمة المرور",
+      "confirmPassword": "تاكيد كلمة المرور",
+      "allowAllPermissions": "سماح بجميع الصلاحيات",
+      "permissions": "الاذونات"
+    },
+    "errors": {
+      "fullName": {
+        "required": "الاسم الكامل مطلوب"
+      },
+      "phoneNumber": {
+        "required": "رقم الهاتف مطلوب",
+        "invalid": "رقم الهاتف غير صحيح"
+      },
+      "jobTitle": {
+        "required": "مسمى الوظيفي مطلوب"
+      },
+      "email": {
+        "required": "البريد الإلكتروني مطلوب",
+        "invalid": "يرجى إدخال عنوان بريد إلكتروني صحيح"
+      },
+      "password": {
+        "required": "كلمة المرور مطلوبة",
+        "minLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل"
+      },
+      "confirmPassword": {
+        "required": "تأكيد كلمة المرور مطلوب",
+        "mismatch": "كلمات المرور غير متطابقة"
+      },
+      "user_email_exists": "المستخدم بهذا البريد الإلكتروني موجود بالفعل",
+      "create_failed": "فشل في إنشاء المستخدم",
+      "user_not_found": "المستخدم غير موجود",
+      "email_taken": "البريد الإلكتروني مستخدم بالفعل",
+      "update_failed": "فشل في تحديث المستخدم",
+      "fetch_permissions_failed": "فشل في جلب الصلاحيات"
+    },
+    "permissions": {
+      "manageUsers": "إدارة المستخدمين",
+      "manageTasks": "إدارة المهام",
+      "manageLists": "إدارة القوائم",
+      "manageProjects": "إدارة المشاريع",
+      "manageWebsite": "إدارة الموقع"
+    }
   }
 }
