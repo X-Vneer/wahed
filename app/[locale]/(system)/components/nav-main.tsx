@@ -61,6 +61,7 @@ export function NavMain({
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton
+                            size="md"
                             render={
                               <Link href={subItem.url}>{subItem.title}</Link>
                             }
@@ -76,7 +77,13 @@ export function NavMain({
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
-                  render={<Link href={item.url}>{item.title}</Link>}
+                  render={
+                    <Link href={item.url}>
+                      {item.icon && <item.icon className="size-4" />}
+
+                      {item.title}
+                    </Link>
+                  }
                   isActive={item.isActive}
                 ></SidebarMenuButton>
               </SidebarMenuItem>
