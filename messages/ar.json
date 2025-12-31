@@ -46,5 +46,12 @@
     "listsTaskTypes": "انواع المهام",
     "usersPermissions": "المستخدمين وصلاحيات",
     "website": "الموقع الاكتروني"
+  },
+  "errors": {
+    "unauthorized": "غير مصرح",
+    "user_not_found": "المستخدم غير موجود",
+    "account_inactive": "الحساب غير نشط",
+    "internal_server_error": "خطأ في الخادم الداخلي",
+    "failed_to_fetch_user_data": "فشل في جلب بيانات المستخدم"
   }
 }

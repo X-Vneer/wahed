@@ -46,5 +46,12 @@
     "listsTaskTypes": "Task Types",
     "usersPermissions": "Users & Permissions",
     "website": "Website"
+  },
+  "errors": {
+    "unauthorized": "Unauthorized",
+    "user_not_found": "User not found",
+    "account_inactive": "Account is inactive",
+    "internal_server_error": "Internal server error",
+    "failed_to_fetch_user_data": "Failed to fetch user data"
   }
 }
