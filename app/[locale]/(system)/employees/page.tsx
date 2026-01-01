@@ -48,7 +48,7 @@ export default function EmployeesPage() {
         {/* Right Panel - Users List */}
         <UsersList />
         {/* Left Panel - User Details Form */}
-        <UserForm selectedUser={selectedUser} />
+        <UserForm key={selectedUserId} selectedUser={selectedUser} />
       </div>
     </div>
   )

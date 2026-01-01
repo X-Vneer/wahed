@@ -34,7 +34,11 @@ export function PermissionsSelector({
       const translationKeyMap: Record<string, string> = {
         PROJECT: "manageProjects",
         TASK: "manageTasks",
-        FILE: "manageWebsite", // Using manageWebsite as closest match
+        FILE: "fileManagement", // Using manageWebsite as closest match
+        STAFF: "manageStaff",
+        LIST: "manageLists",
+        WEBSITE: "manageWebsite",
+        REPORT: "manageReports",
       }
       const translationKey =
         translationKeyMap[groupKey] || groupKey.toLowerCase()

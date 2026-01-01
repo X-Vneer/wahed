@@ -24,16 +24,38 @@ export const PERMISSIONS_GROUPED = {
     CREATE: PrismaPermissionKey.PROJECT_CREATE,
     UPDATE: PrismaPermissionKey.PROJECT_UPDATE,
     DELETE: PrismaPermissionKey.PROJECT_DELETE,
+    VIEW: PrismaPermissionKey.PROJECT_VIEW,
+    ARCHIVE: PrismaPermissionKey.PROJECT_ARCHIVE,
+    UNARCHIVE: PrismaPermissionKey.PROJECT_UNARCHIVE,
   },
   TASK: {
     CREATE: PrismaPermissionKey.TASK_CREATE,
     UPDATE: PrismaPermissionKey.TASK_UPDATE,
     DELETE: PrismaPermissionKey.TASK_DELETE,
     ASSIGN: PrismaPermissionKey.TASK_ASSIGN,
+    VIEW: PrismaPermissionKey.TASK_VIEW,
+    ARCHIVE: PrismaPermissionKey.TASK_ARCHIVE,
+    UNARCHIVE: PrismaPermissionKey.TASK_UNARCHIVE,
+    COMPLETE: PrismaPermissionKey.TASK_COMPLETE,
   },
   FILE: {
     UPLOAD: PrismaPermissionKey.FILE_UPLOAD,
     DELETE: PrismaPermissionKey.FILE_DELETE,
+  },
+  STAFF: {
+    MANAGEMENT: PrismaPermissionKey.STAFF_MANAGEMENT,
+  },
+  LIST: {
+    CREATE: PrismaPermissionKey.LIST_CREATE,
+    UPDATE: PrismaPermissionKey.LIST_UPDATE,
+    DELETE: PrismaPermissionKey.LIST_DELETE,
+  },
+  WEBSITE: {
+    MANAGEMENT: PrismaPermissionKey.WEBSITE_MANAGEMENT,
+  },
+  REPORT: {
+    VIEW: PrismaPermissionKey.REPORT_VIEW,
+    EXPORT: PrismaPermissionKey.REPORT_EXPORT,
   },
 } as const
 

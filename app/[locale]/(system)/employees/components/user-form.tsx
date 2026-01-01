@@ -11,16 +11,18 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
+import { handleFormErrors } from "@/lib/handle-form-errors"
 import { createUserSchema, updateUserSchema } from "@/lib/schemas/user"
 import type { User } from "@/prisma/users/select"
-import { useForm } from "@tanstack/react-form"
+import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
+import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
-import { parseAsString, useQueryState } from "nuqs"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo } from "react"
 import type { Value as PhoneValue } from "react-phone-number-input"
 import { PermissionsSelector } from "./permissions-selector"
+import { parseAsString, useQueryState } from "nuqs"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -29,11 +31,21 @@ type UserFormProps = {
 export function UserForm({ selectedUser }: UserFormProps) {
   const t = useTranslations()
 
+  //   selected user
+  const [_, setSelectedUserId] = useQueryState(
+    "user_id",
+    parseAsString.withDefault("")
+  )
   const queryClient = useQueryClient()
-  const [serverError, setServerError] = useState<string | null>(null)
+
+  const schema = useMemo(
+    () => (selectedUser?.id ? updateUserSchema : createUserSchema),
+    [selectedUser?.id]
+  )
 
   const form = useForm({
-    defaultValues: {
+    mode: "uncontrolled",
+    initialValues: {
       name: "",
       phone: "",
       roleName: "",
@@ -43,55 +55,56 @@ export function UserForm({ selectedUser }: UserFormProps) {
       allowAllPermissions: false,
       permissions: [] as string[],
     },
-    validators: {
-      onSubmit: selectedUser?.id ? updateUserSchema : createUserSchema,
-    },
-    onSubmit: async ({ value }) => {
-      setServerError(null)
-
-      try {
-        if (selectedUser) {
-          // Update existing user
-          await axios.put(`/api/users/${selectedUser.id}`, value, {
-            withCredentials: true,
-          })
-        } else {
-          // Create new user
-          await axios.post("/api/users", value, {
-            withCredentials: true,
-          })
-        }
-
-        // Success - refresh users list and reset form
-        queryClient.invalidateQueries({ queryKey: ["users"] })
-        if (!selectedUser) {
-          form.reset()
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.data?.error) {
-          setServerError(error.response.data.error)
-          return
-        }
-        setServerError(t("errors.internal_server_error"))
-      }
-    },
+    validate: zod4Resolver(schema),
   })
 
   // Update form when user is selected
   useEffect(() => {
     if (selectedUser) {
-      form.setFieldValue("name", selectedUser.name)
-      form.setFieldValue("email", selectedUser.email)
-      form.setFieldValue("phone", selectedUser.phone || "")
-      form.setFieldValue("roleName", selectedUser.roleName || "")
-      form.setFieldValue("password", "")
-      form.setFieldValue("confirmPassword", "")
-      form.setFieldValue("permissions", selectedUser.permissions)
+      form.setValues({
+        name: selectedUser.name,
+        email: selectedUser.email,
+        phone: selectedUser.phone || "",
+        roleName: selectedUser.roleName || "",
+        password: "",
+        confirmPassword: "",
+        permissions: selectedUser.permissions,
+        allowAllPermissions: false,
+      })
     } else {
       form.reset()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser?.id])
+
+  const handleSubmit = async (values: typeof form.values) => {
+    try {
+      if (selectedUser) {
+        // Update existing user
+        await axios.put(`/api/users/${selectedUser.id}`, values, {
+          withCredentials: true,
+        })
+      } else {
+        // Create new user
+        await axios.post("/api/users", values, {
+          withCredentials: true,
+        })
+      }
+
+      // Success - refresh users list and reset form
+      queryClient.invalidateQueries({ queryKey: ["users"] })
+      form.reset()
+      setSelectedUserId(null)
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const rootError = handleFormErrors(error, form)
+        form.setFieldError(
+          "root",
+          rootError || t("errors.internal_server_error")
+        )
+      }
+    }
+  }
 
   return (
     <Card className="flex-1">
@@ -99,212 +112,146 @@ export function UserForm({ selectedUser }: UserFormProps) {
         <CardTitle>{t("employees.userDetails")}</CardTitle>
       </CardHeader>
       <CardContent>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            await form.handleSubmit()
-          }}
-        >
+        <form onSubmit={form.onSubmit(handleSubmit)}>
           <FieldGroup>
             <div className="grid grid-cols-2 gap-4">
               {/* Full Name */}
-              <form.Field name="name">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>
-                        {t("employees.form.fullName")}
-                      </FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder={t("employees.form.fullNamePlaceholder")}
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={!!form.errors.name}>
+                <FieldLabel htmlFor="name">
+                  {t("employees.form.fullName")}
+                </FieldLabel>
+                <Input
+                  id="name"
+                  {...form.getInputProps("name")}
+                  placeholder={t("employees.form.fullNamePlaceholder")}
+                  aria-invalid={!!form.errors.name}
+                />
+                {form.errors.name && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.name) }]}
+                  />
+                )}
+              </Field>
 
               {/* Phone Number */}
-              <form.Field name="phone">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>
-                        {t("employees.form.phoneNumber")}
-                      </FieldLabel>
-                      <PhoneInput
-                        id={field.name}
-                        name={field.name}
-                        value={(field.state.value as PhoneValue) || undefined}
-                        onChange={(value) => field.handleChange(value || "")}
-                        onBlur={field.handleBlur}
-                        placeholder={t("employees.form.phonePlaceholder")}
-                        defaultCountry="SA"
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={!!form.errors.phone}>
+                <FieldLabel htmlFor="phone">
+                  {t("employees.form.phoneNumber")}
+                </FieldLabel>
+                <PhoneInput
+                  id="phone"
+                  name="phone"
+                  value={(form.values.phone as PhoneValue) || undefined}
+                  onChange={(value) => form.setFieldValue("phone", value || "")}
+                  onBlur={() => form.validateField("phone")}
+                  placeholder={t("employees.form.phonePlaceholder")}
+                  defaultCountry="SA"
+                  aria-invalid={!!form.errors.phone}
+                />
+                {form.errors.phone && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.phone) }]}
+                  />
+                )}
+              </Field>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               {/* Email */}
-              <form.Field name="email">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>
-                        {t("employees.form.email")}
-                      </FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        type="email"
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder={t("employees.form.emailPlaceholder")}
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={!!form.errors.email}>
+                <FieldLabel htmlFor="email">
+                  {t("employees.form.email")}
+                </FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  {...form.getInputProps("email")}
+                  placeholder={t("employees.form.emailPlaceholder")}
+                  aria-invalid={!!form.errors.email}
+                />
+                {form.errors.email && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.email) }]}
+                  />
+                )}
+              </Field>
 
               {/* Job Title */}
-
-              <form.Field name="roleName">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>
-                        {t("employees.form.jobTitle")}
-                      </FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder={t("employees.form.jobTitlePlaceholder")}
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={!!form.errors.roleName}>
+                <FieldLabel htmlFor="roleName">
+                  {t("employees.form.jobTitle")}
+                </FieldLabel>
+                <Input
+                  id="roleName"
+                  {...form.getInputProps("roleName")}
+                  placeholder={t("employees.form.jobTitlePlaceholder")}
+                  aria-invalid={!!form.errors.roleName}
+                />
+                {form.errors.roleName && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.roleName) }]}
+                  />
+                )}
+              </Field>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               {/* Password */}
-              <form.Field name="password">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>
-                        {t("employees.form.password")}
-                      </FieldLabel>
-                      <Input
-                        type="password"
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="••••••••"
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={!!form.errors.password}>
+                <FieldLabel htmlFor="password">
+                  {t("employees.form.password")}
+                </FieldLabel>
+                <Input
+                  type="password"
+                  id="password"
+                  {...form.getInputProps("password")}
+                  placeholder="••••••••"
+                  aria-invalid={!!form.errors.password}
+                />
+                {form.errors.password && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.password) }]}
+                  />
+                )}
+              </Field>
 
               {/* Confirm Password */}
-              <form.Field name="confirmPassword">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>
-                        {t("employees.form.confirmPassword")}
-                      </FieldLabel>
-                      <Input
-                        type="password"
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="••••••••"
-                        aria-invalid={isInvalid}
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={!!form.errors.confirmPassword}>
+                <FieldLabel htmlFor="confirmPassword">
+                  {t("employees.form.confirmPassword")}
+                </FieldLabel>
+                <Input
+                  type="password"
+                  id="confirmPassword"
+                  {...form.getInputProps("confirmPassword")}
+                  placeholder="••••••••"
+                  aria-invalid={!!form.errors.confirmPassword}
+                />
+                {form.errors.confirmPassword && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.confirmPassword) }]}
+                  />
+                )}
+              </Field>
             </div>
 
             {/* Permissions Section */}
-            <form.Field name="permissions">
-              {(field) => (
-                <form.Field name="allowAllPermissions">
-                  {(allowAllField) => (
-                    <PermissionsSelector
-                      permissions={field.state.value}
-                      allowAllPermissions={allowAllField.state.value}
-                      onPermissionsChange={(newPermissions) => {
-                        field.handleChange(newPermissions)
-                      }}
-                      onAllowAllChange={(checked) => {
-                        allowAllField.handleChange(checked)
-                      }}
-                    />
-                  )}
-                </form.Field>
-              )}
-            </form.Field>
+            <PermissionsSelector
+              permissions={form.values.permissions}
+              allowAllPermissions={form.values.allowAllPermissions}
+              onPermissionsChange={(newPermissions) => {
+                form.setFieldValue("permissions", newPermissions)
+              }}
+              onAllowAllChange={(checked) => {
+                form.setFieldValue("allowAllPermissions", checked)
+              }}
+            />
           </FieldGroup>
 
           {/* Server Error Message */}
-          {serverError && (
+          {form.errors.root && (
             <div className="text-destructive mt-4 text-sm font-medium">
-              {serverError}
+              {form.errors.root}
             </div>
           )}
 
@@ -313,9 +260,9 @@ export function UserForm({ selectedUser }: UserFormProps) {
             <Button
               type="submit"
               className="w-fit px-10"
-              disabled={form.state.isSubmitting}
+              disabled={form.submitting}
             >
-              {form.state.isSubmitting && <Spinner className="mr-2 size-4" />}
+              {form.submitting && <Spinner className="mr-2 size-4" />}
               {selectedUser ? t("employees.update") : t("employees.add")}
             </Button>
           </div>
