@@ -87,7 +87,8 @@
       "password": "Password",
       "confirmPassword": "Confirm Password",
       "allowAllPermissions": "Allow all permissions",
-      "permissions": "Permissions"
+      "permissions": "Permissions",
+      "role": "Role"
     },
     "errors": {
       "fullName": {

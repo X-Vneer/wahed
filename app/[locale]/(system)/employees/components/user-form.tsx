@@ -11,14 +11,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { PhoneInput } from "@/components/phone-input"
@@ -53,7 +46,6 @@ export function UserForm({ selectedUser }: UserFormProps) {
       email: "",
       password: "",
       confirmPassword: "",
-      role: "STAFF",
       allowAllPermissions: false,
       permissions: [] as string[],
     },
@@ -70,7 +62,6 @@ export function UserForm({ selectedUser }: UserFormProps) {
       form.setFieldValue("email", selectedUser.email)
       form.setFieldValue("phone", selectedUser.phone || "")
       form.setFieldValue("roleName", selectedUser.roleName || "")
-      form.setFieldValue("role", selectedUser.role)
       form.setFieldValue("password", "")
       form.setFieldValue("confirmPassword", "")
       form.setFieldValue("permissions", selectedUser.permissions)
@@ -184,139 +175,133 @@ export function UserForm({ selectedUser }: UserFormProps) {
               </form.Field>
             </div>
 
-            {/* Job Title */}
-            <form.Field name="roleName">
-              {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      {t("employees.form.jobTitle")}
-                    </FieldLabel>
-                    <Select
-                      value={field.state.value || undefined}
-                      onValueChange={(value) => {
-                        if (value) {
-                          field.handleChange(value)
-                        }
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue>
-                          {field.state.value ||
-                            t("employees.form.jobTitlePlaceholder")}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="developer">Developer</SelectItem>
-                        <SelectItem value="designer">Designer</SelectItem>
-                        <SelectItem value="manager">Manager</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            </form.Field>
+            <div className="grid grid-cols-2 gap-4">
+              {/* Email */}
+              <form.Field name="email">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("employees.form.email")}
+                      </FieldLabel>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        type="email"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder={t("employees.form.emailPlaceholder")}
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              </form.Field>
 
-            {/* Email */}
-            <form.Field name="email">
-              {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      {t("employees.form.email")}
-                    </FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      type="email"
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder={t("employees.form.emailPlaceholder")}
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            </form.Field>
+              {/* Job Title */}
 
-            {/* Password */}
-            <form.Field name="password">
-              {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      {t("employees.form.password")}
-                    </FieldLabel>
-                    <PasswordInput
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="••••••••"
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            </form.Field>
+              <form.Field name="roleName">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("employees.form.jobTitle")}
+                      </FieldLabel>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder={t("employees.form.jobTitlePlaceholder")}
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              </form.Field>
+            </div>
 
-            {/* Confirm Password */}
-            <form.Field name="confirmPassword">
-              {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      {t("employees.form.confirmPassword")}
-                    </FieldLabel>
-                    <PasswordInput
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="••••••••"
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            </form.Field>
+            <div className="grid grid-cols-2 gap-4">
+              {/* Password */}
+              <form.Field name="password">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("employees.form.password")}
+                      </FieldLabel>
+                      <PasswordInput
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="••••••••"
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              </form.Field>
+
+              {/* Confirm Password */}
+              <form.Field name="confirmPassword">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("employees.form.confirmPassword")}
+                      </FieldLabel>
+                      <PasswordInput
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="••••••••"
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              </form.Field>
+            </div>
 
             {/* Permissions Section */}
             <div className="space-y-4">
               <form.Field name="allowAllPermissions">
                 {(field) => (
                   <Field orientation="horizontal">
-                    <FieldLabel htmlFor={field.name}>
-                      {t("employees.form.allowAllPermissions")}
-                    </FieldLabel>
-                    <Switch
+                    <Checkbox
                       id={field.name}
                       checked={field.state.value}
                       onCheckedChange={handleAllowAllPermissionsChange}
                     />
+                    <FieldLabel htmlFor={field.name}>
+                      {t("employees.form.allowAllPermissions")}
+                    </FieldLabel>
                   </Field>
                 )}
               </form.Field>
@@ -344,7 +329,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
                         >
                           {permission.name}
                         </FieldLabel>
-                        <Switch
+                        <Checkbox
                           id={`permission-${permission.id}`}
                           checked={isSelected || isDisabled}
                           disabled={isDisabled}

@@ -87,7 +87,8 @@
       "password": "كلمة المرور",
       "confirmPassword": "تاكيد كلمة المرور",
       "allowAllPermissions": "سماح بجميع الصلاحيات",
-      "permissions": "الاذونات"
+      "permissions": "الاذونات",
+      "role": "دور"
     },
     "errors": {
       "fullName": {
