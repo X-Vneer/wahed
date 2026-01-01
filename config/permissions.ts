@@ -16,6 +16,28 @@ import { PermissionKey as PrismaPermissionKey } from "@/lib/generated/prisma/enu
 export const PERMISSIONS = PrismaPermissionKey
 
 /**
+ * Grouped permission keys by category
+ * Provides a more organized way to access permissions
+ */
+export const PERMISSIONS_GROUPED = {
+  PROJECT: {
+    CREATE: PrismaPermissionKey.PROJECT_CREATE,
+    UPDATE: PrismaPermissionKey.PROJECT_UPDATE,
+    DELETE: PrismaPermissionKey.PROJECT_DELETE,
+  },
+  TASK: {
+    CREATE: PrismaPermissionKey.TASK_CREATE,
+    UPDATE: PrismaPermissionKey.TASK_UPDATE,
+    DELETE: PrismaPermissionKey.TASK_DELETE,
+    ASSIGN: PrismaPermissionKey.TASK_ASSIGN,
+  },
+  FILE: {
+    UPLOAD: PrismaPermissionKey.FILE_UPLOAD,
+    DELETE: PrismaPermissionKey.FILE_DELETE,
+  },
+} as const
+
+/**
  * Type for permission keys
  */
 export type Permission =

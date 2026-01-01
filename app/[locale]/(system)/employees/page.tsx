@@ -8,11 +8,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { useUsers } from "@/hooks/use-users"
 import { useTranslations } from "next-intl"
+import { parseAsString, useQueryState } from "nuqs"
 import { UserForm } from "./components/user-form"
 import { UsersList } from "./components/users-list"
-import { useUsers } from "@/hooks/use-users"
-import { parseAsString, useQueryState } from "nuqs"
 
 export default function EmployeesPage() {
   const t = useTranslations()
@@ -46,7 +46,7 @@ export default function EmployeesPage() {
       {/* Main Content */}
       <div className="flex gap-6">
         {/* Right Panel - Users List */}
-        <UsersList onAddNew={() => {}} />
+        <UsersList />
         {/* Left Panel - User Details Form */}
         <UserForm selectedUser={selectedUser} />
       </div>

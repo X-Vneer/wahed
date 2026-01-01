@@ -77,7 +77,7 @@
     "search": "البحث على.......",
     "form": {
       "fullName": "اسم كامل",
-      "fullNamePlaceholder": "اب...",
+      "fullNamePlaceholder": "الاسم الكامل للمستخدم",
       "phoneNumber": "رقم الهاتف",
       "phonePlaceholder": "رقم الجوال",
       "jobTitle": "مسمى الوظيفي",
@@ -125,7 +125,16 @@
       "manageTasks": "إدارة المهام",
       "manageLists": "إدارة القوائم",
       "manageProjects": "إدارة المشاريع",
-      "manageWebsite": "إدارة الموقع"
+      "manageWebsite": "إدارة الموقع",
+      "PROJECT_CREATE": "إنشاء مشروع",
+      "PROJECT_UPDATE": "تحديث مشروع",
+      "PROJECT_DELETE": "حذف مشروع",
+      "TASK_CREATE": "إنشاء مهمة",
+      "TASK_UPDATE": "تحديث مهمة",
+      "TASK_DELETE": "حذف مهمة",
+      "TASK_ASSIGN": "تعيين مهمة",
+      "FILE_UPLOAD": "رفع ملف",
+      "FILE_DELETE": "حذف ملف"
     },
     "no_users found": "لم يتم العثور على مستخدمين"
   }

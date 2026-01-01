@@ -12,11 +12,7 @@ import type { User } from "@/prisma/users/select"
 import { useDebouncedValue } from "@/hooks/use-debounced"
 import { parseAsString, useQueryState } from "nuqs"
 
-type UsersListProps = {
-  onAddNew: () => void
-}
-
-export function UsersList({ onAddNew }: UsersListProps) {
+export function UsersList() {
   const t = useTranslations("employees")
   const [q, setQ] = useState("")
   const debouncedValue = useDebouncedValue(q, 500)
@@ -38,7 +34,12 @@ export function UsersList({ onAddNew }: UsersListProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{t("users")}</CardTitle>
-          <Button onClick={onAddNew} size="sm">
+          <Button
+            onClick={() => {
+              setSelectedUser(null)
+            }}
+            size="sm"
+          >
             <Plus className="size-4" />
             {t("addNew")}
           </Button>

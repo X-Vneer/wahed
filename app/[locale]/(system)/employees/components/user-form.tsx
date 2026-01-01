@@ -11,7 +11,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { PhoneInput } from "@/components/phone-input"
@@ -19,7 +18,7 @@ import { PasswordInput } from "@/components/password-input"
 import type { Value as PhoneValue } from "react-phone-number-input"
 import type { User } from "@/prisma/users/select"
 import { createUserSchema } from "@/lib/schemas/user"
-import { PERMISSION_KEYS } from "@/config"
+import { PermissionsSelector } from "./permissions-selector"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -27,16 +26,6 @@ type UserFormProps = {
 
 export function UserForm({ selectedUser }: UserFormProps) {
   const t = useTranslations()
-
-  // Create permissions list from available permission keys
-  const permissions = PERMISSION_KEYS.map((key) => ({
-    id: key,
-    key,
-    name: t(
-      `employees.permissions.${key}` as `employees.permissions.${typeof key}`,
-      { defaultValue: key }
-    ),
-  }))
 
   const form = useForm({
     defaultValues: {
@@ -70,39 +59,6 @@ export function UserForm({ selectedUser }: UserFormProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser?.id])
-
-  const handleAllowAllPermissionsChange = (checked: boolean) => {
-    form.setFieldValue("allowAllPermissions", checked)
-    if (checked) {
-      form.setFieldValue("permissions", PERMISSION_KEYS)
-    } else {
-      form.setFieldValue("permissions", [])
-    }
-  }
-
-  const handlePermissionToggle = (permissionKey: string) => {
-    const currentPermissions = form.state.values.permissions
-    const isSelected = currentPermissions.includes(permissionKey)
-
-    if (isSelected) {
-      form.setFieldValue(
-        "permissions",
-        currentPermissions.filter((p) => p !== permissionKey)
-      )
-    } else {
-      form.setFieldValue("permissions", [...currentPermissions, permissionKey])
-    }
-
-    // Update allowAllPermissions based on current selection
-    const newPermissions = isSelected
-      ? currentPermissions.filter((p) => p !== permissionKey)
-      : [...currentPermissions, permissionKey]
-
-    form.setFieldValue(
-      "allowAllPermissions",
-      newPermissions.length === permissions.length
-    )
-  }
 
   return (
     <Card className="flex-1">
@@ -290,59 +246,24 @@ export function UserForm({ selectedUser }: UserFormProps) {
             </div>
 
             {/* Permissions Section */}
-            <div className="space-y-4">
-              <form.Field name="allowAllPermissions">
-                {(field) => (
-                  <Field orientation="horizontal">
-                    <Checkbox
-                      id={field.name}
-                      checked={field.state.value}
-                      onCheckedChange={handleAllowAllPermissionsChange}
+            <form.Field name="permissions">
+              {(field) => (
+                <form.Field name="allowAllPermissions">
+                  {(allowAllField) => (
+                    <PermissionsSelector
+                      permissions={field.state.value}
+                      allowAllPermissions={allowAllField.state.value}
+                      onPermissionsChange={(newPermissions) => {
+                        field.handleChange(newPermissions)
+                      }}
+                      onAllowAllChange={(checked) => {
+                        allowAllField.handleChange(checked)
+                      }}
                     />
-                    <FieldLabel htmlFor={field.name}>
-                      {t("employees.form.allowAllPermissions")}
-                    </FieldLabel>
-                  </Field>
-                )}
-              </form.Field>
-
-              <div>
-                <p className="mb-3 text-sm font-medium">
-                  {t("employees.form.permissions")}
-                </p>
-                <div className="space-y-3">
-                  {permissions.map((permission) => {
-                    const isSelected = form.state.values.permissions.includes(
-                      permission.key
-                    )
-                    const isDisabled = form.state.values.allowAllPermissions
-
-                    return (
-                      <Field
-                        key={permission.id}
-                        orientation="horizontal"
-                        className={isDisabled ? "opacity-50" : ""}
-                      >
-                        <FieldLabel
-                          htmlFor={`permission-${permission.id}`}
-                          className="flex-1"
-                        >
-                          {permission.name}
-                        </FieldLabel>
-                        <Checkbox
-                          id={`permission-${permission.id}`}
-                          checked={isSelected || isDisabled}
-                          disabled={isDisabled}
-                          onCheckedChange={() =>
-                            handlePermissionToggle(permission.key)
-                          }
-                        />
-                      </Field>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
+                  )}
+                </form.Field>
+              )}
+            </form.Field>
           </FieldGroup>
 
           {/* Submit Button */}

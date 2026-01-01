@@ -124,28 +124,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-/* Phone Input Styling */
-.phone-input-wrapper {
-  @apply flex w-full gap-0;
-}
-
-.phone-input-wrapper .PhoneInputInput {
-  @apply flex-1 rounded-l-none rounded-r-lg;
-}
-
-.phone-input-wrapper .PhoneInputCountry {
-  @apply flex items-center rounded-l-lg rounded-r-none;
-}
-
-.phone-input-wrapper .PhoneInputCountryIcon {
-  @apply h-5 w-5 rounded;
-}
-
-.phone-input-wrapper .PhoneInputCountrySelect {
-  @apply text-foreground cursor-pointer appearance-none border-0 bg-transparent outline-none;
-}
-
-.phone-input-wrapper .PhoneInputCountrySelectArrow {
-  @apply opacity-50;
-}
