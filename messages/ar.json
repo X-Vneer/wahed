@@ -125,6 +125,7 @@
       "manageLists": "إدارة القوائم",
       "manageProjects": "إدارة المشاريع",
       "manageWebsite": "إدارة الموقع"
-    }
+    },
+    "no_users found": "لم يتم العثور على مستخدمين"
   }
 }

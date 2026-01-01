@@ -1,9 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { useForm } from "@tanstack/react-form"
-import * as z from "zod"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Field,
@@ -22,91 +21,46 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { Eye, EyeOff } from "lucide-react"
-import Image from "next/image"
-import { arFlag } from "@/assets"
-import type { User } from "@/hooks/use-users"
-import type { PermissionKey } from "@/lib/generated/prisma/enums"
+import { PhoneInput } from "@/components/phone-input"
+import { PasswordInput } from "@/components/password-input"
+import type { Value as PhoneValue } from "react-phone-number-input"
+import type { User } from "@/prisma/users/select"
+import { createUserSchema } from "@/lib/schemas/user"
+import { PERMISSION_KEYS } from "@/config"
 
 type UserFormProps = {
   selectedUser: User | null
-  permissions: Array<{ id: string; key: PermissionKey; name: string }>
-  onSubmit: (data: {
-    name: string
-    email: string
-    password: string
-    permissions: PermissionKey[]
-  }) => Promise<{ success: boolean; error?: string }>
-  onSuccess?: () => void
 }
 
-export function UserForm({
-  selectedUser,
-  permissions,
-  onSubmit,
-  onSuccess,
-}: UserFormProps) {
-  const t = useTranslations("employees")
-  const tForm = useTranslations("employees.form")
-  const tErrors = useTranslations("employees.errors")
+export function UserForm({ selectedUser }: UserFormProps) {
+  const t = useTranslations()
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
-
-  const formSchema = z
-    .object({
-      name: z.string().min(1, tErrors("fullName.required")),
-      phoneCountryCode: z.string(),
-      phoneNumber: z.string().min(1, tErrors("phoneNumber.required")),
-      jobTitle: z.string().min(1, tErrors("jobTitle.required")),
-      email: z.email(tErrors("email.invalid")),
-      password: z.string().min(8, tErrors("password.minLength")),
-      confirmPassword: z.string().min(1, tErrors("confirmPassword.required")),
-      allowAllPermissions: z.boolean(),
-      permissions: z.array(z.string()),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: tErrors("confirmPassword.mismatch"),
-      path: ["confirmPassword"],
-    })
+  // Create permissions list from available permission keys
+  const permissions = PERMISSION_KEYS.map((key) => ({
+    id: key,
+    key,
+    name: t(
+      `employees.permissions.${key}` as `employees.permissions.${typeof key}`,
+      { defaultValue: key }
+    ),
+  }))
 
   const form = useForm({
     defaultValues: {
       name: "",
-      phoneCountryCode: "+966",
-      phoneNumber: "",
-      jobTitle: "",
+      phone: "",
+      roleName: "",
       email: "",
       password: "",
       confirmPassword: "",
+      role: "STAFF",
       allowAllPermissions: false,
       permissions: [] as string[],
     },
     validators: {
-      onSubmit: formSchema,
+      onSubmit: createUserSchema,
     },
-    onSubmit: async ({ value }) => {
-      setServerError(null)
-
-      const permissionKeys = value.allowAllPermissions
-        ? permissions.map((p) => p.key)
-        : (value.permissions as PermissionKey[])
-
-      const result = await onSubmit({
-        name: value.name,
-        email: value.email,
-        password: value.password,
-        permissions: permissionKeys,
-      })
-
-      if (result.success) {
-        form.reset()
-        onSuccess?.()
-      } else {
-        setServerError(result.error || "create_failed")
-      }
-    },
+    onSubmit: async () => {},
   })
 
   // Update form when user is selected
@@ -114,29 +68,22 @@ export function UserForm({
     if (selectedUser) {
       form.setFieldValue("name", selectedUser.name)
       form.setFieldValue("email", selectedUser.email)
+      form.setFieldValue("phone", selectedUser.phone || "")
+      form.setFieldValue("roleName", selectedUser.roleName || "")
+      form.setFieldValue("role", selectedUser.role)
       form.setFieldValue("password", "")
       form.setFieldValue("confirmPassword", "")
-      form.setFieldValue(
-        "permissions",
-        selectedUser.permissions.map((p) => p.key)
-      )
-      form.setFieldValue(
-        "allowAllPermissions",
-        selectedUser.permissions.length === permissions.length
-      )
+      form.setFieldValue("permissions", selectedUser.permissions)
     } else {
       form.reset()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedUser, permissions.length])
+  }, [selectedUser?.id])
 
   const handleAllowAllPermissionsChange = (checked: boolean) => {
     form.setFieldValue("allowAllPermissions", checked)
     if (checked) {
-      form.setFieldValue(
-        "permissions",
-        permissions.map((p) => p.key)
-      )
+      form.setFieldValue("permissions", PERMISSION_KEYS)
     } else {
       form.setFieldValue("permissions", [])
     }
@@ -169,7 +116,7 @@ export function UserForm({
   return (
     <Card className="flex-1">
       <CardHeader>
-        <CardTitle>{t("userDetails")}</CardTitle>
+        <CardTitle>{t("employees.userDetails")}</CardTitle>
       </CardHeader>
       <CardContent>
         <form
@@ -180,97 +127,72 @@ export function UserForm({
           }}
         >
           <FieldGroup>
-            {/* Full Name */}
-            <form.Field name="name">
-              {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      {tForm("fullName")}
-                    </FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder={tForm("fullNamePlaceholder")}
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            </form.Field>
-
-            {/* Phone Number */}
-            <form.Field name="phoneNumber">
-              {(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                const countryCode = form.state.values.phoneCountryCode
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel>{tForm("phoneNumber")}</FieldLabel>
-                    <div className="flex gap-2">
-                      <Select
-                        value={countryCode || "+966"}
-                        onValueChange={(value) => {
-                          if (value) {
-                            form.setFieldValue("phoneCountryCode", value)
-                          }
-                        }}
-                      >
-                        <SelectTrigger className="w-32">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src={arFlag}
-                              alt="SA"
-                              width={16}
-                              height={12}
-                              className="rounded"
-                            />
-                            <SelectValue />
-                          </div>
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="+966">+966</SelectItem>
-                          <SelectItem value="+1">+1</SelectItem>
-                          <SelectItem value="+44">+44</SelectItem>
-                        </SelectContent>
-                      </Select>
+            <div className="grid grid-cols-2 gap-4">
+              {/* Full Name */}
+              <form.Field name="name">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("employees.form.fullName")}
+                      </FieldLabel>
                       <Input
                         id={field.name}
                         name={field.name}
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder={tForm("phonePlaceholder")}
-                        className="flex-1"
+                        placeholder={t("employees.form.fullNamePlaceholder")}
                         aria-invalid={isInvalid}
                       />
-                    </div>
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            </form.Field>
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              </form.Field>
+
+              {/* Phone Number */}
+              <form.Field name="phone">
+                {(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("employees.form.phoneNumber")}
+                      </FieldLabel>
+                      <PhoneInput
+                        id={field.name}
+                        name={field.name}
+                        value={(field.state.value as PhoneValue) || undefined}
+                        onChange={(value) => field.handleChange(value || "")}
+                        onBlur={field.handleBlur}
+                        placeholder={t("employees.form.phonePlaceholder")}
+                        defaultCountry="SA"
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              </form.Field>
+            </div>
 
             {/* Job Title */}
-            <form.Field name="jobTitle">
+            <form.Field name="roleName">
               {(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>
-                      {tForm("jobTitle")}
+                      {t("employees.form.jobTitle")}
                     </FieldLabel>
                     <Select
                       value={field.state.value || undefined}
@@ -282,7 +204,8 @@ export function UserForm({
                     >
                       <SelectTrigger>
                         <SelectValue>
-                          {field.state.value || tForm("jobTitlePlaceholder")}
+                          {field.state.value ||
+                            t("employees.form.jobTitlePlaceholder")}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
@@ -307,7 +230,7 @@ export function UserForm({
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>
-                      {tForm("email")}
+                      {t("employees.form.email")}
                     </FieldLabel>
                     <Input
                       id={field.name}
@@ -316,7 +239,7 @@ export function UserForm({
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder={tForm("emailPlaceholder")}
+                      placeholder={t("employees.form.emailPlaceholder")}
                       aria-invalid={isInvalid}
                     />
                     {isInvalid && (
@@ -335,32 +258,17 @@ export function UserForm({
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>
-                      {tForm("password")}
+                      {t("employees.form.password")}
                     </FieldLabel>
-                    <div className="relative">
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        type={showPassword ? "text" : "password"}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="••••••••"
-                        aria-invalid={isInvalid}
-                        className="pr-10"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="size-4" />
-                        ) : (
-                          <Eye className="size-4" />
-                        )}
-                      </button>
-                    </div>
+                    <PasswordInput
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="••••••••"
+                      aria-invalid={isInvalid}
+                    />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
@@ -377,34 +285,17 @@ export function UserForm({
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>
-                      {tForm("confirmPassword")}
+                      {t("employees.form.confirmPassword")}
                     </FieldLabel>
-                    <div className="relative">
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="••••••••"
-                        aria-invalid={isInvalid}
-                        className="pr-10"
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className="size-4" />
-                        ) : (
-                          <Eye className="size-4" />
-                        )}
-                      </button>
-                    </div>
+                    <PasswordInput
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="••••••••"
+                      aria-invalid={isInvalid}
+                    />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
@@ -419,7 +310,7 @@ export function UserForm({
                 {(field) => (
                   <Field orientation="horizontal">
                     <FieldLabel htmlFor={field.name}>
-                      {tForm("allowAllPermissions")}
+                      {t("employees.form.allowAllPermissions")}
                     </FieldLabel>
                     <Switch
                       id={field.name}
@@ -432,7 +323,7 @@ export function UserForm({
 
               <div>
                 <p className="mb-3 text-sm font-medium">
-                  {tForm("permissions")}
+                  {t("employees.form.permissions")}
                 </p>
                 <div className="space-y-3">
                   {permissions.map((permission) => {
@@ -469,13 +360,6 @@ export function UserForm({
             </div>
           </FieldGroup>
 
-          {/* Server Error */}
-          {serverError && (
-            <div className="text-destructive mt-4 text-sm font-medium">
-              {tErrors(serverError)}
-            </div>
-          )}
-
           {/* Submit Button */}
           <div className="mt-6">
             <Button
@@ -484,7 +368,7 @@ export function UserForm({
               disabled={form.state.isSubmitting}
             >
               {form.state.isSubmitting && <Spinner className="size-4" />}
-              {selectedUser ? t("update") : t("add")}
+              {selectedUser ? t("employees.update") : t("employees.add")}
             </Button>
           </div>
         </form>

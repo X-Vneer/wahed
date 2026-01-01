@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Search, Plus } from "lucide-react"
 import { useUsers } from "@/hooks/use-users"
-import type { User } from "@/hooks/use-users"
+import type { User } from "@/prisma/users/select"
 import { useDebouncedValue } from "@/hooks/use-debounced"
 import { parseAsString, useQueryState } from "nuqs"
 
@@ -81,7 +81,7 @@ export function UsersList({ onAddNew }: UsersListProps) {
             ))}
             {users.length === 0 && (
               <p className="text-muted-foreground py-8 text-center text-sm">
-                No users found
+                {t("no_users found")}
               </p>
             )}
           </div>

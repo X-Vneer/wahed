@@ -1,10 +1,10 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
 import db from "@/lib/db"
-import { getTranslations } from "next-intl/server"
-import { createUserSchema } from "@/lib/schemas/user"
-import bcrypt from "bcryptjs"
 import type { PermissionKey } from "@/lib/generated/prisma/enums"
+import { createUserSchema } from "@/lib/schemas/user"
+import { transformUser, userSelect } from "@/prisma/users/select"
+import bcrypt from "bcryptjs"
+import { getTranslations } from "next-intl/server"
+import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,44 +22,16 @@ export async function GET(request: NextRequest) {
             ],
           }
         : undefined,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        roleName: true,
-        role: true,
-        isActive: true,
-        permissions: {
-          select: {
-            permission: {
-              select: {
-                key: true,
-                name: true,
-              },
-            },
-          },
-        },
-      },
+      select: userSelect,
       orderBy: {
         createdAt: "desc",
       },
     })
 
     // Transform the data to match the expected format
-    const transformedUsers = users.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      roleName: user.roleName,
-      role: user.role,
-      isActive: user.isActive,
-      permissions: user.permissions.map((up) => ({
-        key: up.permission.key,
-        name: up.permission.name,
-      })),
-    }))
+    const transformedUsers = users.map((user) => {
+      return transformUser(user)
+    })
 
     return NextResponse.json(transformedUsers)
   } catch (error) {
@@ -82,10 +54,16 @@ export async function POST(request: NextRequest) {
     const validationResult = createUserSchema.safeParse(body)
 
     if (!validationResult.success) {
+      // Translate error messages
+      const translatedIssues = validationResult.error.issues.map((issue) => ({
+        ...issue,
+        message: t(issue.message as string, { defaultValue: issue.message }),
+      }))
+
       return NextResponse.json(
         {
           error: "Validation failed",
-          details: validationResult.error.issues,
+          details: translatedIssues,
         },
         { status: 400 }
       )
@@ -108,11 +86,6 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(data.password, 10)
 
-    // Combine phone country code and number
-    const phone = data.phoneCountryCode
-      ? `${data.phoneCountryCode}${data.phoneNumber}`
-      : data.phoneNumber
-
     // Get all permissions if allowAllPermissions is true, otherwise use selected permissions
     const permissionKeys: PermissionKey[] = data.allowAllPermissions
       ? await db.permission
@@ -126,9 +99,9 @@ export async function POST(request: NextRequest) {
         name: data.name,
         email: data.email,
         password: hashedPassword,
-        phone: phone || null,
-        roleName: data.jobTitle || null,
-        role: "STAFF", // Default role, can be changed later
+        phone: data.phone || null,
+        roleName: data.roleName || null,
+        role: data.role,
         permissions:
           permissionKeys.length > 0
             ? {
@@ -142,41 +115,11 @@ export async function POST(request: NextRequest) {
               }
             : undefined,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        roleName: true,
-        role: true,
-        isActive: true,
-        permissions: {
-          select: {
-            permission: {
-              select: {
-                key: true,
-                name: true,
-              },
-            },
-          },
-        },
-      },
+      select: userSelect,
     })
 
     // Transform the data to match the expected format
-    const transformedUser = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      roleName: user.roleName,
-      role: user.role,
-      isActive: user.isActive,
-      permissions: user.permissions.map((up) => ({
-        key: up.permission.key,
-        name: up.permission.name,
-      })),
-    }
+    const transformedUser = transformUser(user)
 
     return NextResponse.json(transformedUser, { status: 201 })
   } catch (error) {

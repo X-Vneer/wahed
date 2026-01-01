@@ -1,20 +1,25 @@
 import * as z from "zod"
 
 // User form schema - matches the frontend form validation
+// Error messages are translation keys that should be translated when displaying errors
 export const createUserSchema = z
   .object({
-    name: z.string().min(1, "Full name is required"),
-    phoneCountryCode: z.string(),
-    phoneNumber: z.string().min(1, "Phone number is required"),
-    jobTitle: z.string().min(1, "Job title is required"),
-    email: z.email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(1, "Confirm password is required"),
+    name: z.string().min(1, "employees.errors.fullName.required"),
+    phone: z.string(),
+    roleName: z.string().min(1, "employees.errors.jobTitle.required"),
+    email: z.email("employees.errors.email.invalid"),
+    password: z.string().min(8, "employees.errors.password.minLength"),
+    role: z.enum(["ADMIN", "STAFF"], {
+      error: "employees.errors.role.invalid",
+    }),
+    confirmPassword: z
+      .string()
+      .min(1, "employees.errors.confirmPassword.required"),
     allowAllPermissions: z.boolean(),
     permissions: z.array(z.string()),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "employees.errors.confirmPassword.mismatch",
     path: ["confirmPassword"],
   })
 

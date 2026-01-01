@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import db from "@/lib/db"
 import { getTranslations } from "next-intl/server"
+import { transformUser, userSelect } from "@/prisma/users/select"
 
 export async function GET() {
   try {
@@ -21,15 +22,7 @@ export async function GET() {
     // Fetch user from database
     const user = await db.user.findUnique({
       where: { id: payload.userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: userSelect,
     })
 
     if (!user) {
@@ -47,7 +40,7 @@ export async function GET() {
       )
     }
 
-    return NextResponse.json(user)
+    return NextResponse.json(transformUser(user))
   } catch (error) {
     console.error("Error fetching user:", error)
     const t = await getTranslations()

@@ -1,8 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useTranslations } from "next-intl"
-import { useQueryClient } from "@tanstack/react-query"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,91 +8,36 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import {
-  createUserAction,
-  updateUserAction,
-  getAllPermissionsAction,
-} from "./actions"
-import { UsersList } from "./components/users-list"
+import { useTranslations } from "next-intl"
 import { UserForm } from "./components/user-form"
-import type { User } from "@/hooks/use-users"
-import type { PermissionKey } from "@/lib/generated/prisma/enums"
+import { UsersList } from "./components/users-list"
+import { useUsers } from "@/hooks/use-users"
+import { parseAsString, useQueryState } from "nuqs"
 
 export default function EmployeesPage() {
-  const t = useTranslations("employees")
-  const tSidebar = useTranslations("sidebar")
-  const queryClient = useQueryClient()
+  const t = useTranslations()
 
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [permissions, setPermissions] = useState<
-    Array<{ id: string; key: PermissionKey; name: string }>
-  >([])
+  const { data: users = [] } = useUsers()
 
-  // Load permissions
-  useEffect(() => {
-    async function loadPermissions() {
-      const permissionsResult = await getAllPermissionsAction()
-      if (permissionsResult.success) {
-        setPermissions(permissionsResult.permissions)
-      }
-    }
+  const [selectedUserId] = useQueryState(
+    "user_id",
+    parseAsString.withDefault("")
+  )
 
-    loadPermissions()
-  }, [])
-
-  const handleFormSubmit = async (data: {
-    name: string
-    email: string
-    password: string
-    permissions: PermissionKey[]
-  }) => {
-    if (selectedUser) {
-      // Update user
-      const result = await updateUserAction(selectedUser.id, {
-        name: data.name,
-        email: data.email,
-        password: data.password || undefined,
-        permissions: data.permissions,
-      })
-
-      if (result.success) {
-        // Invalidate users query to refetch
-        await queryClient.invalidateQueries({ queryKey: ["users"] })
-        setSelectedUser(null)
-      }
-
-      return result
-    } else {
-      // Create user
-      const result = await createUserAction({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        permissions: data.permissions,
-      })
-
-      if (result.success) {
-        // Invalidate users query to refetch
-        await queryClient.invalidateQueries({ queryKey: ["users"] })
-      }
-
-      return result
-    }
-  }
-
+  const selectedUser = users.find((user) => user.id === selectedUserId) || null
   return (
     <div className="flex h-full flex-col gap-6">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-bold">{t("employees.title")}</h1>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">{tSidebar("home")}</BreadcrumbLink>
+              <BreadcrumbLink href="/">{t("sidebar.home")}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{t("title")}</BreadcrumbPage>
+              <BreadcrumbPage>{t("employees.title")}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -104,20 +46,9 @@ export default function EmployeesPage() {
       {/* Main Content */}
       <div className="flex gap-6">
         {/* Right Panel - Users List */}
-        <UsersList
-          onAddNew={() => {
-            setSelectedUser(null)
-          }}
-        />
+        <UsersList onAddNew={() => {}} />
         {/* Left Panel - User Details Form */}
-        <UserForm
-          selectedUser={selectedUser}
-          permissions={permissions}
-          onSubmit={handleFormSubmit}
-          onSuccess={() => {
-            setSelectedUser(null)
-          }}
-        />
+        <UserForm selectedUser={selectedUser} />
       </div>
     </div>
   )

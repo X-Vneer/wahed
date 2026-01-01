@@ -125,6 +125,7 @@
       "manageLists": "Manage Lists",
       "manageProjects": "Manage Projects",
       "manageWebsite": "Manage Website"
-    }
+    },
+    "no_users found": "No users found"
   }
 }
