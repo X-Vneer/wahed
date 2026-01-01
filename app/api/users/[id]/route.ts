@@ -1,8 +1,9 @@
 import db from "@/lib/db"
-import type { PermissionKey } from "@/lib/generated/prisma/enums"
+import { UserRole, type PermissionKey } from "@/lib/generated/prisma/enums"
 import { updateUserSchema } from "@/lib/schemas/user"
 import { transformZodError } from "@/lib/transform-errors"
 import { transformUser, userSelect } from "@/prisma/users/select"
+import { checkStaffManagementPermission } from "@/lib/permissions"
 import bcrypt from "bcryptjs"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
@@ -12,6 +13,12 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Check permission
+    const permissionCheck = await checkStaffManagementPermission()
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
     // Get translations based on request locale
     const t = await getTranslations()
     const { id } = await params
@@ -129,6 +136,64 @@ export async function PUT(
     return NextResponse.json(transformedUser)
   } catch (error) {
     console.error("Error updating user:", error)
+    const t = await getTranslations()
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    // Check permission
+    const permissionCheck = await checkStaffManagementPermission()
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
+    // Get translations based on request locale
+    const t = await getTranslations()
+    const { id } = await params
+
+    // Check if user exists
+    const existingUser = await db.user.findUnique({
+      where: { id },
+    })
+
+    if (!existingUser) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.user_not_found"),
+        },
+        { status: 404 }
+      )
+    }
+
+    // Prevent deleting admin users
+    if (existingUser.role === UserRole.ADMIN) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.cannot_delete_admin"),
+        },
+        { status: 403 }
+      )
+    }
+
+    // Delete user (cascade will handle related permissions)
+    await db.user.delete({
+      where: { id },
+    })
+
+    return NextResponse.json(
+      { message: t("employees.success.user_deleted") },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error("Error deleting user:", error)
     const t = await getTranslations()
     return NextResponse.json(
       { error: t("errors.internal_server_error") },

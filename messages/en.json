@@ -56,6 +56,7 @@
   },
   "errors": {
     "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
     "user_not_found": "User not found",
     "account_inactive": "Account is inactive",
     "internal_server_error": "Internal server error",
@@ -118,7 +119,18 @@
       "user_not_found": "User not found",
       "email_taken": "Email already taken",
       "update_failed": "Failed to update user",
-      "fetch_permissions_failed": "Failed to fetch permissions"
+      "fetch_permissions_failed": "Failed to fetch permissions",
+      "cannot_delete_admin": "Cannot delete admin user"
+    },
+    "success": {
+      "user_deleted": "User deleted successfully"
+    },
+    "deleteConfirm": {
+      "title": "Delete Staff Member",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
     },
     "permissions": {
       "manageUsers": "Manage Users",

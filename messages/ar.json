@@ -56,6 +56,7 @@
   },
   "errors": {
     "unauthorized": "غير مصرح",
+    "forbidden": "ممنوع",
     "user_not_found": "المستخدم غير موجود",
     "account_inactive": "الحساب غير نشط",
     "internal_server_error": "خطأ في الخادم الداخلي",
@@ -118,7 +119,18 @@
       "user_not_found": "المستخدم غير موجود",
       "email_taken": "البريد الإلكتروني مستخدم بالفعل",
       "update_failed": "فشل في تحديث المستخدم",
-      "fetch_permissions_failed": "فشل في جلب الصلاحيات"
+      "fetch_permissions_failed": "فشل في جلب الصلاحيات",
+      "cannot_delete_admin": "لا يمكن حذف مستخدم المسؤول"
+    },
+    "success": {
+      "user_deleted": "تم حذف المستخدم بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف عضو الموظفين",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
     },
     "permissions": {
       "manageUsers": "إدارة المستخدمين",

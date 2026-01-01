@@ -6,16 +6,31 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { Search, Plus } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Search, Plus, Trash2 } from "lucide-react"
 import { useUsers } from "@/hooks/use-users"
 import type { User } from "@/prisma/users/select"
 import { useDebouncedValue } from "@/hooks/use-debounced"
 import { parseAsString, useQueryState } from "nuqs"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
 
 export function UsersList() {
   const t = useTranslations("employees")
   const [q, setQ] = useState("")
   const debouncedValue = useDebouncedValue(q, 500)
+  const queryClient = useQueryClient()
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<string | null>(null)
 
   const { data: users = [], isLoading } = useUsers({ q: debouncedValue })
 
@@ -27,6 +42,45 @@ export function UsersList() {
 
   const handleSelectUser = (user: User) => {
     setSelectedUser(user.id)
+  }
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const response = await axios.delete(`/api/users/${userId}`, {
+        withCredentials: true,
+      })
+      return response.data
+    },
+    onSuccess: () => {
+      // Invalidate and refetch users list
+      queryClient.invalidateQueries({ queryKey: ["users"] })
+      // Clear selected user if it was deleted
+      if (selectedUser === userToDelete) {
+        setSelectedUser(null)
+      }
+      // Close dialog
+      setDeleteDialogOpen(false)
+      setUserToDelete(null)
+    },
+    onError: () => {
+      // Keep dialog open on error so user can see the error or try again
+    },
+  })
+
+  const handleDeleteClick = (userId: string) => {
+    setUserToDelete(userId)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDelete = async () => {
+    if (!userToDelete) return
+    try {
+      await deleteMutation.mutateAsync(userToDelete)
+    } catch (error) {
+      // Error is handled by the mutation
+      console.error("Failed to delete user:", error)
+    }
   }
 
   return (
@@ -67,18 +121,33 @@ export function UsersList() {
         ) : (
           <div className="space-y-2">
             {users.map((user) => (
-              <button
+              <div
                 key={user.id}
-                onClick={() => handleSelectUser(user)}
-                className={`w-full rounded-lg border p-3 text-start transition-colors ${
+                className={`group flex items-center gap-2 rounded-lg border p-3 transition-colors ${
                   selectedUser === user.id
                     ? "border-primary bg-primary/5"
                     : "border-border hover:bg-muted"
                 }`}
               >
-                <p className="font-medium">{user.name}</p>
-                <p className="text-muted-foreground text-sm">{user.email}</p>
-              </button>
+                <button
+                  onClick={() => handleSelectUser(user)}
+                  className="flex-1 text-start"
+                >
+                  <p className="font-medium">{user.name}</p>
+                  <p className="text-muted-foreground text-sm">{user.email}</p>
+                </button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="opacity-0 transition-opacity group-hover:opacity-100"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleDeleteClick(user.id)
+                  }}
+                >
+                  <Trash2 className="text-destructive size-4" />
+                </Button>
+              </div>
             ))}
             {users.length === 0 && (
               <p className="text-muted-foreground py-8 text-center text-sm">
@@ -88,6 +157,41 @@ export function UsersList() {
           </div>
         )}
       </CardContent>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("deleteConfirm.title")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {userToDelete &&
+                t("deleteConfirm.description", {
+                  name: users.find((u) => u.id === userToDelete)?.name || "",
+                })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              disabled={deleteMutation.isPending}
+              onClick={() => {
+                setDeleteDialogOpen(false)
+                setUserToDelete(null)
+              }}
+            >
+              {t("deleteConfirm.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              className="bg-destructive hover:bg-destructive/90 text-white"
+            >
+              {deleteMutation.isPending
+                ? t("deleteConfirm.deleting")
+                : t("deleteConfirm.delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   )
 }

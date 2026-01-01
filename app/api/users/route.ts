@@ -1,14 +1,21 @@
 import db from "@/lib/db"
-import type { PermissionKey } from "@/lib/generated/prisma/enums"
+import { UserRole, type PermissionKey } from "@/lib/generated/prisma/enums"
 import { createUserSchema } from "@/lib/schemas/user"
 import { transformZodError } from "@/lib/transform-errors"
 import { transformUser, userSelect } from "@/prisma/users/select"
+import { checkStaffManagementPermission } from "@/lib/permissions"
 import bcrypt from "bcryptjs"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   try {
+    // Check permission
+    const permissionCheck = await checkStaffManagementPermission()
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
     // Get search query from URL params
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
@@ -21,8 +28,15 @@ export async function GET(request: NextRequest) {
               { name: { contains: search, mode: "insensitive" } },
               { email: { contains: search, mode: "insensitive" } },
             ],
+            role: {
+              not: UserRole.ADMIN,
+            },
           }
-        : undefined,
+        : {
+            role: {
+              not: UserRole.ADMIN,
+            },
+          },
       select: userSelect,
       orderBy: {
         createdAt: "desc",
@@ -47,6 +61,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check permission
+    const permissionCheck = await checkStaffManagementPermission()
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
     // Get translations based on request locale
     const t = await getTranslations()
 
