@@ -1,11 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useTranslations } from "next-intl"
-import { useForm } from "@tanstack/react-form"
-import { useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
-import { handleFormError } from "@/lib/form-errors"
+import { PhoneInput } from "@/components/phone-input"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Field,
@@ -14,15 +10,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { PhoneInput } from "@/components/phone-input"
-import { PasswordInput } from "@/components/password-input"
-import type { Value as PhoneValue } from "react-phone-number-input"
+import { createUserSchema, updateUserSchema } from "@/lib/schemas/user"
 import type { User } from "@/prisma/users/select"
-import { createUserSchema } from "@/lib/schemas/user"
-import { PermissionsSelector } from "./permissions-selector"
+import { useForm } from "@tanstack/react-form"
+import { useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
+import { useTranslations } from "next-intl"
 import { parseAsString, useQueryState } from "nuqs"
+import { useEffect, useState } from "react"
+import type { Value as PhoneValue } from "react-phone-number-input"
+import { PermissionsSelector } from "./permissions-selector"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -34,7 +32,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
   const queryClient = useQueryClient()
   const [serverError, setServerError] = useState<string | null>(null)
   //   selected user
-  const [_, setSelectedUserId] = useQueryState(
+  const [, setSelectedUserId] = useQueryState(
     "user_id",
     parseAsString.withDefault("")
   )
@@ -46,21 +44,28 @@ export function UserForm({ selectedUser }: UserFormProps) {
       roleName: "",
       email: "",
       password: "",
-      role: "STAFF",
       confirmPassword: "",
       allowAllPermissions: false,
       permissions: [] as string[],
     },
     validators: {
-      onSubmit: createUserSchema,
+      onSubmit: selectedUser?.id ? updateUserSchema : createUserSchema,
     },
     onSubmit: async ({ value }) => {
       setServerError(null)
 
       try {
-        await axios.post("/api/users", value, {
-          withCredentials: true,
-        })
+        if (selectedUser) {
+          // Update existing user
+          await axios.put(`/api/users/${selectedUser.id}`, value, {
+            withCredentials: true,
+          })
+        } else {
+          // Create new user
+          await axios.post("/api/users", value, {
+            withCredentials: true,
+          })
+        }
 
         // Success - refresh users list and reset form
         queryClient.invalidateQueries({ queryKey: ["users"] })
@@ -68,11 +73,12 @@ export function UserForm({ selectedUser }: UserFormProps) {
 
         setSelectedUserId(null)
       } catch (error) {
-        const generalError = handleFormError(error, form)
-        if (generalError) {
-          setServerError(generalError)
+        if (axios.isAxiosError(error) && error.response?.data?.error) {
+          setServerError(error.response.data.error)
+          return
         }
       }
+      setServerError(t("errors.internal_server_error"))
     },
   })
 
@@ -232,7 +238,8 @@ export function UserForm({ selectedUser }: UserFormProps) {
                       <FieldLabel htmlFor={field.name}>
                         {t("employees.form.password")}
                       </FieldLabel>
-                      <PasswordInput
+                      <Input
+                        type="password"
                         id={field.name}
                         name={field.name}
                         value={field.state.value}
@@ -259,7 +266,8 @@ export function UserForm({ selectedUser }: UserFormProps) {
                       <FieldLabel htmlFor={field.name}>
                         {t("employees.form.confirmPassword")}
                       </FieldLabel>
-                      <PasswordInput
+                      <Input
+                        type="password"
                         id={field.name}
                         name={field.name}
                         value={field.state.value}
@@ -301,7 +309,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
           {/* Server Error Message */}
           {serverError && (
             <div className="text-destructive mt-4 text-sm font-medium">
-              {t(serverError, { defaultValue: serverError })}
+              {serverError}
             </div>
           )}
 

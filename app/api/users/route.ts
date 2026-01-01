@@ -73,7 +73,12 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: t("employees.errors.user_email_exists") },
+        {
+          error: t("employees.errors.user_email_exists"),
+          details: {
+            email: t("employees.errors.user_email_exists"),
+          },
+        },
         { status: 409 }
       )
     }
@@ -96,7 +101,6 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         phone: data.phone || null,
         roleName: data.roleName || null,
-        role: data.role,
         permissions:
           permissionKeys.length > 0
             ? {
