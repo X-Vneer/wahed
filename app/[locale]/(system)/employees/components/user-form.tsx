@@ -69,9 +69,9 @@ export function UserForm({ selectedUser }: UserFormProps) {
 
         // Success - refresh users list and reset form
         queryClient.invalidateQueries({ queryKey: ["users"] })
-        form.reset()
-
-        setSelectedUserId(null)
+        if (!selectedUser) {
+          form.reset()
+        }
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data?.error) {
           setServerError(error.response.data.error)
