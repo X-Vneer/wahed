@@ -34,6 +34,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
       roleName: "",
       email: "",
       password: "",
+      role: "STAFF",
       confirmPassword: "",
       allowAllPermissions: false,
       permissions: [] as string[],
@@ -73,7 +74,6 @@ export function UserForm({ selectedUser }: UserFormProps) {
             e.preventDefault()
             e.stopPropagation()
             form.handleSubmit()
-            console.log(form.state)
           }}
         >
           <FieldGroup>
@@ -273,7 +273,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
           <div className="mt-6">
             <Button
               type="submit"
-              className="w-full"
+              className="w-fit"
               disabled={form.state.isSubmitting}
             >
               {form.state.isSubmitting && <Spinner className="size-4" />}
