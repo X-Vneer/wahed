@@ -120,10 +120,14 @@
       "email_taken": "البريد الإلكتروني مستخدم بالفعل",
       "update_failed": "فشل في تحديث المستخدم",
       "fetch_permissions_failed": "فشل في جلب الصلاحيات",
-      "cannot_delete_admin": "لا يمكن حذف مستخدم المسؤول"
+      "cannot_delete_admin": "لا يمكن حذف مستخدم المسؤول",
+      "cannot_delete_self": "لا يمكنك حذف حسابك الخاص",
+      "internal_server_error": "خطأ في الخادم الداخلي"
     },
     "success": {
-      "user_deleted": "تم حذف المستخدم بنجاح"
+      "user_deleted": "تم حذف المستخدم بنجاح",
+      "user_created": "تم إنشاء المستخدم بنجاح",
+      "user_updated": "تم تحديث المستخدم بنجاح"
     },
     "deleteConfirm": {
       "title": "حذف عضو الموظفين",

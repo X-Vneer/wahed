@@ -23,6 +23,7 @@ import { useEffect, useMemo } from "react"
 import type { Value as PhoneValue } from "react-phone-number-input"
 import { PermissionsSelector } from "./permissions-selector"
 import { parseAsString, useQueryState } from "nuqs"
+import { toast } from "sonner"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -95,6 +96,13 @@ export function UserForm({ selectedUser }: UserFormProps) {
       queryClient.invalidateQueries({ queryKey: ["users"] })
       form.reset()
       setSelectedUserId(null)
+
+      // Show success toast
+      if (selectedUser) {
+        toast.success(t("employees.success.user_updated"))
+      } else {
+        toast.success(t("employees.success.user_created"))
+      }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const rootError = handleFormErrors(error, form)
@@ -102,7 +110,14 @@ export function UserForm({ selectedUser }: UserFormProps) {
           "root",
           rootError || t("errors.internal_server_error")
         )
+        toast.error(rootError || t("errors.internal_server_error"))
+        return
       }
+      toast.error(t("errors.internal_server_error"))
+      form.setFieldError(
+        "root",
+        (error as Error).message || t("errors.internal_server_error")
+      )
     }
   }
 

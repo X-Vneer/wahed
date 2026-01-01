@@ -120,10 +120,14 @@
       "email_taken": "Email already taken",
       "update_failed": "Failed to update user",
       "fetch_permissions_failed": "Failed to fetch permissions",
-      "cannot_delete_admin": "Cannot delete admin user"
+      "cannot_delete_admin": "Cannot delete admin user",
+      "cannot_delete_self": "You cannot delete your own account",
+      "internal_server_error": "Internal server error"
     },
     "success": {
-      "user_deleted": "User deleted successfully"
+      "user_deleted": "User deleted successfully",
+      "user_created": "User created successfully",
+      "user_updated": "User updated successfully"
     },
     "deleteConfirm": {
       "title": "Delete Staff Member",

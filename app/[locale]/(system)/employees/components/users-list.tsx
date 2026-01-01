@@ -23,6 +23,7 @@ import { useDebouncedValue } from "@/hooks/use-debounced"
 import { parseAsString, useQueryState } from "nuqs"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
+import { toast } from "sonner"
 
 export function UsersList() {
   const t = useTranslations("employees")
@@ -63,7 +64,11 @@ export function UsersList() {
       setDeleteDialogOpen(false)
       setUserToDelete(null)
     },
-    onError: () => {
+    onError: (error) => {
+      toast.error(
+        error.response?.data.error || t("errors.internal_server_error")
+      )
+      setDeleteDialogOpen(false)
       // Keep dialog open on error so user can see the error or try again
     },
   })
@@ -75,12 +80,7 @@ export function UsersList() {
 
   const handleDelete = async () => {
     if (!userToDelete) return
-    try {
-      await deleteMutation.mutateAsync(userToDelete)
-    } catch (error) {
-      // Error is handled by the mutation
-      console.error("Failed to delete user:", error)
-    }
+    deleteMutation.mutate(userToDelete)
   }
 
   return (

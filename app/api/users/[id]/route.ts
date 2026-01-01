@@ -4,6 +4,7 @@ import { updateUserSchema } from "@/lib/schemas/user"
 import { transformZodError } from "@/lib/transform-errors"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import { checkStaffManagementPermission } from "@/lib/permissions"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 import bcrypt from "bcryptjs"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
@@ -178,6 +179,17 @@ export async function DELETE(
       return NextResponse.json(
         {
           error: t("employees.errors.cannot_delete_admin"),
+        },
+        { status: 403 }
+      )
+    }
+
+    // Prevent users from deleting themselves
+    const payload = await getAccessTokenPayload()
+    if (payload && payload.userId === id) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.cannot_delete_self"),
         },
         { status: 403 }
       )
