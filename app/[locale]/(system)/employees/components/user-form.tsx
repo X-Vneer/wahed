@@ -31,11 +31,6 @@ export function UserForm({ selectedUser }: UserFormProps) {
 
   const queryClient = useQueryClient()
   const [serverError, setServerError] = useState<string | null>(null)
-  //   selected user
-  const [, setSelectedUserId] = useQueryState(
-    "user_id",
-    parseAsString.withDefault("")
-  )
 
   const form = useForm({
     defaultValues: {
@@ -77,8 +72,8 @@ export function UserForm({ selectedUser }: UserFormProps) {
           setServerError(error.response.data.error)
           return
         }
+        setServerError(t("errors.internal_server_error"))
       }
-      setServerError(t("errors.internal_server_error"))
     },
   })
 
