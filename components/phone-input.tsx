@@ -40,6 +40,11 @@ function PhoneInputComponent({
 }: PhoneInputProps) {
   const locale = useLocale()
   const isArabic = locale === "ar"
+  // Exclude phoneInputProps from props to prevent it from being passed to DOM
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { phoneInputProps, ...restProps } = props as Record<string, unknown> & {
+    phoneInputProps?: unknown
+  }
   return (
     <div dir="ltr">
       <PhoneInput
@@ -51,15 +56,8 @@ function PhoneInputComponent({
         onBlur={onBlur}
         disabled={disabled}
         inputComponent={Input}
-        phoneInputProps={{
-          ref: ref,
-          className: className,
-          "aria-invalid": ariaInvalid,
-          name: name,
-          id: id,
-        }}
         placeholder={placeholder}
-        {...props}
+        {...restProps}
       />
     </div>
   )

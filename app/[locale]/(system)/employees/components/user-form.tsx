@@ -44,6 +44,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
     },
     onSubmit: async (data) => {
       console.log(data)
+      throw new Error("Not implemented")
     },
   })
 
