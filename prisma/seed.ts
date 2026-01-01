@@ -1,10 +1,34 @@
 import "dotenv/config"
 import { UserRole } from "../lib/generated/prisma/client"
+import { PermissionKey } from "../lib/generated/prisma/enums"
 import db from "../lib/db"
 import bcrypt from "bcryptjs"
 
 async function main() {
   console.log("🌱 Starting seed...")
+
+  // Create all permissions
+  const permissions = [
+    { key: PermissionKey.PROJECT_CREATE, name: "Create Project" },
+    { key: PermissionKey.PROJECT_UPDATE, name: "Update Project" },
+    { key: PermissionKey.PROJECT_DELETE, name: "Delete Project" },
+    { key: PermissionKey.TASK_CREATE, name: "Create Task" },
+    { key: PermissionKey.TASK_UPDATE, name: "Update Task" },
+    { key: PermissionKey.TASK_DELETE, name: "Delete Task" },
+    { key: PermissionKey.TASK_ASSIGN, name: "Assign Task" },
+    { key: PermissionKey.FILE_UPLOAD, name: "Upload File" },
+    { key: PermissionKey.FILE_DELETE, name: "Delete File" },
+  ]
+
+  for (const perm of permissions) {
+    await db.permission.upsert({
+      where: { key: perm.key },
+      update: { name: perm.name },
+      create: perm,
+    })
+  }
+
+  console.log("✅ Created/updated permissions")
 
   // Hash passwords
   const saltRounds = 10

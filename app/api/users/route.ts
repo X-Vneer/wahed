@@ -102,8 +102,16 @@ export async function POST(request: NextRequest) {
             ? {
                 create: permissionKeys.map((permissionKey) => ({
                   permission: {
-                    connect: {
-                      key: permissionKey,
+                    connectOrCreate: {
+                      where: {
+                        key: permissionKey,
+                      },
+                      create: {
+                        key: permissionKey,
+                        name: permissionKey
+                          .replace(/_/g, " ")
+                          .replace(/\b\w/g, (l) => l.toUpperCase()),
+                      },
                     },
                   },
                 })),

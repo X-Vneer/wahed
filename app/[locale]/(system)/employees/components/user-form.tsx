@@ -30,7 +30,7 @@ type UserFormProps = {
 
 export function UserForm({ selectedUser }: UserFormProps) {
   const t = useTranslations()
-  const tErrors = useTranslations("employees.errors")
+
   const queryClient = useQueryClient()
   const [serverError, setServerError] = useState<string | null>(null)
   //   selected user
@@ -99,10 +99,10 @@ export function UserForm({ selectedUser }: UserFormProps) {
       </CardHeader>
       <CardContent>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault()
             e.stopPropagation()
-            form.handleSubmit()
+            await form.handleSubmit()
           }}
         >
           <FieldGroup>
@@ -301,7 +301,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
           {/* Server Error Message */}
           {serverError && (
             <div className="text-destructive mt-4 text-sm font-medium">
-              {tErrors(serverError, { defaultValue: serverError })}
+              {t(serverError, { defaultValue: serverError })}
             </div>
           )}
 
@@ -309,10 +309,10 @@ export function UserForm({ selectedUser }: UserFormProps) {
           <div className="mt-6">
             <Button
               type="submit"
-              className="w-fit"
+              className="w-fit px-10"
               disabled={form.state.isSubmitting}
             >
-              {form.state.isSubmitting && <Spinner className="size-4" />}
+              {form.state.isSubmitting && <Spinner className="mr-2 size-4" />}
               {selectedUser ? t("employees.update") : t("employees.add")}
             </Button>
           </div>
