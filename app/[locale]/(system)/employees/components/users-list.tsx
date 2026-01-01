@@ -70,7 +70,7 @@ export function UsersList() {
               <button
                 key={user.id}
                 onClick={() => handleSelectUser(user)}
-                className={`w-full rounded-lg border p-3 text-right transition-colors ${
+                className={`w-full rounded-lg border p-3 text-start transition-colors ${
                   selectedUser === user.id
                     ? "border-primary bg-primary/5"
                     : "border-border hover:bg-muted"

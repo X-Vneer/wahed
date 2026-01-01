@@ -41,7 +41,9 @@ export function UserForm({ selectedUser }: UserFormProps) {
     validators: {
       onSubmit: createUserSchema,
     },
-    onSubmit: async () => {},
+    onSubmit: async (data) => {
+      console.log(data)
+    },
   })
 
   // Update form when user is selected
@@ -71,6 +73,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
             e.preventDefault()
             e.stopPropagation()
             form.handleSubmit()
+            console.log(form.state)
           }}
         >
           <FieldGroup>

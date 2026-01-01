@@ -4,6 +4,13 @@ import { useTranslations } from "next-intl"
 import { PERMISSIONS_GROUPED, type Permission } from "@/config"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Field, FieldLabel } from "@/components/ui/field"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { ChevronDown } from "lucide-react"
 
 type PermissionsSelectorProps = {
   permissions: string[]
@@ -64,9 +71,9 @@ export function PermissionsSelector({
     onAllowAllChange(checked)
     if (checked) {
       onPermissionsChange(allPermissionKeys)
-    } else {
-      onPermissionsChange([])
     }
+    // When unchecking "Allow All", keep current permissions instead of clearing
+    // The permissions array will remain as is, just allowAllPermissions becomes false
   }
 
   const handlePermissionToggle = (
@@ -144,7 +151,7 @@ export function PermissionsSelector({
         <p className="mb-3 text-sm font-medium">
           {t("employees.form.permissions")}
         </p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2 space-x-2">
           {permissionGroups.map((group) => {
             const groupPermissionKeys = group.permissions.map((p) =>
               String(p.key)
@@ -152,59 +159,82 @@ export function PermissionsSelector({
             const allGroupPermissionsSelected = groupPermissionKeys.every(
               (key) => permissions.includes(key)
             )
-            const isDisabled = allowAllPermissions
+            const selectedInGroup = groupPermissionKeys.filter((key) =>
+              permissions.includes(key)
+            ).length
 
             return (
-              <div
-                key={group.id}
-                className={`space-y-3 rounded-lg border p-4 ${
-                  isDisabled ? "opacity-50" : ""
-                }`}
-              >
-                <Field orientation="horizontal">
-                  <FieldLabel
-                    htmlFor={`group-${group.id}`}
-                    className="flex-1 font-medium"
-                  >
-                    {group.name}
-                  </FieldLabel>
-                  <Checkbox
-                    id={`group-${group.id}`}
-                    checked={allGroupPermissionsSelected || isDisabled}
-                    disabled={isDisabled}
-                    onCheckedChange={() => handleGroupToggle(group.key)}
-                  />
-                </Field>
-                <div className="space-y-2 pl-4">
-                  {group.permissions.map((permission) => {
-                    const permissionKey = String(permission.key)
-                    const isSelected = permissions.includes(permissionKey)
-
-                    return (
-                      <Field
-                        key={permission.id}
-                        orientation="horizontal"
-                        className={isDisabled ? "opacity-50" : ""}
+              <Popover key={group.id}>
+                <PopoverTrigger
+                  render={(props) => (
+                    <Button
+                      variant="outline"
+                      className="w-fit justify-between"
+                      {...props}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <Checkbox
+                            id={`group-${group.id}`}
+                            checked={allGroupPermissionsSelected}
+                            onCheckedChange={() => handleGroupToggle(group.key)}
+                          />
+                        </div>
+                        <span>{group.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {selectedInGroup > 0 && (
+                          <span className="text-muted-foreground text-sm">
+                            {selectedInGroup}/{groupPermissionKeys.length}
+                          </span>
+                        )}
+                        <ChevronDown className="size-4" />
+                      </div>
+                    </Button>
+                  )}
+                ></PopoverTrigger>
+                <PopoverContent className="w-80" align="start">
+                  <div className="space-y-3">
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        id={`group-checkbox-${group.id}`}
+                        checked={allGroupPermissionsSelected}
+                        onCheckedChange={() => handleGroupToggle(group.key)}
+                      />
+                      <FieldLabel
+                        htmlFor={`group-checkbox-${group.id}`}
+                        className="flex-1 font-medium"
                       >
-                        <FieldLabel
-                          htmlFor={`permission-${permission.id}`}
-                          className="flex-1 text-sm"
-                        >
-                          {permission.name}
-                        </FieldLabel>
-                        <Checkbox
-                          id={`permission-${permission.id}`}
-                          checked={isSelected || isDisabled}
-                          disabled={isDisabled}
-                          onCheckedChange={(checked) =>
-                            handlePermissionToggle(permissionKey, checked)
-                          }
-                        />
-                      </Field>
-                    )
-                  })}
-                </div>
-              </div>
+                        {group.name}
+                      </FieldLabel>
+                    </Field>
+                    <div className="space-y-2">
+                      {group.permissions.map((permission) => {
+                        const permissionKey = String(permission.key)
+                        const isSelected = permissions.includes(permissionKey)
+
+                        return (
+                          <Field key={permission.id} orientation="horizontal">
+                            <Checkbox
+                              id={`permission-${permission.id}`}
+                              checked={isSelected}
+                              onCheckedChange={(checked) =>
+                                handlePermissionToggle(permissionKey, checked)
+                              }
+                            />
+                            <FieldLabel
+                              htmlFor={`permission-${permission.id}`}
+                              className="flex-1 text-sm"
+                            >
+                              {permission.name}
+                            </FieldLabel>
+                          </Field>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             )
           })}
         </div>
