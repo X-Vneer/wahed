@@ -1,6 +1,7 @@
 import db from "@/lib/db"
 import type { PermissionKey } from "@/lib/generated/prisma/enums"
 import { createUserSchema } from "@/lib/schemas/user"
+import { transformZodError } from "@/lib/transform-errors"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import bcrypt from "bcryptjs"
 import { getTranslations } from "next-intl/server"
@@ -54,16 +55,10 @@ export async function POST(request: NextRequest) {
     const validationResult = createUserSchema.safeParse(body)
 
     if (!validationResult.success) {
-      // Translate error messages
-      const translatedIssues = validationResult.error.issues.map((issue) => ({
-        ...issue,
-        message: t(issue.message as string, { defaultValue: issue.message }),
-      }))
-
       return NextResponse.json(
         {
           error: "Validation failed",
-          details: translatedIssues,
+          details: transformZodError(validationResult.error),
         },
         { status: 400 }
       )

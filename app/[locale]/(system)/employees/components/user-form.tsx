@@ -1,8 +1,11 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { useForm } from "@tanstack/react-form"
+import { useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
+import { handleFormError } from "@/lib/form-errors"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Field,
@@ -19,6 +22,7 @@ import type { Value as PhoneValue } from "react-phone-number-input"
 import type { User } from "@/prisma/users/select"
 import { createUserSchema } from "@/lib/schemas/user"
 import { PermissionsSelector } from "./permissions-selector"
+import { parseAsString, useQueryState } from "nuqs"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -26,6 +30,14 @@ type UserFormProps = {
 
 export function UserForm({ selectedUser }: UserFormProps) {
   const t = useTranslations()
+  const tErrors = useTranslations("employees.errors")
+  const queryClient = useQueryClient()
+  const [serverError, setServerError] = useState<string | null>(null)
+  //   selected user
+  const [_, setSelectedUserId] = useQueryState(
+    "user_id",
+    parseAsString.withDefault("")
+  )
 
   const form = useForm({
     defaultValues: {
@@ -42,9 +54,25 @@ export function UserForm({ selectedUser }: UserFormProps) {
     validators: {
       onSubmit: createUserSchema,
     },
-    onSubmit: async (data) => {
-      console.log(data)
-      throw new Error("Not implemented")
+    onSubmit: async ({ value }) => {
+      setServerError(null)
+
+      try {
+        await axios.post("/api/users", value, {
+          withCredentials: true,
+        })
+
+        // Success - refresh users list and reset form
+        queryClient.invalidateQueries({ queryKey: ["users"] })
+        form.reset()
+
+        setSelectedUserId(null)
+      } catch (error) {
+        const generalError = handleFormError(error, form)
+        if (generalError) {
+          setServerError(generalError)
+        }
+      }
     },
   })
 
@@ -269,6 +297,13 @@ export function UserForm({ selectedUser }: UserFormProps) {
               )}
             </form.Field>
           </FieldGroup>
+
+          {/* Server Error Message */}
+          {serverError && (
+            <div className="text-destructive mt-4 text-sm font-medium">
+              {tErrors(serverError, { defaultValue: serverError })}
+            </div>
+          )}
 
           {/* Submit Button */}
           <div className="mt-6">
