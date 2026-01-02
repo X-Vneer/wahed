@@ -201,5 +201,11 @@
       "updated": "Project category updated successfully",
       "deleted": "Project category deleted successfully"
     }
-  }
+  },
+  "table-status-filter": {
+    "all": "All",
+    "statusPlaceholder": "Select status"
+  },
+  "next": "Next",
+  "previous": "Previous"
 }

@@ -202,5 +202,11 @@
       "updated": "تم تحديث فئة المشروع بنجاح",
       "deleted": "تم حذف فئة المشروع بنجاح"
     }
-  }
+  },
+  "table-status-filter": {
+    "all": "الكل",
+    "statusPlaceholder": "اختر الحالة"
+  },
+  "next": "التالي",
+  "previous": "السابق"
 }
