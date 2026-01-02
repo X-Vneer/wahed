@@ -1,4 +1,5 @@
 import db from "@/lib/db"
+import { transformProjectCategory } from "@/prisma/project-categories"
 import { getLocale, getTranslations } from "next-intl/server"
 import { NextResponse } from "next/server"
 
@@ -15,11 +16,7 @@ export async function GET() {
 
     const transformedProjectCategories = projectCategories.map(
       (projectCategory) => {
-        return {
-          id: projectCategory.id,
-          name:
-            locale === "ar" ? projectCategory.nameAr : projectCategory.nameEn,
-        }
+        return transformProjectCategory(projectCategory, locale)
       }
     )
 

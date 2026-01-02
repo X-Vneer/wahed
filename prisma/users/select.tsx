@@ -1,3 +1,4 @@
+"use server"
 import type { Prisma } from "@/lib/generated/prisma/client"
 
 export const userSelect = {
@@ -22,17 +23,7 @@ export const userSelect = {
 
 export type UserSelect = Prisma.UserGetPayload<{ select: typeof userSelect }>
 
-export type User = {
-  id: string
-  name: string
-  email: string
-  phone: string | null
-  roleName: string | null
-  role: string
-  isActive: boolean
-  permissions: string[]
-}
-export const transformUser = (user: UserSelect): User => {
+export const transformUser = (user: UserSelect) => {
   return {
     id: user.id,
     name: user.name,
@@ -44,3 +35,5 @@ export const transformUser = (user: UserSelect): User => {
     permissions: user.permissions.map((p) => p.permission.key),
   }
 }
+
+export type User = ReturnType<typeof transformUser>

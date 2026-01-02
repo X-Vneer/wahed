@@ -2,6 +2,7 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { createProjectCategorySchema } from "@/lib/schemas/project-categories"
 import { transformZodError } from "@/lib/transform-errors"
+import { transformProjectCategory } from "@/prisma/project-categories"
 import { hasPermission } from "@/utils/has-permission"
 import { getLocale, getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
@@ -28,16 +29,10 @@ export async function GET(request: NextRequest) {
     })
 
     const locale = await getLocale()
+
     const transformedProjectCategories = projectCategories.map(
       (projectCategory) => {
-        return {
-          id: projectCategory.id,
-          isActive: projectCategory.isActive,
-          createdAt: projectCategory.createdAt,
-          updatedAt: projectCategory.updatedAt,
-          name:
-            locale === "ar" ? projectCategory.nameAr : projectCategory.nameEn,
-        }
+        return transformProjectCategory(projectCategory, locale)
       }
     )
 
