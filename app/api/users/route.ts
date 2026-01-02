@@ -3,15 +3,18 @@ import { UserRole, type PermissionKey } from "@/lib/generated/prisma/enums"
 import { createUserSchema } from "@/lib/schemas/user"
 import { transformZodError } from "@/lib/transform-errors"
 import { transformUser, userSelect } from "@/prisma/users/select"
-import { checkStaffManagementPermission } from "@/lib/permissions"
 import bcrypt from "bcryptjs"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
+import { hasPermission } from "@/utils/has-permission"
+import { PERMISSIONS_GROUPED } from "@/config"
 
 export async function GET(request: NextRequest) {
   try {
     // Check permission
-    const permissionCheck = await checkStaffManagementPermission()
+    const permissionCheck = await hasPermission(
+      PERMISSIONS_GROUPED.STAFF.MANAGEMENT
+    )
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }
@@ -62,7 +65,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Check permission
-    const permissionCheck = await checkStaffManagementPermission()
+    const permissionCheck = await hasPermission(
+      PERMISSIONS_GROUPED.STAFF.MANAGEMENT
+    )
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }

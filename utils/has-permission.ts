@@ -1,18 +1,14 @@
+"use server"
+
+import { Permission } from "@/config"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
+
 import db from "@/lib/db"
 import { UserRole } from "@/lib/generated/prisma/enums"
-import { PERMISSIONS_GROUPED } from "@/config"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { getTranslations } from "next-intl/server"
 import { NextResponse } from "next/server"
 
-/**
- * Checks if the current user has permission to manage staff.
- * Admin users have all permissions by default.
- * Staff users need the STAFF_MANAGEMENT permission.
- *
- * @returns An object with `hasPermission` boolean and optional `error` NextResponse
- */
-export async function checkStaffManagementPermission(): Promise<{
+export async function hasPermission(permission: Permission): Promise<{
   hasPermission: boolean
   error?: NextResponse
 }> {
@@ -58,7 +54,7 @@ export async function checkStaffManagementPermission(): Promise<{
 
   // Staff needs STAFF_MANAGEMENT permission
   const hasPermission = currentUser.permissions.some(
-    (up) => up.permission.key === PERMISSIONS_GROUPED.STAFF.MANAGEMENT
+    (up) => up.permission.key === permission
   )
 
   if (!hasPermission) {

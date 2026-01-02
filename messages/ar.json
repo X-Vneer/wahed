@@ -1,7 +1,8 @@
 {
   "common": {
     "welcome": "مرحباً",
-    "hello": "مرحبا"
+    "hello": "مرحبا",
+    "cancel": "إلغاء"
   },
   "auth": {
     "login": {
@@ -170,5 +171,36 @@
       "REPORT_EXPORT": "تصدير تقرير"
     },
     "no_users found": "لم يتم العثور على مستخدمين"
+  },
+  "projectCategories": {
+    "createTitle": "إنشاء فئة مشروع",
+    "editTitle": "تعديل فئة مشروع",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "form": {
+      "nameAr": "الاسم (عربي)",
+      "nameArPlaceholder": "أدخل الاسم بالعربية",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+      "isActive": "نشط",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم العربي مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم الإنجليزي مطلوب"
+      },
+      "not_found": "فئة المشروع غير موجود",
+      "create_failed": "فشل في إنشاء فئة المشروع",
+      "update_failed": "فشل في تحديث فئة المشروع"
+    },
+    "success": {
+      "created": "تم إنشاء فئة المشروع بنجاح",
+      "updated": "تم تحديث فئة المشروع بنجاح",
+      "deleted": "تم حذف فئة المشروع بنجاح"
+    }
   }
 }

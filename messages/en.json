@@ -1,7 +1,8 @@
 {
   "common": {
     "welcome": "Welcome",
-    "hello": "Hello"
+    "hello": "Hello",
+    "cancel": "Cancel"
   },
   "auth": {
     "login": {
@@ -169,5 +170,36 @@
       "REPORT_EXPORT": "Export Report"
     },
     "no_users found": "No users found"
+  },
+  "projectCategories": {
+    "createTitle": "Create Project Category",
+    "editTitle": "Edit Project Category",
+    "create": "Create",
+    "update": "Update",
+    "form": {
+      "nameAr": "Name (Arabic)",
+      "nameArPlaceholder": "Enter name in Arabic",
+      "nameEn": "Name (English)",
+      "nameEnPlaceholder": "Enter name in English",
+      "isActive": "Active",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "Arabic name is required"
+      },
+      "nameEn": {
+        "required": "English name is required"
+      },
+      "not_found": "Project category not found",
+      "create_failed": "Failed to create project category",
+      "update_failed": "Failed to update project category"
+    },
+    "success": {
+      "created": "Project category created successfully",
+      "updated": "Project category updated successfully",
+      "deleted": "Project category deleted successfully"
+    }
   }
 }
