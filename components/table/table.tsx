@@ -18,13 +18,14 @@ import {
   type ColumnDef,
 } from "@tanstack/react-table"
 import { AlertCircle, Loader2 } from "lucide-react"
-import { useOptimisticSearchParams } from "nuqs/adapters/react-router/v7"
 import * as React from "react"
 
 import { DynamicPagination } from "../dynamic-pagination"
 import SearchInput from "../search-input"
 import { Separator } from "../ui/separator"
 import StatusFilter from "./status-filter"
+import { useSearchParams } from "next/navigation"
+import { useTranslations } from "next-intl"
 
 export interface TableQueryResponse<TData> {
   data: TData[]
@@ -43,7 +44,6 @@ interface BaseTableProps<TData> {
   className?: string
   queryKey: string[]
   queryFn: (searchParams: URLSearchParams) => Promise<TableQueryResponse<TData>>
-  title: string
   children?: React.ReactNode
   filters?: React.ReactNode
   statuses?: { value: string; label: string }[]
@@ -62,18 +62,19 @@ const DEFAULT_PAGINATION_DATA = {
 
 export function BaseTable<TData>({
   columns,
-  emptyMessage = "No data found.",
+  emptyMessage,
   caption,
   className,
   queryKey,
   queryFn,
-  title,
   statuses,
   statusFilterKey,
   children,
   filters,
 }: BaseTableProps<TData>) {
-  const searchParams = useOptimisticSearchParams()
+  const t = useTranslations("table")
+  const searchParams = useSearchParams()
+  const defaultEmptyMessage = emptyMessage ?? t("noDataFound")
   const {
     data = DEFAULT_PAGINATION_DATA,
     isLoading,
@@ -101,12 +102,10 @@ export function BaseTable<TData>({
         <div className="flex flex-col items-center justify-center gap-2 py-8 text-center">
           <AlertCircle className="text-destructive h-8 w-8" />
           <p className="text-destructive text-sm font-medium">
-            Failed to load data
+            {t("failedToLoad")}
           </p>
           <p className="text-muted-foreground text-xs">
-            {error instanceof Error
-              ? error.message
-              : "An unexpected error occurred"}
+            {error instanceof Error ? error.message : t("unexpectedError")}
           </p>
         </div>
       </div>
@@ -116,16 +115,16 @@ export function BaseTable<TData>({
   return (
     <>
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-xl font-bold">{title}</h2>
+        <SearchInput />
+
         <div className="flex items-center gap-2">
-          {children}
           {filters}
           <StatusFilter statusFilterKey={statusFilterKey} statuses={statuses} />
-          <SearchInput />
+          {children}
         </div>
       </div>
       <div className="rounded bg-white p-4 shadow">
-        <Table className={cn("w-full min-w-5xl", className)}>
+        <Table className={cn("w-full min-w-4xl", className)}>
           {caption && <TableCaption>{caption}</TableCaption>}
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -156,7 +155,7 @@ export function BaseTable<TData>({
               <TableRow>
                 <TableCell colSpan={columnCount} className="text-center">
                   <div className="text-muted-foreground py-8">
-                    {emptyMessage}
+                    {defaultEmptyMessage}
                   </div>
                 </TableCell>
               </TableRow>
@@ -180,7 +179,7 @@ export function BaseTable<TData>({
             )}
           </TableBody>
         </Table>
-        {data.last_page && data.last_page > 1 && (
+        {!!data.last_page && data.last_page > 1 && (
           <>
             <Separator className="my-4" />
             <div className="flex justify-end">

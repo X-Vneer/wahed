@@ -55,6 +55,11 @@
     "system": "System",
     "companyName": "Wahed"
   },
+  "lists": {
+    "projectCategories": {
+      "title": "Project Categories"
+    }
+  },
   "errors": {
     "unauthorized": "Unauthorized",
     "forbidden": "Forbidden",
@@ -183,7 +188,8 @@
       "nameEnPlaceholder": "Enter name in English",
       "isActive": "Active",
       "createdAt": "Created At",
-      "updatedAt": "Updated At"
+      "updatedAt": "Updated At",
+      "actions": "Actions"
     },
     "errors": {
       "nameAr": {
@@ -200,12 +206,29 @@
       "created": "Project category created successfully",
       "updated": "Project category updated successfully",
       "deleted": "Project category deleted successfully"
+    },
+    "deleteConfirm": {
+      "title": "Delete Project Category",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
     }
   },
   "table-status-filter": {
     "all": "All",
-    "statusPlaceholder": "Select status"
+    "statusPlaceholder": "Select status",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "table": {
+    "noDataFound": "No data found.",
+    "failedToLoad": "Failed to load data",
+    "unexpectedError": "An unexpected error occurred"
   },
   "next": "Next",
-  "previous": "Previous"
+  "previous": "Previous",
+  "search-input": {
+    "placeholder": "Search..."
+  }
 }

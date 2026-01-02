@@ -45,7 +45,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
   )
 
   const form = useForm({
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: {
       name: "",
       phone: "",

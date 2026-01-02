@@ -55,6 +55,11 @@
     "system": "النظام",
     "companyName": "وهد العمرانية"
   },
+  "lists": {
+    "projectCategories": {
+      "title": "فئات المشاريع"
+    }
+  },
   "errors": {
     "unauthorized": "غير مصرح",
     "forbidden": "ممنوع",
@@ -184,7 +189,8 @@
       "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
       "isActive": "نشط",
       "createdAt": "تاريخ الإنشاء",
-      "updatedAt": "تاريخ التحديث"
+      "updatedAt": "تاريخ التحديث",
+      "actions": "الإجراءات"
     },
     "errors": {
       "nameAr": {
@@ -201,12 +207,29 @@
       "created": "تم إنشاء فئة المشروع بنجاح",
       "updated": "تم تحديث فئة المشروع بنجاح",
       "deleted": "تم حذف فئة المشروع بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف فئة المشروع",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
     }
   },
   "table-status-filter": {
     "all": "الكل",
-    "statusPlaceholder": "اختر الحالة"
+    "statusPlaceholder": "اختر الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+  "table": {
+    "noDataFound": "لم يتم العثور على بيانات.",
+    "failedToLoad": "فشل تحميل البيانات",
+    "unexpectedError": "حدث خطأ غير متوقع"
   },
   "next": "التالي",
-  "previous": "السابق"
+  "previous": "السابق",
+  "search-input": {
+    "placeholder": "أبحث..."
+  }
 }

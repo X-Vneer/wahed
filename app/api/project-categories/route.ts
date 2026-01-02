@@ -1,5 +1,6 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import { Prisma } from "@/lib/generated/prisma/client"
 import { createProjectCategorySchema } from "@/lib/schemas/project-categories"
 import { transformZodError } from "@/lib/transform-errors"
 import { transformProjectCategory } from "@/prisma/project-categories"
@@ -9,23 +10,38 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   try {
-    // Get search query from URL params
+    // Get search query and filters from URL params
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
+    const status = searchParams.get("status")
+    const page = parseInt(searchParams.get("page") || "1", 10)
+    const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
-    // Fetch project categories from database
+    // Build where clause
+    const where: Prisma.ProjectCategoryWhereInput = {}
+
+    if (search) {
+      where.OR = [
+        { nameAr: { contains: search, mode: "insensitive" } },
+        { nameEn: { contains: search, mode: "insensitive" } },
+      ]
+    }
+
+    if (status && status !== "all") {
+      where.isActive = status === "active"
+    }
+
+    // Get total count for pagination
+    const total = await db.projectCategory.count({ where })
+
+    // Fetch project categories from database with pagination
     const projectCategories = await db.projectCategory.findMany({
-      where: search
-        ? {
-            OR: [
-              { nameAr: { contains: search, mode: "insensitive" } },
-              { nameEn: { contains: search, mode: "insensitive" } },
-            ],
-          }
-        : undefined,
+      where,
       orderBy: {
         createdAt: "desc",
       },
+      skip: (page - 1) * perPage,
+      take: perPage,
     })
 
     const locale = await getLocale()
@@ -36,7 +52,19 @@ export async function GET(request: NextRequest) {
       }
     )
 
-    return NextResponse.json(transformedProjectCategories)
+    const lastPage = Math.ceil(total / perPage)
+    const from = total > 0 ? (page - 1) * perPage + 1 : 0
+    const to = Math.min(page * perPage, total)
+
+    return NextResponse.json({
+      data: transformedProjectCategories,
+      from,
+      to,
+      total,
+      per_page: perPage,
+      current_page: page,
+      last_page: lastPage,
+    })
   } catch (error) {
     console.error("Error fetching project categories:", error)
     const t = await getTranslations()

@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "next/image"
+import { usePathname } from "@/lib/i18n/navigation"
 import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
@@ -31,6 +32,7 @@ import { NavUser } from "./nav-user"
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const locale = useLocale()
   const t = useTranslations("sidebar")
+  const pathname = usePathname()
   const isRtl = locale === "ar"
 
   const data = {
@@ -56,7 +58,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: t("home"),
         url: "/",
         icon: Home,
-        isActive: true,
+        isActive: pathname === "/",
       },
       {
         title: t("projects"),
@@ -76,6 +78,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/projects/add",
           },
         ],
+        isActive: pathname?.startsWith("/projects") ?? false,
       },
       {
         title: t("tasks"),
@@ -95,11 +98,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/tasks/add",
           },
         ],
+        isActive: pathname?.startsWith("/tasks") ?? false,
       },
       {
         title: t("calendar"),
         url: "/calendar",
         icon: Calendar,
+        isActive: pathname === "/calendar",
       },
       {
         title: t("lists"),
@@ -108,11 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [
           {
             title: t("listsProjectTypes"),
-            url: "/lists/project-types",
-          },
-          {
-            title: t("listsJobTitles"),
-            url: "/lists/job-titles",
+            url: "/lists/project-categories",
           },
           {
             title: t("listsCities"),
@@ -127,17 +128,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/lists/task-types",
           },
         ],
+        isActive: pathname?.startsWith("/lists") ?? false,
       },
       {
         title: t("usersPermissions"),
         url: "/employees",
         icon: Users,
+        isActive: pathname === "/employees",
       },
       {
         title: t("website"),
         url: "#",
         icon: Globe,
         items: [],
+        isActive: false,
       },
     ],
     projects: [],

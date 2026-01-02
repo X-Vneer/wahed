@@ -25,7 +25,7 @@ const SearchInput = ({ className, ...props }: SearchInputProps) => {
       {...props}
       value={value}
       onChange={handleChange}
-      className={cn("h-9 w-full max-w-[250px] bg-white", className)}
+      className={cn("h-10 w-full max-w-[250px] bg-white", className)}
     />
   )
 }
