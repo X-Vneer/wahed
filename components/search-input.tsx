@@ -9,7 +9,7 @@ export type SearchInputProps = React.InputHTMLAttributes<HTMLInputElement>
 
 const SearchInput = ({ className, ...props }: SearchInputProps) => {
   const t = useTranslations()
-  const [q, setQ] = useQueryState("query", parseAsString.withDefault(""))
+  const [q, setQ] = useQueryState("q", parseAsString.withDefault(""))
   const [value, setValue] = useState(q)
 
   const search = useDebouncedCallback(setQ, 500)

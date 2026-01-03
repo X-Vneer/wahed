@@ -11,7 +11,11 @@ export function useProjectCategoryColumns(): ColumnDef<ProjectCategory>[] {
 
   return [
     {
-      accessorKey: "name",
+      accessorKey: "nameAr",
+      header: t("projectCategories.form.nameAr"),
+    },
+    {
+      accessorKey: "nameEn",
       header: t("projectCategories.form.nameEn"),
     },
     {

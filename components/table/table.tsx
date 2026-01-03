@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 import {
   flexRender,
   getCoreRowModel,
@@ -48,6 +48,10 @@ interface BaseTableProps<TData> {
   filters?: React.ReactNode
   statuses?: { value: string; label: string }[]
   statusFilterKey?: string
+  queryOptions?: Omit<
+    UseQueryOptions<TableQueryResponse<TData>, Error>,
+    "retry" | "queryFn" | "queryKey"
+  >
 }
 
 const DEFAULT_PAGINATION_DATA = {
@@ -71,6 +75,7 @@ export function BaseTable<TData>({
   statusFilterKey,
   children,
   filters,
+  queryOptions,
 }: BaseTableProps<TData>) {
   const t = useTranslations("table")
   const searchParams = useSearchParams()
@@ -84,6 +89,7 @@ export function BaseTable<TData>({
     queryFn: () => queryFn(searchParams),
     refetchOnWindowFocus: false,
     retry: false,
+    ...queryOptions,
   })
 
   // React Compiler warning: TanStack Table's useReactTable() returns functions
