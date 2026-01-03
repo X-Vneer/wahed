@@ -19,8 +19,8 @@ import {
 } from "@/components/ui/sheet"
 import { handleFormErrors } from "@/lib/handle-form-errors"
 import {
-  createProjectTypeSchema,
-  updateProjectTypeSchema,
+  createProjectCategorySchema,
+  updateProjectCategorySchema,
 } from "@/lib/schemas/project-categories"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
@@ -56,8 +56,8 @@ export function ProjectTypeModal({
   const schema = useMemo(
     () =>
       selectedProjectType?.id
-        ? updateProjectTypeSchema
-        : createProjectTypeSchema,
+        ? updateProjectCategorySchema
+        : createProjectCategorySchema,
     [selectedProjectType?.id]
   )
 
