@@ -89,3 +89,26 @@ model ProjectCategory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Region {
+  id     String @id @default(cuid())
+  nameAr String
+  nameEn String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cities City[]
+}
+
+model City {
+  id     String @id @default(cuid())
+  nameAr String
+  nameEn String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  regionId String
+  region   Region @relation(fields: [regionId], references: [id], onDelete: Cascade)
+}
