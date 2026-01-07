@@ -26,6 +26,8 @@ import { Separator } from "../ui/separator"
 import StatusFilter from "./status-filter"
 import { useSearchParams } from "next/navigation"
 import { useTranslations } from "next-intl"
+import { parseAsInteger, useQueryState } from "nuqs"
+import { useEffect } from "react"
 
 export interface TableQueryResponse<TData> {
   data: TData[]
@@ -79,6 +81,7 @@ export function BaseTable<TData>({
 }: BaseTableProps<TData>) {
   const t = useTranslations("table")
   const searchParams = useSearchParams()
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1))
   const defaultEmptyMessage = emptyMessage ?? t("noDataFound")
   const {
     data = DEFAULT_PAGINATION_DATA,
@@ -91,6 +94,13 @@ export function BaseTable<TData>({
     retry: false,
     ...queryOptions,
   })
+
+  // Reset page to last_page if current page is greater than last_page
+  useEffect(() => {
+    if (data.last_page && data.last_page > 0 && page > data.last_page) {
+      setPage(data.last_page)
+    }
+  }, [data.last_page, page, setPage])
 
   // React Compiler warning: TanStack Table's useReactTable() returns functions
   // that cannot be memoized safely. This is expected behavior and can be ignored.
