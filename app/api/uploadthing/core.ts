@@ -3,8 +3,6 @@ import { UploadThingError } from "uploadthing/server"
 import { SESSION_COOKIE_NAME } from "@/config"
 import { verifyToken } from "@/lib/jwt"
 import { cookies } from "next/headers"
-import { db } from "@/lib/db"
-import { userSelect } from "@/prisma/users/select"
 
 const f = createUploadthing()
 
@@ -30,7 +28,7 @@ const auth = async () => {
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  imageUploader: f({
+  projectImageUploader: f({
     image: {
       /**
        * For full list of options and defaults, see the File Route API reference
@@ -41,7 +39,7 @@ export const ourFileRouter = {
     },
   })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req: _req }) => {
+    .middleware(async () => {
       // This code runs on your server before upload
       const user = await auth()
 
@@ -52,13 +50,17 @@ export const ourFileRouter = {
       return { user }
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.user.userId)
-
-      console.log("file url", file.ufsUrl)
-
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.user.userId }
+      return {
+        uploadedBy: metadata.user.userId,
+        url: file.ufsUrl,
+        file: {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified,
+          customId: file.customId,
+        },
+      }
     }),
 } satisfies FileRouter
 

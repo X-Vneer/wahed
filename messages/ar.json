@@ -428,5 +428,8 @@
   "previous": "السابق",
   "search-input": {
     "placeholder": "أبحث..."
+  },
+  "upload": {
+    "label": "قم بالسحب والإفلات لتحميل الملفات"
   }
 }

@@ -427,5 +427,8 @@
   "previous": "Previous",
   "search-input": {
     "placeholder": "Search..."
+  },
+  "upload": {
+    "label": "Drag and drop to upload files"
   }
 }
