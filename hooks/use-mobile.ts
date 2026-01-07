@@ -1,6 +1,8 @@
 import * as React from "react"
 
-const MOBILE_BREAKPOINT = 768
+// Use Tailwind's `lg` breakpoint (1024px) as the cutoff for mobile mode,
+// so that `md` screens are treated as mobile.
+const MOBILE_BREAKPOINT = 1024
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
