@@ -15,21 +15,16 @@ const auth = async () => {
   if (!token) {
     return null
   }
+
   // Verify token and return payload
   const payload = await verifyToken(token)
   if (!payload || !payload.userId) {
     return null
   }
 
-  const user = await db.user.findUnique({
-    where: { id: payload.userId },
-    select: userSelect,
-  })
-  if (!user) {
-    return null
+  return {
+    userId: payload.userId,
   }
-
-  return user
 }
 
 // FileRouter for your app, can contain multiple FileRoutes
@@ -58,12 +53,12 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.user.id)
+      console.log("Upload complete for userId:", metadata.user.userId)
 
       console.log("file url", file.ufsUrl)
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.user.id }
+      return { uploadedBy: metadata.user.userId }
     }),
 } satisfies FileRouter
 
