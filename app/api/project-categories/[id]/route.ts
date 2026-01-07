@@ -4,12 +4,14 @@ import { transformZodError } from "@/lib/transform-errors"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+type RouteContext = {
+  params: Promise<{
+    id: string
+  }>
+}
+export async function GET(_request: NextRequest, context: RouteContext) {
   try {
-    const { id } = await params
+    const { id } = await context.params
     const t = await getTranslations()
 
     const projectCategory = await db.projectCategory.findUnique({
@@ -34,12 +36,9 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, context: RouteContext) {
   try {
-    const { id } = await params
+    const { id } = await context.params
     const t = await getTranslations()
 
     // Parse and validate request body
@@ -91,12 +90,9 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
-    const { id } = await params
+    const { id } = await context.params
     const t = await getTranslations()
 
     // Check if project category exists

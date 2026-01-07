@@ -7,12 +7,13 @@ import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 type RouteContext = {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function PUT(request: NextRequest, context: RouteContext) {
+  const { id } = await context.params
   const t = await getTranslations()
 
   try {
@@ -37,7 +38,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     const data = validationResult.data
 
     const region = await db.region.update({
-      where: { id: context.params.id },
+      where: { id },
       data: {
         nameAr: data.nameAr,
         nameEn: data.nameEn,
@@ -55,6 +56,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
+  const { id } = await context.params
   const t = await getTranslations()
 
   try {
@@ -64,7 +66,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     }
 
     await db.region.delete({
-      where: { id: context.params.id },
+      where: { id },
     })
 
     return NextResponse.json({ success: true })
