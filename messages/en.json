@@ -53,11 +53,15 @@
     "user": "User",
     "notAvailable": "Not available",
     "system": "System",
-    "companyName": "Wahed"
+    "companyName": "Wahed",
+    "listsRegions": "Regions"
   },
   "lists": {
     "projectCategories": {
       "title": "Project Categories"
+    },
+    "regions": {
+      "title": "Regions"
     }
   },
   "errors": {
@@ -213,6 +217,53 @@
       "delete": "Delete",
       "deleting": "Deleting...",
       "cancel": "Cancel"
+    }
+  },
+  "regions": {
+    "createTitle": "Create Region",
+    "editTitle": "Edit Region",
+    "create": "Create",
+    "update": "Update",
+    "form": {
+      "nameAr": "Name (Arabic)",
+      "nameArPlaceholder": "Enter name in Arabic",
+      "nameEn": "Name (English)",
+      "nameEnPlaceholder": "Enter name in English",
+      "citiesCount": "Cities Count"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "Arabic name is required"
+      },
+      "nameEn": {
+        "required": "English name is required"
+      },
+      "not_found": "Region not found",
+      "create_failed": "Failed to create region",
+      "update_failed": "Failed to update region"
+    },
+    "success": {
+      "created": "Region created successfully",
+      "updated": "Region updated successfully",
+      "deleted": "Region deleted successfully"
+    },
+    "deleteConfirm": {
+      "title": "Delete Region",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
+    },
+    "table": {
+      "name": "Region",
+      "nameAr": "Name (Arabic)",
+      "nameEn": "Name (English)",
+      "citiesCount": "Cities Count",
+      "createdAt": "Created At"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
     }
   },
   "table-status-filter": {

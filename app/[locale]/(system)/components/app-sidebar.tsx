@@ -116,6 +116,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/lists/project-categories",
           },
           {
+            title: t("listsRegions"),
+            url: "/lists/regions",
+          },
+          {
             title: t("listsCities"),
             url: "/lists/cities",
           },

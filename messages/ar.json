@@ -53,11 +53,15 @@
     "user": "المستخدم",
     "notAvailable": "غير متاح",
     "system": "النظام",
-    "companyName": "وهد العمرانية"
+    "companyName": "وهد العمرانية",
+    "listsRegions": "المناطق"
   },
   "lists": {
     "projectCategories": {
       "title": "فئات المشاريع"
+    },
+    "regions": {
+      "title": "المناطق"
     }
   },
   "errors": {
@@ -214,6 +218,53 @@
       "delete": "حذف",
       "deleting": "جاري الحذف...",
       "cancel": "إلغاء"
+    }
+  },
+  "regions": {
+    "createTitle": "إنشاء منطقة",
+    "editTitle": "تعديل منطقة",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "form": {
+      "nameAr": "الاسم (عربي)",
+      "nameArPlaceholder": "أدخل الاسم بالعربية",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+      "citiesCount": "عدد المدن"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم العربي مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم الإنجليزي مطلوب"
+      },
+      "not_found": "المنطقة غير موجودة",
+      "create_failed": "فشل في إنشاء المنطقة",
+      "update_failed": "فشل في تحديث المنطقة"
+    },
+    "success": {
+      "created": "تم إنشاء المنطقة بنجاح",
+      "updated": "تم تحديث المنطقة بنجاح",
+      "deleted": "تم حذف المنطقة بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف المنطقة",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    },
+    "table": {
+      "name": "المنطقة",
+      "nameAr": "الاسم (عربي)",
+      "nameEn": "الاسم (إنجليزي)",
+      "createdAt": "تاريخ الإنشاء",
+      "citiesCount": "عدد المدن"
+    },
+    "actions": {
+      "edit": "تعديل",
+      "delete": "حذف"
     }
   },
   "table-status-filter": {

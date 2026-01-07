@@ -3,10 +3,9 @@ import axios from "axios"
 
 export const useProjectCategories = () => {
   return useQuery({
-    queryKey: ["project-categories"],
+    queryKey: ["lists", "project-categories"],
     queryFn: () => axios.get("/api/lists/project-categories"),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: Infinity,
     retry: 1,
   })
 }
