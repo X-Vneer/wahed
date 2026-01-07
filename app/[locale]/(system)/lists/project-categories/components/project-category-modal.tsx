@@ -54,7 +54,7 @@ export function ProjectCategoryModal({
     initialValues: {
       nameAr: selectedCategory?.nameAr || "",
       nameEn: selectedCategory?.nameEn || "",
-      isActive: selectedCategory?.isActive ?? false,
+      isActive: selectedCategory?.isActive ?? true,
     },
     validate: zod4Resolver(schema),
   })
