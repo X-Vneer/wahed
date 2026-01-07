@@ -73,11 +73,14 @@ export function PermissionsSelector({
 
   const handleAllowAllPermissionsChange = (checked: boolean) => {
     onAllowAllChange(checked)
+
     if (checked) {
+      // When checking "Allow All", select every available permission
       onPermissionsChange(allPermissionKeys)
+    } else {
+      // When unchecking "Allow All", clear all selected permissions
+      onPermissionsChange([])
     }
-    // When unchecking "Allow All", keep current permissions instead of clearing
-    // The permissions array will remain as is, just allowAllPermissions becomes false
   }
 
   const handlePermissionToggle = (
