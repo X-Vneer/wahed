@@ -10,6 +10,7 @@ import axios from "axios"
 import { CityModal } from "./city-modal"
 import { useCityColumns } from "./columns"
 import { useActionsColumn } from "./actions-column"
+import { RegionFilter } from "./region-filter"
 
 export function CitiesTable() {
   const t = useTranslations()
@@ -36,6 +37,7 @@ export function CitiesTable() {
   ): Promise<TableQueryResponse<City>> => {
     const search = searchParams.get("q") || ""
     const status = searchParams.get("status")
+    const regionId = searchParams.get("region_id")
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
@@ -43,6 +45,7 @@ export function CitiesTable() {
       params: {
         q: search || undefined,
         status: status || undefined,
+        region_id: regionId || undefined,
         page,
         per_page: perPage,
       },
@@ -66,6 +69,7 @@ export function CitiesTable() {
         queryKey={["cities"]}
         queryFn={queryFn}
         emptyMessage={t("table.noDataFound")}
+        filters={<RegionFilter />}
       >
         <Button onClick={handleCreateClick}>
           <Plus className="mr-2 size-4" />

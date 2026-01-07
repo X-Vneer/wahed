@@ -319,6 +319,10 @@
     "actions": {
       "edit": "تعديل",
       "delete": "حذف"
+    },
+    "filter": {
+      "allRegions": "جميع المناطق",
+      "regionPlaceholder": "اختر منطقة"
     }
   },
   "table-status-filter": {

@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
     const status = searchParams.get("status")
+    const regionId = searchParams.get("region_id")
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
@@ -28,6 +29,12 @@ export async function GET(request: NextRequest) {
     if (status && status !== "all") {
       // if you later add isActive back, you can filter here
       // where.isActive = status === "active"
+    }
+
+    if (regionId) {
+      where.region = {
+        id: regionId,
+      }
     }
 
     const total = await db.city.count({ where })

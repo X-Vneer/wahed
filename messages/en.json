@@ -318,6 +318,10 @@
     "actions": {
       "edit": "Edit",
       "delete": "Delete"
+    },
+    "filter": {
+      "allRegions": "All Regions",
+      "regionPlaceholder": "Select region"
     }
   },
   "table-status-filter": {
