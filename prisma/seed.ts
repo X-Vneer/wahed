@@ -295,11 +295,54 @@ async function main() {
 
   console.log("✅ Seeded Saudi Arabia regions and cities")
 
+  // Seed task statuses
+  const taskStatuses = [
+    {
+      id: "task-status-pending",
+      nameAr: "قيد الانتظار",
+      nameEn: "Pending",
+      color: "#F59E0B", // Amber/Orange
+    },
+    {
+      id: "task-status-in-progress",
+      nameAr: "قيد التنفيذ",
+      nameEn: "In Progress",
+      color: "#3B82F6", // Blue
+    },
+    {
+      id: "task-status-completed",
+      nameAr: "مكتمل",
+      nameEn: "Completed",
+      color: "#10B981", // Green
+    },
+    {
+      id: "task-status-cancelled",
+      nameAr: "ملغي",
+      nameEn: "Cancelled",
+      color: "#EF4444", // Red
+    },
+  ]
+
+  for (const status of taskStatuses) {
+    await db.taskStatus.upsert({
+      where: { id: status.id },
+      update: {
+        nameAr: status.nameAr,
+        nameEn: status.nameEn,
+        color: status.color,
+      },
+      create: status,
+    })
+  }
+
+  console.log("✅ Seeded task statuses")
+
   console.log("\n📋 Seed Summary:")
   console.log("   Admin: admin@wahed.com / admin123")
   console.log("   Staff 1: staff1@wahed.com / staff123")
   console.log("   Staff 2: staff2@wahed.com / staff456")
   console.log("   Regions: 13 Saudi regions with major cities")
+  console.log("   Task Statuses: 4 default statuses")
   console.log("\n✨ Seed completed successfully!")
 }
 
