@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { useTranslations } from "next-intl"
-import { TaskCategoryTable } from "./components/table"
+import { TaskCategoryTable } from "./_components/table"
 
 export default function TaskCategoryPage() {
   const t = useTranslations()

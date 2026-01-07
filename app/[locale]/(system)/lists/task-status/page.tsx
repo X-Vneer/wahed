@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { useTranslations } from "next-intl"
-import { TaskStatusTable } from "./components/table"
+import { TaskStatusTable } from "./_components/table"
 
 export default function TaskStatusPage() {
   const t = useTranslations()

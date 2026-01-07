@@ -11,8 +11,8 @@ import {
 import { useUsers } from "@/hooks/use-users"
 import { useTranslations } from "next-intl"
 import { parseAsString, useQueryState } from "nuqs"
-import { UserForm } from "./components/user-form"
-import { UsersList } from "./components/users-list"
+import { UserForm } from "./_components/user-form"
+import { UsersList } from "./_components/users-list"
 
 export default function EmployeesPage() {
   const t = useTranslations()

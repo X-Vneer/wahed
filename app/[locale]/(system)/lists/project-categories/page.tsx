@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { useTranslations } from "next-intl"
-import { ProjectCategoriesTable } from "./components/table"
+import { ProjectCategoriesTable } from "./_components/table"
 
 export default function ProjectCategoriesPage() {
   const t = useTranslations()

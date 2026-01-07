@@ -3,8 +3,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { LangSwitcher } from "./components/lang-switcher"
+import { AppSidebar } from "./_components/app-sidebar"
+import { LangSwitcher } from "./_components/lang-switcher"
 
 export default function SystemLayout({
   children,
