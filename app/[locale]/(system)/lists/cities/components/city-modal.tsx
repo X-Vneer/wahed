@@ -9,6 +9,13 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Sheet,
   SheetContent,
   SheetFooter,
@@ -17,8 +24,10 @@ import {
 } from "@/components/ui/sheet"
 import { Spinner } from "@/components/ui/spinner"
 import { handleFormErrors } from "@/lib/handle-form-errors"
-import { createRegionSchema, updateRegionSchema } from "@/lib/schemas/regions"
+import { createCitySchema, updateCitySchema } from "@/lib/schemas/cities"
+import type { City } from "@/prisma/cities"
 import type { Region } from "@/prisma/regions"
+import { useRegions } from "@/hooks/use-regions"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
@@ -27,65 +36,71 @@ import { useTranslations } from "next-intl"
 import { useEffect } from "react"
 import { toast } from "sonner"
 
-type RegionModalProps = {
+type CityModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  selectedRegion: Region | null
+  selectedCity: City | null
 }
 
-export function RegionModal({
+export function CityModal({
   open,
   onOpenChange,
-  selectedRegion,
-}: RegionModalProps) {
+  selectedCity,
+}: CityModalProps) {
   const t = useTranslations()
   const queryClient = useQueryClient()
+  const { data: regionsData } = useRegions()
+  const regions = regionsData?.data?.data || []
 
-  const schema = selectedRegion?.id ? updateRegionSchema : createRegionSchema
+  const schema = selectedCity?.id ? updateCitySchema : createCitySchema
 
   const form = useForm({
     mode: "controlled",
     initialValues: {
-      nameAr: selectedRegion?.nameAr || "",
-      nameEn: selectedRegion?.nameEn || "",
+      nameAr: selectedCity?.nameAr || "",
+      nameEn: selectedCity?.nameEn || "",
+      regionId: selectedCity?.regionId || "",
     },
     validate: zod4Resolver(schema),
   })
 
   useEffect(() => {
-    if (selectedRegion) {
+    if (selectedCity) {
       form.setValues({
-        nameAr: selectedRegion.nameAr || "",
-        nameEn: selectedRegion.nameEn || "",
+        nameAr: selectedCity.nameAr || "",
+        nameEn: selectedCity.nameEn || "",
+        regionId: selectedCity.regionId || "",
       })
     } else {
       form.setValues({
         nameAr: "",
         nameEn: "",
+        regionId: "",
       })
     }
-  }, [selectedRegion?.id])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCity?.id])
 
   const handleSubmit = async (values: typeof form.values) => {
     try {
-      if (selectedRegion) {
-        await axios.put(`/api/regions/${selectedRegion.id}`, values, {
+      if (selectedCity) {
+        await axios.put(`/api/cities/${selectedCity.id}`, values, {
           withCredentials: true,
         })
       } else {
-        await axios.post("/api/regions", values, {
+        await axios.post("/api/cities", values, {
           withCredentials: true,
         })
       }
 
-      await queryClient.invalidateQueries({ queryKey: ["regions"] })
+      await queryClient.invalidateQueries({ queryKey: ["cities"] })
       form.reset()
       onOpenChange(false)
 
-      if (selectedRegion) {
-        toast.success(t("regions.success.updated"))
+      if (selectedCity) {
+        toast.success(t("cities.success.updated"))
       } else {
-        toast.success(t("regions.success.created"))
+        toast.success(t("cities.success.created"))
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -110,7 +125,7 @@ export function RegionModal({
       <SheetContent className="w-full sm:max-w-md">
         <SheetHeader>
           <SheetTitle>
-            {selectedRegion ? t("regions.editTitle") : t("regions.createTitle")}
+            {selectedCity ? t("cities.editTitle") : t("cities.createTitle")}
           </SheetTitle>
         </SheetHeader>
 
@@ -122,12 +137,12 @@ export function RegionModal({
             <FieldGroup>
               <Field data-invalid={!!form.errors.nameAr}>
                 <FieldLabel htmlFor="nameAr">
-                  {t("regions.form.nameAr")}
+                  {t("cities.form.nameAr")}
                 </FieldLabel>
                 <Input
                   id="nameAr"
                   {...form.getInputProps("nameAr")}
-                  placeholder={t("regions.form.nameArPlaceholder")}
+                  placeholder={t("cities.form.nameArPlaceholder")}
                   aria-invalid={!!form.errors.nameAr}
                 />
                 {form.errors.nameAr && (
@@ -139,17 +154,55 @@ export function RegionModal({
 
               <Field data-invalid={!!form.errors.nameEn}>
                 <FieldLabel htmlFor="nameEn">
-                  {t("regions.form.nameEn")}
+                  {t("cities.form.nameEn")}
                 </FieldLabel>
                 <Input
                   id="nameEn"
                   {...form.getInputProps("nameEn")}
-                  placeholder={t("regions.form.nameEnPlaceholder")}
+                  placeholder={t("cities.form.nameEnPlaceholder")}
                   aria-invalid={!!form.errors.nameEn}
                 />
                 {form.errors.nameEn && (
                   <FieldError
                     errors={[{ message: String(form.errors.nameEn) }]}
+                  />
+                )}
+              </Field>
+
+              <Field data-invalid={!!form.errors.regionId}>
+                <FieldLabel htmlFor="regionId">
+                  {t("cities.form.region")}
+                </FieldLabel>
+                <Select
+                  value={form.values.regionId || undefined}
+                  onValueChange={(value) => {
+                    form.setFieldValue("regionId", value || "")
+                  }}
+                >
+                  <SelectTrigger
+                    id="regionId"
+                    className="w-full"
+                    aria-invalid={!!form.errors.regionId}
+                  >
+                    <SelectValue>
+                      {form.values.regionId
+                        ? regions.find(
+                            (r: Region) => r.id === form.values.regionId
+                          )?.name || t("cities.form.regionPlaceholder")
+                        : t("cities.form.regionPlaceholder")}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {regions.map((region: Region) => (
+                      <SelectItem key={region.id} value={region.id}>
+                        {region.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {form.errors.regionId && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.regionId) }]}
                   />
                 )}
               </Field>
@@ -172,7 +225,7 @@ export function RegionModal({
             </Button>
             <Button type="submit" disabled={form.submitting}>
               {form.submitting && <Spinner className="mr-2 size-4" />}
-              {selectedRegion ? t("regions.update") : t("regions.create")}
+              {selectedCity ? t("cities.update") : t("cities.create")}
             </Button>
           </SheetFooter>
         </form>

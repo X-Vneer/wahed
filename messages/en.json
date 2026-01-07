@@ -62,6 +62,9 @@
     },
     "regions": {
       "title": "Regions"
+    },
+    "cities": {
+      "title": "Cities"
     }
   },
   "errors": {
@@ -259,6 +262,57 @@
       "nameAr": "Name (Arabic)",
       "nameEn": "Name (English)",
       "citiesCount": "Cities Count",
+      "createdAt": "Created At"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+  "cities": {
+    "createTitle": "Create City",
+    "editTitle": "Edit City",
+    "create": "Create",
+    "update": "Update",
+    "form": {
+      "nameAr": "Name (Arabic)",
+      "nameArPlaceholder": "Enter name in Arabic",
+      "nameEn": "Name (English)",
+      "nameEnPlaceholder": "Enter name in English",
+      "region": "Region",
+      "regionPlaceholder": "Select a region"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "Arabic name is required"
+      },
+      "nameEn": {
+        "required": "English name is required"
+      },
+      "regionId": {
+        "required": "Region is required"
+      },
+      "not_found": "City not found",
+      "create_failed": "Failed to create city",
+      "update_failed": "Failed to update city"
+    },
+    "success": {
+      "created": "City created successfully",
+      "updated": "City updated successfully",
+      "deleted": "City deleted successfully"
+    },
+    "deleteConfirm": {
+      "title": "Delete City",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
+    },
+    "table": {
+      "name": "City",
+      "nameAr": "Name (Arabic)",
+      "nameEn": "Name (English)",
+      "regionName": "Region",
       "createdAt": "Created At"
     },
     "actions": {

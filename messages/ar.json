@@ -62,6 +62,9 @@
     },
     "regions": {
       "title": "المناطق"
+    },
+    "cities": {
+      "title": "المدن"
     }
   },
   "errors": {
@@ -261,6 +264,57 @@
       "nameEn": "الاسم (إنجليزي)",
       "createdAt": "تاريخ الإنشاء",
       "citiesCount": "عدد المدن"
+    },
+    "actions": {
+      "edit": "تعديل",
+      "delete": "حذف"
+    }
+  },
+  "cities": {
+    "createTitle": "إنشاء مدينة",
+    "editTitle": "تعديل مدينة",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "form": {
+      "nameAr": "الاسم (عربي)",
+      "nameArPlaceholder": "أدخل الاسم بالعربية",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+      "region": "المنطقة",
+      "regionPlaceholder": "اختر منطقة"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم العربي مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم الإنجليزي مطلوب"
+      },
+      "regionId": {
+        "required": "المنطقة مطلوبة"
+      },
+      "not_found": "المدينة غير موجودة",
+      "create_failed": "فشل في إنشاء المدينة",
+      "update_failed": "فشل في تحديث المدينة"
+    },
+    "success": {
+      "created": "تم إنشاء المدينة بنجاح",
+      "updated": "تم تحديث المدينة بنجاح",
+      "deleted": "تم حذف المدينة بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف المدينة",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    },
+    "table": {
+      "name": "المدينة",
+      "nameAr": "الاسم (عربي)",
+      "nameEn": "الاسم (إنجليزي)",
+      "regionName": "المنطقة",
+      "createdAt": "تاريخ الإنشاء"
     },
     "actions": {
       "edit": "تعديل",

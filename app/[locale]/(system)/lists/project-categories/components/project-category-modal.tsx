@@ -118,7 +118,7 @@ export function ProjectCategoryModal({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="w-full sm:max-w-md">
+      <SheetContent className="w-full sm:max-w-md">
         <SheetHeader>
           <SheetTitle>
             {selectedCategory
