@@ -129,7 +129,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
       <CardContent>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <FieldGroup>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid-cols-2 gap-4 md:grid">
               {/* Full Name */}
               <Field data-invalid={!!form.errors.name}>
                 <FieldLabel htmlFor="name">
@@ -171,7 +171,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
               </Field>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid-cols-2 gap-4 md:grid">
               {/* Email */}
               <Field data-invalid={!!form.errors.email}>
                 <FieldLabel htmlFor="email">
@@ -210,7 +210,7 @@ export function UserForm({ selectedUser }: UserFormProps) {
               </Field>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid-cols-2 gap-4 md:grid">
               {/* Password */}
               <Field data-invalid={!!form.errors.password}>
                 <FieldLabel htmlFor="password">

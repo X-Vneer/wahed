@@ -84,7 +84,7 @@ export function UsersList() {
   }
 
   return (
-    <Card className="w-xs">
+    <Card className="w-full sm:w-xs">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{t("users")}</CardTitle>

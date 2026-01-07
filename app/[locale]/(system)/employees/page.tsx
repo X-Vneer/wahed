@@ -44,7 +44,7 @@ export default function EmployeesPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex gap-6">
+      <div className="flex flex-col gap-6 sm:flex-row">
         {/* Right Panel - Users List */}
         <UsersList />
         {/* Left Panel - User Details Form */}
