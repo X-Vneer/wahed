@@ -65,6 +65,9 @@
     },
     "cities": {
       "title": "المدن"
+    },
+    "taskStatus": {
+      "title": "حالات المهام"
     }
   },
   "errors": {
@@ -323,6 +326,49 @@
     "filter": {
       "allRegions": "جميع المناطق",
       "regionPlaceholder": "اختر منطقة"
+    }
+  },
+  "taskStatus": {
+    "createTitle": "إنشاء حالة مهمة",
+    "editTitle": "تعديل حالة مهمة",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "form": {
+      "nameAr": "الاسم (عربي)",
+      "nameArPlaceholder": "أدخل الاسم بالعربية",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+      "color": "اللون",
+      "colorPlaceholder": "أدخل رمز اللون",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث",
+      "actions": "الإجراءات"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم العربي مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم الإنجليزي مطلوب"
+      },
+      "color": {
+        "required": "اللون مطلوب"
+      },
+      "not_found": "حالة المهمة غير موجودة",
+      "create_failed": "فشل في إنشاء حالة المهمة",
+      "update_failed": "فشل في تحديث حالة المهمة"
+    },
+    "success": {
+      "created": "تم إنشاء حالة المهمة بنجاح",
+      "updated": "تم تحديث حالة المهمة بنجاح",
+      "deleted": "تم حذف حالة المهمة بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف حالة المهمة",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
     }
   },
   "table-status-filter": {

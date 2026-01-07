@@ -112,3 +112,12 @@ model City {
   regionId String
   region   Region @relation(fields: [regionId], references: [id], onDelete: Cascade)
 }
+
+model TaskStatus {
+  id        String   @id @default(cuid())
+  nameAr    String
+  nameEn    String
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

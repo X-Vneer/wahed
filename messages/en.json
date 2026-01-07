@@ -65,6 +65,9 @@
     },
     "cities": {
       "title": "Cities"
+    },
+    "taskStatus": {
+      "title": "Task Statuses"
     }
   },
   "errors": {
@@ -322,6 +325,49 @@
     "filter": {
       "allRegions": "All Regions",
       "regionPlaceholder": "Select region"
+    }
+  },
+  "taskStatus": {
+    "createTitle": "Create Task Status",
+    "editTitle": "Edit Task Status",
+    "create": "Create",
+    "update": "Update",
+    "form": {
+      "nameAr": "Name (Arabic)",
+      "nameArPlaceholder": "Enter name in Arabic",
+      "nameEn": "Name (English)",
+      "nameEnPlaceholder": "Enter name in English",
+      "color": "Color",
+      "colorPlaceholder": "Enter color code",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "actions": "Actions"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "Arabic name is required"
+      },
+      "nameEn": {
+        "required": "English name is required"
+      },
+      "color": {
+        "required": "Color is required"
+      },
+      "not_found": "Task status not found",
+      "create_failed": "Failed to create task status",
+      "update_failed": "Failed to update task status"
+    },
+    "success": {
+      "created": "Task status created successfully",
+      "updated": "Task status updated successfully",
+      "deleted": "Task status deleted successfully"
+    },
+    "deleteConfirm": {
+      "title": "Delete Task Status",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
     }
   },
   "table-status-filter": {

@@ -125,7 +125,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
           {
             title: t("listsTaskStatuses"),
-            url: "/lists/task-statuses",
+            url: "/lists/task-status",
           },
           {
             title: t("listsTaskTypes"),
