@@ -337,12 +337,55 @@ async function main() {
 
   console.log("✅ Seeded task statuses")
 
+  // Seed task categories
+  const taskCategories = [
+    {
+      id: "task-category-development",
+      nameAr: "تطوير",
+      nameEn: "Development",
+      isActive: true,
+    },
+    {
+      id: "task-category-design",
+      nameAr: "تصميم",
+      nameEn: "Design",
+      isActive: true,
+    },
+    {
+      id: "task-category-testing",
+      nameAr: "اختبار",
+      nameEn: "Testing",
+      isActive: true,
+    },
+    {
+      id: "task-category-documentation",
+      nameAr: "توثيق",
+      nameEn: "Documentation",
+      isActive: true,
+    },
+  ]
+
+  for (const category of taskCategories) {
+    await db.taskCategory.upsert({
+      where: { id: category.id },
+      update: {
+        nameAr: category.nameAr,
+        nameEn: category.nameEn,
+        isActive: category.isActive,
+      },
+      create: category,
+    })
+  }
+
+  console.log("✅ Seeded task categories")
+
   console.log("\n📋 Seed Summary:")
   console.log("   Admin: admin@wahed.com / admin123")
   console.log("   Staff 1: staff1@wahed.com / staff123")
   console.log("   Staff 2: staff2@wahed.com / staff456")
   console.log("   Regions: 13 Saudi regions with major cities")
   console.log("   Task Statuses: 4 default statuses")
+  console.log("   Task Categories: 4 default categories")
   console.log("\n✨ Seed completed successfully!")
 }
 

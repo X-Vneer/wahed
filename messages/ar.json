@@ -68,6 +68,9 @@
     },
     "taskStatus": {
       "title": "حالات المهام"
+    },
+    "taskCategory": {
+      "title": "فئات المهام"
     }
   },
   "errors": {
@@ -365,6 +368,45 @@
     },
     "deleteConfirm": {
       "title": "حذف حالة المهمة",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    }
+  },
+  "taskCategory": {
+    "createTitle": "إنشاء فئة مهمة",
+    "editTitle": "تعديل فئة مهمة",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "form": {
+      "nameAr": "الاسم (عربي)",
+      "nameArPlaceholder": "أدخل الاسم بالعربية",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+      "isActive": "نشط",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث",
+      "actions": "الإجراءات"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم العربي مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم الإنجليزي مطلوب"
+      },
+      "not_found": "فئة المهمة غير موجودة",
+      "create_failed": "فشل في إنشاء فئة المهمة",
+      "update_failed": "فشل في تحديث فئة المهمة"
+    },
+    "success": {
+      "created": "تم إنشاء فئة المهمة بنجاح",
+      "updated": "تم تحديث فئة المهمة بنجاح",
+      "deleted": "تم حذف فئة المهمة بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف فئة المهمة",
       "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
       "delete": "حذف",
       "deleting": "جاري الحذف...",

@@ -129,7 +129,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
           {
             title: t("listsTaskTypes"),
-            url: "/lists/task-types",
+            url: "/lists/task-category",
           },
         ],
         isActive: pathname?.startsWith("/lists") ?? false,

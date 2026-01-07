@@ -68,6 +68,9 @@
     },
     "taskStatus": {
       "title": "Task Statuses"
+    },
+    "taskCategory": {
+      "title": "Task Categories"
     }
   },
   "errors": {
@@ -364,6 +367,45 @@
     },
     "deleteConfirm": {
       "title": "Delete Task Status",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
+    }
+  },
+  "taskCategory": {
+    "createTitle": "Create Task Category",
+    "editTitle": "Edit Task Category",
+    "create": "Create",
+    "update": "Update",
+    "form": {
+      "nameAr": "Name (Arabic)",
+      "nameArPlaceholder": "Enter name in Arabic",
+      "nameEn": "Name (English)",
+      "nameEnPlaceholder": "Enter name in English",
+      "isActive": "Active",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "actions": "Actions"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "Arabic name is required"
+      },
+      "nameEn": {
+        "required": "English name is required"
+      },
+      "not_found": "Task category not found",
+      "create_failed": "Failed to create task category",
+      "update_failed": "Failed to update task category"
+    },
+    "success": {
+      "created": "Task category created successfully",
+      "updated": "Task category updated successfully",
+      "deleted": "Task category deleted successfully"
+    },
+    "deleteConfirm": {
+      "title": "Delete Task Category",
       "description": "Are you sure you want to delete {name}? This action cannot be undone.",
       "delete": "Delete",
       "deleting": "Deleting...",
