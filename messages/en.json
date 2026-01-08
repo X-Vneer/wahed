@@ -462,6 +462,15 @@
       "googleMapsAddress": "Address on Google Map",
       "googleMapsAddressPlaceholder": "Enter Google Maps address",
       "internallyRegistered": "Project internally registered for work",
+      "attachments": {
+        "title": "Attach Supporting Documents",
+        "addDocuments": "Add Documents",
+        "uploaded": "Files uploaded successfully",
+        "uploadError": "Failed to upload files",
+        "download": "Download",
+        "remove": "Remove",
+        "cancel": "Cancel"
+      },
       "submit": "Add Project",
       "submitting": "Adding project..."
     },

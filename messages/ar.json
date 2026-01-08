@@ -463,6 +463,15 @@
       "googleMapsAddress": "العنوان على قوقل ماب",
       "googleMapsAddressPlaceholder": "أدخل رابط العنوان من خرائط جوجل",
       "internallyRegistered": "المشروع مسجل داخليا للعمل",
+      "attachments": {
+        "title": "ارفاق المستندات الداعمة",
+        "addDocuments": "إضافة المستندات",
+        "uploaded": "تم رفع الملفات بنجاح",
+        "uploadError": "فشل رفع الملفات",
+        "download": "تحميل",
+        "remove": "إزالة",
+        "cancel": "إلغاء"
+      },
       "submit": "إضافة المشروع",
       "submitting": "جاري الإضافة..."
     },

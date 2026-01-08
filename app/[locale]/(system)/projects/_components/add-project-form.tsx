@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
 import { handleFormErrors } from "@/lib/handle-form-errors"
 import { createProjectSchema } from "@/lib/schemas/project"
@@ -19,6 +19,7 @@ import { ImageUploadField } from "./image-upload-field"
 import { ProjectDetailsSection } from "./project-details-section"
 import { GoogleMapsAddressField } from "./google-maps-address-field"
 import { InternallyRegisteredField } from "./internally-registered-field"
+import { AttachmentsUploadField } from "./attachments-upload-field"
 import { SubmitButton } from "./submit-button"
 
 function ProjectFormContent() {
@@ -36,6 +37,7 @@ function ProjectFormContent() {
           : undefined,
         image: values.image || undefined,
         categoryIds: values.categoryIds,
+        attachments: values.attachments || [],
       }
 
       await axios.post("/api/projects", submitData, {
@@ -71,6 +73,7 @@ function ProjectFormContent() {
             </div>
           </CardContent>
         </Card>
+        <AttachmentsUploadField />
         <SubmitButton />
       </FieldGroup>
     </form>
