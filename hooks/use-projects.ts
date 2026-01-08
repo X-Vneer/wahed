@@ -1,7 +1,7 @@
 "use client"
 
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
-import axios from "axios"
+import apiClient from "@/services"
 import type { TransformedProject } from "@/prisma/projects"
 
 export interface ProjectsResponse {
@@ -18,9 +18,8 @@ export const useProjects = (
   >
 ) => {
   const fetchProjects = async () => {
-    const response = await axios.get<ProjectsResponse>("/api/projects", {
+    const response = await apiClient.get<ProjectsResponse>("/api/projects", {
       params,
-      withCredentials: true,
     })
     return response.data
   }

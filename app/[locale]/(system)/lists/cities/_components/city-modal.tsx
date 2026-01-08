@@ -35,6 +35,7 @@ import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import { useEffect } from "react"
 import { toast } from "sonner"
+import apiClient from "@/services"
 
 type CityModalProps = {
   open: boolean
@@ -84,13 +85,9 @@ export function CityModal({
   const handleSubmit = async (values: typeof form.values) => {
     try {
       if (selectedCity) {
-        await axios.put(`/api/cities/${selectedCity.id}`, values, {
-          withCredentials: true,
-        })
+        await apiClient.put(`/api/cities/${selectedCity.id}`, values)
       } else {
-        await axios.post("/api/cities", values, {
-          withCredentials: true,
-        })
+        await apiClient.post("/api/cities", values)
       }
 
       await queryClient.invalidateQueries({ queryKey: ["cities"] })

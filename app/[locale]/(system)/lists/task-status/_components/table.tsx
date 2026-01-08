@@ -10,6 +10,7 @@ import axios from "axios"
 import { TaskStatusModal } from "./task-status-modal"
 import { useTaskStatusColumns } from "./columns"
 import { useActionsColumn } from "./actions-column"
+import apiClient from "@/services"
 
 export function TaskStatusTable() {
   const t = useTranslations()
@@ -39,13 +40,12 @@ export function TaskStatusTable() {
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
-    const response = await axios.get("/api/task-status", {
+    const response = await apiClient.get("/api/task-status", {
       params: {
         q: search || undefined,
         page,
         per_page: perPage,
       },
-      withCredentials: true,
     })
 
     // The API now returns paginated data directly

@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,13 +10,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import type { TaskStatus } from "@/prisma/task-statuses"
+import apiClient from "@/services"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Edit, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
 import { toast } from "sonner"
 
 interface ActionsColumnProps {
@@ -37,9 +37,9 @@ function ActionsCell({ taskStatus, onEdit }: ActionsCellProps) {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (taskStatusId: string) => {
-      const response = await axios.delete(`/api/task-status/${taskStatusId}`, {
-        withCredentials: true,
-      })
+      const response = await apiClient.delete(
+        `/api/task-status/${taskStatusId}`
+      )
       return response.data
     },
     onSuccess: () => {

@@ -19,6 +19,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { handleFormErrors } from "@/lib/handle-form-errors"
 import { createRegionSchema, updateRegionSchema } from "@/lib/schemas/regions"
 import type { Region } from "@/prisma/regions"
+import apiClient from "@/services"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
@@ -69,13 +70,9 @@ export function RegionModal({
   const handleSubmit = async (values: typeof form.values) => {
     try {
       if (selectedRegion) {
-        await axios.put(`/api/regions/${selectedRegion.id}`, values, {
-          withCredentials: true,
-        })
+        await apiClient.put(`/api/regions/${selectedRegion.id}`, values)
       } else {
-        await axios.post("/api/regions", values, {
-          withCredentials: true,
-        })
+        await apiClient.post("/api/regions", values)
       }
 
       await queryClient.invalidateQueries({ queryKey: ["regions"] })

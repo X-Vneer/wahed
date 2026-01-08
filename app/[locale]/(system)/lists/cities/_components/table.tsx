@@ -3,13 +3,13 @@
 import { BaseTable, type TableQueryResponse } from "@/components/table/table"
 import { Button } from "@/components/ui/button"
 import type { City } from "@/prisma/cities"
+import apiClient from "@/services"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
-import axios from "axios"
+import { useActionsColumn } from "./actions-column"
 import { CityModal } from "./city-modal"
 import { useCityColumns } from "./columns"
-import { useActionsColumn } from "./actions-column"
 import { RegionFilter } from "./region-filter"
 
 export function CitiesTable() {
@@ -41,7 +41,7 @@ export function CitiesTable() {
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
-    const response = await axios.get("/api/cities", {
+    const response = await apiClient.get("/api/cities", {
       params: {
         q: search || undefined,
         status: status || undefined,
@@ -49,7 +49,6 @@ export function CitiesTable() {
         page,
         per_page: perPage,
       },
-      withCredentials: true,
     })
 
     return response.data as TableQueryResponse<City>

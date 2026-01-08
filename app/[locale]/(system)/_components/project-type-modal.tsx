@@ -24,11 +24,12 @@ import {
 } from "@/lib/schemas/project-categories"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import apiClient from "@/services"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import { useEffect, useMemo } from "react"
 import { toast } from "sonner"
+import axios from "axios"
 
 type ProjectType = {
   id: string
@@ -89,18 +90,13 @@ export function ProjectTypeModal({
     try {
       if (selectedProjectType) {
         // Update existing project type
-        await axios.put(
+        await apiClient.put(
           `/api/project-types/${selectedProjectType.id}`,
-          values,
-          {
-            withCredentials: true,
-          }
+          values
         )
       } else {
         // Create new project type
-        await axios.post("/api/project-types", values, {
-          withCredentials: true,
-        })
+        await apiClient.post("/api/project-types", values)
       }
 
       // Success - refresh project types list and reset form

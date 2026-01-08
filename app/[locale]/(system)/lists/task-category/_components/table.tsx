@@ -10,6 +10,7 @@ import axios from "axios"
 import { TaskCategoryModal } from "./task-category-modal"
 import { useTaskCategoryColumns } from "./columns"
 import { useActionsColumn } from "./actions-column"
+import apiClient from "@/services"
 
 export function TaskCategoryTable() {
   const t = useTranslations()
@@ -41,14 +42,13 @@ export function TaskCategoryTable() {
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
-    const response = await axios.get("/api/task-category", {
+    const response = await apiClient.get("/api/task-category", {
       params: {
         q: search || undefined,
         status: status || undefined,
         page,
         per_page: perPage,
       },
-      withCredentials: true,
     })
 
     // The API now returns paginated data directly

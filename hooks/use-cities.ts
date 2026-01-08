@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import apiClient from "@/services"
 
 export const useCities = (regionId?: string | null) => {
   return useQuery({
     queryKey: ["lists", "cities", regionId],
     queryFn: () => {
       const params = regionId ? { region_id: regionId } : {}
-      return axios.get("/api/lists/cities", { params })
+      return apiClient.get("/api/lists/cities", { params })
     },
     staleTime: Infinity,
     retry: 1,

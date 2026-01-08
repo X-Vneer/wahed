@@ -22,7 +22,7 @@ import type { User } from "@/prisma/users/select"
 import { useDebouncedValue } from "@/hooks/use-debounced"
 import { parseAsString, useQueryState } from "nuqs"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import apiClient from "@/services"
 import { toast } from "sonner"
 
 export function UsersList() {
@@ -48,9 +48,7 @@ export function UsersList() {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (userId: string) => {
-      const response = await axios.delete(`/api/users/${userId}`, {
-        withCredentials: true,
-      })
+      const response = await apiClient.delete(`/api/users/${userId}`)
       return response.data
     },
     onSuccess: () => {

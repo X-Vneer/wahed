@@ -9,7 +9,7 @@ import { useUserData } from "@/hooks/use-user-data"
 import { LogOut, User } from "lucide-react"
 import { useRouter } from "@/lib/i18n/navigation"
 import { useTranslations } from "next-intl"
-import axios from "axios"
+import apiClient from "@/services"
 
 export function NavUser() {
   const { data: user, isLoading, error } = useUserData()
@@ -18,7 +18,7 @@ export function NavUser() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/api/auth/logout", {}, { withCredentials: true })
+      await apiClient.post("/api/auth/logout")
       router.refresh()
       router.push("/auth/login")
     } catch (error) {

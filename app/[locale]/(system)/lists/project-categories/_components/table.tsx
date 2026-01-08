@@ -3,13 +3,13 @@
 import { BaseTable, type TableQueryResponse } from "@/components/table/table"
 import { Button } from "@/components/ui/button"
 import type { ProjectCategory } from "@/prisma/project-categories"
+import apiClient from "@/services"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
-import axios from "axios"
-import { ProjectCategoryModal } from "./project-category-modal"
-import { useProjectCategoryColumns } from "./columns"
 import { useActionsColumn } from "./actions-column"
+import { useProjectCategoryColumns } from "./columns"
+import { ProjectCategoryModal } from "./project-category-modal"
 
 export function ProjectCategoriesTable() {
   const t = useTranslations()
@@ -40,14 +40,13 @@ export function ProjectCategoriesTable() {
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
-    const response = await axios.get("/api/project-categories", {
+    const response = await apiClient.get("/api/project-categories", {
       params: {
         q: search || undefined,
         status: status || undefined,
         page,
         per_page: perPage,
       },
-      withCredentials: true,
     })
 
     // The API now returns paginated data directly

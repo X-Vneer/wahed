@@ -21,6 +21,7 @@ import { GoogleMapsAddressField } from "./google-maps-address-field"
 import { InternallyRegisteredField } from "./internally-registered-field"
 import { AttachmentsUploadField } from "./attachments-upload-field"
 import { SubmitButton } from "./submit-button"
+import apiClient from "@/services"
 
 function ProjectFormContent() {
   const t = useTranslations()
@@ -40,9 +41,7 @@ function ProjectFormContent() {
         attachments: values.attachments || [],
       }
 
-      await axios.post("/api/projects", submitData, {
-        withCredentials: true,
-      })
+      await apiClient.post("/api/projects", submitData)
 
       // Success - refresh projects list and reset form
       queryClient.invalidateQueries({ queryKey: ["projects"] })

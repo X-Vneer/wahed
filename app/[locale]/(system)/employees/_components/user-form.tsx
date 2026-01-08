@@ -24,6 +24,7 @@ import type { Value as PhoneValue } from "react-phone-number-input"
 import { PermissionsSelector } from "./permissions-selector"
 import { parseAsString, useQueryState } from "nuqs"
 import { toast } from "sonner"
+import apiClient from "@/services"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -82,14 +83,10 @@ export function UserForm({ selectedUser }: UserFormProps) {
     try {
       if (selectedUser) {
         // Update existing user
-        await axios.put(`/api/users/${selectedUser.id}`, values, {
-          withCredentials: true,
-        })
+        await apiClient.put(`/api/users/${selectedUser.id}`, values)
       } else {
         // Create new user
-        await axios.post("/api/users", values, {
-          withCredentials: true,
-        })
+        await apiClient.post("/api/users", values)
       }
 
       // Success - refresh users list and reset form

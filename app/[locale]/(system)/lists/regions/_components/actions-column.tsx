@@ -19,6 +19,7 @@ import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "sonner"
+import apiClient from "@/services"
 
 interface ActionsColumnProps {
   onEdit: (region: Region) => void
@@ -36,9 +37,7 @@ function ActionsCell({ region, onEdit }: ActionsCellProps) {
 
   const deleteMutation = useMutation({
     mutationFn: async (regionId: string) => {
-      const response = await axios.delete(`/api/regions/${regionId}`, {
-        withCredentials: true,
-      })
+      const response = await apiClient.delete(`/api/regions/${regionId}`)
       return response.data
     },
     onSuccess: () => {

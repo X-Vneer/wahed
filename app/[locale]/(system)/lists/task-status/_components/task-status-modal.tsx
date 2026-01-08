@@ -22,6 +22,7 @@ import {
   updateTaskStatusSchema,
 } from "@/lib/schemas/task-status"
 import type { TaskStatus } from "@/prisma/task-statuses"
+import apiClient from "@/services"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
@@ -79,14 +80,10 @@ export function TaskStatusModal({
     try {
       if (selectedTaskStatus) {
         // Update existing task status
-        await axios.put(`/api/task-status/${selectedTaskStatus.id}`, values, {
-          withCredentials: true,
-        })
+        await apiClient.put(`/api/task-status/${selectedTaskStatus.id}`, values)
       } else {
         // Create new task status
-        await axios.post("/api/task-status", values, {
-          withCredentials: true,
-        })
+        await apiClient.post("/api/task-status", values)
       }
 
       // Success - refresh task statuses list and reset form

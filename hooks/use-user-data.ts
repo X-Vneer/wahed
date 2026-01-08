@@ -2,15 +2,13 @@
 
 import { User } from "@/prisma/users/select"
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
-import axios from "axios"
+import apiClient from "@/services"
 
 export const useUserData = (
   options?: Omit<UseQueryOptions<User, Error>, "queryKey" | "queryFn">
 ) => {
   const fetchUserData = async (): Promise<User> => {
-    const response = await axios.get<User>("/api/user/me", {
-      withCredentials: true,
-    })
+    const response = await apiClient.get<User>("/api/user/me")
     return response.data
   }
 

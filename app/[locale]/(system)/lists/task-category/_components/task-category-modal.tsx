@@ -23,6 +23,7 @@ import {
   updateTaskCategorySchema,
 } from "@/lib/schemas/task-category"
 import type { TaskCategory } from "@/prisma/task-categories"
+import apiClient from "@/services"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
@@ -80,14 +81,10 @@ export function TaskCategoryModal({
     try {
       if (selectedCategory) {
         // Update existing task category
-        await axios.put(`/api/task-category/${selectedCategory.id}`, values, {
-          withCredentials: true,
-        })
+        await apiClient.put(`/api/task-category/${selectedCategory.id}`, values)
       } else {
         // Create new task category
-        await axios.post("/api/task-category", values, {
-          withCredentials: true,
-        })
+        await apiClient.post("/api/task-category", values)
       }
 
       // Success - refresh task categories list and reset form

@@ -17,8 +17,9 @@ import { Edit, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
+import apiClient from "@/services"
 import { toast } from "sonner"
+import axios from "axios"
 
 interface ActionsColumnProps {
   onEdit: (city: City) => void
@@ -36,9 +37,7 @@ function ActionsCell({ city, onEdit }: ActionsCellProps) {
 
   const deleteMutation = useMutation({
     mutationFn: async (cityId: string) => {
-      const response = await axios.delete(`/api/cities/${cityId}`, {
-        withCredentials: true,
-      })
+      const response = await apiClient.delete(`/api/cities/${cityId}`)
       return response.data
     },
     onSuccess: () => {

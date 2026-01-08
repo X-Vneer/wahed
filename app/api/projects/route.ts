@@ -1,13 +1,14 @@
 import db from "@/lib/db"
 import { createProjectSchema } from "@/lib/schemas/project"
 import { transformZodError } from "@/lib/transform-errors"
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { projectInclude } from "@/prisma/projects"
 import { ProjectStatus } from "@/lib/generated/prisma/enums"
 import { transformProject } from "@/prisma/projects"
+import { getLocaleFromRequest } from "@/lib/i18n/utils"
 
 export async function GET(request: NextRequest) {
   // Check permission
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    const locale = await getLocale()
+    const locale = getLocaleFromRequest(request)
     const transformedProjects = projects.map((project) =>
       transformProject(project, locale)
     )

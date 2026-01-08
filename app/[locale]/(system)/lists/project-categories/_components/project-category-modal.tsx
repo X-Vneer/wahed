@@ -23,6 +23,7 @@ import {
   updateProjectCategorySchema,
 } from "@/lib/schemas/project-categories"
 import type { ProjectCategory } from "@/prisma/project-categories"
+import apiClient from "@/services"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
@@ -73,18 +74,13 @@ export function ProjectCategoryModal({
     try {
       if (selectedCategory) {
         // Update existing project category
-        await axios.put(
+        await apiClient.put(
           `/api/project-categories/${selectedCategory.id}`,
-          values,
-          {
-            withCredentials: true,
-          }
+          values
         )
       } else {
         // Create new project category
-        await axios.post("/api/project-categories", values, {
-          withCredentials: true,
-        })
+        await apiClient.post("/api/project-categories", values)
       }
 
       // Success - refresh project categories list and reset form

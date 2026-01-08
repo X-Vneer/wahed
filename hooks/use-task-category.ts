@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import apiClient from "@/services"
 
 export const useTaskCategories = () => {
   return useQuery({
     queryKey: ["lists", "task-categories"],
-    queryFn: () => axios.get("/api/task-category"),
+    queryFn: () => apiClient.get("/api/task-category"),
     staleTime: Infinity,
     retry: 1,
   })
