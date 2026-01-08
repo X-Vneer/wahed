@@ -73,7 +73,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
               />
             </div>
           )}
-          <div className="flex-1">
+          <div className="flex flex-1 flex-col justify-between">
             {/* Status Badges - Top Left */}
             <div className="flex flex-wrap items-center justify-end gap-2">
               <Badge
@@ -132,7 +132,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                         href={project.googleMapsAddress}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary flex items-center gap-1 hover:underline"
+                        className="text-muted-foreground flex items-center gap-1 hover:underline"
                       >
                         <ExternalLink className="size-3" />
                         {t("visitSite")}
@@ -140,31 +140,23 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                     )}
                   </div>
                 )}
-                <div className="text-muted-foreground flex items-center gap-2">
+                <div className="text-foreground flex items-center gap-2">
                   <Building2 className="size-4" />
                   <span>{projectType}</span>
                 </div>
               </div>
             </div>
 
-            {/* Current Task */}
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
-              <Clock className="size-4" />
-              <span>
-                {t("currentTask")}: {t("task.contentWriting")}
-              </span>
-            </div>
-
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-2 pt-2">
-              <Button
-                variant="default"
-                size="sm"
-                className="bg-orange-500 text-white hover:bg-orange-600"
-              >
-                <ChevronDown className="mr-1 size-4" />
-                {t("quickAccess")}
-              </Button>
+            <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
+              <div className="flex items-center gap-2 rounded-lg border bg-gray-50 px-3 py-1.5 text-sm">
+                <Clock className="text-muted-foreground size-4" />
+                <span className="text-muted-foreground">
+                  {t("daysRemaining", { count: 4 })}
+                </span>
+                <div className="ml-2 h-2 w-2 rounded-full bg-green-500"></div>
+                <span className="text-muted-foreground text-xs">80%</span>
+              </div>
               <Button
                 variant="outline"
                 size="sm"
@@ -174,19 +166,15 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                     href={`/projects/${project.id}`}
                     className="flex items-center"
                   >
-                    <Eye className="mr-1 size-4" />
+                    <Eye className="size-4" />
                     {t("viewProject")}
                   </Link>
                 }
               />
-              <div className="flex items-center gap-2 rounded-lg border bg-gray-50 px-3 py-1.5 text-sm">
-                <Clock className="text-muted-foreground size-4" />
-                <span className="text-muted-foreground">
-                  {t("daysRemaining", { count: 4 })}
-                </span>
-                <div className="ml-2 h-2 w-2 rounded-full bg-green-500"></div>
-                <span className="text-muted-foreground text-xs">80%</span>
-              </div>
+              <Button size={"sm"}>
+                <ChevronDown className="size-4" />
+                {t("quickAccess")}
+              </Button>
             </div>
           </div>
         </div>
