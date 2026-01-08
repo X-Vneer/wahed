@@ -433,6 +433,71 @@
     "label": "قم بالسحب والإفلات لتحميل الملفات"
   },
   "projects": {
-    "addNew": "أضف مشروع"
+    "addNew": "أضف مشروع",
+    "form": {
+      "generalInfo": "معلومات عامة",
+      "nameAr": "الاسم المشروع بالعربية",
+      "nameArPlaceholder": "أدخل اسم المشروع باللغة العربية",
+      "nameEn": "الاسم المشروع بالإنجليزية",
+      "nameEnPlaceholder": "أدخل اسم المشروع بالإنجليزية",
+      "imageUpload": "رفع صورة المشروع",
+      "supportedFormats": "الصيغ المدعومة jpg.png",
+      "imageDimensions": "أبعاد الصور: 1000*1000",
+      "maxImageSize": "حجم الصورة لا يتجاوز 6mb",
+      "descriptionAr": "وصف المشروع",
+      "descriptionArPlaceholder": "أدخل وصف المشروع باللغة العربية",
+      "descriptionEn": "وصف المشروع بالانجليزي",
+      "descriptionEnPlaceholder": "أدخل وصف المشروع بالإنجليزية",
+      "location": "الموقع",
+      "locationPlaceholder": "اختر المدينة",
+      "area": "المساحة",
+      "areaPlaceholder": "أدخل المساحة بالمتر المربع",
+      "numberOfFloors": "عدد الطوابق",
+      "numberOfFloorsPlaceholder": "أدخل عدد الطوابق",
+      "deedNumber": "رقم الصك",
+      "deedNumberPlaceholder": "أدخل رقم الصك",
+      "projectClassification": "تصنيف المشروع",
+      "projectClassificationPlaceholder": "اختر تصنيف المشروع",
+      "workDuration": "مدة العمل",
+      "workDurationPlaceholder": "أدخل مدة العمل بالايام",
+      "googleMapsAddress": "العنوان على قوقل ماب",
+      "googleMapsAddressPlaceholder": "أدخل رابط العنوان من خرائط جوجل",
+      "internallyRegistered": "المشروع مسجل داخليا للعمل",
+      "submit": "إضافة المشروع",
+      "submitting": "جاري الإضافة..."
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم العربي مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم الإنجليزي مطلوب"
+      },
+      "descriptionAr": {
+        "required": "الوصف العربي مطلوب"
+      },
+      "descriptionEn": {
+        "required": "الوصف الإنجليزي مطلوب"
+      },
+      "area": {
+        "required": "المساحة مطلوبة"
+      },
+      "cityId": {
+        "required": "المدينة مطلوبة"
+      },
+      "categoryIds": {
+        "required": "يجب اختيار فئة واحدة على الأقل"
+      },
+      "attachments": {
+        "fileUrl": {
+          "required": "رابط الملف مطلوب"
+        }
+      },
+      "city_not_found": "المدينة غير موجودة",
+      "invalid_categories": "واحدة أو أكثر من الفئات المحددة غير صحيحة"
+    },
+    "success": {
+      "created": "تم إنشاء المشروع بنجاح"
+    }
   }
 }

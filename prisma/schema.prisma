@@ -19,6 +19,14 @@ enum UserRole {
   STAFF
 }
 
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
 enum PermissionKey {
   PROJECT_CREATE
   PROJECT_UPDATE
@@ -147,6 +155,10 @@ model Project {
   deedNumber        String?
   workDuration      String?
   googleMapsAddress String?
+
+  status     ProjectStatus @default(PLANNING)
+  isActive   Boolean       @default(true)
+  archivedAt DateTime?
 
   cityId String
   city   City   @relation(fields: [cityId], references: [id], onDelete: Cascade)

@@ -432,6 +432,71 @@
     "label": "Drag and drop to upload files"
   },
   "projects": {
-    "addNew": "Add Project"
+    "addNew": "Add Project",
+    "form": {
+      "generalInfo": "General Information",
+      "nameAr": "Project Name in Arabic",
+      "nameArPlaceholder": "Enter project name in Arabic",
+      "nameEn": "Project Name in English",
+      "nameEnPlaceholder": "Enter project name in English",
+      "imageUpload": "Upload Project Image",
+      "supportedFormats": "Supported formats: jpg, png",
+      "imageDimensions": "Image dimensions: 1000*1000",
+      "maxImageSize": "Image size does not exceed 6mb",
+      "descriptionAr": "Project Description",
+      "descriptionArPlaceholder": "Enter project description in Arabic",
+      "descriptionEn": "Project Description in English",
+      "descriptionEnPlaceholder": "Enter project description in English",
+      "location": "Location",
+      "locationPlaceholder": "Select location",
+      "area": "Area",
+      "areaPlaceholder": "Enter area",
+      "numberOfFloors": "Number of Floors",
+      "numberOfFloorsPlaceholder": "Enter number of floors",
+      "deedNumber": "Deed Number",
+      "deedNumberPlaceholder": "Enter deed number",
+      "projectClassification": "Project Classification",
+      "projectClassificationPlaceholder": "Select project classification",
+      "workDuration": "Work Duration",
+      "workDurationPlaceholder": "Enter work duration",
+      "googleMapsAddress": "Address on Google Map",
+      "googleMapsAddressPlaceholder": "Enter Google Maps address",
+      "internallyRegistered": "Project internally registered for work",
+      "submit": "Add Project",
+      "submitting": "Adding project..."
+    },
+    "errors": {
+      "nameAr": {
+        "required": "Arabic name is required"
+      },
+      "nameEn": {
+        "required": "English name is required"
+      },
+      "descriptionAr": {
+        "required": "Arabic description is required"
+      },
+      "descriptionEn": {
+        "required": "English description is required"
+      },
+      "area": {
+        "required": "Area is required"
+      },
+      "cityId": {
+        "required": "City is required"
+      },
+      "categoryIds": {
+        "required": "At least one category must be selected"
+      },
+      "attachments": {
+        "fileUrl": {
+          "required": "File URL is required"
+        }
+      },
+      "city_not_found": "City not found",
+      "invalid_categories": "One or more selected categories are invalid"
+    },
+    "success": {
+      "created": "Project created successfully"
+    }
   }
 }
