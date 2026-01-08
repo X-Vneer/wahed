@@ -2,7 +2,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import Uploader from "@/components/uploader"
 import { X } from "lucide-react"
 import { useTranslations } from "next-intl"
@@ -24,7 +24,9 @@ export function ImageUploadField() {
 
   return (
     <Field>
-      <FieldLabel>{t("projects.form.imageUpload")}</FieldLabel>
+      <FieldLabel aria-invalid={!!form.errors.image}>
+        {t("projects.form.imageUpload")}
+      </FieldLabel>
       {!imageUrl ? (
         <div className="relative">
           <Uploader
@@ -56,6 +58,9 @@ export function ImageUploadField() {
             </Button>
           </div>
         </div>
+      )}
+      {form.errors.image && (
+        <FieldError errors={[{ message: String(form.errors.image) }]} />
       )}
     </Field>
   )

@@ -447,8 +447,12 @@
       "descriptionArPlaceholder": "Enter project description in Arabic",
       "descriptionEn": "Project Description in English",
       "descriptionEnPlaceholder": "Enter project description in English",
+      "region": "Region",
+      "regionPlaceholder": "Select region",
       "location": "Location",
       "locationPlaceholder": "Select location",
+      "noCitiesAvailable": "No cities available",
+      "selectRegionFirst": "Please select a region first",
       "area": "Area",
       "areaPlaceholder": "Enter area",
       "numberOfFloors": "Number of Floors",
@@ -472,7 +476,8 @@
         "cancel": "Cancel"
       },
       "submit": "Add Project",
-      "submitting": "Adding project..."
+      "submitting": "Adding project...",
+      "cityPlaceholder": "Select city"
     },
     "errors": {
       "nameAr": {
@@ -489,6 +494,9 @@
       },
       "area": {
         "required": "Area is required"
+      },
+      "regionId": {
+        "required": "Region is required"
       },
       "cityId": {
         "required": "City is required"

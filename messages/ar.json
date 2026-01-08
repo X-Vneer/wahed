@@ -448,8 +448,12 @@
       "descriptionArPlaceholder": "أدخل وصف المشروع باللغة العربية",
       "descriptionEn": "وصف المشروع بالانجليزي",
       "descriptionEnPlaceholder": "أدخل وصف المشروع بالإنجليزية",
+      "region": "المنطقة",
+      "regionPlaceholder": "اختر المنطقة",
       "location": "الموقع",
       "locationPlaceholder": "اختر المدينة",
+      "noCitiesAvailable": "لا توجد مدن متاحة",
+      "selectRegionFirst": "يرجى اختيار المنطقة أولاً",
       "area": "المساحة",
       "areaPlaceholder": "أدخل المساحة بالمتر المربع",
       "numberOfFloors": "عدد الطوابق",
@@ -473,7 +477,8 @@
         "cancel": "إلغاء"
       },
       "submit": "إضافة المشروع",
-      "submitting": "جاري الإضافة..."
+      "submitting": "جاري الإضافة...",
+      "cityPlaceholder": "اختر المدينة"
     },
     "errors": {
       "nameAr": {
@@ -490,6 +495,9 @@
       },
       "area": {
         "required": "المساحة مطلوبة"
+      },
+      "regionId": {
+        "required": "المنطقة مطلوبة"
       },
       "cityId": {
         "required": "المدينة مطلوبة"

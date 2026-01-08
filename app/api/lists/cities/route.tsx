@@ -1,11 +1,21 @@
 import db from "@/lib/db"
 import { transformCity } from "@/prisma/cities"
 import { getLocale, getTranslations } from "next-intl/server"
-import { NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const searchParams = request.nextUrl.searchParams
+    const regionId = searchParams.get("region_id")
+
     const cities = await db.city.findMany({
+      where: regionId
+        ? {
+            region: {
+              id: regionId,
+            },
+          }
+        : undefined,
       orderBy: {
         createdAt: "desc",
       },

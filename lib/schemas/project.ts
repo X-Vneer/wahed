@@ -26,6 +26,7 @@ export const createProjectSchema = z.object({
   deedNumber: z.string().optional(),
   workDuration: z.string().optional(),
   googleMapsAddress: z.string().optional(),
+  regionId: z.string().min(1, { error: "projects.errors.regionId.required" }),
   cityId: z.string().min(1, { error: "projects.errors.cityId.required" }),
   categoryIds: z
     .array(z.string())

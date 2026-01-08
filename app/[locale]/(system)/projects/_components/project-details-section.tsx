@@ -24,17 +24,21 @@ import { useProjectFormContext } from "./project-form-context"
 import { useTranslations } from "next-intl"
 import { useProjectCategories } from "@/hooks/use-project-categories"
 import { useCities } from "@/hooks/use-cities"
+import { useRegions } from "@/hooks/use-regions"
 import type { City } from "@/prisma/cities"
 import type { ProjectCategory } from "@/prisma/project-categories"
+import type { Region } from "@/prisma/regions"
 
 export function ProjectDetailsSection() {
   const t = useTranslations()
   const form = useProjectFormContext()
 
   const { data: categoriesData } = useProjectCategories()
-  const { data: citiesData } = useCities()
+  const { data: regionsData } = useRegions()
+  const { data: citiesData } = useCities(form.values.regionId || null)
 
   const categories: ProjectCategory[] = categoriesData?.data?.data || []
+  const regions: Region[] = regionsData?.data?.data || []
   const cities: City[] = citiesData?.data?.data || []
 
   const anchor = useComboboxAnchor()
@@ -42,7 +46,48 @@ export function ProjectDetailsSection() {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* Region */}
+        <Field data-invalid={!!form.errors.regionId}>
+          <FieldLabel htmlFor="regionId">
+            {t("projects.form.region")}
+          </FieldLabel>
+          <Select
+            value={form.values.regionId || ""}
+            onValueChange={(value) => {
+              form.setFieldValue("regionId", value || "")
+              // Clear city selection when region changes
+              form.setFieldValue("cityId", "")
+            }}
+          >
+            <SelectTrigger
+              id="regionId"
+              className="w-full"
+              aria-invalid={!!form.errors.regionId}
+            >
+              <SelectValue>
+                {form.values.regionId
+                  ? regions.find((region) => region.id === form.values.regionId)
+                      ?.name || t("projects.form.regionPlaceholder")
+                  : t("projects.form.regionPlaceholder")}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">
+                {t("projects.form.regionPlaceholder")}
+              </SelectItem>
+              {regions.map((region) => (
+                <SelectItem key={region.id} value={region.id}>
+                  {region.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {form.errors.regionId && (
+            <FieldError errors={[{ message: String(form.errors.regionId) }]} />
+          )}
+        </Field>
+
         {/* Location (City) */}
         <Field data-invalid={!!form.errors.cityId}>
           <FieldLabel htmlFor="cityId">
@@ -53,6 +98,7 @@ export function ProjectDetailsSection() {
             onValueChange={(value) => {
               form.setFieldValue("cityId", value || "")
             }}
+            disabled={!form.values.regionId}
           >
             <SelectTrigger
               id="cityId"
@@ -62,16 +108,30 @@ export function ProjectDetailsSection() {
               <SelectValue>
                 {form.values.cityId
                   ? cities.find((city) => city.id === form.values.cityId)
-                      ?.name || t("projects.form.locationPlaceholder")
-                  : t("projects.form.locationPlaceholder")}
+                      ?.name || t("projects.form.cityPlaceholder")
+                  : t("projects.form.cityPlaceholder")}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {cities.map((city) => (
-                <SelectItem key={city.id} value={city.id}>
-                  {city.name}
-                </SelectItem>
-              ))}
+              {cities.length === 0 ? (
+                <div className="text-muted-foreground px-2 py-1.5 text-sm">
+                  {form.values.regionId
+                    ? t("projects.form.noCitiesAvailable")
+                    : t("projects.form.selectRegionFirst")}
+                </div>
+              ) : (
+                <>
+                  <SelectItem value="">
+                    {t("projects.form.cityPlaceholder")}
+                  </SelectItem>
+
+                  {cities.map((city) => (
+                    <SelectItem key={city.id} value={city.id}>
+                      {city.name}
+                    </SelectItem>
+                  ))}
+                </>
+              )}
             </SelectContent>
           </Select>
           {form.errors.cityId && (
@@ -144,6 +204,7 @@ export function ProjectDetailsSection() {
           <FieldLabel htmlFor="categoryIds">
             {t("projects.form.projectClassification")}
           </FieldLabel>
+
           <div ref={anchor}>
             <Combobox
               value={selectedCategoryIds}
@@ -183,7 +244,11 @@ export function ProjectDetailsSection() {
                     </ComboboxEmpty>
                   ) : (
                     categories.map((category) => (
-                      <ComboboxItem key={category.id} value={category.id}>
+                      <ComboboxItem
+                        className="py-2"
+                        key={category.id}
+                        value={category.id}
+                      >
                         {category.name}
                       </ComboboxItem>
                     ))
