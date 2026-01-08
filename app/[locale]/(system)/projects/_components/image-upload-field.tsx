@@ -1,15 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { Field, FieldLabel } from "@/components/ui/field"
-import { useProjectFormContext } from "./project-form-context"
-import { useTranslations } from "next-intl"
-import { UploadDropzone } from "@/lib/uploadthing"
-import { X } from "lucide-react"
-import Image from "next/image"
-import { toast } from "sonner"
-import Uploader from "@/components/uploader"
 import { Button } from "@/components/ui/button"
+import { Field, FieldLabel } from "@/components/ui/field"
+import Uploader from "@/components/uploader"
+import { X } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { toast } from "sonner"
+import { useProjectFormContext } from "./project-form-context"
 
 export function ImageUploadField() {
   const t = useTranslations()
