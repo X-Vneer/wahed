@@ -430,5 +430,8 @@
   },
   "upload": {
     "label": "Drag and drop to upload files"
+  },
+  "projects": {
+    "addNew": "Add Project"
   }
 }
