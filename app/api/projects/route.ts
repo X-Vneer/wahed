@@ -1,10 +1,68 @@
 import db from "@/lib/db"
 import { createProjectSchema } from "@/lib/schemas/project"
 import { transformZodError } from "@/lib/transform-errors"
-import { getTranslations } from "next-intl/server"
+import { getLocale, getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
+import { projectInclude } from "@/prisma/projects"
+import { ProjectStatus } from "@/lib/generated/prisma/enums"
+import { transformProject } from "@/prisma/projects"
+
+export async function GET(request: NextRequest) {
+  // Check permission
+  const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.PROJECT.VIEW)
+  if (!permissionCheck.hasPermission) {
+    return permissionCheck.error!
+  }
+
+  try {
+    const searchParams = request.nextUrl.searchParams
+    const status = searchParams.get("status")
+    const isActive = searchParams.get("archived")
+
+    const [total, archived] = await Promise.all([
+      db.project.count({
+        where: {
+          archivedAt: null,
+          ...(status ? { status: status as ProjectStatus } : {}),
+        },
+      }),
+
+      db.project.count({
+        where: {
+          archivedAt: { not: null },
+          ...(status ? { status: status as ProjectStatus } : {}),
+        },
+      }),
+    ])
+
+    const projects = await db.project.findMany({
+      include: projectInclude,
+      where: {
+        archivedAt: isActive == "true" ? { not: null } : null,
+        ...(status ? { status: status as ProjectStatus } : {}),
+      },
+    })
+
+    const locale = await getLocale()
+    const transformedProjects = projects.map((project) =>
+      transformProject(project, locale)
+    )
+    return NextResponse.json({
+      projects: transformedProjects,
+      total,
+      archived,
+    })
+  } catch (error) {
+    console.error("Error fetching projects:", error)
+    const t = await getTranslations()
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {

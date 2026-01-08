@@ -511,10 +511,32 @@
         }
       },
       "city_not_found": "المدينة غير موجودة",
-      "invalid_categories": "واحدة أو أكثر من الفئات المحددة غير صحيحة"
+      "invalid_categories": "واحدة أو أكثر من الفئات المحددة غير صحيحة",
+      "failedToLoad": "فشل تحميل المشاريع"
     },
     "success": {
       "created": "تم إنشاء المشروع بنجاح"
-    }
+    },
+    "status": {
+      "completed": "مكتمل",
+      "inProgress": "قيد التنفيذ",
+      "planning": "قيد التخطيط",
+      "onHold": "متوقف",
+      "cancelled": "ملغي"
+    },
+    "daysRemaining": "{count, plural, =0 {لا توجد أيام متبقية} =1 {يوم واحد متبقي} other {# أيام متبقية}}",
+    "stage": "المرحلة {current} من {total}",
+    "areaUnit": "م²",
+    "visitSite": "زيارة الموقع",
+    "type": {
+      "residential": "سكني"
+    },
+    "currentTask": "المهمة الحالية",
+    "task": {
+      "contentWriting": "كتابة المحتوى"
+    },
+    "quickAccess": "وصول سريع",
+    "viewProject": "عرض المشروع",
+    "noProjects": "لم يتم العثور على مشاريع"
   }
 }

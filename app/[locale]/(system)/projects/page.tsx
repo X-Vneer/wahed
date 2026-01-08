@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Link } from "@/lib/i18n/navigation"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { ListProjects } from "./_components/list-projects"
 
 const ProjectsPage = () => {
   const t = useTranslations()
@@ -42,6 +43,9 @@ const ProjectsPage = () => {
           }
         />
       </div>
+
+      {/* Projects List */}
+      <ListProjects />
     </div>
   )
 }

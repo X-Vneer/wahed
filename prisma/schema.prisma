@@ -153,7 +153,7 @@ model Project {
   area              Float?
   numberOfFloors    Int?
   deedNumber        String?
-  workDuration      String?
+  workDuration      Int?
   googleMapsAddress String?
 
   status     ProjectStatus @default(PLANNING)
