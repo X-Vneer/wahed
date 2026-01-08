@@ -60,11 +60,17 @@ function ProjectFormContent() {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <FieldGroup>
-        <GeneralInfoSection />
-        <ImageUploadField />
-        <ProjectDetailsSection />
-        <GoogleMapsAddressField />
-        <InternallyRegisteredField />
+        <Card className="ring-none shadow-none ring-0">
+          <CardContent>
+            <div className="flex flex-col gap-4">
+              <GeneralInfoSection />
+              <ImageUploadField />
+              <ProjectDetailsSection />
+              <GoogleMapsAddressField />
+              <InternallyRegisteredField />
+            </div>
+          </CardContent>
+        </Card>
         <SubmitButton />
       </FieldGroup>
     </form>
@@ -72,7 +78,6 @@ function ProjectFormContent() {
 }
 
 export function AddProjectForm() {
-  const t = useTranslations()
   const form = useProjectForm({
     mode: "uncontrolled",
     initialValues: {
@@ -95,15 +100,8 @@ export function AddProjectForm() {
   })
 
   return (
-    <Card className="w-full border-none shadow-none">
-      <CardHeader>
-        <CardTitle>{t("projects.addNew")}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ProjectFormProvider form={form}>
-          <ProjectFormContent />
-        </ProjectFormProvider>
-      </CardContent>
-    </Card>
+    <ProjectFormProvider form={form}>
+      <ProjectFormContent />
+    </ProjectFormProvider>
   )
 }

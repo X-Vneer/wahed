@@ -33,6 +33,7 @@ const ProjectsPage = () => {
           </Breadcrumb>
         </div>
         <Button
+          nativeButton={false}
           render={
             <Link href="/projects/add">
               <Plus className="size-4" />
