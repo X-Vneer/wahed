@@ -4,11 +4,14 @@ import { Prisma } from "@/lib/generated/prisma/client"
 import { createTaskCategorySchema } from "@/lib/schemas/task-category"
 import { transformZodError } from "@/lib/transform-errors"
 import { transformTaskCategory } from "@/prisma/task-categories"
+import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
 import { getLocale, getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     // Get search query and filters from URL params
     const searchParams = request.nextUrl.searchParams
@@ -44,8 +47,6 @@ export async function GET(request: NextRequest) {
       take: perPage,
     })
 
-    const locale = await getLocale()
-
     const transformedTaskCategories = taskCategories.map((taskCategory) => {
       return transformTaskCategory(taskCategory, locale)
     })
@@ -65,7 +66,6 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error("Error fetching task categories:", error)
-    const t = await getTranslations()
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -75,7 +75,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   // Get translations based on request locale
-  const t = await getTranslations()
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     // Check permission
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.CREATE)

@@ -44,12 +44,12 @@ apiClient.interceptors.request.use(
     if (typeof window !== "undefined") {
       const locale = getLocaleFromPath()
       if (config.headers) {
-        config.headers["Accept-Locale"] = locale
+        config.headers["Accept-Language"] = locale
       }
     } else {
       const locale = await (await import("next-intl/server")).getLocale()
       if (config.headers) {
-        config.headers["Accept-Locale"] = locale
+        config.headers["Accept-Language"] = locale
       }
     }
 

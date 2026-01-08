@@ -8,8 +8,11 @@ import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
+import { getReqLocale } from "@/utils/get-req-locale"
 
 export async function GET(request: NextRequest) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     // Check permission
     const permissionCheck = await hasPermission(
@@ -54,7 +57,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(transformedUsers)
   } catch (error) {
     console.error("Error fetching users:", error)
-    const t = await getTranslations()
+
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -63,6 +66,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Get translations based on request locale
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     // Check permission
     const permissionCheck = await hasPermission(
@@ -71,9 +77,6 @@ export async function POST(request: NextRequest) {
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }
-
-    // Get translations based on request locale
-    const t = await getTranslations()
 
     // Parse and validate request body
     const body = await request.json()
@@ -156,7 +159,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(transformedUser, { status: 201 })
   } catch (error) {
     console.error("Error creating user:", error)
-    const t = await getTranslations()
+
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

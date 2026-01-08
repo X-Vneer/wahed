@@ -2,6 +2,7 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { updateCitySchema } from "@/lib/schemas/cities"
 import { transformZodError } from "@/lib/transform-errors"
+import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
@@ -14,7 +15,8 @@ type RouteContext = {
 
 export async function PUT(request: NextRequest, context: RouteContext) {
   const { id } = await context.params
-  const t = await getTranslations()
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
 
   try {
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.UPDATE)
@@ -56,9 +58,10 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
   const { id } = await context.params
-  const t = await getTranslations()
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
 
   try {
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.DELETE)

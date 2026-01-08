@@ -4,11 +4,14 @@ import { Prisma } from "@/lib/generated/prisma/client"
 import { createCitySchema } from "@/lib/schemas/cities"
 import { transformZodError } from "@/lib/transform-errors"
 import { transformCity } from "@/prisma/cities"
+import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
@@ -51,7 +54,7 @@ export async function GET(request: NextRequest) {
       take: perPage,
     })
 
-    const locale = await getLocale()
+    const locale = await getReqLocale(request)
 
     const transformedCities = cities.map((city) => transformCity(city, locale))
 
@@ -70,7 +73,6 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error("Error fetching cities:", error)
-    const t = await getTranslations()
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -79,7 +81,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const t = await getTranslations()
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.CREATE)
     if (!permissionCheck.hasPermission) {

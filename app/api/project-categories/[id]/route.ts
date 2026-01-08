@@ -1,6 +1,7 @@
 import db from "@/lib/db"
 import { updateProjectCategorySchema } from "@/lib/schemas/project-categories"
 import { transformZodError } from "@/lib/transform-errors"
+import { getReqLocale } from "@/utils/get-req-locale"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -9,10 +10,11 @@ type RouteContext = {
     id: string
   }>
 }
-export async function GET(_request: NextRequest, context: RouteContext) {
+export async function GET(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
 
     const projectCategory = await db.projectCategory.findUnique({
       where: { id },
@@ -28,7 +30,8 @@ export async function GET(_request: NextRequest, context: RouteContext) {
     return NextResponse.json(projectCategory)
   } catch (error) {
     console.error("Error fetching project category:", error)
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -37,9 +40,10 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 }
 
 export async function PUT(request: NextRequest, context: RouteContext) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     const { id } = await context.params
-    const t = await getTranslations()
 
     // Parse and validate request body
     const body = await request.json()
@@ -82,7 +86,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     return NextResponse.json(projectCategory)
   } catch (error) {
     console.error("Error updating project category:", error)
-    const t = await getTranslations()
+
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -91,9 +95,10 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
+  const locale = await getReqLocale(_request)
+  const t = await getTranslations(locale)
   try {
     const { id } = await context.params
-    const t = await getTranslations()
 
     // Check if project category exists
     const existingProjectCategory = await db.projectCategory.findUnique({
@@ -115,7 +120,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error deleting project category:", error)
-    const t = await getTranslations()
+
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

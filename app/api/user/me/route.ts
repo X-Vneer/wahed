@@ -1,13 +1,15 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import db from "@/lib/db"
 import { getTranslations } from "next-intl/server"
 import { transformUser, userSelect } from "@/prisma/users/select"
+import { getReqLocale } from "@/utils/get-req-locale"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     // Get translations based on request locale
-    const t = await getTranslations()
 
     // Get and verify token from cookies
     const payload = await getAccessTokenPayload()
@@ -43,7 +45,7 @@ export async function GET() {
     return NextResponse.json(transformUser(user))
   } catch (error) {
     console.error("Error fetching user:", error)
-    const t = await getTranslations()
+
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

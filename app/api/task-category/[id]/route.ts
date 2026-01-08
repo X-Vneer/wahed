@@ -2,6 +2,7 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { updateTaskCategorySchema } from "@/lib/schemas/task-category"
 import { transformZodError } from "@/lib/transform-errors"
+import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
@@ -12,10 +13,11 @@ type RouteContext = {
   }>
 }
 
-export async function GET(_request: NextRequest, context: RouteContext) {
+export async function GET(request: NextRequest, context: RouteContext) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     const { id } = await context.params
-    const t = await getTranslations()
 
     const taskCategory = await db.taskCategory.findUnique({
       where: { id },
@@ -31,7 +33,8 @@ export async function GET(_request: NextRequest, context: RouteContext) {
     return NextResponse.json(taskCategory)
   } catch (error) {
     console.error("Error fetching task category:", error)
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -42,7 +45,8 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 export async function PUT(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
 
     // Check permission
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.UPDATE)
@@ -91,7 +95,8 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     return NextResponse.json(taskCategory)
   } catch (error) {
     console.error("Error updating task category:", error)
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -99,10 +104,11 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     const { id } = await context.params
-    const t = await getTranslations()
 
     // Check permission
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.DELETE)
@@ -129,8 +135,6 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Error deleting task category:", error)
-    const t = await getTranslations()
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

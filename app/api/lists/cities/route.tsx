@@ -1,6 +1,7 @@
 import db from "@/lib/db"
 import { transformCity } from "@/prisma/cities"
-import { getLocale, getTranslations } from "next-intl/server"
+import { getReqLocale } from "@/utils/get-req-locale"
+import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    const locale = await getLocale()
+    const locale = await getReqLocale(request)
 
     const transformedCities = cities.map((city) => {
       return transformCity(city, locale)
@@ -37,7 +38,8 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error("Error fetching cities:", error)
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

@@ -9,11 +9,14 @@ import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
+import { getReqLocale } from "@/utils/get-req-locale"
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     // Check permission
     const permissionCheck = await hasPermission(
@@ -24,7 +27,6 @@ export async function PUT(
     }
 
     // Get translations based on request locale
-    const t = await getTranslations()
     const { id } = await params
 
     // Parse and validate request body
@@ -140,7 +142,7 @@ export async function PUT(
     return NextResponse.json(transformedUser)
   } catch (error) {
     console.error("Error updating user:", error)
-    const t = await getTranslations()
+
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -152,6 +154,8 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations(locale)
   try {
     // Check permission
     const permissionCheck = await hasPermission(
@@ -162,7 +166,6 @@ export async function DELETE(
     }
 
     // Get translations based on request locale
-    const t = await getTranslations()
     const { id } = await params
 
     // Check if user exists
@@ -211,7 +214,6 @@ export async function DELETE(
     )
   } catch (error) {
     console.error("Error deleting user:", error)
-    const t = await getTranslations()
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

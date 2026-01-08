@@ -9,6 +9,7 @@ import { projectInclude } from "@/prisma/projects"
 import { ProjectStatus } from "@/lib/generated/prisma/enums"
 import { transformProject } from "@/prisma/projects"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
+import { getReqLocale } from "@/utils/get-req-locale"
 
 export async function GET(request: NextRequest) {
   // Check permission
@@ -57,7 +58,8 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error("Error fetching projects:", error)
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -76,7 +78,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get translations based on request locale
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
 
     // Parse and validate request body
     const body = await request.json()
@@ -174,7 +177,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(project, { status: 201 })
   } catch (error) {
     console.error("Error creating project:", error)
-    const t = await getTranslations()
+    const locale = await getReqLocale(request)
+    const t = await getTranslations(locale)
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
