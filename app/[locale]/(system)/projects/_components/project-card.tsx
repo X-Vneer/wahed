@@ -102,24 +102,22 @@ function ProjectCard({ project }: { project: TransformedProject }) {
 
             <div className="space-y-2">
               {/* Project Title and Distance */}
-              <div>
-                <h3 className="text-foreground mb-1 font-bold">
-                  {project.name} .
-                  <span className="text-muted-foreground text-sm font-normal">
-                    {project.area ? `${project.area} ${t("areaUnit")}` : ""}
-                  </span>
-                </h3>
-              </div>
+              <h3 className="text-foreground text-lg font-bold">
+                {project.name} .
+                <span className="text-muted-foreground text-sm font-normal">
+                  {project.area ? `${project.area} ${t("areaUnit")}` : ""}
+                </span>
+              </h3>
 
               {/* Description */}
               {project.description && (
-                <p className="text-foreground line-clamp-2 text-sm font-medium">
+                <p className="text-foreground line-clamp-2 font-medium">
                   {project.description}
                 </p>
               )}
 
               {/* Location and Type */}
-              <div className="flex flex-wrap items-center gap-4 text-sm">
+              <div className="flex flex-wrap items-center gap-4">
                 {project.cityName && (
                   <div className="text-foreground flex items-center gap-2">
                     <MapPin className="size-4" />
@@ -171,7 +169,11 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                   </Link>
                 }
               />
-              <Button size={"sm"}>
+              <Button
+                variant="outline"
+                className="text-primary border-primary hover:text-primary bg-white"
+                size={"sm"}
+              >
                 <ChevronDown className="size-4" />
                 {t("quickAccess")}
               </Button>

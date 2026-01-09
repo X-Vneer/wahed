@@ -8,6 +8,7 @@ export interface ProjectsResponse {
   projects: TransformedProject[]
   total: number
   archived: number
+  totalTasks: number
 }
 
 export const useProjects = (

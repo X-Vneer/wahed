@@ -584,6 +584,14 @@
     },
     "quickAccess": "وصول سريع",
     "viewProject": "عرض المشروع",
-    "noProjects": "لم يتم العثور على مشاريع"
+    "noProjects": "لم يتم العثور على مشاريع",
+    "statusCards": {
+      "allTasks": "كل المهام",
+      "task": "مهمة",
+      "archived": "أرشيف",
+      "archivedProject": "مشروع مؤرشف",
+      "numberOfProjects": "عدد مشاريع",
+      "project": "مشاريع"
+    }
   }
 }

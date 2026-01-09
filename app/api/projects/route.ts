@@ -55,6 +55,7 @@ export async function GET(request: NextRequest) {
       projects: transformedProjects,
       total,
       archived,
+      totalTasks: 100,
     })
   } catch (error) {
     console.error("Error fetching projects:", error)

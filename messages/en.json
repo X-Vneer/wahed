@@ -583,6 +583,14 @@
     },
     "quickAccess": "Quick Access",
     "viewProject": "View Project",
-    "noProjects": "No projects found"
+    "noProjects": "No projects found",
+    "statusCards": {
+      "allTasks": "All Tasks",
+      "task": "task",
+      "archived": "Archived",
+      "archivedProject": "archived project",
+      "numberOfProjects": "Number of Projects",
+      "project": "projects"
+    }
   }
 }
