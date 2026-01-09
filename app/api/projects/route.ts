@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching projects:", error)
     const locale = await getReqLocale(request)
-    const t = await getTranslations(locale)
+    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
 
     // Get translations based on request locale
     const locale = await getReqLocale(request)
-    const t = await getTranslations(locale)
+    const t = await getTranslations({ locale })
 
     // Parse and validate request body
     const body = await request.json()
@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error creating project:", error)
     const locale = await getReqLocale(request)
-    const t = await getTranslations(locale)
+    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

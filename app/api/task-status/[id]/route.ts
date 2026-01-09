@@ -15,7 +15,7 @@ type RouteContext = {
 
 export async function GET(request: NextRequest, context: RouteContext) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     const { id } = await context.params
 
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
 export async function PUT(request: NextRequest, context: RouteContext) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     const { id } = await context.params
 
@@ -103,7 +103,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     const { id } = await context.params
 

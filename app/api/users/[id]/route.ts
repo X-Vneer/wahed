@@ -16,7 +16,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     // Check permission
     const permissionCheck = await hasPermission(
@@ -155,7 +155,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     // Check permission
     const permissionCheck = await hasPermission(

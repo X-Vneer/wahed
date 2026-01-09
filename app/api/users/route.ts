@@ -12,7 +12,7 @@ import { getReqLocale } from "@/utils/get-req-locale"
 
 export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     // Check permission
     const permissionCheck = await hasPermission(
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   // Get translations based on request locale
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     // Check permission
     const permissionCheck = await hasPermission(

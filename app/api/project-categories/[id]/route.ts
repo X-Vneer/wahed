@@ -14,7 +14,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params
     const locale = await getReqLocale(request)
-    const t = await getTranslations(locale)
+    const t = await getTranslations({ locale })
 
     const projectCategory = await db.projectCategory.findUnique({
       where: { id },
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
   } catch (error) {
     console.error("Error fetching project category:", error)
     const locale = await getReqLocale(request)
-    const t = await getTranslations(locale)
+    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
 export async function PUT(request: NextRequest, context: RouteContext) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     const { id } = await context.params
 
@@ -96,7 +96,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   const locale = await getReqLocale(_request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     const { id } = await context.params
 

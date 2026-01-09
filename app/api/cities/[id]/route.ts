@@ -16,7 +16,7 @@ type RouteContext = {
 export async function PUT(request: NextRequest, context: RouteContext) {
   const { id } = await context.params
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
 
   try {
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.UPDATE)
@@ -61,7 +61,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 export async function DELETE(request: NextRequest, context: RouteContext) {
   const { id } = await context.params
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
 
   try {
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.DELETE)

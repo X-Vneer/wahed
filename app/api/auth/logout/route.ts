@@ -6,7 +6,7 @@ import { getReqLocale } from "@/utils/get-req-locale"
 
 export async function POST(request: NextRequest) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     const cookiesStore = await cookies()
     cookiesStore.delete(SESSION_COOKIE_NAME)

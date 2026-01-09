@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching cities:", error)
     const locale = await getReqLocale(request)
-    const t = await getTranslations(locale)
+    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

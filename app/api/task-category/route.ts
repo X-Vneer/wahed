@@ -11,7 +11,7 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     // Get search query and filters from URL params
     const searchParams = request.nextUrl.searchParams
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   // Get translations based on request locale
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     // Check permission
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.CREATE)

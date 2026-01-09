@@ -7,7 +7,7 @@ import { getReqLocale } from "@/utils/get-req-locale"
 
 export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     // Get translations based on request locale
 

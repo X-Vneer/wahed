@@ -11,7 +11,7 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const locale = await getReqLocale(request)
-  const t = await getTranslations(locale)
+  const t = await getTranslations({ locale })
   try {
     const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.CREATE)
     if (!permissionCheck.hasPermission) {
