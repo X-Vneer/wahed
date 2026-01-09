@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 export function SubmitButton() {
   const t = useTranslations()
   const form = useProjectFormContext()
+  console.log("🚀 ~ SubmitButton ~ form:", form.errors)
 
   return (
     <Card className="ring-none shadow-none ring-0">
@@ -25,6 +26,9 @@ export function SubmitButton() {
             )}
           </Button>
         </div>
+        {form.errors.root && (
+          <div className="text-sm text-red-500">{form.errors.root}</div>
+        )}
       </CardContent>
     </Card>
   )

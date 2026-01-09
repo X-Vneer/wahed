@@ -379,6 +379,72 @@ async function main() {
 
   console.log("✅ Seeded task categories")
 
+  // Seed project categories
+  const projectCategories = [
+    {
+      id: "project-category-residential",
+      nameAr: "سكني",
+      nameEn: "Residential",
+      isActive: true,
+    },
+    {
+      id: "project-category-commercial",
+      nameAr: "تجاري",
+      nameEn: "Commercial",
+      isActive: true,
+    },
+    {
+      id: "project-category-industrial",
+      nameAr: "صناعي",
+      nameEn: "Industrial",
+      isActive: true,
+    },
+    {
+      id: "project-category-mixed-use",
+      nameAr: "استخدام مختلط",
+      nameEn: "Mixed Use",
+      isActive: true,
+    },
+    {
+      id: "project-category-infrastructure",
+      nameAr: "بنية تحتية",
+      nameEn: "Infrastructure",
+      isActive: true,
+    },
+    {
+      id: "project-category-hospitality",
+      nameAr: "ضيافة",
+      nameEn: "Hospitality",
+      isActive: true,
+    },
+    {
+      id: "project-category-educational",
+      nameAr: "تعليمي",
+      nameEn: "Educational",
+      isActive: true,
+    },
+    {
+      id: "project-category-healthcare",
+      nameAr: "صحي",
+      nameEn: "Healthcare",
+      isActive: true,
+    },
+  ]
+
+  for (const category of projectCategories) {
+    await db.projectCategory.upsert({
+      where: { id: category.id },
+      update: {
+        nameAr: category.nameAr,
+        nameEn: category.nameEn,
+        isActive: category.isActive,
+      },
+      create: category,
+    })
+  }
+
+  console.log("✅ Seeded project categories")
+
   console.log("\n📋 Seed Summary:")
   console.log("   Admin: admin@wahed.com / admin123")
   console.log("   Staff 1: staff1@wahed.com / staff123")
@@ -386,6 +452,7 @@ async function main() {
   console.log("   Regions: 13 Saudi regions with major cities")
   console.log("   Task Statuses: 4 default statuses")
   console.log("   Task Categories: 4 default categories")
+  console.log("   Project Categories: 8 default categories")
   console.log("\n✨ Seed completed successfully!")
 }
 

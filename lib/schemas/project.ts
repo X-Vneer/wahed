@@ -66,10 +66,8 @@ export const createProjectSchema = z.object({
           options: z.array(z.string()).optional(), // For choice fields
           min: z.number().optional(),
           max: z.number().optional(),
-          minDate: z.date().optional(),
-          maxDate: z.date().optional(),
-          minTime: z.date().optional(),
-          maxTime: z.date().optional(),
+          minDate: z.coerce.date().optional(),
+          maxDate: z.coerce.date().optional(),
           placeholder: z.string().optional(),
           required: z.boolean().optional(),
         })

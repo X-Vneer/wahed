@@ -10,6 +10,7 @@ import { ProjectStatus } from "@/lib/generated/prisma/enums"
 import { transformProject } from "@/prisma/projects"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { getReqLocale } from "@/utils/get-req-locale"
+import { Prisma } from "@/lib/generated/prisma/client"
 
 export async function GET(request: NextRequest) {
   // Check permission
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest) {
 
     // Parse and validate request body
     const body = await request.json()
+    console.log("🚀 ~ body:", body)
     const validationResult = createProjectSchema.safeParse(body)
 
     if (!validationResult.success) {
@@ -170,6 +172,43 @@ export async function POST(request: NextRequest) {
                   fileSize: attachment.fileSize || null,
                   additionalInfo: attachment.additionalInfo || null,
                 })),
+              }
+            : undefined,
+        additionalData:
+          data.additionalFields && data.additionalFields.length > 0
+            ? {
+                create: data.additionalFields.map((field) => {
+                  // Convert value to proper JSON format
+                  let jsonValue:
+                    | Prisma.InputJsonValue
+                    | Prisma.JsonNullValueInput = Prisma.JsonNull
+                  if (field.value !== undefined && field.value !== null) {
+                    if (typeof field.value === "string") {
+                      const trimmed = field.value.trim()
+                      jsonValue = trimmed || Prisma.JsonNull
+                    } else if (Array.isArray(field.value)) {
+                      jsonValue = field.value
+                    } else {
+                      jsonValue = field.value as Prisma.InputJsonValue
+                    }
+                  }
+
+                  return {
+                    name: field.label,
+                    value: jsonValue,
+                    type: field.type,
+                    options:
+                      field.options && field.options.length > 0
+                        ? (field.options as Prisma.InputJsonValue)
+                        : undefined,
+                    min: field.min ?? undefined,
+                    max: field.max ?? undefined,
+                    minDate: field.minDate ?? undefined,
+                    maxDate: field.maxDate ?? undefined,
+                    placeholder: field.placeholder ?? undefined,
+                    required: field.required ?? false,
+                  }
+                }),
               }
             : undefined,
       },

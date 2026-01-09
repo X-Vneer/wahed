@@ -77,8 +77,6 @@ type FormAdditionalField = {
   max?: number
   minDate?: Date
   maxDate?: Date
-  minTime?: Date
-  maxTime?: Date
   placeholder?: string
   required?: boolean
 }
@@ -149,9 +147,6 @@ function AddFieldModal({
       // Text fields
       minLength: "",
       maxLength: "",
-      // Time fields
-      minTime: "",
-      maxTime: "",
       // Choice fields
       options: [] as string[],
       newOption: "",
@@ -207,20 +202,6 @@ function AddFieldModal({
     } else if (fieldType === "text" || fieldType === "textarea") {
       // Note: minLength/maxLength are not in the schema, so we skip them
       // They could be added to the schema if needed
-    } else if (fieldType === "time") {
-      if (modalForm.values.minTime) {
-        // Parse time string to Date (using today's date)
-        const [hours, minutes] = modalForm.values.minTime.split(":")
-        const date = new Date()
-        date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0)
-        newField.minTime = date
-      }
-      if (modalForm.values.maxTime) {
-        const [hours, minutes] = modalForm.values.maxTime.split(":")
-        const date = new Date()
-        date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0)
-        newField.maxTime = date
-      }
     }
 
     onAdd(newField)
@@ -430,30 +411,6 @@ function AddFieldModal({
                 </>
               )}
 
-              {/* Time fields metadata */}
-              {fieldType === "time" && (
-                <>
-                  <Field>
-                    <FieldLabel>
-                      {t("projects.form.additionalFields.metadata.minTime")}
-                    </FieldLabel>
-                    <Input
-                      type="time"
-                      {...modalForm.getInputProps("minTime")}
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel>
-                      {t("projects.form.additionalFields.metadata.maxTime")}
-                    </FieldLabel>
-                    <Input
-                      type="time"
-                      {...modalForm.getInputProps("maxTime")}
-                    />
-                  </Field>
-                </>
-              )}
-
               {/* Choice fields options */}
               {(fieldType === "singleChoice" ||
                 fieldType === "multipleChoice") && (
@@ -632,36 +589,12 @@ export function AdditionalFieldsSection() {
         )
       }
       case "time": {
-        // Convert Date to time string for input
-        const timeValue =
-          field.value instanceof Date
-            ? `${String(field.value.getHours()).padStart(2, "0")}:${String(field.value.getMinutes()).padStart(2, "0")}`
-            : typeof field.value === "string"
-              ? field.value
-              : ""
-
-        const minTime = field.minTime
-          ? `${String(field.minTime.getHours()).padStart(2, "0")}:${String(field.minTime.getMinutes()).padStart(2, "0")}`
-          : undefined
-        const maxTime = field.maxTime
-          ? `${String(field.maxTime.getHours()).padStart(2, "0")}:${String(field.maxTime.getMinutes()).padStart(2, "0")}`
-          : undefined
-
         return (
           <Input
             key={fieldKey}
             type="time"
             placeholder={placeholder}
-            value={timeValue}
-            onChange={(e) => {
-              // Convert time string to Date
-              const [hours, minutes] = e.target.value.split(":")
-              const date = new Date()
-              date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0)
-              form.setFieldValue(valuePath, date)
-            }}
-            min={minTime}
-            max={maxTime}
+            {...form.getInputProps(valuePath)}
           />
         )
       }

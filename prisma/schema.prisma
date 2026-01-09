@@ -205,6 +205,4 @@ model ProjectAdditionalData {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@unique([projectId, name])
 }

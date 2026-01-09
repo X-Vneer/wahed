@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
+import { logo } from "@/assets"
 
 function ProjectCard({ project }: { project: TransformedProject }) {
   const t = useTranslations("projects")
@@ -58,21 +59,14 @@ function ProjectCard({ project }: { project: TransformedProject }) {
   return (
     <Card className="shadow-none ring-0">
       <CardContent>
-        <div
-          className={cn(
-            "flex flex-col gap-4",
-            project.image ? "md:flex-row" : ""
-          )}
-        >
-          {project.image && (
-            <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-xl md:w-64">
-              <img
-                src={project.image}
-                alt={project.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          )}
+        <div className={cn("flex flex-col gap-4", "md:flex-row")}>
+          <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-xl md:w-64">
+            <img
+              src={project.image || logo.src}
+              alt={project.name}
+              className="h-full w-full object-cover"
+            />
+          </div>
           <div className="flex flex-1 flex-col justify-between">
             {/* Status Badges - Top Left */}
             <div className="flex flex-wrap items-center justify-end gap-2">

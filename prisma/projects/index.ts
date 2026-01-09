@@ -42,7 +42,7 @@ export const transformProject = (project: ProjectInclude, locale: string) => {
     categories: project.categories.map((category) =>
       locale === "ar" ? category.nameAr : category.nameEn
     ),
-    attachments: project.attachments.map((attachment) => attachment.fileUrl),
+    attachments: project.attachments,
     additionalData: project.additionalData,
   }
 }

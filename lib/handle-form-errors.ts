@@ -55,5 +55,6 @@ export function handleFormErrors<T extends Record<string, unknown>>(
   }
 
   // Return the main error message for root error display
+  form.setFieldError("root", responseData.error)
   return responseData.error || null
 }

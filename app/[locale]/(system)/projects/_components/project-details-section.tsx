@@ -9,17 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  Combobox,
-  ComboboxChips,
-  ComboboxChip,
-  ComboboxChipsInput,
-  ComboboxContent,
-  ComboboxList,
-  ComboboxItem,
-  ComboboxEmpty,
-  useComboboxAnchor,
-} from "@/components/ui/combobox"
 import { useProjectFormContext } from "./project-form-context"
 import { useTranslations } from "next-intl"
 import { useProjectCategories } from "@/hooks/use-project-categories"
@@ -40,9 +29,6 @@ export function ProjectDetailsSection() {
   const categories: ProjectCategory[] = categoriesData?.data?.data || []
   const regions: Region[] = regionsData?.data?.data || []
   const cities: City[] = citiesData?.data?.data || []
-
-  const anchor = useComboboxAnchor()
-  const selectedCategoryIds = form.values.categoryIds || []
 
   return (
     <>
@@ -179,7 +165,7 @@ export function ProjectDetailsSection() {
         </Field>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Deed Number */}
         <Field data-invalid={!!form.errors.deedNumber}>
           <FieldLabel htmlFor="deedNumber">
@@ -204,59 +190,46 @@ export function ProjectDetailsSection() {
           <FieldLabel htmlFor="categoryIds">
             {t("projects.form.projectClassification")}
           </FieldLabel>
-
-          <div ref={anchor}>
-            <Combobox
-              value={selectedCategoryIds}
-              onValueChange={(value) => {
-                if (Array.isArray(value)) {
-                  form.setFieldValue("categoryIds", value)
-                }
-              }}
-              multiple
+          <Select
+            multiple={true}
+            value={form.values.categoryIds}
+            onValueChange={(value) => {
+              form.setFieldValue("categoryIds", value)
+            }}
+          >
+            <SelectTrigger
+              id="categoryIds"
+              className="w-full"
+              aria-invalid={!!form.errors.categoryIds}
             >
-              <ComboboxChips
-                id="categoryIds"
-                aria-invalid={!!form.errors.categoryIds}
-              >
-                {selectedCategoryIds.map((categoryId) => {
-                  const category = categories.find((c) => c.id === categoryId)
-                  if (!category) return null
-                  return (
-                    <ComboboxChip key={categoryId}>
-                      {category.name}
-                    </ComboboxChip>
-                  )
-                })}
-                <ComboboxChipsInput
-                  placeholder={
-                    selectedCategoryIds.length === 0
-                      ? t("projects.form.projectClassificationPlaceholder")
-                      : ""
-                  }
-                />
-              </ComboboxChips>
-              <ComboboxContent anchor={anchor}>
-                <ComboboxList>
-                  {categories.length === 0 ? (
-                    <ComboboxEmpty>
-                      {t("projects.form.projectClassificationPlaceholder")}
-                    </ComboboxEmpty>
-                  ) : (
-                    categories.map((category) => (
-                      <ComboboxItem
-                        className="py-2"
-                        key={category.id}
-                        value={category.id}
-                      >
-                        {category.name}
-                      </ComboboxItem>
-                    ))
-                  )}
-                </ComboboxList>
-              </ComboboxContent>
-            </Combobox>
-          </div>
+              <SelectValue>
+                {form.values.categoryIds.length > 0
+                  ? form.values.categoryIds
+                      .map((id) => categories.find((c) => c.id === id)?.name)
+                      .join(", ")
+                  : t("projects.form.projectClassificationPlaceholder")}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {categories.length === 0 ? (
+                <div className="text-muted-foreground px-2 py-1.5 text-sm">
+                  {t("projects.form.projectClassificationPlaceholder")}
+                </div>
+              ) : (
+                [
+                  {
+                    id: "",
+                    name: t("projects.form.projectClassificationPlaceholder"),
+                  },
+                  ...categories,
+                ].map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))
+              )}
+            </SelectContent>
+          </Select>
           {form.errors.categoryIds && (
             <FieldError
               errors={[{ message: String(form.errors.categoryIds) }]}

@@ -53,6 +53,7 @@ function ProjectFormContent() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const rootError = handleFormErrors(error, form)
+
         toast.error(rootError || t("errors.internal_server_error"))
         return
       }
