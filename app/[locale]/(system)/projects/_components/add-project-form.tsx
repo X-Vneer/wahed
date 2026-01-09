@@ -20,6 +20,7 @@ import { ProjectDetailsSection } from "./project-details-section"
 import { GoogleMapsAddressField } from "./google-maps-address-field"
 import { InternallyRegisteredField } from "./internally-registered-field"
 import { AttachmentsUploadField } from "./attachments-upload-field"
+import { AdditionalFieldsSection } from "./additional-fields-section"
 import { SubmitButton } from "./submit-button"
 import apiClient from "@/services"
 
@@ -39,6 +40,7 @@ function ProjectFormContent() {
         image: values.image || undefined,
         categoryIds: values.categoryIds,
         attachments: values.attachments || [],
+        additionalFields: values.additionalFields || [],
       }
 
       await apiClient.post("/api/projects", submitData)
@@ -61,19 +63,30 @@ function ProjectFormContent() {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <FieldGroup>
-        <Card className="ring-none shadow-none ring-0">
-          <CardContent>
-            <div className="flex flex-col gap-4">
-              <GeneralInfoSection />
-              <ImageUploadField />
-              <ProjectDetailsSection />
-              <GoogleMapsAddressField />
-              <InternallyRegisteredField />
-            </div>
-          </CardContent>
-        </Card>
-        <AttachmentsUploadField />
-        <SubmitButton />
+        <div className="flex gap-4">
+          <div className="flex grow flex-col gap-4">
+            <Card className="ring-none w-full shadow-none ring-0">
+              <CardContent>
+                <div className="flex flex-col gap-4">
+                  <GeneralInfoSection />
+                  <ImageUploadField />
+                  <ProjectDetailsSection />
+                  <GoogleMapsAddressField />
+                  <InternallyRegisteredField />
+                </div>
+              </CardContent>
+            </Card>
+            <AttachmentsUploadField />
+            <SubmitButton />
+          </div>
+          <div className="md:max-w-sm">
+            <Card className="ring-none shadow-none ring-0">
+              <CardContent>
+                <AdditionalFieldsSection />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </FieldGroup>
     </form>
   )
@@ -98,6 +111,7 @@ export function AddProjectForm() {
       categoryIds: [] as string[],
       isActive: true,
       attachments: [],
+      additionalFields: [],
     },
     validate: zod4Resolver(createProjectSchema),
   })

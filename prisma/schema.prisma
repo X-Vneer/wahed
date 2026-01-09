@@ -187,12 +187,21 @@ model ProjectAttachment {
 }
 
 model ProjectAdditionalData {
-  id    String @id @default(cuid())
-  name  String
-  value Json // can store string, number, or boolean
-
-  projectId String
-  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  name        String
+  value       Json // can store string, number, or boolean
+  type        String // can be "text", "number", "boolean", "date", "time", "singleChoice", "multipleChoice"
+  options     Json? // for choice fields
+  min         Float?
+  max         Float?
+  minDate     DateTime?
+  maxDate     DateTime?
+  minTime     DateTime?
+  maxTime     DateTime?
+  placeholder String?
+  required    Boolean   @default(false)
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -478,7 +478,51 @@
       },
       "submit": "إضافة المشروع",
       "submitting": "جاري الإضافة...",
-      "cityPlaceholder": "اختر المدينة"
+      "cityPlaceholder": "اختر المدينة",
+      "additionalFields": {
+        "title": "الحقول الإضافية",
+        "fieldLabel": "تسمية الحقل",
+        "labelPlaceholder": "أدخل تسمية الحقل",
+        "valuePlaceholder": "أدخل القيمة",
+        "selectDate": "اختر التاريخ",
+        "optionsPlaceholder": "تكوين الخيارات",
+        "noOptions": "لا توجد خيارات متاحة",
+        "delete": "حذف",
+        "addField": "إضافة حقل",
+        "add": "إضافة",
+        "placeholder": "نص توضيحي",
+        "placeholderPlaceholder": "أدخل النص التوضيحي",
+        "errors": {
+          "labelRequired": "تسمية الحقل مطلوبة"
+        },
+        "metadata": {
+          "min": "القيمة الدنيا",
+          "minPlaceholder": "أدخل القيمة الدنيا",
+          "max": "القيمة العليا",
+          "maxPlaceholder": "أدخل القيمة العليا",
+          "minDate": "أقل تاريخ",
+          "maxDate": "أكبر تاريخ",
+          "minLength": "الحد الأدنى للطول",
+          "minLengthPlaceholder": "أدخل الحد الأدنى لعدد الأحرف",
+          "maxLength": "الحد الأقصى للطول",
+          "maxLengthPlaceholder": "أدخل الحد الأقصى لعدد الأحرف",
+          "minTime": "أقل وقت",
+          "maxTime": "أكبر وقت",
+          "options": "الخيارات",
+          "addOption": "إضافة خيار",
+          "required": "حقل مطلوب"
+        },
+        "fieldTypes": {
+          "dateField": "حقل تاريخ",
+          "numberField": "حقل رقم",
+          "largeTextField": "حقل كتابة كبير",
+          "multipleChoice": "خيارات متعددة",
+          "list": "قائمة",
+          "simpleTextField": "حقل كتابة بسيط",
+          "timeField": "حقل وقت",
+          "singleChoice": "خيار واحد"
+        }
+      }
     },
     "errors": {
       "nameAr": {
@@ -509,6 +553,9 @@
         "fileUrl": {
           "required": "رابط الملف مطلوب"
         }
+      },
+      "additionalFields": {
+        "required": "هذا الحقل مطلوب"
       },
       "city_not_found": "المدينة غير موجودة",
       "invalid_categories": "واحدة أو أكثر من الفئات المحددة غير صحيحة",

@@ -47,6 +47,62 @@ export const createProjectSchema = z.object({
     )
     .optional()
     .default([]),
+  additionalFields: z
+    .array(
+      z
+        .object({
+          id: z.string(),
+          type: z.enum([
+            "date",
+            "number",
+            "text",
+            "textarea",
+            "time",
+            "singleChoice",
+            "multipleChoice",
+          ]),
+          label: z.string().min(1),
+          value: z.any().optional(),
+          options: z.array(z.string()).optional(), // For choice fields
+          min: z.number().optional(),
+          max: z.number().optional(),
+          minDate: z.date().optional(),
+          maxDate: z.date().optional(),
+          minTime: z.date().optional(),
+          maxTime: z.date().optional(),
+          placeholder: z.string().optional(),
+          required: z.boolean().optional(),
+        })
+        .refine(
+          (field) => {
+            if (field.required) {
+              // Check if value is empty
+              if (field.value === undefined || field.value === null) {
+                return false
+              }
+              // Check for empty string
+              if (
+                typeof field.value === "string" &&
+                field.value.trim() === ""
+              ) {
+                return false
+              }
+              // Check for empty array
+              if (Array.isArray(field.value) && field.value.length === 0) {
+                return false
+              }
+              return true
+            }
+            return true
+          },
+          {
+            path: ["value"],
+            message: "projects.errors.additionalFields.required",
+          }
+        )
+    )
+    .optional()
+    .default([]),
 })
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>

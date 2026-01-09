@@ -477,7 +477,51 @@
       },
       "submit": "Add Project",
       "submitting": "Adding project...",
-      "cityPlaceholder": "Select city"
+      "cityPlaceholder": "Select city",
+      "additionalFields": {
+        "title": "Additional Fields",
+        "fieldLabel": "Field Label",
+        "labelPlaceholder": "Enter field label",
+        "valuePlaceholder": "Enter value",
+        "selectDate": "Select date",
+        "optionsPlaceholder": "Options configuration",
+        "noOptions": "No options available",
+        "delete": "Delete",
+        "addField": "Add Field",
+        "add": "Add",
+        "placeholder": "Placeholder",
+        "placeholderPlaceholder": "Enter placeholder text",
+        "errors": {
+          "labelRequired": "Field label is required"
+        },
+        "metadata": {
+          "min": "Minimum Value",
+          "minPlaceholder": "Enter minimum value",
+          "max": "Maximum Value",
+          "maxPlaceholder": "Enter maximum value",
+          "minDate": "Minimum Date",
+          "maxDate": "Maximum Date",
+          "minLength": "Minimum Length",
+          "minLengthPlaceholder": "Enter minimum character length",
+          "maxLength": "Maximum Length",
+          "maxLengthPlaceholder": "Enter maximum character length",
+          "minTime": "Minimum Time",
+          "maxTime": "Maximum Time",
+          "options": "Options",
+          "addOption": "Add option",
+          "required": "Required Field"
+        },
+        "fieldTypes": {
+          "dateField": "Date Field",
+          "numberField": "Number Field",
+          "largeTextField": "Large Text Field",
+          "multipleChoice": "Multiple Choice",
+          "list": "List",
+          "simpleTextField": "Simple Text Field",
+          "timeField": "Time Field",
+          "singleChoice": "Single Choice"
+        }
+      }
     },
     "errors": {
       "nameAr": {
@@ -508,6 +552,9 @@
         "fileUrl": {
           "required": "File URL is required"
         }
+      },
+      "additionalFields": {
+        "required": "This field is required"
       },
       "city_not_found": "City not found",
       "invalid_categories": "One or more selected categories are invalid",
