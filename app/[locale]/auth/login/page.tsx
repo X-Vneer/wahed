@@ -11,44 +11,52 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
-import { useForm } from "@tanstack/react-form"
+import { handleFormErrors } from "@/lib/handle-form-errors"
+import { useForm } from "@mantine/form"
+import axios from "axios"
+import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
-import * as z from "zod"
+import * as z from "zod/v4"
 import { loginAction } from "./actions"
 
 export default function LoginPage() {
   const t = useTranslations("auth.login")
-  const tErrors = useTranslations("auth.login.errors")
+
   const router = useRouter()
-  const [serverError, setServerError] = useState<string | null>(null)
 
   const formSchema = z.object({
-    email: z.email(tErrors("email.invalid")),
-    password: z.string().min(8, tErrors("password.minLength")),
+    email: z.email("auth.login.errors.email.invalid"),
+    password: z.string().min(8, "auth.login.errors.password.minLength"),
   })
 
   const form = useForm({
-    defaultValues: {
+    mode: "controlled",
+    initialValues: {
       email: "",
       password: "",
     },
-    validators: {
-      onSubmit: formSchema,
-    },
-    onSubmit: async ({ value }) => {
-      setServerError(null)
-      const result = await loginAction(value.email, value.password)
+    validate: zod4Resolver(formSchema),
+  })
+
+  const handleSubmit = async (values: typeof form.values) => {
+    try {
+      const result = await loginAction(values.email, values.password)
       if (result.success) {
         router.refresh()
         router.push("/")
       } else {
-        setServerError(result.error)
+        form.setFieldError("root", result.error)
       }
-    },
-  })
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        handleFormErrors(error, form)
+      } else {
+        form.setFieldError("root", "An unknown error occurred")
+      }
+    }
+  }
 
   return (
     <div className="relative flex min-h-screen items-center justify-center">
@@ -97,79 +105,50 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent className="px-6 pb-3">
-          <form
-            id="login-form"
-            onSubmit={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              form.handleSubmit()
-            }}
-          >
+          <form id="login-form" onSubmit={form.onSubmit(handleSubmit)}>
             <FieldGroup>
               {/* Email Field */}
-              <form.Field name="email">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>{t("email")}</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        type="email"
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder={t("emailPlaceholder")}
-                        className="bg-white"
-                        aria-invalid={isInvalid}
-                        autoComplete="email"
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={!!form.errors.email}>
+                <FieldLabel htmlFor="email">{t("email")}</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  {...form.getInputProps("email")}
+                  placeholder={t("emailPlaceholder")}
+                  className="bg-white"
+                  aria-invalid={!!form.errors.email}
+                  autoComplete="email"
+                />
+                {form.errors.email && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.email) }]}
+                  />
+                )}
+              </Field>
 
               {/* Password Field */}
-              <form.Field name="password">
-                {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>
-                        {t("password")}
-                      </FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        type="password"
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="••••••••"
-                        className="bg-white"
-                        aria-invalid={isInvalid}
-                        autoComplete="current-password"
-                      />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                    </Field>
-                  )
-                }}
-              </form.Field>
+              <Field data-invalid={!!form.errors.password}>
+                <FieldLabel htmlFor="password">{t("password")}</FieldLabel>
+                <Input
+                  id="password"
+                  type="password"
+                  {...form.getInputProps("password")}
+                  placeholder="••••••••"
+                  className="bg-white"
+                  aria-invalid={!!form.errors.password}
+                  autoComplete="current-password"
+                />
+                {form.errors.password && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.password) }]}
+                  />
+                )}
+              </Field>
             </FieldGroup>
 
             {/* Server Error Message */}
-            {serverError && (
-              <div className="text-destructive mt-4 text-sm font-medium">
-                {tErrors(serverError)}
-              </div>
+            {form.errors.root && (
+              <FieldError errors={[{ message: String(form.errors.root) }]} />
             )}
 
             {/* Login Button */}
@@ -178,9 +157,9 @@ export default function LoginPage() {
                 type="submit"
                 form="login-form"
                 className="w-full py-6 text-base font-medium"
-                disabled={form.state.isSubmitting}
+                disabled={form.submitting}
               >
-                {form.state.isSubmitting ? <Spinner /> : null}
+                {form.submitting ? <Spinner /> : null}
 
                 {t("button")}
               </Button>

@@ -24,7 +24,7 @@ export async function loginAction(
     if (!user) {
       return {
         success: false,
-        error: "invalid_credentials",
+        error: "auth.login.errors.invalid_credentials",
       }
     }
 
@@ -32,7 +32,7 @@ export async function loginAction(
     if (!user.isActive) {
       return {
         success: false,
-        error: "account_inactive",
+        error: "auth.login.errors.account_inactive",
       }
     }
 
@@ -41,7 +41,7 @@ export async function loginAction(
     if (!isPasswordValid) {
       return {
         success: false,
-        error: "invalid_credentials",
+        error: "auth.login.errors.invalid_credentials",
       }
     }
 
@@ -66,7 +66,7 @@ export async function loginAction(
     console.error("Login error:", error)
     return {
       success: false,
-      error: "server_error",
+      error: "auth.login.errors.server_error",
     }
   }
 }
