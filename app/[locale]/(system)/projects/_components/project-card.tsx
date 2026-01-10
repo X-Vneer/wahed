@@ -214,8 +214,8 @@ function ProjectCard({ project }: { project: TransformedProject }) {
           </CardContent>
         </Card>
 
-        <CollapsibleContent className="w-full">
-          <Card className="mt-2 shadow-none ring-0">
+        <CollapsibleContent className="-mt-4 w-full rounded-t-none border-t">
+          <Card className="rounded-t-none shadow-none ring-0">
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {/* Tasks Column - Left */}
