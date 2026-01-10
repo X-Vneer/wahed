@@ -4,7 +4,8 @@
     "hello": "Hello",
     "cancel": "Cancel",
     "save": "Save",
-    "edit": "Edit project"
+    "edit": "Edit project",
+    "update": "Edit"
   },
   "auth": {
     "login": {

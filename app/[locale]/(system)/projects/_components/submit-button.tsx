@@ -6,33 +6,36 @@ import { useProjectFormContext } from "./project-form-context"
 import { useTranslations } from "next-intl"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 
 export function SubmitButton() {
+  const { id } = useParams()
   const t = useTranslations()
   const form = useProjectFormContext()
-  console.log("🚀 ~ SubmitButton ~ form:", form.errors)
 
   return (
     <Card className="ring-none shadow-none ring-0">
       <CardContent>
         <div className="flex justify-end gap-3">
           <Button
-            type="button"
             variant="outline"
             className={"px-8"}
+            nativeButton={false}
             disabled={form.submitting}
-            render={<Link href="/projects">{t("common.cancel")}</Link>}
+            render={
+              <Link href={id ? `/projects/${id}` : "/projects"}>
+                {t("common.cancel")}
+              </Link>
+            }
           />
 
           <Button type="submit" className={"px-8"} disabled={form.submitting}>
             {form.submitting ? (
               <>
-                <Spinner className="mr-2" />
-                {t("projects.form.submitting")}
+                <Spinner className="me-2" />
               </>
-            ) : (
-              t("projects.form.submit")
-            )}
+            ) : null}
+            {id ? t("common.update") : t("projects.form.submit")}
           </Button>
         </div>
         {form.errors.root && (
