@@ -5,6 +5,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { useProjectFormContext } from "./project-form-context"
 import { useTranslations } from "next-intl"
 import { Card, CardContent } from "@/components/ui/card"
+import Link from "next/link"
 
 export function SubmitButton() {
   const t = useTranslations()
@@ -14,8 +15,16 @@ export function SubmitButton() {
   return (
     <Card className="ring-none shadow-none ring-0">
       <CardContent>
-        <div className="flex justify-end">
-          <Button type="submit" disabled={form.submitting}>
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            className={"px-8"}
+            disabled={form.submitting}
+            render={<Link href="/projects">{t("common.cancel")}</Link>}
+          />
+
+          <Button type="submit" className={"px-8"} disabled={form.submitting}>
             {form.submitting ? (
               <>
                 <Spinner className="mr-2" />

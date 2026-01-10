@@ -64,7 +64,7 @@ function ProjectFormContent() {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <FieldGroup>
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row">
           <div className="flex grow flex-col gap-4">
             <Card className="ring-none w-full shadow-none ring-0">
               <CardContent>
@@ -78,15 +78,21 @@ function ProjectFormContent() {
               </CardContent>
             </Card>
             <AttachmentsUploadField />
-            <SubmitButton />
           </div>
-          <div className="md:max-w-sm">
+          <div className="lg:w-sm">
             <Card className="ring-none shadow-none ring-0">
               <CardContent>
                 <AdditionalFieldsSection />
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        <div className="flex flex-col gap-4 lg:flex-row">
+          <div className="grow">
+            <SubmitButton />
+          </div>
+          <div className="lg:w-sm"></div>
         </div>
       </FieldGroup>
     </form>
