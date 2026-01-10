@@ -621,6 +621,11 @@
       "archivedProject": "مشروع مؤرشف",
       "numberOfProjects": "عدد مشاريع",
       "project": "مشاريع"
-    }
+    },
+    "sidebar": {
+      "files": "مرفقات المشروع",
+      "tasks": "مهام المشروع"
+    },
+    "noTasks": "لا توجد مهام"
   }
 }

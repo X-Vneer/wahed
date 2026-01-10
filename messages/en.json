@@ -620,6 +620,11 @@
       "archivedProject": "archived project",
       "numberOfProjects": "Number of Projects",
       "project": "projects"
-    }
+    },
+    "sidebar": {
+      "files": "Project attachments",
+      "tasks": "Project tasks"
+    },
+    "noTasks": "There is no tasks"
   }
 }

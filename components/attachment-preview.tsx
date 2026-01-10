@@ -21,7 +21,7 @@ import type { ProjectAttachment } from "@/lib/generated/prisma/client"
 
 type AttachmentPreviewProps = {
   attachment: Partial<ProjectAttachment>
-  onDelete: () => void
+  onDelete?: () => void
   className?: string
 }
 
@@ -117,16 +117,18 @@ export function AttachmentPreview({
               <div className="flex shrink-0 items-center gap-2">
                 {/* Download Button */}
                 {/* Delete Button */}
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={onDelete}
-                  className="bg-destructive/10 hover:bg-destructive/20 text-destructive size-10"
-                  aria-label={t("attachmentPreview.deleteFile")}
-                >
-                  <X />
-                </Button>
+                {onDelete && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={onDelete}
+                    className="bg-destructive/10 hover:bg-destructive/20 text-destructive size-10"
+                    aria-label={t("attachmentPreview.deleteFile")}
+                  >
+                    <X />
+                  </Button>
+                )}
               </div>
             </div>
           </CardContent>
