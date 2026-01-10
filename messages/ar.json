@@ -598,7 +598,7 @@
       "cancelled": "ملغي"
     },
     "daysRemaining": "{count, plural, =0 {لا توجد أيام متبقية} =1 {يوم واحد متبقي} other {# أيام متبقية}}",
-    "stage": "المرحلة {current} من {total}",
+    "stage": "المهمة {current} من {total}",
     "areaUnit": "م²",
     "visitSite": "زيارة الموقع",
     "workDurationUnit": "يوم",

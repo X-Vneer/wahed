@@ -11,6 +11,7 @@ import {
   ExternalLink,
   ChevronDown,
   Eye,
+  Play,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
@@ -75,7 +76,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                 className="rounded-sm px-5 py-3 text-xs font-medium text-gray-700"
               >
                 <Clock className="size-3" />
-                {t("daysRemaining", { count: 4 })}
+                {t("daysRemaining", { count: 20 })}
               </Badge>
               <Badge
                 variant="outline"
@@ -140,37 +141,44 @@ function ProjectCard({ project }: { project: TransformedProject }) {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
-              <div className="flex items-center gap-2 rounded-lg border bg-gray-50 px-3 py-1.5 text-sm">
-                <Clock className="text-muted-foreground size-4" />
-                <span className="text-muted-foreground">
-                  {t("daysRemaining", { count: 4 })}
-                </span>
-                <div className="ml-2 h-2 w-2 rounded-full bg-green-500"></div>
-                <span className="text-muted-foreground text-xs">80%</span>
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+              <div className="flex items-center gap-8 rounded-lg border bg-gray-50 px-3 py-2">
+                <div className="flex items-center gap-1">
+                  <p>عنوان المهمة الحالية</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="text-muted-foreground size-4" />
+                  <span className="text-muted-foreground">
+                    {t("daysRemaining", { count: 4 })}
+                  </span>
+                  <div className="ms-2 h-2 w-2 animate-pulse rounded-full bg-green-500 ring-1 ring-green-500 ring-offset-1"></div>
+                  <Play className="text-muted-foreground size-4 rtl:rotate-180" />
+                </div>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                nativeButton={false}
-                render={
-                  <Link
-                    href={`/projects/${project.id}`}
-                    className="flex items-center"
-                  >
-                    <Eye className="size-4" />
-                    {t("viewProject")}
-                  </Link>
-                }
-              />
-              <Button
-                variant="outline"
-                className="text-primary border-primary hover:text-primary bg-white"
-                size={"sm"}
-              >
-                <ChevronDown className="size-4" />
-                {t("quickAccess")}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  nativeButton={false}
+                  render={
+                    <Link
+                      href={`/projects/${project.id}`}
+                      className="flex items-center"
+                    >
+                      <Eye className="size-4" />
+                      {t("viewProject")}
+                    </Link>
+                  }
+                />
+                <Button
+                  variant="outline"
+                  className="text-primary border-primary hover:text-primary bg-white"
+                  size={"sm"}
+                >
+                  <ChevronDown className="size-4" />
+                  {t("quickAccess")}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
