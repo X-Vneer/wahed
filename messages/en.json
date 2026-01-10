@@ -583,8 +583,12 @@
     "success": {
       "created": "Project created successfully",
       "updated": "Project updated successfully",
-      "attachments_added": "Attachments updated successfully"
+      "attachments_added": "Attachments updated successfully",
+      "archived": "Project archived successfully",
+      "unarchived": "Project unarchived successfully"
     },
+    "archive": "Archive",
+    "unarchive": "Unarchive",
     "status": {
       "completed": "Completed",
       "inProgress": "In Progress",

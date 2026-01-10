@@ -26,6 +26,7 @@ import { getTranslations } from "next-intl/server"
 import { notFound } from "next/navigation"
 import { ProjectAttachments } from "./_components/project-attachments"
 import { EditProjectLink } from "../_components/edit-project-link"
+import { ArchiveButton } from "./_components/archive-button"
 
 type PageProps = {
   params: Promise<{
@@ -81,7 +82,10 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
           </Breadcrumb>
         </div>
 
-        <EditProjectLink />
+        <div className="flex gap-2">
+          <ArchiveButton isArchived={!!transformedProject.archivedAt} />
+          <EditProjectLink />
+        </div>
       </div>
 
       <div className="flex flex-col gap-4 lg:flex-row">

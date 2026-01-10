@@ -6,9 +6,15 @@ import { useTranslations } from "next-intl"
 import ProjectCard from "./project-card"
 import { Card, CardContent } from "@/components/ui/card"
 
-export function ListProjects() {
+type ListProjectsProps = {
+  archived?: boolean
+}
+
+export function ListProjects({ archived }: ListProjectsProps = {}) {
   const t = useTranslations("projects")
-  const { data, isLoading, error } = useProjects()
+  const { data, isLoading, error } = useProjects(
+    archived ? { archived: "true" } : undefined
+  )
 
   if (isLoading) {
     return (

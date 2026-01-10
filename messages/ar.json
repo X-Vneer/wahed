@@ -584,8 +584,12 @@
     "success": {
       "created": "تم إنشاء المشروع بنجاح",
       "updated": "تم تحديث المشروع بنجاح",
-      "attachments_added": "تم تحديث المرفقات بنجاح"
+      "attachments_added": "تم تحديث المرفقات بنجاح",
+      "archived": "تم أرشفة المشروع بنجاح",
+      "unarchived": "تم إلغاء أرشفة المشروع بنجاح"
     },
+    "archive": "أرشفة",
+    "unarchive": "إلغاء الأرشفة",
     "status": {
       "completed": "مكتمل",
       "inProgress": "قيد التنفيذ",
