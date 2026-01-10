@@ -78,31 +78,35 @@ export async function POST(request: NextRequest, context: RouteContext) {
     }
 
     // Create new attachments (ones without IDs)
-    const createdAttachments = await Promise.all(
-      newAttachments.map(
-        (attachment: {
-          fileUrl: string
-          fileName?: string
-          fileType?: string
-          fileSize?: number
-          additionalInfo?: unknown
-        }) =>
-          db.projectAttachment.create({
-            data: {
-              projectId: id,
-              fileUrl: attachment.fileUrl,
-              fileName: attachment.fileName || null,
-              fileType: attachment.fileType || null,
-              fileSize: attachment.fileSize || null,
-              additionalInfo:
-                attachment.additionalInfo !== undefined &&
-                attachment.additionalInfo !== null
-                  ? (attachment.additionalInfo as Prisma.InputJsonValue)
-                  : Prisma.JsonNull,
-            },
+    if (newAttachments.length > 0) {
+      await db.projectAttachment.createMany({
+        data: newAttachments.map(
+          (attachment: {
+            fileUrl: string
+            fileName?: string
+            fileType?: string
+            fileSize?: number
+            additionalInfo?: unknown
+          }) => ({
+            projectId: id,
+            fileUrl: attachment.fileUrl,
+            fileName: attachment.fileName || null,
+            fileType: attachment.fileType || null,
+            fileSize: attachment.fileSize || null,
+            additionalInfo:
+              attachment.additionalInfo !== undefined &&
+              attachment.additionalInfo !== null
+                ? (attachment.additionalInfo as Prisma.InputJsonValue)
+                : Prisma.JsonNull,
           })
-      )
-    )
+        ),
+      })
+    }
+
+    // Fetch all attachments for the project to return in response
+    const createdAttachments = await db.projectAttachment.findMany({
+      where: { projectId: id },
+    })
 
     return NextResponse.json(
       {

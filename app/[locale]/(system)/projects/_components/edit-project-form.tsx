@@ -128,6 +128,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
     isActive: project.isActive ?? true,
     attachments:
       project.attachments?.map((att) => ({
+        id: att.id,
         fileUrl: att.fileUrl,
         fileName: att.fileName || undefined,
         fileType: att.fileType || undefined,

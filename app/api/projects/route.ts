@@ -12,6 +12,90 @@ import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { Prisma } from "@/lib/generated/prisma/client"
 
+// Helper function to convert additional field value to Prisma JSON format
+function convertToPrismaJsonValue(
+  value: unknown
+): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
+  if (value === undefined || value === null) {
+    return Prisma.JsonNull
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim()
+    return trimmed || Prisma.JsonNull
+  }
+  if (Array.isArray(value)) {
+    return value
+  }
+  return value as Prisma.InputJsonValue
+}
+
+// Helper function to build attachments for create
+function buildAttachmentsForCreate(
+  attachments:
+    | Array<{
+        fileUrl: string
+        fileName?: string
+        fileType?: string
+        fileSize?: number
+        additionalInfo?: unknown
+      }>
+    | undefined
+) {
+  if (!attachments || attachments.length === 0) {
+    return undefined
+  }
+
+  return {
+    create: attachments.map((attachment) => ({
+      fileUrl: attachment.fileUrl,
+      fileName: attachment.fileName || null,
+      fileType: attachment.fileType || null,
+      fileSize: attachment.fileSize || null,
+      additionalInfo: convertToPrismaJsonValue(attachment.additionalInfo),
+    })),
+  }
+}
+
+// Helper function to build additional data for create
+function buildAdditionalDataForCreate(
+  additionalFields:
+    | Array<{
+        label: string
+        type: string
+        value?: unknown
+        options?: string[]
+        min?: number
+        max?: number
+        minDate?: Date
+        maxDate?: Date
+        placeholder?: string
+        required?: boolean
+      }>
+    | undefined
+) {
+  if (!additionalFields || additionalFields.length === 0) {
+    return undefined
+  }
+
+  return {
+    create: additionalFields.map((field) => ({
+      name: field.label,
+      value: convertToPrismaJsonValue(field.value),
+      type: field.type,
+      options:
+        field.options && field.options.length > 0
+          ? (field.options as Prisma.InputJsonValue)
+          : undefined,
+      min: field.min ?? undefined,
+      max: field.max ?? undefined,
+      minDate: field.minDate ?? undefined,
+      maxDate: field.maxDate ?? undefined,
+      placeholder: field.placeholder ?? undefined,
+      required: field.required ?? false,
+    })),
+  }
+}
+
 export async function GET(request: NextRequest) {
   // Check permission
   const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.PROJECT.VIEW)
@@ -85,7 +169,6 @@ export async function POST(request: NextRequest) {
 
     // Parse and validate request body
     const body = await request.json()
-    console.log("🚀 ~ body:", body)
     const validationResult = createProjectSchema.safeParse(body)
 
     if (!validationResult.success) {
@@ -100,10 +183,22 @@ export async function POST(request: NextRequest) {
 
     const data = validationResult.data
 
-    // Check if city exists
-    const city = await db.city.findUnique({
-      where: { id: data.cityId },
-    })
+    // Validate city and categories in parallel for better performance
+    const [city, categories] = await Promise.all([
+      db.city.findUnique({
+        where: { id: data.cityId },
+        select: { id: true },
+      }),
+      data.categoryIds && data.categoryIds.length > 0
+        ? db.projectCategory.findMany({
+            where: {
+              id: { in: data.categoryIds },
+              isActive: true,
+            },
+            select: { id: true },
+          })
+        : Promise.resolve([]),
+    ])
 
     if (!city) {
       return NextResponse.json(
@@ -117,15 +212,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if categories exist (if provided)
+    // Validate categories if provided
     if (data.categoryIds && data.categoryIds.length > 0) {
-      const categories = await db.projectCategory.findMany({
-        where: {
-          id: { in: data.categoryIds },
-          isActive: true,
-        },
-      })
-
       if (categories.length !== data.categoryIds.length) {
         return NextResponse.json(
           {
@@ -140,7 +228,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Create project with categories and attachments
-
     const project = await db.project.create({
       data: {
         nameAr: data.nameAr,
@@ -159,58 +246,13 @@ export async function POST(request: NextRequest) {
         categories:
           data.categoryIds && data.categoryIds.length > 0
             ? {
-                connect: data.categoryIds.map((id: string) => ({ id })),
-              }
-            : undefined,
-        attachments:
-          data.attachments && data.attachments.length > 0
-            ? {
-                create: data.attachments.map((attachment) => ({
-                  fileUrl: attachment.fileUrl,
-                  fileName: attachment.fileName || null,
-                  fileType: attachment.fileType || null,
-                  fileSize: attachment.fileSize || null,
-                  additionalInfo: attachment.additionalInfo || null,
+                connect: data.categoryIds.map((categoryId: string) => ({
+                  id: categoryId,
                 })),
               }
             : undefined,
-        additionalData:
-          data.additionalFields && data.additionalFields.length > 0
-            ? {
-                create: data.additionalFields.map((field) => {
-                  // Convert value to proper JSON format
-                  let jsonValue:
-                    | Prisma.InputJsonValue
-                    | Prisma.JsonNullValueInput = Prisma.JsonNull
-                  if (field.value !== undefined && field.value !== null) {
-                    if (typeof field.value === "string") {
-                      const trimmed = field.value.trim()
-                      jsonValue = trimmed || Prisma.JsonNull
-                    } else if (Array.isArray(field.value)) {
-                      jsonValue = field.value
-                    } else {
-                      jsonValue = field.value as Prisma.InputJsonValue
-                    }
-                  }
-
-                  return {
-                    name: field.label,
-                    value: jsonValue,
-                    type: field.type,
-                    options:
-                      field.options && field.options.length > 0
-                        ? (field.options as Prisma.InputJsonValue)
-                        : undefined,
-                    min: field.min ?? undefined,
-                    max: field.max ?? undefined,
-                    minDate: field.minDate ?? undefined,
-                    maxDate: field.maxDate ?? undefined,
-                    placeholder: field.placeholder ?? undefined,
-                    required: field.required ?? false,
-                  }
-                }),
-              }
-            : undefined,
+        attachments: buildAttachmentsForCreate(data.attachments),
+        additionalData: buildAdditionalDataForCreate(data.additionalFields),
       },
     })
 
