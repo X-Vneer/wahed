@@ -483,7 +483,7 @@
       "internallyRegistered": "المشروع مسجل داخليا للعمل",
       "attachments": {
         "title": "ارفاق المستندات الداعمة",
-        "addDocuments": "إضافة المستندات",
+        "addDocuments": "رفع مستندات",
         "uploaded": "تم رفع الملفات بنجاح",
         "uploadError": "فشل رفع الملفات",
         "download": "تحميل",
@@ -593,6 +593,9 @@
     "stage": "المرحلة {current} من {total}",
     "areaUnit": "م²",
     "visitSite": "زيارة الموقع",
+    "workDurationUnit": "يوم",
+    "numberOfFloorsLabel": "عدد {count} طوابق",
+    "locationSeparator": " - ",
     "type": {
       "residential": "سكني"
     },

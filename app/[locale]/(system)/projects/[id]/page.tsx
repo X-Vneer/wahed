@@ -1,24 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { notFound } from "next/navigation"
-import db from "@/lib/db"
-import { projectInclude, transformProject } from "@/prisma/projects"
-import { hasPermission } from "@/utils/has-permission"
-import { PERMISSIONS_GROUPED } from "@/config"
-import {
-  MapPin,
-  Building2,
-  Square,
-  Clock,
-  ExternalLink,
-  Users,
-  Ruler,
-  Grid2X2Check,
-} from "lucide-react"
-import { Link } from "@/lib/i18n/navigation"
-import { getTranslations } from "next-intl/server"
-import Image from "next/image"
-import { ProjectAttachments } from "./_components/project-attachments"
-import { Card, CardContent } from "@/components/ui/card"
 import { logo } from "@/assets"
 import {
   Breadcrumb,
@@ -28,6 +8,23 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { Card, CardContent } from "@/components/ui/card"
+import { PERMISSIONS_GROUPED } from "@/config"
+import db from "@/lib/db"
+import { Link } from "@/lib/i18n/navigation"
+import { projectInclude, transformProject } from "@/prisma/projects"
+import { hasPermission } from "@/utils/has-permission"
+import {
+  Building2,
+  Clock,
+  ExternalLink,
+  Grid2X2Check,
+  MapPin,
+  Ruler,
+} from "lucide-react"
+import { getTranslations } from "next-intl/server"
+import { notFound } from "next/navigation"
+import { ProjectAttachments } from "./_components/project-attachments"
 
 type PageProps = {
   params: Promise<{
@@ -86,9 +83,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
           <Card>
             <CardContent className="flex flex-col gap-3">
               {/* Header - Project Name */}
-              <h1 className="text-2xl font-bold">
-                {transformedProject.name} .
-              </h1>
+              <h1 className="text-2xl font-bold">{transformedProject.name}</h1>
 
               {/* Main Image */}
               <div className="relative h-[300px] w-full overflow-hidden rounded-lg">
@@ -121,7 +116,9 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
                             <span>{transformedProject.regionName}</span>
                           )}
                           {transformedProject.regionName &&
-                            transformedProject.cityName && <span> - </span>}
+                            transformedProject.cityName && (
+                              <span>{t("projects.locationSeparator")}</span>
+                            )}
                           {transformedProject.cityName && (
                             <span>{transformedProject.cityName}</span>
                           )}
@@ -156,7 +153,8 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
                     <div className="flex items-center gap-3">
                       <Clock className="size-5" />
                       <span className="">
-                        {transformedProject.workDuration} يوم
+                        {transformedProject.workDuration}{" "}
+                        {t("projects.workDurationUnit")}
                       </span>
                     </div>
                   )}
@@ -182,7 +180,9 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
                     <div className="flex items-center gap-3">
                       <Building2 className="size-5 shrink-0" />
                       <span className="">
-                        عدد {transformedProject.numberOfFloors} طوابق
+                        {t("projects.numberOfFloorsLabel", {
+                          count: transformedProject.numberOfFloors,
+                        })}
                       </span>
                     </div>
                   )}

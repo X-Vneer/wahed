@@ -482,7 +482,7 @@
       "internallyRegistered": "Project internally registered for work",
       "attachments": {
         "title": "Attach Supporting Documents",
-        "addDocuments": "Add Documents",
+        "addDocuments": "Upload",
         "uploaded": "Files uploaded successfully",
         "uploadError": "Failed to upload files",
         "download": "Download",
@@ -592,6 +592,9 @@
     "stage": "Stage {current} of {total}",
     "areaUnit": "m²",
     "visitSite": "Visit Site",
+    "workDurationUnit": "days",
+    "numberOfFloorsLabel": "{count} {count, plural, =1 {floor} other {floors}}",
+    "locationSeparator": " - ",
     "type": {
       "residential": "Residential"
     },

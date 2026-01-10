@@ -159,6 +159,8 @@ export function ProjectAttachments({
                 appearance={{
                   button:
                     "border-orange-500 text-orange-500 hover:bg-orange-500 bg-white hover:text-white ut-ready:bg-orange-500 ut-ready:text-white ut-uploading:bg-orange-500 ut-uploading:text-white rounded-lg px-4 py-2",
+                  container: "w-[unset]",
+                  allowedContent: "h-0!",
                 }}
                 content={{
                   button: (
