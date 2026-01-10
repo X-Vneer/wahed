@@ -447,6 +447,7 @@
   },
   "projects": {
     "addNew": "Add Project",
+    "edit": "Edit Project",
     "form": {
       "generalInfo": "General Information",
       "nameAr": "Project Name in Arabic",
@@ -579,6 +580,7 @@
     },
     "success": {
       "created": "Project created successfully",
+      "updated": "Project updated successfully",
       "attachments_added": "Attachments updated successfully"
     },
     "status": {
