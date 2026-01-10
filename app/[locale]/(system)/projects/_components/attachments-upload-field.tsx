@@ -17,41 +17,12 @@ import { useEffect } from "react"
 import { toast } from "sonner"
 import { useProjectFormContext } from "./project-form-context"
 import { Card, CardContent } from "@/components/ui/card"
-
-type Attachment = {
-  fileUrl: string
-  fileName?: string
-  fileType?: string
-  fileSize?: number
-}
-
-const getFileIcon = (fileType?: string) => {
-  if (!fileType) return File
-  const type = fileType.toLowerCase()
-
-  if (type.includes("pdf")) return FileText
-  if (type.includes("image")) return FileImage
-  if (type.includes("video")) return FileVideo
-  if (type.includes("audio")) return FileAudio
-  if (type.includes("text") || type.includes("document")) return FileText
-  return File
-}
-
-const getFileTypeColor = (fileType?: string) => {
-  if (!fileType) return "bg-gray-100"
-  const type = fileType.toLowerCase()
-
-  if (type.includes("pdf")) return "bg-red-50"
-  if (type.includes("image")) return "bg-blue-50"
-  if (type.includes("video")) return "bg-purple-50"
-  if (type.includes("audio")) return "bg-green-50"
-  return "bg-gray-50"
-}
+import { AttachmentPreview } from "@/components/attachment-preview"
 
 export function AttachmentsUploadField() {
   const t = useTranslations()
   const form = useProjectFormContext()
-  const attachments: Attachment[] = form.values.attachments || []
+  const attachments = form.values.attachments || []
 
   // Clean up body overflow style after upload completes
   useEffect(() => {
@@ -115,10 +86,6 @@ export function AttachmentsUploadField() {
     form.setFieldValue("attachments", updatedAttachments)
   }
 
-  const handleDownload = (url: string) => {
-    window.open(url, "_blank")
-  }
-
   return (
     <Card className="ring-none shadow-none ring-0">
       <CardContent>
@@ -172,51 +139,12 @@ export function AttachmentsUploadField() {
             {attachments.length > 0 && (
               <div className="space-y-2">
                 {attachments.map((attachment, index) => {
-                  const Icon = getFileIcon(attachment.fileType)
-                  const bgColor = getFileTypeColor(attachment.fileType)
-
                   return (
-                    <div
-                      key={index}
-                      className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3"
-                    >
-                      {/* Download Icon */}
-                      <button
-                        type="button"
-                        onClick={() => handleDownload(attachment.fileUrl)}
-                        className="hover:text-primary shrink-0 text-gray-600"
-                        aria-label={t("projects.form.attachments.download")}
-                      >
-                        <Download className="h-5 w-5" />
-                      </button>
-
-                      {/* File Icon and Name */}
-                      <div className="flex flex-1 items-center gap-3">
-                        <div
-                          className={`flex h-10 w-10 items-center justify-center rounded ${bgColor}`}
-                        >
-                          <Icon className="h-5 w-5 text-gray-700" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-semibold text-gray-900">
-                            {attachment.fileName || `File ${index + 1}`}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            {attachment.fileName || `File ${index + 1}`}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Remove Icon */}
-                      <button
-                        type="button"
-                        onClick={() => handleFileRemove(index)}
-                        className="hover:text-destructive shrink-0 text-gray-400"
-                        aria-label={t("projects.form.attachments.remove")}
-                      >
-                        <X className="h-5 w-5" />
-                      </button>
-                    </div>
+                    <AttachmentPreview
+                      key={attachment.fileUrl}
+                      attachment={attachment}
+                      onDelete={() => handleFileRemove(index)}
+                    />
                   )
                 })}
               </div>

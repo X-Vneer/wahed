@@ -54,7 +54,8 @@
     "notAvailable": "Not available",
     "system": "System",
     "companyName": "Wahed",
-    "listsRegions": "Regions"
+    "listsRegions": "Regions",
+    "view-project": "View project"
   },
   "lists": {
     "projectCategories": {
@@ -431,6 +432,18 @@
   "upload": {
     "label": "Drag and drop to upload files"
   },
+  "attachmentPreview": {
+    "file": "File",
+    "unknownType": "Unknown type",
+    "unknownSize": "Unknown size",
+    "viewFileDetails": "View file details",
+    "downloadFile": "Download file",
+    "deleteFile": "Delete file",
+    "fileDetails": "File Details",
+    "name": "Name",
+    "type": "Type",
+    "size": "Size"
+  },
   "projects": {
     "addNew": "Add Project",
     "form": {
@@ -558,10 +571,13 @@
       },
       "city_not_found": "City not found",
       "invalid_categories": "One or more selected categories are invalid",
-      "failedToLoad": "Failed to load projects"
+      "failedToLoad": "Failed to load projects",
+      "not_found": "Project not found",
+      "invalid_attachments": "Invalid attachments format. Attachments must be an array."
     },
     "success": {
-      "created": "Project created successfully"
+      "created": "Project created successfully",
+      "attachments_added": "Attachments updated successfully"
     },
     "status": {
       "completed": "Completed",

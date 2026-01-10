@@ -54,7 +54,8 @@
     "notAvailable": "غير متاح",
     "system": "النظام",
     "companyName": "وهد العمرانية",
-    "listsRegions": "المناطق"
+    "listsRegions": "المناطق",
+    "view-project": "عرض المشروع"
   },
   "lists": {
     "projectCategories": {
@@ -432,6 +433,18 @@
   "upload": {
     "label": "قم بالسحب والإفلات لتحميل الملفات"
   },
+  "attachmentPreview": {
+    "file": "ملف",
+    "unknownType": "نوع غير معروف",
+    "unknownSize": "حجم غير معروف",
+    "viewFileDetails": "عرض تفاصيل الملف",
+    "downloadFile": "تحميل الملف",
+    "deleteFile": "حذف الملف",
+    "fileDetails": "تفاصيل الملف",
+    "name": "الاسم",
+    "type": "النوع",
+    "size": "الحجم"
+  },
   "projects": {
     "addNew": "أضف مشروع",
     "form": {
@@ -559,10 +572,13 @@
       },
       "city_not_found": "المدينة غير موجودة",
       "invalid_categories": "واحدة أو أكثر من الفئات المحددة غير صحيحة",
-      "failedToLoad": "فشل تحميل المشاريع"
+      "failedToLoad": "فشل تحميل المشاريع",
+      "not_found": "المشروع غير موجود",
+      "invalid_attachments": "تنسيق المرفقات غير صحيح. يجب أن تكون المرفقات مصفوفة."
     },
     "success": {
-      "created": "تم إنشاء المشروع بنجاح"
+      "created": "تم إنشاء المشروع بنجاح",
+      "attachments_added": "تم تحديث المرفقات بنجاح"
     },
     "status": {
       "completed": "مكتمل",

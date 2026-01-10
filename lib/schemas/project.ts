@@ -1,4 +1,5 @@
 import * as z from "zod/v4"
+import { attachmentSchema } from "./attachment"
 
 // Project status enum values
 export const ProjectStatusEnum = z.enum([
@@ -33,20 +34,7 @@ export const createProjectSchema = z.object({
     .min(1, { error: "projects.errors.categoryIds.required" }),
   status: ProjectStatusEnum.optional(),
   isActive: z.boolean().optional(),
-  attachments: z
-    .array(
-      z.object({
-        fileUrl: z
-          .string()
-          .min(1, { error: "projects.errors.attachments.fileUrl.required" }),
-        fileName: z.string().optional(),
-        fileType: z.string().optional(),
-        fileSize: z.number().int().positive().optional(),
-        additionalInfo: z.any().optional(),
-      })
-    )
-    .optional()
-    .default([]),
+  attachments: z.array(attachmentSchema).optional().default([]),
   additionalFields: z
     .array(
       z
