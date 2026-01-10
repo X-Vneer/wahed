@@ -10,4 +10,8 @@ export const attachmentSchema = z.object({
   additionalInfo: z.any().optional(),
 })
 
+export const projectAttachmentsSchema = z.object({
+  attachments: z.array(attachmentSchema),
+})
 export type Attachment = z.infer<typeof attachmentSchema>
+export type ProjectAttachments = z.infer<typeof projectAttachmentsSchema>

@@ -1,23 +1,14 @@
 "use client"
 
+import { AttachmentPreview } from "@/components/attachment-preview"
+import { Card, CardContent } from "@/components/ui/card"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { UploadButton } from "@/lib/uploadthing"
-import {
-  FileText,
-  File,
-  FileImage,
-  FileVideo,
-  FileAudio,
-  Download,
-  X,
-  Plus,
-} from "lucide-react"
+import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useEffect } from "react"
 import { toast } from "sonner"
 import { useProjectFormContext } from "./project-form-context"
-import { Card, CardContent } from "@/components/ui/card"
-import { AttachmentPreview } from "@/components/attachment-preview"
 
 export function AttachmentsUploadField() {
   const t = useTranslations()

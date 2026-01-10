@@ -2,7 +2,8 @@
   "common": {
     "welcome": "Welcome",
     "hello": "Hello",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "auth": {
     "login": {
@@ -486,7 +487,8 @@
         "uploadError": "Failed to upload files",
         "download": "Download",
         "remove": "Remove",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "noFiles": "No files attached"
       },
       "submit": "Add Project",
       "submitting": "Adding project...",

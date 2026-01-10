@@ -82,7 +82,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
         </Breadcrumb>
       </div>
       <div className="flex flex-col gap-4 lg:flex-row">
-        <div className="grow space-y-8">
+        <div className="flex grow flex-col gap-4">
           <Card>
             <CardContent className="flex flex-col gap-3">
               {/* Header - Project Name */}

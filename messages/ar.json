@@ -2,7 +2,8 @@
   "common": {
     "welcome": "مرحباً",
     "hello": "مرحبا",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "save": "حفظ"
   },
   "auth": {
     "login": {
@@ -487,7 +488,8 @@
         "uploadError": "فشل رفع الملفات",
         "download": "تحميل",
         "remove": "إزالة",
-        "cancel": "إلغاء"
+        "cancel": "إلغاء",
+        "noFiles": "لا توجد ملفات مرفقة"
       },
       "submit": "إضافة المشروع",
       "submitting": "جاري الإضافة...",
