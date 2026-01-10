@@ -3,7 +3,8 @@
     "welcome": "Welcome",
     "hello": "Hello",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "edit": "Edit project"
   },
   "auth": {
     "login": {
