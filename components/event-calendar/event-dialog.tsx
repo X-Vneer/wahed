@@ -42,6 +42,7 @@ import {
   EndHour,
   StartHour,
 } from "@/components/event-calendar/constants"
+import { ScrollArea } from "../ui/scroll-area"
 
 interface EventDialogProps {
   event: CalendarEvent | null
@@ -242,248 +243,256 @@ export function EventDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>
-            {event?.id ? t("editTitle") : t("createTitle")}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            {event?.id ? t("editDescription") : t("createDescription")}
-          </DialogDescription>
-        </DialogHeader>
-        {error && (
-          <div className="bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm">
-            {error}
-          </div>
-        )}
-        <div className="grid gap-4 py-4">
-          <div className="*:not-first:mt-1.5">
-            <Label htmlFor="title">{t("title")}</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
-
-          <div className="*:not-first:mt-1.5">
-            <Label htmlFor="description">{t("description")}</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-            />
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-1 *:not-first:mt-1.5">
-              <Label htmlFor="start-date">{t("startDate")}</Label>
-              <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
-                <PopoverTrigger
-                  render={
-                    <Button
-                      id="start-date"
-                      variant={"outline"}
-                      className={cn(
-                        "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
-                        !startDate && "text-muted-foreground"
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "truncate",
-                          !startDate && "text-muted-foreground"
-                        )}
-                      >
-                        {startDate
-                          ? format(startDate, "PPP", { locale: dateFnsLocale })
-                          : t("pickDate")}
-                      </span>
-                      <RiCalendarLine
-                        size={16}
-                        className="text-muted-foreground/80 shrink-0"
-                        aria-hidden="true"
-                      />
-                    </Button>
-                  }
-                ></PopoverTrigger>
-                <PopoverContent className="w-auto p-2" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={startDate}
-                    defaultMonth={startDate}
-                    onSelect={(date) => {
-                      if (date) {
-                        setStartDate(date)
-                        // If end date is before the new start date, update it to match the start date
-                        if (isBefore(endDate, date)) {
-                          setEndDate(date)
-                        }
-                        setError(null)
-                        setStartDateOpen(false)
-                      }
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            {!allDay && (
-              <div className="min-w-28 *:not-first:mt-1.5">
-                <Label htmlFor="start-time">{t("startTime")}</Label>
-                <Select
-                  value={startTime}
-                  onValueChange={(value) => setStartTime(value || "")}
-                >
-                  <SelectTrigger id="start-time">
-                    <SelectValue>{t("selectTime")}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+      <DialogContent className="flex flex-col gap-0 p-0 sm:max-h-[min(640px,80vh)] sm:max-w-md [&>button:last-child]:hidden">
+        <ScrollArea className="flex max-h-full flex-col overflow-hidden">
+          <div className="p-6">
+            <DialogHeader>
+              <DialogTitle>
+                {event?.id ? t("editTitle") : t("createTitle")}
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                {event?.id ? t("editDescription") : t("createDescription")}
+              </DialogDescription>
+            </DialogHeader>
+            {error && (
+              <div className="bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm">
+                {error}
               </div>
             )}
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-1 *:not-first:mt-1.5">
-              <Label htmlFor="end-date">{t("endDate")}</Label>
-              <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
-                <PopoverTrigger
-                  render={
-                    <Button
-                      id="end-date"
-                      variant={"outline"}
-                      className={cn(
-                        "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
-                        !endDate && "text-muted-foreground"
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "truncate",
-                          !endDate && "text-muted-foreground"
-                        )}
-                      >
-                        {endDate
-                          ? format(endDate, "PPP", { locale: dateFnsLocale })
-                          : t("pickDate")}
-                      </span>
-                      <RiCalendarLine
-                        size={16}
-                        className="text-muted-foreground/80 shrink-0"
-                        aria-hidden="true"
-                      />
-                    </Button>
-                  }
-                ></PopoverTrigger>
-                <PopoverContent className="w-auto p-2" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={endDate}
-                    defaultMonth={endDate}
-                    disabled={{ before: startDate }}
-                    onSelect={(date) => {
-                      if (date) {
-                        setEndDate(date)
-                        setError(null)
-                        setEndDateOpen(false)
-                      }
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            {!allDay && (
-              <div className="min-w-28 *:not-first:mt-1.5">
-                <Label htmlFor="end-time">{t("endTime")}</Label>
-                <Select
-                  value={endTime}
-                  onValueChange={(value) => setEndTime(value || "")}
-                >
-                  <SelectTrigger id="end-time">
-                    <SelectValue>{t("selectTime")}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="all-day"
-              checked={allDay}
-              onCheckedChange={(checked) => setAllDay(checked === true)}
-            />
-            <Label htmlFor="all-day">{tCalendar("allDay")}</Label>
-          </div>
-
-          <div className="*:not-first:mt-1.5">
-            <Label htmlFor="location">{t("location")}</Label>
-            <Input
-              id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </div>
-          <fieldset className="space-y-4">
-            <legend className="text-foreground text-sm leading-none font-medium">
-              {t("etiquette")}
-            </legend>
-            <RadioGroup
-              className="flex gap-1.5"
-              defaultValue={colorOptions[0]?.value}
-              value={color}
-              onValueChange={(value) => setColor(value as EventColor)}
-            >
-              {colorOptions.map((colorOption) => (
-                <RadioGroupItem
-                  key={colorOption.value}
-                  id={`color-${colorOption.value}`}
-                  value={colorOption.value}
-                  aria-label={colorOption.label}
-                  className={cn(
-                    "size-6 shadow-none",
-                    colorOption.bgClass,
-                    colorOption.borderClass
-                  )}
+            <div className="grid gap-4 py-4">
+              <div className="*:not-first:mt-1.5">
+                <Label htmlFor="title">{t("title")}</Label>
+                <Input
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
-              ))}
-            </RadioGroup>
-          </fieldset>
-        </div>
-        <DialogFooter className="flex-row sm:justify-between">
-          {event?.id && (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleDelete}
-              aria-label="Delete event"
-            >
-              <RiDeleteBinLine size={16} aria-hidden="true" />
-            </Button>
-          )}
-          <div className="flex flex-1 justify-end gap-2">
-            <Button variant="outline" onClick={onClose}>
-              {tCommon("cancel")}
-            </Button>
-            <Button onClick={handleSave}>{tCommon("save")}</Button>
+              </div>
+
+              <div className="*:not-first:mt-1.5">
+                <Label htmlFor="description">{t("description")}</Label>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-1 *:not-first:mt-1.5">
+                  <Label htmlFor="start-date">{t("startDate")}</Label>
+                  <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
+                    <PopoverTrigger
+                      render={
+                        <Button
+                          id="start-date"
+                          variant={"outline"}
+                          className={cn(
+                            "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                            !startDate && "text-muted-foreground"
+                          )}
+                        >
+                          <span
+                            className={cn(
+                              "truncate",
+                              !startDate && "text-muted-foreground"
+                            )}
+                          >
+                            {startDate
+                              ? format(startDate, "PPP", {
+                                  locale: dateFnsLocale,
+                                })
+                              : t("pickDate")}
+                          </span>
+                          <RiCalendarLine
+                            size={16}
+                            className="text-muted-foreground/80 shrink-0"
+                            aria-hidden="true"
+                          />
+                        </Button>
+                      }
+                    ></PopoverTrigger>
+                    <PopoverContent className="w-auto p-2" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={startDate}
+                        defaultMonth={startDate}
+                        onSelect={(date) => {
+                          if (date) {
+                            setStartDate(date)
+                            // If end date is before the new start date, update it to match the start date
+                            if (isBefore(endDate, date)) {
+                              setEndDate(date)
+                            }
+                            setError(null)
+                            setStartDateOpen(false)
+                          }
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {!allDay && (
+                  <div className="min-w-28 *:not-first:mt-1.5">
+                    <Label htmlFor="start-time">{t("startTime")}</Label>
+                    <Select
+                      value={startTime}
+                      onValueChange={(value) => setStartTime(value || "")}
+                    >
+                      <SelectTrigger id="start-time">
+                        <SelectValue>{t("selectTime")}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-1 *:not-first:mt-1.5">
+                  <Label htmlFor="end-date">{t("endDate")}</Label>
+                  <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
+                    <PopoverTrigger
+                      render={
+                        <Button
+                          id="end-date"
+                          variant={"outline"}
+                          className={cn(
+                            "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                            !endDate && "text-muted-foreground"
+                          )}
+                        >
+                          <span
+                            className={cn(
+                              "truncate",
+                              !endDate && "text-muted-foreground"
+                            )}
+                          >
+                            {endDate
+                              ? format(endDate, "PPP", {
+                                  locale: dateFnsLocale,
+                                })
+                              : t("pickDate")}
+                          </span>
+                          <RiCalendarLine
+                            size={16}
+                            className="text-muted-foreground/80 shrink-0"
+                            aria-hidden="true"
+                          />
+                        </Button>
+                      }
+                    ></PopoverTrigger>
+                    <PopoverContent className="w-auto p-2" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={endDate}
+                        defaultMonth={endDate}
+                        disabled={{ before: startDate }}
+                        onSelect={(date) => {
+                          if (date) {
+                            setEndDate(date)
+                            setError(null)
+                            setEndDateOpen(false)
+                          }
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {!allDay && (
+                  <div className="min-w-28 *:not-first:mt-1.5">
+                    <Label htmlFor="end-time">{t("endTime")}</Label>
+                    <Select
+                      value={endTime}
+                      onValueChange={(value) => setEndTime(value || "")}
+                    >
+                      <SelectTrigger id="end-time">
+                        <SelectValue>{t("selectTime")}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="all-day"
+                  checked={allDay}
+                  onCheckedChange={(checked) => setAllDay(checked === true)}
+                />
+                <Label htmlFor="all-day">{tCalendar("allDay")}</Label>
+              </div>
+
+              <div className="*:not-first:mt-1.5">
+                <Label htmlFor="location">{t("location")}</Label>
+                <Input
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </div>
+              <fieldset className="space-y-4">
+                <legend className="text-foreground text-sm leading-none font-medium">
+                  {t("etiquette")}
+                </legend>
+                <RadioGroup
+                  className="flex gap-1.5"
+                  defaultValue={colorOptions[0]?.value}
+                  value={color}
+                  onValueChange={(value) => setColor(value as EventColor)}
+                >
+                  {colorOptions.map((colorOption) => (
+                    <RadioGroupItem
+                      key={colorOption.value}
+                      id={`color-${colorOption.value}`}
+                      value={colorOption.value}
+                      aria-label={colorOption.label}
+                      className={cn(
+                        "size-6 shadow-none",
+                        colorOption.bgClass,
+                        colorOption.borderClass
+                      )}
+                    />
+                  ))}
+                </RadioGroup>
+              </fieldset>
+            </div>
+            <DialogFooter className="flex-row sm:justify-between">
+              {event?.id && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleDelete}
+                  aria-label="Delete event"
+                >
+                  <RiDeleteBinLine size={16} aria-hidden="true" />
+                </Button>
+              )}
+              <div className="flex flex-1 justify-end gap-2">
+                <Button variant="outline" onClick={onClose}>
+                  {tCommon("cancel")}
+                </Button>
+                <Button onClick={handleSave}>{tCommon("save")}</Button>
+              </div>
+            </DialogFooter>
           </div>
-        </DialogFooter>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )
