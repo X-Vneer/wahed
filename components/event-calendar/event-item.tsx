@@ -4,7 +4,8 @@ import { useMemo } from "react"
 import type { DraggableAttributes } from "@dnd-kit/core"
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities"
 import { differenceInMinutes, format, getMinutes, isPast } from "date-fns"
-import { useTranslations } from "next-intl"
+import { ar, enUS, type Locale } from "date-fns/locale"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import {
@@ -17,8 +18,10 @@ import {
 // 'h' - hours (1-12)
 // 'a' - am/pm
 // ':mm' - minutes with leading zero (only if the token 'mm' is present)
-const formatTimeWithOptionalMinutes = (date: Date) => {
-  return format(date, getMinutes(date) === 0 ? "ha" : "h:mma").toLowerCase()
+const formatTimeWithOptionalMinutes = (date: Date, locale: Locale = enUS) => {
+  return format(date, getMinutes(date) === 0 ? "ha" : "h:mma", {
+    locale,
+  }).toLowerCase()
 }
 
 interface EventWrapperProps {
@@ -116,6 +119,8 @@ export function EventItem({
   onTouchStart,
 }: EventItemProps) {
   const t = useTranslations("calendar")
+  const locale = useLocale()
+  const dateFnsLocale = locale === "ar" ? ar : enUS
   const eventColor = event.color
 
   // Use the provided currentTime (for dragging) or the event's actual time
@@ -142,11 +147,11 @@ export function EventItem({
 
     // For short events (less than 45 minutes), only show start time
     if (durationMinutes < 45) {
-      return formatTimeWithOptionalMinutes(displayStart)
+      return formatTimeWithOptionalMinutes(displayStart, dateFnsLocale)
     }
 
     // For longer events, show both start and end time
-    return `${formatTimeWithOptionalMinutes(displayStart)} - ${formatTimeWithOptionalMinutes(displayEnd)}`
+    return `${formatTimeWithOptionalMinutes(displayStart, dateFnsLocale)} - ${formatTimeWithOptionalMinutes(displayEnd, dateFnsLocale)}`
   }
 
   if (view === "month") {
@@ -171,7 +176,10 @@ export function EventItem({
           <span className="truncate">
             {!event.allDay && (
               <span className="truncate font-normal opacity-70 sm:text-[11px]">
-                {formatTimeWithOptionalMinutes(displayStart)}{" "}
+                {formatTimeWithOptionalMinutes(
+                  displayStart,
+                  dateFnsLocale
+                )}{" "}
               </span>
             )}
             {event.title}
@@ -206,7 +214,7 @@ export function EventItem({
             {event.title}{" "}
             {showTime && (
               <span className="opacity-70">
-                {formatTimeWithOptionalMinutes(displayStart)}
+                {formatTimeWithOptionalMinutes(displayStart, dateFnsLocale)}
               </span>
             )}
           </div>
@@ -245,8 +253,8 @@ export function EventItem({
           <span>{t("allDay")}</span>
         ) : (
           <span className="uppercase">
-            {formatTimeWithOptionalMinutes(displayStart)} -{" "}
-            {formatTimeWithOptionalMinutes(displayEnd)}
+            {formatTimeWithOptionalMinutes(displayStart, dateFnsLocale)} -{" "}
+            {formatTimeWithOptionalMinutes(displayEnd, dateFnsLocale)}
           </span>
         )}
         {event.location && (

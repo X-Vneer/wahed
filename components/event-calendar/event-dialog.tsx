@@ -4,7 +4,8 @@
 import { useEffect, useMemo, useState } from "react"
 import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react"
 import { format, isBefore } from "date-fns"
-import { useTranslations } from "next-intl"
+import { ar, enUS } from "date-fns/locale"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -60,6 +61,8 @@ export function EventDialog({
   const t = useTranslations("calendar.eventDialog")
   const tCalendar = useTranslations("calendar")
   const tCommon = useTranslations("common")
+  const locale = useLocale()
+  const dateFnsLocale = locale === "ar" ? ar : enUS
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [startDate, setStartDate] = useState<Date>(new Date())
@@ -123,12 +126,12 @@ export function EventDialog({
         const value = `${formattedHour}:${formattedMinute}`
         // Use a fixed date to avoid unnecessary date object creations
         const date = new Date(2000, 0, 1, hour, minute)
-        const label = format(date, "h:mm a")
+        const label = format(date, "h:mm a", { locale: dateFnsLocale })
         options.push({ value, label })
       }
     }
     return options
-  }, []) // Empty dependency array ensures this only runs once
+  }, [dateFnsLocale]) // Empty dependency array ensures this only runs once
 
   const handleSave = () => {
     const start = new Date(startDate)
@@ -293,7 +296,9 @@ export function EventDialog({
                           !startDate && "text-muted-foreground"
                         )}
                       >
-                        {startDate ? format(startDate, "PPP") : t("pickDate")}
+                        {startDate
+                          ? format(startDate, "PPP", { locale: dateFnsLocale })
+                          : t("pickDate")}
                       </span>
                       <RiCalendarLine
                         size={16}
@@ -366,7 +371,9 @@ export function EventDialog({
                           !endDate && "text-muted-foreground"
                         )}
                       >
-                        {endDate ? format(endDate, "PPP") : t("pickDate")}
+                        {endDate
+                          ? format(endDate, "PPP", { locale: dateFnsLocale })
+                          : t("pickDate")}
                       </span>
                       <RiCalendarLine
                         size={16}

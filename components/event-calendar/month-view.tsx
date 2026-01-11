@@ -14,7 +14,8 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns"
-import { useTranslations } from "next-intl"
+import { ar, enUS } from "date-fns/locale"
+import { useLocale, useTranslations } from "next-intl"
 
 import {
   Popover,
@@ -50,6 +51,8 @@ export function MonthView({
   onEventCreate,
 }: MonthViewProps) {
   const t = useTranslations("calendar")
+  const locale = useLocale()
+  const dateFnsLocale = locale === "ar" ? ar : enUS
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentDate)
     const monthEnd = endOfMonth(monthStart)
@@ -62,9 +65,9 @@ export function MonthView({
   const weekdays = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => {
       const date = addDays(startOfWeek(new Date()), i)
-      return format(date, "EEE")
+      return format(date, "EEE", { locale: dateFnsLocale })
     })
-  }, [])
+  }, [dateFnsLocale])
 
   const weeks = useMemo(() => {
     const result = []
@@ -154,7 +157,7 @@ export function MonthView({
                     }}
                   >
                     <div className="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
-                      {format(day, "d")}
+                      {format(day, "d", { locale: dateFnsLocale })}
                     </div>
                     <div
                       ref={isReferenceCell ? contentRef : null}
@@ -188,10 +191,9 @@ export function MonthView({
                                 <div className="invisible" aria-hidden={true}>
                                   {!event.allDay && (
                                     <span>
-                                      {format(
-                                        new Date(event.start),
-                                        "h:mm"
-                                      )}{" "}
+                                      {format(new Date(event.start), "h:mm", {
+                                        locale: dateFnsLocale,
+                                      })}{" "}
                                     </span>
                                   )}
                                   {event.title}
@@ -244,7 +246,9 @@ export function MonthView({
                           >
                             <div className="space-y-2">
                               <div className="text-sm font-medium">
-                                {format(day, "EEE d")}
+                                {format(day, "EEE d", {
+                                  locale: dateFnsLocale,
+                                })}
                               </div>
                               <div className="space-y-1">
                                 {sortEvents(allEvents).map((event) => {

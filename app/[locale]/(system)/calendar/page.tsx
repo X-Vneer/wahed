@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import { addDays, setHours, setMinutes, subDays } from "date-fns"
+import { useState } from "react"
 
 import { EventCalendar, type CalendarEvent } from "@/components/event-calendar"
 
@@ -150,7 +150,7 @@ export default function Home() {
 
   return (
     // Add min-h-screen to make it full height
-    <div className="flex flex-col bg-white p-1 sm:p-4 md:p-8" dir="ltr">
+    <div className="flex flex-col rounded-md bg-white p-2">
       <EventCalendar
         events={events}
         onEventAdd={handleEventAdd}

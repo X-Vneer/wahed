@@ -1,7 +1,5 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { RiCalendarCheckLine } from "@remixicon/react"
 import {
   addDays,
   addHours,
@@ -14,24 +12,18 @@ import {
   subMonths,
   subWeeks,
 } from "date-fns"
+import { ar, enUS } from "date-fns/locale"
 import {
+  CalendarCheck,
   ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
+  ChevronLeft,
+  ChevronRight,
   PlusIcon,
 } from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
-import { useTranslations } from "next-intl"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   AgendaDaysToShow,
   AgendaView,
@@ -46,6 +38,15 @@ import {
   WeekCellsHeight,
   WeekView,
 } from "@/components/event-calendar"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { cn } from "@/lib/utils"
 
 export interface EventCalendarProps {
   events?: CalendarEvent[]
@@ -65,6 +66,8 @@ export function EventCalendar({
   initialView = "month",
 }: EventCalendarProps) {
   const t = useTranslations("calendar")
+  const locale = useLocale()
+  const dateFnsLocale = locale === "ar" ? ar : enUS
   const [currentDate, setCurrentDate] = useState(new Date())
   const [view, setView] = useState<CalendarView>(initialView)
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)
@@ -175,7 +178,9 @@ export function EventCalendar({
         onEventUpdate?.(event)
         // Show toast notification when an event is updated
         toast(t("toasts.eventUpdated", { title: event.title }), {
-          description: format(new Date(event.start), "MMM d, yyyy"),
+          description: format(new Date(event.start), "MMM d, yyyy", {
+            locale: dateFnsLocale,
+          }),
           position: "bottom-left",
         })
       } else {
@@ -185,14 +190,16 @@ export function EventCalendar({
         })
         // Show toast notification when an event is added
         toast(t("toasts.eventAdded", { title: event.title }), {
-          description: format(new Date(event.start), "MMM d, yyyy"),
+          description: format(new Date(event.start), "MMM d, yyyy", {
+            locale: dateFnsLocale,
+          }),
           position: "bottom-left",
         })
       }
       setIsEventDialogOpen(false)
       setSelectedEvent(null)
     },
-    [onEventAdd, onEventUpdate, t]
+    [onEventAdd, onEventUpdate, t, dateFnsLocale]
   )
 
   const handleEventDelete = useCallback(
@@ -205,12 +212,14 @@ export function EventCalendar({
       // Show toast notification when an event is deleted
       if (deletedEvent) {
         toast(t("toasts.eventDeleted", { title: deletedEvent.title }), {
-          description: format(new Date(deletedEvent.start), "MMM d, yyyy"),
+          description: format(new Date(deletedEvent.start), "MMM d, yyyy", {
+            locale: dateFnsLocale,
+          }),
           position: "bottom-left",
         })
       }
     },
-    [events, onEventDelete, t]
+    [events, onEventDelete, t, dateFnsLocale]
   )
 
   const handleEventUpdate = useCallback(
@@ -219,11 +228,13 @@ export function EventCalendar({
 
       // Show toast notification when an event is updated via drag and drop
       toast(t("toasts.eventMoved", { title: updatedEvent.title }), {
-        description: format(new Date(updatedEvent.start), "MMM d, yyyy"),
+        description: format(new Date(updatedEvent.start), "MMM d, yyyy", {
+          locale: dateFnsLocale,
+        }),
         position: "bottom-left",
       })
     },
-    [onEventUpdate, t]
+    [onEventUpdate, t, dateFnsLocale]
   )
 
   const handleDialogClose = useCallback(() => {
@@ -233,26 +244,28 @@ export function EventCalendar({
 
   const viewTitle = useMemo(() => {
     if (view === "month") {
-      return format(currentDate, "MMMM yyyy")
+      return format(currentDate, "MMMM yyyy", { locale: dateFnsLocale })
     } else if (view === "week") {
       const start = startOfWeek(currentDate, { weekStartsOn: 0 })
       const end = endOfWeek(currentDate, { weekStartsOn: 0 })
       if (isSameMonth(start, end)) {
-        return format(start, "MMMM yyyy")
+        return format(start, "MMMM yyyy", { locale: dateFnsLocale })
       } else {
-        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`
+        return `${format(start, "MMM", { locale: dateFnsLocale })} - ${format(end, "MMM yyyy", { locale: dateFnsLocale })}`
       }
     } else if (view === "day") {
       return (
         <>
           <span className="min-[480px]:hidden" aria-hidden="true">
-            {format(currentDate, "MMM d, yyyy")}
+            {format(currentDate, "MMM d, yyyy", { locale: dateFnsLocale })}
           </span>
-          <span className="max-[479px]:hidden min-md:hidden" aria-hidden="true">
-            {format(currentDate, "MMMM d, yyyy")}
+          <span className="max-[479px]:hidden md:hidden" aria-hidden="true">
+            {format(currentDate, "MMMM d, yyyy", { locale: dateFnsLocale })}
           </span>
           <span className="max-md:hidden">
-            {format(currentDate, "EEE MMMM d, yyyy")}
+            {format(currentDate, "EEE MMMM d, yyyy", {
+              locale: dateFnsLocale,
+            })}
           </span>
         </>
       )
@@ -262,18 +275,18 @@ export function EventCalendar({
       const end = addDays(currentDate, AgendaDaysToShow - 1)
 
       if (isSameMonth(start, end)) {
-        return format(start, "MMMM yyyy")
+        return format(start, "MMMM yyyy", { locale: dateFnsLocale })
       } else {
-        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`
+        return `${format(start, "MMM", { locale: dateFnsLocale })} - ${format(end, "MMM yyyy", { locale: dateFnsLocale })}`
       }
     } else {
-      return format(currentDate, "MMMM yyyy")
+      return format(currentDate, "MMMM yyyy", { locale: dateFnsLocale })
     }
-  }, [currentDate, view])
+  }, [currentDate, view, dateFnsLocale])
 
   return (
     <div
-      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
+      className="flex flex-col has-data-[slot=month-view]:flex-1"
       style={
         {
           "--event-height": `${EventHeight}px`,
@@ -295,7 +308,7 @@ export function EventCalendar({
               className="max-[479px]:aspect-square max-[479px]:p-0!"
               onClick={handleToday}
             >
-              <RiCalendarCheckLine
+              <CalendarCheck
                 className="min-[480px]:hidden"
                 size={16}
                 aria-hidden="true"
@@ -309,7 +322,11 @@ export function EventCalendar({
                 onClick={handlePrevious}
                 aria-label="Previous"
               >
-                <ChevronLeftIcon size={16} aria-hidden="true" />
+                <ChevronLeft
+                  className="rtl:rotate-180"
+                  size={16}
+                  aria-hidden="true"
+                />
               </Button>
               <Button
                 variant="ghost"
@@ -317,7 +334,11 @@ export function EventCalendar({
                 onClick={handleNext}
                 aria-label="Next"
               >
-                <ChevronRightIcon size={16} aria-hidden="true" />
+                <ChevronRight
+                  className="rtl:rotate-180"
+                  size={16}
+                  aria-hidden="true"
+                />
               </Button>
             </div>
             <h2 className="text-sm font-semibold sm:text-lg md:text-xl">
