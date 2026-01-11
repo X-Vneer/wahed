@@ -627,5 +627,55 @@
       "tasks": "مهام المشروع"
     },
     "noTasks": "لا توجد مهام"
+  },
+  "calendar": {
+    "today": "اليوم",
+    "newEvent": "حدث جديد",
+    "views": {
+      "month": "شهر",
+      "week": "أسبوع",
+      "day": "يوم",
+      "agenda": "جدول"
+    },
+    "allDay": "طوال اليوم",
+    "more": "المزيد",
+    "noEvents": "لا توجد أحداث",
+    "noEventsFound": "لم يتم العثور على أحداث",
+    "noEventsScheduled": "لا توجد أحداث مجدولة لهذه الفترة الزمنية.",
+    "eventDialog": {
+      "createTitle": "إنشاء حدث",
+      "editTitle": "تعديل حدث",
+      "createDescription": "إضافة حدث جديد إلى التقويم",
+      "editDescription": "تعديل تفاصيل هذا الحدث",
+      "title": "العنوان",
+      "description": "الوصف",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية",
+      "startTime": "وقت البداية",
+      "endTime": "وقت النهاية",
+      "location": "الموقع",
+      "etiquette": "اللون",
+      "pickDate": "اختر تاريخ",
+      "selectTime": "اختر الوقت",
+      "noTitle": "(بدون عنوان)",
+      "errors": {
+        "timeRange": "يجب أن يكون الوقت المحدد بين {startHour}:00 و {endHour}:00",
+        "endBeforeStart": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية"
+      },
+      "colors": {
+        "sky": "أزرق سماوي",
+        "amber": "كهرماني",
+        "violet": "بنفسجي",
+        "rose": "وردي",
+        "emerald": "زمردي",
+        "orange": "برتقالي"
+      }
+    },
+    "toasts": {
+      "eventAdded": "تمت إضافة الحدث \"{title}\"",
+      "eventUpdated": "تم تحديث الحدث \"{title}\"",
+      "eventMoved": "تم نقل الحدث \"{title}\"",
+      "eventDeleted": "تم حذف الحدث \"{title}\""
+    }
   }
 }

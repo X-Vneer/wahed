@@ -12,6 +12,7 @@ import {
   isSameDay,
   startOfDay,
 } from "date-fns"
+import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import {
@@ -47,6 +48,7 @@ export function DayView({
   onEventSelect,
   onEventCreate,
 }: DayViewProps) {
+  const t = useTranslations("calendar")
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate)
     return eachHourOfInterval({
@@ -158,7 +160,7 @@ export function DayView({
       currentColumn.push({ event, end: adjustedEnd })
 
       // First column takes full width, others are indented by 10% and take 90% width
-      const width = columnIndex === 0 ? 1 : 1 - (columnIndex * 0.1)
+      const width = columnIndex === 0 ? 1 : 1 - columnIndex * 0.1
       const left = columnIndex === 0 ? 0 : columnIndex * 0.1
 
       result.push({
@@ -192,7 +194,7 @@ export function DayView({
           <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">
             <div className="relative">
               <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
-                All day
+                {t("allDay")}
               </span>
             </div>
             <div className="border-border/70 relative border-r p-1 last:border-r-0">

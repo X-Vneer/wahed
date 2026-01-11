@@ -4,6 +4,7 @@ import { useMemo } from "react"
 import type { DraggableAttributes } from "@dnd-kit/core"
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities"
 import { differenceInMinutes, format, getMinutes, isPast } from "date-fns"
+import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import {
@@ -114,6 +115,7 @@ export function EventItem({
   onMouseDown,
   onTouchStart,
 }: EventItemProps) {
+  const t = useTranslations("calendar")
   const eventColor = event.color
 
   // Use the provided currentTime (for dragging) or the event's actual time
@@ -136,7 +138,7 @@ export function EventItem({
   }, [displayStart, displayEnd])
 
   const getEventTime = () => {
-    if (event.allDay) return "All day"
+    if (event.allDay) return t("allDay")
 
     // For short events (less than 45 minutes), only show start time
     if (durationMinutes < 45) {
@@ -240,7 +242,7 @@ export function EventItem({
       <div className="text-sm font-medium">{event.title}</div>
       <div className="text-xs opacity-70">
         {event.allDay ? (
-          <span>All day</span>
+          <span>{t("allDay")}</span>
         ) : (
           <span className="uppercase">
             {formatTimeWithOptionalMinutes(displayStart)} -{" "}

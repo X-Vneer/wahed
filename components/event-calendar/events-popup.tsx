@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useRef } from "react"
 import { format, isSameDay } from "date-fns"
 import { XIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { EventItem, type CalendarEvent } from "@/components/event-calendar"
 
@@ -22,6 +23,7 @@ export function EventsPopup({
   onClose,
   onEventSelect,
 }: EventsPopupProps) {
+  const t = useTranslations("calendar")
   const popupRef = useRef<HTMLDivElement>(null)
 
   // Handle click outside to close popup
@@ -106,7 +108,9 @@ export function EventsPopup({
 
       <div className="space-y-2 p-3">
         {events.length === 0 ? (
-          <div className="text-muted-foreground py-2 text-sm">No events</div>
+          <div className="text-muted-foreground py-2 text-sm">
+            {t("noEvents")}
+          </div>
         ) : (
           events.map((event) => {
             const eventStart = new Date(event.start)

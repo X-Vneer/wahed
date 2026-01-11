@@ -626,5 +626,55 @@
       "tasks": "Project tasks"
     },
     "noTasks": "There is no tasks"
+  },
+  "calendar": {
+    "today": "Today",
+    "newEvent": "New event",
+    "views": {
+      "month": "Month",
+      "week": "Week",
+      "day": "Day",
+      "agenda": "Agenda"
+    },
+    "allDay": "All day",
+    "more": "more",
+    "noEvents": "No events",
+    "noEventsFound": "No events found",
+    "noEventsScheduled": "There are no events scheduled for this time period.",
+    "eventDialog": {
+      "createTitle": "Create Event",
+      "editTitle": "Edit Event",
+      "createDescription": "Add a new event to your calendar",
+      "editDescription": "Edit the details of this event",
+      "title": "Title",
+      "description": "Description",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "location": "Location",
+      "etiquette": "Etiquette",
+      "pickDate": "Pick a date",
+      "selectTime": "Select time",
+      "noTitle": "(no title)",
+      "errors": {
+        "timeRange": "Selected time must be between {startHour}:00 and {endHour}:00",
+        "endBeforeStart": "End date cannot be before start date"
+      },
+      "colors": {
+        "sky": "Sky",
+        "amber": "Amber",
+        "violet": "Violet",
+        "rose": "Rose",
+        "emerald": "Emerald",
+        "orange": "Orange"
+      }
+    },
+    "toasts": {
+      "eventAdded": "Event \"{title}\" added",
+      "eventUpdated": "Event \"{title}\" updated",
+      "eventMoved": "Event \"{title}\" moved",
+      "eventDeleted": "Event \"{title}\" deleted"
+    }
   }
 }

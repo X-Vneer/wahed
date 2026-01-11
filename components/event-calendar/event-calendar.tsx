@@ -21,6 +21,7 @@ import {
   PlusIcon,
 } from "lucide-react"
 import { toast } from "sonner"
+import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -63,6 +64,7 @@ export function EventCalendar({
   className,
   initialView = "month",
 }: EventCalendarProps) {
+  const t = useTranslations("calendar")
   const [currentDate, setCurrentDate] = useState(new Date())
   const [view, setView] = useState<CalendarView>(initialView)
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)
@@ -174,7 +176,7 @@ export function EventCalendar({
     if (event.id) {
       onEventUpdate?.(event)
       // Show toast notification when an event is updated
-      toast(`Event "${event.title}" updated`, {
+      toast(t("toasts.eventUpdated", { title: event.title }), {
         description: format(new Date(event.start), "MMM d, yyyy"),
         position: "bottom-left",
       })
@@ -184,7 +186,7 @@ export function EventCalendar({
         id: Math.random().toString(36).substring(2, 11),
       })
       // Show toast notification when an event is added
-      toast(`Event "${event.title}" added`, {
+      toast(t("toasts.eventAdded", { title: event.title }), {
         description: format(new Date(event.start), "MMM d, yyyy"),
         position: "bottom-left",
       })
@@ -201,7 +203,7 @@ export function EventCalendar({
 
     // Show toast notification when an event is deleted
     if (deletedEvent) {
-      toast(`Event "${deletedEvent.title}" deleted`, {
+      toast(t("toasts.eventDeleted", { title: deletedEvent.title }), {
         description: format(new Date(deletedEvent.start), "MMM d, yyyy"),
         position: "bottom-left",
       })
@@ -212,7 +214,7 @@ export function EventCalendar({
     onEventUpdate?.(updatedEvent)
 
     // Show toast notification when an event is updated via drag and drop
-    toast(`Event "${updatedEvent.title}" moved`, {
+    toast(t("toasts.eventMoved", { title: updatedEvent.title }), {
       description: format(new Date(updatedEvent.start), "MMM d, yyyy"),
       position: "bottom-left",
     })
@@ -287,7 +289,7 @@ export function EventCalendar({
                 size={16}
                 aria-hidden="true"
               />
-              <span className="max-[479px]:sr-only">Today</span>
+              <span className="max-[479px]:sr-only">{t("today")}</span>
             </Button>
             <div className="flex items-center sm:gap-2">
               <Button
@@ -334,16 +336,20 @@ export function EventCalendar({
               ></DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-32">
                 <DropdownMenuItem onClick={() => setView("month")}>
-                  Month <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                  {t("views.month")}{" "}
+                  <DropdownMenuShortcut>M</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("week")}>
-                  Week <DropdownMenuShortcut>W</DropdownMenuShortcut>
+                  {t("views.week")}{" "}
+                  <DropdownMenuShortcut>W</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("day")}>
-                  Day <DropdownMenuShortcut>D</DropdownMenuShortcut>
+                  {t("views.day")}{" "}
+                  <DropdownMenuShortcut>D</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("agenda")}>
-                  Agenda <DropdownMenuShortcut>A</DropdownMenuShortcut>
+                  {t("views.agenda")}{" "}
+                  <DropdownMenuShortcut>A</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -359,7 +365,7 @@ export function EventCalendar({
                 size={16}
                 aria-hidden="true"
               />
-              <span className="max-sm:sr-only">New event</span>
+              <span className="max-sm:sr-only">{t("newEvent")}</span>
             </Button>
           </div>
         </div>

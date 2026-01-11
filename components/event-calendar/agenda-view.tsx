@@ -3,6 +3,7 @@
 import { useMemo } from "react"
 import { RiCalendarEventLine } from "@remixicon/react"
 import { addDays, format, isToday } from "date-fns"
+import { useTranslations } from "next-intl"
 
 import {
   AgendaDaysToShow,
@@ -22,6 +23,7 @@ export function AgendaView({
   events,
   onEventSelect,
 }: AgendaViewProps) {
+  const t = useTranslations("calendar")
   // Show events for the next days based on constant
   const days = useMemo(() => {
     console.log("Agenda view updating with date:", currentDate.toISOString())
@@ -49,10 +51,8 @@ export function AgendaView({
             size={32}
             className="text-muted-foreground/50 mb-2"
           />
-          <h3 className="text-lg font-medium">No events found</h3>
-          <p className="text-muted-foreground">
-            There are no events scheduled for this time period.
-          </p>
+          <h3 className="text-lg font-medium">{t("noEventsFound")}</h3>
+          <p className="text-muted-foreground">{t("noEventsScheduled")}</p>
         </div>
       ) : (
         days.map((day) => {
