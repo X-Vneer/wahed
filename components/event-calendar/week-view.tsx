@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo } from "react"
+import React, { useCallback, useMemo } from "react"
 import {
   addHours,
   areIntervalsOverlapping,
@@ -206,10 +206,13 @@ export function WeekView({
     return result
   }, [days, events])
 
-  const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
-    e.stopPropagation()
-    onEventSelect(event)
-  }
+  const handleEventClick = useCallback(
+    (event: CalendarEvent, e: React.MouseEvent) => {
+      e.stopPropagation()
+      onEventSelect(event)
+    },
+    [onEventSelect]
+  )
 
   const showAllDaySection = allDayEvents.length > 0
   const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(

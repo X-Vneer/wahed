@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client"
 
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import {
   addDays,
   eachDayOfInterval,
@@ -81,10 +81,13 @@ export function MonthView({
     return result
   }, [days])
 
-  const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
-    e.stopPropagation()
-    onEventSelect(event)
-  }
+  const handleEventClick = useCallback(
+    (event: CalendarEvent, e: React.MouseEvent) => {
+      e.stopPropagation()
+      onEventSelect(event)
+    },
+    [onEventSelect]
+  )
 
   const [isMounted, setIsMounted] = useState(false)
   const { contentRef, getVisibleEventCount } = useEventVisibility({

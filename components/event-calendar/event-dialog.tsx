@@ -73,11 +73,6 @@ export function EventDialog({
   const [startDateOpen, setStartDateOpen] = useState(false)
   const [endDateOpen, setEndDateOpen] = useState(false)
 
-  // Debug log to check what event is being passed
-  useEffect(() => {
-    console.log("EventDialog received event:", event)
-  }, [event])
-
   const resetForm = () => {
     setTitle("")
     setDescription("")
@@ -191,50 +186,56 @@ export function EventDialog({
     }
   }
 
-  // Updated color options to match types.ts
-  const colorOptions: Array<{
-    value: EventColor
-    label: string
-    bgClass: string
-    borderClass: string
-  }> = [
-    {
-      value: "sky",
-      label: t("colors.sky"),
-      bgClass: "bg-sky-400 data-[state=checked]:bg-sky-400",
-      borderClass: "border-sky-400 data-[state=checked]:border-sky-400",
-    },
-    {
-      value: "amber",
-      label: t("colors.amber"),
-      bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400",
-      borderClass: "border-amber-400 data-[state=checked]:border-amber-400",
-    },
-    {
-      value: "violet",
-      label: t("colors.violet"),
-      bgClass: "bg-violet-400 data-[state=checked]:bg-violet-400",
-      borderClass: "border-violet-400 data-[state=checked]:border-violet-400",
-    },
-    {
-      value: "rose",
-      label: t("colors.rose"),
-      bgClass: "bg-rose-400 data-[state=checked]:bg-rose-400",
-      borderClass: "border-rose-400 data-[state=checked]:border-rose-400",
-    },
-    {
-      value: "emerald",
-      label: t("colors.emerald"),
-      bgClass: "bg-emerald-400 data-[state=checked]:bg-emerald-400",
-      borderClass: "border-emerald-400 data-[state=checked]:border-emerald-400",
-    },
-    {
-      value: "orange",
-      label: t("colors.orange"),
-      bgClass: "bg-orange-400 data-[state=checked]:bg-orange-400",
-      borderClass: "border-orange-400 data-[state=checked]:border-orange-400",
-    },
-  ]
+  // Updated color options to match types.ts - memoized to avoid recreation on every render
+  const colorOptions = useMemo<
+    Array<{
+      value: EventColor
+      label: string
+      bgClass: string
+      borderClass: string
+    }>
+  >(
+    () => [
+      {
+        value: "sky",
+        label: t("colors.sky"),
+        bgClass: "bg-sky-400 data-[state=checked]:bg-sky-400",
+        borderClass: "border-sky-400 data-[state=checked]:border-sky-400",
+      },
+      {
+        value: "amber",
+        label: t("colors.amber"),
+        bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400",
+        borderClass: "border-amber-400 data-[state=checked]:border-amber-400",
+      },
+      {
+        value: "violet",
+        label: t("colors.violet"),
+        bgClass: "bg-violet-400 data-[state=checked]:bg-violet-400",
+        borderClass: "border-violet-400 data-[state=checked]:border-violet-400",
+      },
+      {
+        value: "rose",
+        label: t("colors.rose"),
+        bgClass: "bg-rose-400 data-[state=checked]:bg-rose-400",
+        borderClass: "border-rose-400 data-[state=checked]:border-rose-400",
+      },
+      {
+        value: "emerald",
+        label: t("colors.emerald"),
+        bgClass: "bg-emerald-400 data-[state=checked]:bg-emerald-400",
+        borderClass:
+          "border-emerald-400 data-[state=checked]:border-emerald-400",
+      },
+      {
+        value: "orange",
+        label: t("colors.orange"),
+        bgClass: "bg-orange-400 data-[state=checked]:bg-orange-400",
+        borderClass: "border-orange-400 data-[state=checked]:border-orange-400",
+      },
+    ],
+    [t]
+  )
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>

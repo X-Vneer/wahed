@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { RiCalendarCheckLine } from "@remixicon/react"
 import {
   addDays,
@@ -137,15 +137,12 @@ export function EventCalendar({
     setCurrentDate(new Date())
   }
 
-  const handleEventSelect = (event: CalendarEvent) => {
-    console.log("Event selected:", event) // Debug log
+  const handleEventSelect = useCallback((event: CalendarEvent) => {
     setSelectedEvent(event)
     setIsEventDialogOpen(true)
-  }
+  }, [])
 
-  const handleEventCreate = (startTime: Date) => {
-    console.log("Creating new event at:", startTime) // Debug log
-
+  const handleEventCreate = useCallback((startTime: Date) => {
     // Snap to 15-minute intervals
     const minutes = startTime.getMinutes()
     const remainder = minutes % 15
@@ -170,55 +167,69 @@ export function EventCalendar({
     }
     setSelectedEvent(newEvent)
     setIsEventDialogOpen(true)
-  }
+  }, [])
 
-  const handleEventSave = (event: CalendarEvent) => {
-    if (event.id) {
-      onEventUpdate?.(event)
-      // Show toast notification when an event is updated
-      toast(t("toasts.eventUpdated", { title: event.title }), {
-        description: format(new Date(event.start), "MMM d, yyyy"),
+  const handleEventSave = useCallback(
+    (event: CalendarEvent) => {
+      if (event.id) {
+        onEventUpdate?.(event)
+        // Show toast notification when an event is updated
+        toast(t("toasts.eventUpdated", { title: event.title }), {
+          description: format(new Date(event.start), "MMM d, yyyy"),
+          position: "bottom-left",
+        })
+      } else {
+        onEventAdd?.({
+          ...event,
+          id: Math.random().toString(36).substring(2, 11),
+        })
+        // Show toast notification when an event is added
+        toast(t("toasts.eventAdded", { title: event.title }), {
+          description: format(new Date(event.start), "MMM d, yyyy"),
+          position: "bottom-left",
+        })
+      }
+      setIsEventDialogOpen(false)
+      setSelectedEvent(null)
+    },
+    [onEventAdd, onEventUpdate, t]
+  )
+
+  const handleEventDelete = useCallback(
+    (eventId: string) => {
+      const deletedEvent = events.find((e) => e.id === eventId)
+      onEventDelete?.(eventId)
+      setIsEventDialogOpen(false)
+      setSelectedEvent(null)
+
+      // Show toast notification when an event is deleted
+      if (deletedEvent) {
+        toast(t("toasts.eventDeleted", { title: deletedEvent.title }), {
+          description: format(new Date(deletedEvent.start), "MMM d, yyyy"),
+          position: "bottom-left",
+        })
+      }
+    },
+    [events, onEventDelete, t]
+  )
+
+  const handleEventUpdate = useCallback(
+    (updatedEvent: CalendarEvent) => {
+      onEventUpdate?.(updatedEvent)
+
+      // Show toast notification when an event is updated via drag and drop
+      toast(t("toasts.eventMoved", { title: updatedEvent.title }), {
+        description: format(new Date(updatedEvent.start), "MMM d, yyyy"),
         position: "bottom-left",
       })
-    } else {
-      onEventAdd?.({
-        ...event,
-        id: Math.random().toString(36).substring(2, 11),
-      })
-      // Show toast notification when an event is added
-      toast(t("toasts.eventAdded", { title: event.title }), {
-        description: format(new Date(event.start), "MMM d, yyyy"),
-        position: "bottom-left",
-      })
-    }
+    },
+    [onEventUpdate, t]
+  )
+
+  const handleDialogClose = useCallback(() => {
     setIsEventDialogOpen(false)
     setSelectedEvent(null)
-  }
-
-  const handleEventDelete = (eventId: string) => {
-    const deletedEvent = events.find((e) => e.id === eventId)
-    onEventDelete?.(eventId)
-    setIsEventDialogOpen(false)
-    setSelectedEvent(null)
-
-    // Show toast notification when an event is deleted
-    if (deletedEvent) {
-      toast(t("toasts.eventDeleted", { title: deletedEvent.title }), {
-        description: format(new Date(deletedEvent.start), "MMM d, yyyy"),
-        position: "bottom-left",
-      })
-    }
-  }
-
-  const handleEventUpdate = (updatedEvent: CalendarEvent) => {
-    onEventUpdate?.(updatedEvent)
-
-    // Show toast notification when an event is updated via drag and drop
-    toast(t("toasts.eventMoved", { title: updatedEvent.title }), {
-      description: format(new Date(updatedEvent.start), "MMM d, yyyy"),
-      position: "bottom-left",
-    })
-  }
+  }, [])
 
   const viewTitle = useMemo(() => {
     if (view === "month") {
@@ -407,10 +418,7 @@ export function EventCalendar({
         <EventDialog
           event={selectedEvent}
           isOpen={isEventDialogOpen}
-          onClose={() => {
-            setIsEventDialogOpen(false)
-            setSelectedEvent(null)
-          }}
+          onClose={handleDialogClose}
           onSave={handleEventSave}
           onDelete={handleEventDelete}
         />
