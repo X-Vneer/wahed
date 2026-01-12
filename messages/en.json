@@ -5,7 +5,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "edit": "Edit project",
-    "update": "Edit"
+    "update": "Edit",
+    "attendeesPlaceholder": "Select Attendess"
   },
   "auth": {
     "login": {
@@ -654,6 +655,7 @@
       "endTime": "End Time",
       "location": "Location",
       "etiquette": "Etiquette",
+      "attendees": "Attendees",
       "pickDate": "Pick a date",
       "selectTime": "Select time",
       "noTitle": "(no title)",
@@ -668,13 +670,46 @@
         "rose": "Rose",
         "emerald": "Emerald",
         "orange": "Orange"
-      }
+      },
+      "deleteConfirm": {
+        "title": "Delete Event",
+        "description": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
+        "delete": "Delete",
+        "cancel": "Cancel"
+      },
+      "attendeesPlaceholder": "Search and select attendees...",
+      "noAttendeesFound": "No attendees found"
     },
     "toasts": {
       "eventAdded": "Event \"{title}\" added",
       "eventUpdated": "Event \"{title}\" updated",
       "eventMoved": "Event \"{title}\" moved",
       "eventDeleted": "Event \"{title}\" deleted"
+    },
+    "errors": {
+      "create_failed": "Failed to create event",
+      "update_failed": "Failed to update event",
+      "delete_failed": "Failed to delete event",
+      "failedToLoad": "Failed to load events"
+    }
+  },
+  "events": {
+    "errors": {
+      "title": {
+        "required": "Title is required"
+      },
+      "start": {
+        "required": "Start date is required"
+      },
+      "end": {
+        "required": "End date is required"
+      },
+      "end_before_start": "End date cannot be before start date",
+      "not_found": "Event not found",
+      "invalid_attendees": "One or more selected attendees are invalid",
+      "invalid_attendee": "Invalid attendee",
+      "attendee_already_added": "Attendee is already added to this event",
+      "attendee_not_found": "Attendee not found"
     }
   }
 }

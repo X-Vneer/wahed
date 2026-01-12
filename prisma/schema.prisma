@@ -53,6 +53,15 @@ enum PermissionKey {
   REPORT_EXPORT
 }
 
+enum EventColor {
+  SKY
+  AMBER
+  VIOLET
+  ROSE
+  EMERALD
+  ORANGE
+}
+
 model User {
   id       String   @id @default(cuid())
   name     String
@@ -64,7 +73,9 @@ model User {
 
   isActive Boolean @default(true)
 
-  permissions UserPermission[]
+  permissions     UserPermission[]
+  createdEvents   Event[]          @relation("EventCreator")
+  attendingEvents EventAttendee[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -205,4 +216,36 @@ model ProjectAdditionalData {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  start       DateTime
+  end         DateTime
+  allDay      Boolean    @default(false)
+  color       EventColor @default(SKY)
+  location    String?
+
+  createdById String
+  createdBy   User   @relation("EventCreator", fields: [createdById], references: [id], onDelete: Cascade)
+
+  attendees EventAttendee[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EventAttendee {
+  id      String @id @default(cuid())
+  eventId String
+  userId  String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, userId])
 }

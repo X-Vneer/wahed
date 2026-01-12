@@ -5,7 +5,8 @@
     "cancel": "إلغاء",
     "save": "حفظ",
     "edit": "تعديل المشروع",
-    "update": "تعديل"
+    "update": "تعديل",
+    "attendeesPlaceholder": "حدد الحضور"
   },
   "auth": {
     "login": {
@@ -655,6 +656,7 @@
       "endTime": "وقت النهاية",
       "location": "الموقع",
       "etiquette": "اللون",
+      "attendees": "الحضور",
       "pickDate": "اختر تاريخ",
       "selectTime": "اختر الوقت",
       "noTitle": "(بدون عنوان)",
@@ -669,13 +671,46 @@
         "rose": "وردي",
         "emerald": "زمردي",
         "orange": "برتقالي"
-      }
+      },
+      "deleteConfirm": {
+        "title": "حذف الحدث",
+        "description": "هل أنت متأكد أنك تريد حذف \"{title}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+        "delete": "حذف",
+        "cancel": "إلغاء"
+      },
+      "attendeesPlaceholder": "ابحث واختر الحضور...",
+      "noAttendeesFound": "لم يتم العثور على حضور"
     },
     "toasts": {
       "eventAdded": "تمت إضافة الحدث \"{title}\"",
       "eventUpdated": "تم تحديث الحدث \"{title}\"",
       "eventMoved": "تم نقل الحدث \"{title}\"",
       "eventDeleted": "تم حذف الحدث \"{title}\""
+    },
+    "errors": {
+      "create_failed": "فشل في إنشاء الحدث",
+      "update_failed": "فشل في تحديث الحدث",
+      "delete_failed": "فشل في حذف الحدث",
+      "failedToLoad": "فشل في تحميل الأحداث"
+    }
+  },
+  "events": {
+    "errors": {
+      "title": {
+        "required": "العنوان مطلوب"
+      },
+      "start": {
+        "required": "تاريخ البداية مطلوب"
+      },
+      "end": {
+        "required": "تاريخ النهاية مطلوب"
+      },
+      "end_before_start": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية",
+      "not_found": "الحدث غير موجود",
+      "invalid_attendees": "واحد أو أكثر من الحضور المحددين غير صحيح",
+      "invalid_attendee": "حضور غير صحيح",
+      "attendee_already_added": "الحضور مضاف بالفعل إلى هذا الحدث",
+      "attendee_not_found": "الحضور غير موجود"
     }
   }
 }
