@@ -6,8 +6,14 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
-import { eventInclude, transformEvent } from "@/prisma/events"
+import {
+  eventInclude,
+  transformEvent,
+  type EventInclude,
+} from "@/prisma/events"
 import { expandRecurringEvents } from "@/lib/recurrence"
+import type { CalendarEvent } from "@/components/event-calendar"
+import { Prisma } from "@/lib/generated/prisma/client"
 
 export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
@@ -96,7 +102,16 @@ export async function GET(request: NextRequest) {
     })
 
     // Transform events to match CalendarEvent format
-    const transformedEvents = events.map((event) => transformEvent(event))
+    const transformedEvents = events.map((event) => {
+      const transformed = transformEvent(event)
+      return {
+        ...transformed,
+        description: transformed.description ?? undefined,
+        location: transformed.location ?? undefined,
+        color: transformed.color as CalendarEvent["color"],
+        recurrenceEndDate: transformed.recurrenceEndDate ?? undefined,
+      }
+    })
 
     // Expand recurring events into instances
     const startDateForExpansion = startDate ? new Date(startDate) : new Date()
@@ -176,7 +191,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create event with attendees
-    const event = await db.event.create({
+    const event: EventInclude = await db.event.create({
       data: {
         title: data.title,
         description: data.description || null,
@@ -187,9 +202,9 @@ export async function POST(request: NextRequest) {
         location: data.location || null,
         isRecurring: data.isRecurring ?? false,
         recurrenceRule: data.recurrenceRule
-          ? (data.recurrenceRule as unknown as Record<string, unknown>)
-          : null,
-        recurrenceEndDate: data.recurrenceEndDate || null,
+          ? (data.recurrenceRule as Prisma.InputJsonValue)
+          : undefined,
+        recurrenceEndDate: data.recurrenceEndDate || undefined,
         createdById: userId,
         attendees:
           data.attendeeIds && data.attendeeIds.length > 0
