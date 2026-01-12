@@ -27,6 +27,7 @@ import { notFound } from "next/navigation"
 import { ProjectAttachments } from "./_components/project-attachments"
 import { EditProjectLink } from "../_components/edit-project-link"
 import { ArchiveButton } from "./_components/archive-button"
+import { DeleteButton } from "./_components/delete-button"
 
 type PageProps = {
   params: Promise<{
@@ -85,6 +86,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
         <div className="flex gap-2">
           <ArchiveButton isArchived={!!transformedProject.archivedAt} />
           <EditProjectLink />
+          <DeleteButton />
         </div>
       </div>
 

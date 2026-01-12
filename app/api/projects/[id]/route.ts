@@ -316,3 +316,47 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     )
   }
 }
+
+export async function DELETE(request: NextRequest, context: RouteContext) {
+  try {
+    // Check permission
+    const permissionCheck = await hasPermission(
+      PERMISSIONS_GROUPED.PROJECT.DELETE
+    )
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    const { id } = await context.params
+
+    // Check if project exists
+    const existingProject = await db.project.findUnique({
+      where: { id },
+      select: { id: true },
+    })
+
+    if (!existingProject) {
+      return NextResponse.json(
+        { error: t("projects.errors.not_found") },
+        { status: 404 }
+      )
+    }
+
+    // Delete project (cascade will handle related records)
+    await db.project.delete({
+      where: { id },
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Error deleting project:", error)
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}
