@@ -20,7 +20,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
-import { logo } from "@/assets"
+import { loginBg, logo } from "@/assets"
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -84,7 +84,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
             <div className={cn("flex flex-col gap-4", "md:flex-row")}>
               <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-xl md:w-64">
                 <img
-                  src={project.image || logo.src}
+                  src={project.image || loginBg.src}
                   alt={project.name}
                   className="h-full w-full object-cover"
                 />

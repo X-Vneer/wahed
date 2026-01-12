@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { logo } from "@/assets"
+import { loginBg } from "@/assets"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,10 +24,10 @@ import {
 } from "lucide-react"
 import { getTranslations } from "next-intl/server"
 import { notFound } from "next/navigation"
-import { ProjectAttachments } from "./_components/project-attachments"
 import { EditProjectLink } from "../_components/edit-project-link"
 import { ArchiveButton } from "./_components/archive-button"
 import { DeleteButton } from "./_components/delete-button"
+import { ProjectAttachments } from "./_components/project-attachments"
 
 type PageProps = {
   params: Promise<{
@@ -100,7 +100,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
               {/* Main Image */}
               <div className="relative h-[300px] w-full overflow-hidden rounded-lg">
                 <img
-                  src={transformedProject.image || logo.src}
+                  src={transformedProject.image || loginBg.src}
                   alt={transformedProject.name}
                   className="h-full w-full object-cover"
                 />
