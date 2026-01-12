@@ -58,13 +58,13 @@ export function WeekView({
   const locale = useLocale()
   const dateFnsLocale = locale === "ar" ? ar : enUS
   const days = useMemo(() => {
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
-    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 })
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 6 })
+    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 6 })
     return eachDayOfInterval({ start: weekStart, end: weekEnd })
   }, [currentDate])
 
   const weekStart = useMemo(
-    () => startOfWeek(currentDate, { weekStartsOn: 0 }),
+    () => startOfWeek(currentDate, { weekStartsOn: 6 }),
     [currentDate]
   )
 

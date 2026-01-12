@@ -246,8 +246,8 @@ export function EventCalendar({
     if (view === "month") {
       return format(currentDate, "MMMM yyyy", { locale: dateFnsLocale })
     } else if (view === "week") {
-      const start = startOfWeek(currentDate, { weekStartsOn: 0 })
-      const end = endOfWeek(currentDate, { weekStartsOn: 0 })
+      const start = startOfWeek(currentDate, { weekStartsOn: 6 })
+      const end = endOfWeek(currentDate, { weekStartsOn: 6 })
       if (isSameMonth(start, end)) {
         return format(start, "MMMM yyyy", { locale: dateFnsLocale })
       } else {

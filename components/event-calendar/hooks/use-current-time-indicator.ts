@@ -32,8 +32,8 @@ export function useCurrentTimeIndicator(
       if (view === "day") {
         isCurrentTimeVisible = isSameDay(now, currentDate)
       } else if (view === "week") {
-        const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 0 })
-        const endOfWeekDate = endOfWeek(currentDate, { weekStartsOn: 0 })
+        const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 6 })
+        const endOfWeekDate = endOfWeek(currentDate, { weekStartsOn: 6 })
         isCurrentTimeVisible = isWithinInterval(now, {
           start: startOfWeekDate,
           end: endOfWeekDate,
