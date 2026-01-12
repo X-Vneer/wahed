@@ -103,8 +103,57 @@ export const useCreateEvent = () => {
       const response = await apiClient.post<ApiEvent>("/api/events", apiEvent)
       return transformEvent(response.data)
     },
-    onSuccess: () => {
-      // Invalidate all event queries to refetch
+    onMutate: async (newEvent: Omit<CalendarEvent, "id">) => {
+      // Cancel any outgoing refetches to avoid overwriting our optimistic update
+      await queryClient.cancelQueries({ queryKey: ["events"] })
+
+      // Snapshot the previous value for rollback
+      const previousEvents = queryClient.getQueriesData<CalendarEvent[]>({
+        queryKey: ["events"],
+      })
+
+      // Generate a temporary ID for the optimistic event
+      const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
+      const optimisticEvent: CalendarEvent = {
+        ...newEvent,
+        id: tempId,
+      }
+
+      // Optimistically add the event to all event queries
+      queryClient.setQueriesData<CalendarEvent[]>(
+        { queryKey: ["events"] },
+        (old) => {
+          if (!old) return [optimisticEvent]
+          return [...old, optimisticEvent]
+        }
+      )
+
+      // Return context with the snapshotted value for rollback
+      return { previousEvents, tempId }
+    },
+    onError: (error, newEvent, context) => {
+      // Rollback to the previous value on error
+      if (context?.previousEvents) {
+        context.previousEvents.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data)
+        })
+      }
+    },
+    onSuccess: (data, newEvent, context) => {
+      // Replace the temporary event with the real one from the server
+      queryClient.setQueriesData<CalendarEvent[]>(
+        { queryKey: ["events"] },
+        (old) => {
+          if (!old) return [data]
+          // Remove the temporary event and add the real one
+          return old
+            .filter((event) => event.id !== context?.tempId)
+            .concat(data)
+        }
+      )
+    },
+    onSettled: () => {
+      // Invalidate to ensure we're in sync with the server
       queryClient.invalidateQueries({ queryKey: ["events"] })
     },
   })
@@ -189,8 +238,57 @@ export const useDeleteEvent = () => {
       await apiClient.delete(`/api/events/${eventId}`)
       return eventId
     },
+    onMutate: async (eventId: string) => {
+      // Cancel any outgoing refetches to avoid overwriting our optimistic update
+      await queryClient.cancelQueries({ queryKey: ["events"] })
+
+      // Snapshot the previous value for rollback
+      const previousEvents = queryClient.getQueriesData<CalendarEvent[]>({
+        queryKey: ["events"],
+      })
+
+      // Find the event being deleted for potential rollback
+      let deletedEvent: CalendarEvent | undefined
+      queryClient
+        .getQueriesData<CalendarEvent[]>({ queryKey: ["events"] })
+        .forEach(([, data]) => {
+          if (data) {
+            const event = data.find((e) => e.id === eventId)
+            if (event) {
+              deletedEvent = event
+            }
+          }
+        })
+
+      // Optimistically remove the event from all event queries
+      queryClient.setQueriesData<CalendarEvent[]>(
+        { queryKey: ["events"] },
+        (old) => {
+          if (!old) return old
+          return old.filter((event) => event.id !== eventId)
+        }
+      )
+
+      // Return context with the snapshotted value and deleted event for rollback
+      return { previousEvents, deletedEvent }
+    },
+    onError: (error, eventId, context) => {
+      // Rollback to the previous value on error
+      if (context?.previousEvents) {
+        context.previousEvents.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data)
+        })
+      }
+    },
     onSuccess: () => {
-      // Invalidate all event queries to refetch
+      // Event is already removed optimistically, just ensure consistency
+      queryClient.setQueriesData<CalendarEvent[]>(
+        { queryKey: ["events"] },
+        (old) => old // Keep the optimistic update
+      )
+    },
+    onSettled: () => {
+      // Invalidate to ensure we're in sync with the server
       queryClient.invalidateQueries({ queryKey: ["events"] })
     },
   })
