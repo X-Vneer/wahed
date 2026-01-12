@@ -61,7 +61,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
 
   return (
     <div className="flex h-full flex-col gap-6">
-      <div className="flex justify-between gap-4">
+      <div className="flex flex-wrap justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold">{t("sidebar.view-project")}</h1>
           <Breadcrumb>
@@ -83,7 +83,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
           </Breadcrumb>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex grow justify-end gap-2">
           <ArchiveButton isArchived={!!transformedProject.archivedAt} />
           <EditProjectLink />
           <DeleteButton />

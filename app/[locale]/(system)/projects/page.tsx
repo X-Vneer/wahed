@@ -18,7 +18,7 @@ const ProjectsPage = () => {
   return (
     <div className="flex h-full flex-col gap-6">
       {/* Header */}
-      <div className="flex justify-between">
+      <div className="flex flex-wrap justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold">{t("sidebar.projects")}</h1>
           <Breadcrumb>
@@ -33,15 +33,17 @@ const ProjectsPage = () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <Button
-          nativeButton={false}
-          render={
-            <Link href="/projects/add">
-              <Plus className="size-4" />
-              {t("projects.addNew")}
-            </Link>
-          }
-        />
+        <div className="flex grow justify-end gap-2">
+          <Button
+            nativeButton={false}
+            render={
+              <Link href="/projects/add">
+                <Plus className="size-4" />
+                {t("projects.addNew")}
+              </Link>
+            }
+          />
+        </div>
       </div>
 
       {/* Projects List */}

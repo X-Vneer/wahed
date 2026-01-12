@@ -16,6 +16,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { Link, usePathname } from "@/lib/i18n/navigation"
 import { useTranslations } from "next-intl"
@@ -38,6 +39,13 @@ export function NavMain({
 }) {
   const t = useTranslations("sidebar")
   const pathname = usePathname()
+  const { isMobile, setOpenMobile } = useSidebar()
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
 
   return (
     <SidebarGroup>
@@ -77,7 +85,12 @@ export function NavMain({
                               size="md"
                               isActive={isSubItemActive}
                               render={
-                                <Link href={subItem.url}>{subItem.title}</Link>
+                                <Link
+                                  href={subItem.url}
+                                  onClick={handleLinkClick}
+                                >
+                                  {subItem.title}
+                                </Link>
                               }
                             />
                           </SidebarMenuSubItem>
@@ -93,7 +106,7 @@ export function NavMain({
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   render={
-                    <Link href={item.url}>
+                    <Link href={item.url} onClick={handleLinkClick}>
                       {item.icon && <item.icon className="size-4" />}
 
                       {item.title}

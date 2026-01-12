@@ -176,7 +176,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                       <Play className="text-muted-foreground size-4 rtl:rotate-180" />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 max-sm:mt-2 max-sm:w-full max-sm:justify-between">
                     <Button
                       variant="outline"
                       size="sm"

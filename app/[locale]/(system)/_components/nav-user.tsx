@@ -4,6 +4,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { useUserData } from "@/hooks/use-user-data"
 import { LogOut, User } from "lucide-react"
@@ -15,9 +16,13 @@ export function NavUser() {
   const { data: user, isLoading, error } = useUserData()
   const router = useRouter()
   const t = useTranslations("sidebar")
+  const { isMobile, setOpenMobile } = useSidebar()
 
   const handleLogout = async () => {
     try {
+      if (isMobile) {
+        setOpenMobile(false)
+      }
       await apiClient.post("/api/auth/logout")
       router.refresh()
       router.push("/auth/login")
