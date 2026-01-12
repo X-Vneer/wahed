@@ -82,6 +82,22 @@ export const useEvents = (
   })
 }
 
+// Hook to fetch a single event by ID
+export const useEvent = (eventId: string | null) => {
+  return useQuery<Event, Error>({
+    queryKey: ["event", eventId],
+    queryFn: async () => {
+      if (!eventId) throw new Error("Event ID is required")
+      const response = await apiClient.get<Event>(`/api/events/${eventId}`)
+      // The API already returns the transformed event with recurrence fields
+      return response.data
+    },
+    enabled: !!eventId,
+    staleTime: 1 * 60 * 1000, // 1 minute
+    retry: 1,
+  })
+}
+
 export const useCreateEvent = () => {
   const queryClient = useQueryClient()
 
@@ -89,6 +105,17 @@ export const useCreateEvent = () => {
     mutationFn: async (event: Omit<CalendarEvent, "id">) => {
       console.log("🚀 ~ useCreateEvent ~ event:", event)
       // Transform to API format
+      const eventWithRecurrence = event as CalendarEvent & {
+        isRecurring?: boolean
+        recurrenceRule?: {
+          frequency: "WEEKLY" | "DAILY" | "MONTHLY" | "YEARLY"
+          interval: number
+          daysOfWeek?: number[]
+          endDate?: Date
+        }
+        recurrenceEndDate?: Date
+      }
+
       const apiEvent: CreateEventInput = {
         title: event.title,
         description: event.description,
@@ -98,6 +125,10 @@ export const useCreateEvent = () => {
         color: (event.color?.toUpperCase() || "SKY") as EventColor,
         location: event.location,
         attendeeIds: event.attendees?.map((attendee) => attendee.id) ?? [],
+        // Recurrence fields
+        isRecurring: eventWithRecurrence.isRecurring ?? false,
+        recurrenceRule: eventWithRecurrence.recurrenceRule,
+        recurrenceEndDate: eventWithRecurrence.recurrenceEndDate,
       }
 
       const response = await apiClient.post<ApiEvent>("/api/events", apiEvent)
@@ -164,7 +195,21 @@ export const useUpdateEvent = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...event }: CalendarEvent) => {
+      // Extract original event ID if this is an expanded recurring event
+      const originalId = extractOriginalEventId(id)
+
       // Transform to API format
+      const eventWithRecurrence = event as CalendarEvent & {
+        isRecurring?: boolean
+        recurrenceRule?: {
+          frequency: "WEEKLY" | "DAILY" | "MONTHLY" | "YEARLY"
+          interval: number
+          daysOfWeek?: number[]
+          endDate?: Date
+        }
+        recurrenceEndDate?: Date
+      }
+
       const apiEvent: UpdateEventInput = {
         title: event.title,
         description: event.description,
@@ -174,10 +219,14 @@ export const useUpdateEvent = () => {
         color: (event.color?.toUpperCase() || "SKY") as EventColor,
         location: event.location,
         attendeeIds: event.attendees?.map((attendee) => attendee.id) ?? [],
+        // Recurrence fields
+        isRecurring: eventWithRecurrence.isRecurring ?? false,
+        recurrenceRule: eventWithRecurrence.recurrenceRule,
+        recurrenceEndDate: eventWithRecurrence.recurrenceEndDate,
       }
 
       const response = await apiClient.put<ApiEvent>(
-        `/api/events/${id}`,
+        `/api/events/${originalId}`,
         apiEvent
       )
       return transformEvent(response.data)
@@ -230,13 +279,17 @@ export const useUpdateEvent = () => {
   })
 }
 
+import { extractOriginalEventId } from "@/lib/recurrence"
+
 export const useDeleteEvent = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (eventId: string) => {
-      await apiClient.delete(`/api/events/${eventId}`)
-      return eventId
+      // Extract original event ID if this is an expanded recurring event
+      const originalId = extractOriginalEventId(eventId)
+      await apiClient.delete(`/api/events/${originalId}`)
+      return originalId
     },
     onMutate: async (eventId: string) => {
       // Cancel any outgoing refetches to avoid overwriting our optimistic update

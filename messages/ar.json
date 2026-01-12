@@ -697,7 +697,34 @@
         "cancel": "إلغاء"
       },
       "attendeesPlaceholder": "ابحث واختر الحضور...",
-      "noAttendeesFound": "لم يتم العثور على حضور"
+      "noAttendeesFound": "لم يتم العثور على حضور",
+      "recurrence": {
+        "title": "تكرار",
+        "enable": "تكرار هذا الحدث",
+        "frequency": {
+          "label": "كرر كل",
+          "daily": "يوم",
+          "weekly": "أسبوع",
+          "monthly": "شهر",
+          "yearly": "سنة"
+        },
+        "interval": "كل",
+        "daysOfWeek": {
+          "label": "كرر في",
+          "sunday": "الأحد",
+          "monday": "الإثنين",
+          "tuesday": "الثلاثاء",
+          "wednesday": "الأربعاء",
+          "thursday": "الخميس",
+          "friday": "الجمعة",
+          "saturday": "السبت"
+        },
+        "endDate": {
+          "label": "إنهاء التكرار",
+          "never": "أبداً",
+          "onDate": "في تاريخ"
+        }
+      }
     },
     "toasts": {
       "eventAdded": "تمت إضافة الحدث \"{title}\"",
@@ -724,11 +751,14 @@
         "required": "تاريخ النهاية مطلوب"
       },
       "end_before_start": "لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية",
+      "recurrence_rule_required": "قاعدة التكرار مطلوبة عندما يكون الحدث متكرراً",
+      "recurrence_end_before_start": "لا يمكن أن يكون تاريخ نهاية التكرار قبل تاريخ البداية",
       "not_found": "الحدث غير موجود",
       "invalid_attendees": "واحد أو أكثر من الحضور المحددين غير صحيح",
       "invalid_attendee": "حضور غير صحيح",
       "attendee_already_added": "الحضور مضاف بالفعل إلى هذا الحدث",
       "attendee_not_found": "الحضور غير موجود"
     }
-  }
+  },
+  "location": "الموقع"
 }

@@ -62,8 +62,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { useUsers } from "@/hooks/use-users"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "../ui/scroll-area"
-import { User } from "lucide-react"
 import UserAvatar from "../user-avatar"
+import { extractOriginalEventId } from "@/lib/recurrence"
+import { useEvent } from "@/hooks/use-events"
 
 // Form schema for the event dialog
 const eventFormSchema = z
@@ -80,6 +81,15 @@ const eventFormSchema = z
       .enum(["sky", "amber", "violet", "rose", "emerald", "orange"])
       .default("sky"),
     attendeeIds: z.array(z.string()).default([]),
+    // Recurrence fields
+    isRecurring: z.boolean().default(false),
+    recurrenceFrequency: z
+      .enum(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"])
+      .optional(),
+    recurrenceInterval: z.number().int().positive().default(1),
+    recurrenceDaysOfWeek: z.array(z.number()).optional(),
+    recurrenceEndType: z.enum(["never", "onDate"]).default("never"),
+    recurrenceEndDate: z.date().optional(),
   })
   .refine(
     (data) => {
@@ -151,6 +161,26 @@ export function EventDialog({
 
   const { data: users = [] } = useUsers()
 
+  // Check if this is an expanded recurring event and fetch the original event
+  const originalEventId = event?.id ? extractOriginalEventId(event.id) : null
+  const isExpandedEvent = event?.id && originalEventId !== event.id
+  const { data: originalEvent, isLoading: isLoadingOriginalEvent } = useEvent(
+    isExpandedEvent ? originalEventId : null
+  )
+
+  // Use original event if this is an expanded recurring event, otherwise use the passed event
+  const eventToUse =
+    isExpandedEvent && originalEvent
+      ? {
+          ...originalEvent,
+          // Keep the instance-specific start/end times from the expanded event
+          start: event.start,
+          end: event.end,
+          // Use the original event ID for operations
+          id: originalEvent.id,
+        }
+      : event
+
   const formatTimeForInput = (date: Date) => {
     const hours = date.getHours().toString().padStart(2, "0")
     const minutes = Math.floor(date.getMinutes() / 15) * 15
@@ -170,34 +200,82 @@ export function EventDialog({
       location: "",
       color: "sky" as EventColor,
       attendeeIds: [] as string[],
+      // Recurrence fields
+      isRecurring: false,
+      recurrenceFrequency: "WEEKLY" as
+        | "WEEKLY"
+        | "DAILY"
+        | "MONTHLY"
+        | "YEARLY",
+      recurrenceInterval: 1,
+      recurrenceDaysOfWeek: [] as number[],
+      recurrenceEndType: "never" as "never" | "onDate",
+      recurrenceEndDate: undefined as Date | undefined,
     },
 
     validate: zod4Resolver(eventFormSchema),
   })
 
   useEffect(() => {
-    if (event) {
-      console.log("🚀 ~ EventDialog ~ event:", event)
-      const start = new Date(event.start)
-      const end = new Date(event.end)
+    // Wait for original event to load if it's an expanded recurring event
+    if (isExpandedEvent && isLoadingOriginalEvent) {
+      return
+    }
+
+    if (eventToUse) {
+      console.log("🚀 ~ EventDialog ~ event:", eventToUse)
+      const start = new Date(eventToUse.start)
+      const end = new Date(eventToUse.end)
+
+      // Extract recurrence data if available
+      const recurrenceRule =
+        (eventToUse as unknown as { recurrenceRule?: unknown })
+          ?.recurrenceRule || null
+      const isRecurring =
+        (eventToUse as unknown as { isRecurring?: boolean })?.isRecurring ||
+        false
+      const recurrenceEndDate =
+        (eventToUse as unknown as { recurrenceEndDate?: Date | null })
+          ?.recurrenceEndDate || null
+
+      const rule =
+        typeof recurrenceRule === "object" && recurrenceRule !== null
+          ? (recurrenceRule as {
+              frequency?: string
+              interval?: number
+              daysOfWeek?: number[]
+              endDate?: Date
+            })
+          : null
 
       form.setValues({
-        title: event.title || "",
-        description: event.description || "",
+        title: eventToUse.title || "",
+        description: eventToUse.description || "",
         startDate: start,
         endDate: end,
         startTime: formatTimeForInput(start),
         endTime: formatTimeForInput(end),
-        allDay: event.allDay || false,
-        location: event.location || "",
-        color: (event.color as EventColor) || "sky",
-        attendeeIds: event.attendees?.map((attendee) => attendee.id) || [],
+        allDay: eventToUse.allDay || false,
+        location: eventToUse.location || "",
+        color: (eventToUse.color as EventColor) || "sky",
+        attendeeIds: eventToUse.attendees?.map((attendee) => attendee.id) || [],
+        // Recurrence fields
+        isRecurring: isRecurring,
+        recurrenceFrequency: (rule?.frequency as "WEEKLY") || "WEEKLY",
+        recurrenceInterval: rule?.interval || 1,
+        recurrenceDaysOfWeek: rule?.daysOfWeek || [start.getDay()],
+        recurrenceEndType: (recurrenceEndDate
+          ? "onDate"
+          : "never") as unknown as "never" | "onDate",
+        recurrenceEndDate: recurrenceEndDate
+          ? new Date(recurrenceEndDate)
+          : undefined,
       })
     } else {
       form.reset()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event?.id])
+  }, [eventToUse?.id, isExpandedEvent, isLoadingOriginalEvent])
 
   // Memoize time options so they're only calculated once
   const timeOptions = useMemo(() => {
@@ -238,8 +316,28 @@ export function EventDialog({
     // Use generic title if empty
     const eventTitle = values.title.trim() ? values.title : t("noTitle")
 
+    // Use original event ID for operations (in case this is an expanded recurring event)
+    const eventIdToUse = eventToUse?.id || event?.id || ""
+
+    // Build recurrence rule if recurring
+    const recurrenceRule = values.isRecurring
+      ? {
+          frequency: values.recurrenceFrequency || "WEEKLY",
+          interval: values.recurrenceInterval || 1,
+          daysOfWeek:
+            values.recurrenceFrequency === "WEEKLY"
+              ? values.recurrenceDaysOfWeek || [start.getDay()]
+              : undefined,
+          endDate:
+            (values.recurrenceEndType as string) === "onDate" &&
+            values.recurrenceEndDate
+              ? values.recurrenceEndDate
+              : undefined,
+        }
+      : undefined
+
     onSave({
-      id: event?.id || "",
+      id: eventIdToUse,
       title: eventTitle,
       description: values.description,
       start,
@@ -249,6 +347,30 @@ export function EventDialog({
       color: values.color,
       attendees:
         users.filter((user) => values.attendeeIds.includes(user.id)) || [],
+      // Recurrence fields
+      isRecurring: values.isRecurring,
+      recurrenceRule: recurrenceRule as
+        | {
+            frequency: "WEEKLY" | "DAILY" | "MONTHLY" | "YEARLY"
+            interval: number
+            daysOfWeek?: number[]
+            endDate?: Date
+          }
+        | undefined,
+      recurrenceEndDate:
+        (values.recurrenceEndType as string) === "onDate" &&
+        values.recurrenceEndDate
+          ? values.recurrenceEndDate
+          : undefined,
+    } as CalendarEvent & {
+      isRecurring?: boolean
+      recurrenceRule?: {
+        frequency: "WEEKLY" | "DAILY" | "MONTHLY" | "YEARLY"
+        interval: number
+        daysOfWeek?: number[]
+        endDate?: Date
+      }
+      recurrenceEndDate?: Date
     })
   })
 
@@ -257,8 +379,11 @@ export function EventDialog({
   }
 
   const confirmDelete = () => {
-    if (event?.id) {
-      onDelete(event.id)
+    const eventIdToDelete = eventToUse?.id || event?.id
+    if (eventIdToDelete) {
+      // Extract original ID if this is an expanded recurring event
+      const originalId = extractOriginalEventId(eventIdToDelete)
+      onDelete(originalId)
       setDeleteDialogOpen(false)
     }
   }
@@ -588,6 +713,274 @@ export function EventDialog({
                       />
                     </Field>
 
+                    {/* Recurrence Section */}
+                    <div className="space-y-4 rounded-md border p-4">
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="is-recurring"
+                          checked={form.values.isRecurring}
+                          onCheckedChange={(checked) => {
+                            form.setFieldValue("isRecurring", checked === true)
+                            if (!checked) {
+                              // Reset recurrence fields when disabled
+                              form.setFieldValue(
+                                "recurrenceFrequency",
+                                "WEEKLY"
+                              )
+                              form.setFieldValue("recurrenceInterval", 1)
+                              form.setFieldValue("recurrenceDaysOfWeek", [
+                                form.values.startDate.getDay(),
+                              ])
+                              form.setFieldValue("recurrenceEndType", "never")
+                              form.setFieldValue("recurrenceEndDate", undefined)
+                            }
+                          }}
+                        />
+                        <Label htmlFor="is-recurring">
+                          {t("recurrence.enable")}
+                        </Label>
+                      </div>
+
+                      {form.values.isRecurring && (
+                        <div className="space-y-4 pl-6">
+                          <div className="flex gap-4">
+                            <Field className="flex-1">
+                              <FieldLabel>
+                                {t("recurrence.frequency.label")}
+                              </FieldLabel>
+                              <Select
+                                value={form.values.recurrenceFrequency}
+                                onValueChange={(value) => {
+                                  form.setFieldValue(
+                                    "recurrenceFrequency",
+                                    value as unknown as
+                                      | "WEEKLY"
+                                      | "DAILY"
+                                      | "MONTHLY"
+                                      | "YEARLY"
+                                  )
+                                  // Reset days of week when frequency changes
+                                  if (value !== "WEEKLY") {
+                                    form.setFieldValue(
+                                      "recurrenceDaysOfWeek",
+                                      []
+                                    )
+                                  } else {
+                                    form.setFieldValue("recurrenceDaysOfWeek", [
+                                      form.values.startDate.getDay(),
+                                    ])
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="DAILY">
+                                    {t("recurrence.frequency.daily")}
+                                  </SelectItem>
+                                  <SelectItem value="WEEKLY">
+                                    {t("recurrence.frequency.weekly")}
+                                  </SelectItem>
+                                  <SelectItem value="MONTHLY">
+                                    {t("recurrence.frequency.monthly")}
+                                  </SelectItem>
+                                  <SelectItem value="YEARLY">
+                                    {t("recurrence.frequency.yearly")}
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </Field>
+
+                            <Field className="w-24">
+                              <FieldLabel>
+                                {t("recurrence.interval")}
+                              </FieldLabel>
+                              <Input
+                                type="number"
+                                min="1"
+                                value={form.values.recurrenceInterval}
+                                onChange={(e) => {
+                                  const value = parseInt(e.target.value, 10)
+                                  if (!isNaN(value) && value > 0) {
+                                    form.setFieldValue(
+                                      "recurrenceInterval",
+                                      value
+                                    )
+                                  }
+                                }}
+                              />
+                            </Field>
+                          </div>
+
+                          {form.values.recurrenceFrequency === "WEEKLY" && (
+                            <Field>
+                              <FieldLabel>
+                                {t("recurrence.daysOfWeek.label")}
+                              </FieldLabel>
+                              <div className="flex flex-wrap gap-2">
+                                {[
+                                  {
+                                    value: 0,
+                                    label: t("recurrence.daysOfWeek.sunday"),
+                                  },
+                                  {
+                                    value: 1,
+                                    label: t("recurrence.daysOfWeek.monday"),
+                                  },
+                                  {
+                                    value: 2,
+                                    label: t("recurrence.daysOfWeek.tuesday"),
+                                  },
+                                  {
+                                    value: 3,
+                                    label: t("recurrence.daysOfWeek.wednesday"),
+                                  },
+                                  {
+                                    value: 4,
+                                    label: t("recurrence.daysOfWeek.thursday"),
+                                  },
+                                  {
+                                    value: 5,
+                                    label: t("recurrence.daysOfWeek.friday"),
+                                  },
+                                  {
+                                    value: 6,
+                                    label: t("recurrence.daysOfWeek.saturday"),
+                                  },
+                                ].map((day) => (
+                                  <div
+                                    key={day.value}
+                                    className="flex items-center gap-2"
+                                  >
+                                    <Checkbox
+                                      id={`day-${day.value}`}
+                                      checked={form.values.recurrenceDaysOfWeek?.includes(
+                                        day.value
+                                      )}
+                                      onCheckedChange={(checked) => {
+                                        const currentDays =
+                                          form.values.recurrenceDaysOfWeek || []
+                                        if (checked) {
+                                          form.setFieldValue(
+                                            "recurrenceDaysOfWeek",
+                                            [...currentDays, day.value]
+                                          )
+                                        } else {
+                                          form.setFieldValue(
+                                            "recurrenceDaysOfWeek",
+                                            currentDays.filter(
+                                              (d) => d !== day.value
+                                            )
+                                          )
+                                        }
+                                      }}
+                                    />
+                                    <Label
+                                      htmlFor={`day-${day.value}`}
+                                      className="cursor-pointer text-sm font-normal"
+                                    >
+                                      {day.label}
+                                    </Label>
+                                  </div>
+                                ))}
+                              </div>
+                            </Field>
+                          )}
+
+                          <Field>
+                            <FieldLabel>
+                              {t("recurrence.endDate.label")}
+                            </FieldLabel>
+                            <RadioGroup
+                              value={form.values.recurrenceEndType}
+                              onValueChange={(value) => {
+                                const endType = value as "never" | "onDate"
+                                form.setFieldValue(
+                                  "recurrenceEndType",
+                                  endType as unknown as "never" | "onDate"
+                                )
+                                if (value === "never") {
+                                  form.setFieldValue(
+                                    "recurrenceEndDate",
+                                    undefined
+                                  )
+                                }
+                              }}
+                            >
+                              <div className="flex items-center gap-2">
+                                <RadioGroupItem
+                                  value="never"
+                                  id="recurrence-end-never"
+                                />
+                                <Label
+                                  htmlFor="recurrence-end-never"
+                                  className="cursor-pointer"
+                                >
+                                  {t("recurrence.endDate.never")}
+                                </Label>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <RadioGroupItem
+                                  value="onDate"
+                                  id="recurrence-end-date"
+                                />
+                                <Label
+                                  htmlFor="recurrence-end-date"
+                                  className="cursor-pointer"
+                                >
+                                  {t("recurrence.endDate.onDate")}
+                                </Label>
+                              </div>
+                            </RadioGroup>
+                            {form.values.recurrenceEndType === "onDate" && (
+                              <Popover>
+                                <PopoverTrigger
+                                  render={
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      className="mt-2 w-full justify-start text-left font-normal"
+                                    >
+                                      {form.values.recurrenceEndDate ? (
+                                        format(
+                                          form.values.recurrenceEndDate,
+                                          "PPP",
+                                          {
+                                            locale: dateFnsLocale,
+                                          }
+                                        )
+                                      ) : (
+                                        <span>{t("pickDate")}</span>
+                                      )}
+                                    </Button>
+                                  }
+                                />
+                                <PopoverContent
+                                  className="w-auto p-0"
+                                  align="start"
+                                >
+                                  <Calendar
+                                    mode="single"
+                                    selected={form.values.recurrenceEndDate}
+                                    onSelect={(date) => {
+                                      if (date) {
+                                        form.setFieldValue(
+                                          "recurrenceEndDate",
+                                          date
+                                        )
+                                      }
+                                    }}
+                                    disabled={{ before: form.values.startDate }}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            )}
+                          </Field>
+                        </div>
+                      )}
+                    </div>
+
                     <Field>
                       <FieldLabel htmlFor="attendees">
                         {t("attendees")}
@@ -686,7 +1079,7 @@ export function EventDialog({
             <AlertDialogTitle>{t("deleteConfirm.title")}</AlertDialogTitle>
             <AlertDialogDescription>
               {t("deleteConfirm.description", {
-                title: event?.title || t("noTitle"),
+                title: eventToUse?.title || event?.title || t("noTitle"),
               })}
             </AlertDialogDescription>
           </AlertDialogHeader>

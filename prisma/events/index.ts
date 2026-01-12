@@ -40,6 +40,14 @@ export const transformEvent = (event: EventInclude) => {
     attendees: event.attendees.map((attendee) => attendee.user),
     createdAt: event.createdAt,
     updatedAt: event.updatedAt,
+    // Recurrence fields
+    isRecurring: event.isRecurring ?? false,
+    recurrenceRule: event.recurrenceRule
+      ? typeof event.recurrenceRule === "string"
+        ? JSON.parse(event.recurrenceRule)
+        : event.recurrenceRule
+      : null,
+    recurrenceEndDate: event.recurrenceEndDate,
   }
 }
 export type Event = ReturnType<typeof transformEvent>

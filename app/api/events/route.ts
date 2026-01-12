@@ -7,6 +7,7 @@ import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
 import { eventInclude, transformEvent } from "@/prisma/events"
+import { expandRecurringEvents } from "@/lib/recurrence"
 
 export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
@@ -97,7 +98,19 @@ export async function GET(request: NextRequest) {
     // Transform events to match CalendarEvent format
     const transformedEvents = events.map((event) => transformEvent(event))
 
-    return NextResponse.json({ events: transformedEvents })
+    // Expand recurring events into instances
+    const startDateForExpansion = startDate ? new Date(startDate) : new Date()
+    const endDateForExpansion = endDate
+      ? new Date(endDate)
+      : new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // Default to 3 months ahead
+
+    const expandedEvents = expandRecurringEvents(
+      transformedEvents,
+      startDateForExpansion,
+      endDateForExpansion
+    )
+
+    return NextResponse.json({ events: expandedEvents })
   } catch (error) {
     console.error("Error fetching events:", error)
 
@@ -172,6 +185,11 @@ export async function POST(request: NextRequest) {
         allDay: data.allDay ?? false,
         color: (data.color || "SKY") as EventColor,
         location: data.location || null,
+        isRecurring: data.isRecurring ?? false,
+        recurrenceRule: data.recurrenceRule
+          ? (data.recurrenceRule as unknown as Record<string, unknown>)
+          : null,
+        recurrenceEndDate: data.recurrenceEndDate || null,
         createdById: userId,
         attendees:
           data.attendeeIds && data.attendeeIds.length > 0

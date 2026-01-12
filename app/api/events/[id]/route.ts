@@ -1,12 +1,17 @@
 import db from "@/lib/db"
+import { Prisma } from "@/lib/generated/prisma/client"
+import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { updateEventSchema } from "@/lib/schemas/event"
 import { transformZodError } from "@/lib/transform-errors"
-import { getTranslations } from "next-intl/server"
-import { type NextRequest, NextResponse } from "next/server"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  eventInclude,
+  transformEvent,
+  type EventInclude,
+} from "@/prisma/events"
 import { getReqLocale } from "@/utils/get-req-locale"
-import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
-import { eventInclude, transformEvent } from "@/prisma/events"
+import { getTranslations } from "next-intl/server"
+import { NextResponse, type NextRequest } from "next/server"
 
 type RouteContext = {
   params: Promise<{
@@ -120,7 +125,6 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     // Parse and validate request body
     const body = await request.json()
     const validationResult = updateEventSchema.safeParse(body)
-    console.log("🚀 ~ PUT ~ validationResult:", validationResult)
 
     if (!validationResult.success) {
       return NextResponse.json(
@@ -171,7 +175,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     }
 
     // Update event
-    const event = await db.event.update({
+    const event = (await db.event.update({
       where: { id },
       data: {
         ...(data.title !== undefined && { title: data.title }),
@@ -183,6 +187,18 @@ export async function PUT(request: NextRequest, context: RouteContext) {
         ...(data.allDay !== undefined && { allDay: data.allDay }),
         ...(data.color !== undefined && { color: data.color as EventColor }),
         ...(data.location !== undefined && { location: data.location || null }),
+        // Recurrence fields
+        ...(data.isRecurring !== undefined && {
+          isRecurring: data.isRecurring,
+        }),
+        ...(data.recurrenceRule !== undefined && {
+          recurrenceRule: data.recurrenceRule
+            ? (data.recurrenceRule as Prisma.InputJsonValue)
+            : Prisma.JsonNull,
+        }),
+        ...(data.recurrenceEndDate !== undefined && {
+          recurrenceEndDate: data.recurrenceEndDate || null,
+        }),
         // Handle attendees update
         ...(data.attendeeIds !== undefined && {
           attendees: {
@@ -194,7 +210,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
         }),
       },
       include: eventInclude,
-    })
+    })) as EventInclude
 
     return NextResponse.json(transformEvent(event))
   } catch (error) {

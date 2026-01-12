@@ -696,7 +696,34 @@
         "cancel": "Cancel"
       },
       "attendeesPlaceholder": "Search and select attendees...",
-      "noAttendeesFound": "No attendees found"
+      "noAttendeesFound": "No attendees found",
+      "recurrence": {
+        "title": "Repeat",
+        "enable": "Repeat this event",
+        "frequency": {
+          "label": "Repeat every",
+          "daily": "Day",
+          "weekly": "Week",
+          "monthly": "Month",
+          "yearly": "Year"
+        },
+        "interval": "Every",
+        "daysOfWeek": {
+          "label": "Repeat on",
+          "sunday": "Sunday",
+          "monday": "Monday",
+          "tuesday": "Tuesday",
+          "wednesday": "Wednesday",
+          "thursday": "Thursday",
+          "friday": "Friday",
+          "saturday": "Saturday"
+        },
+        "endDate": {
+          "label": "End repeat",
+          "never": "Never",
+          "onDate": "On date"
+        }
+      }
     },
     "toasts": {
       "eventAdded": "Event \"{title}\" added",
@@ -723,11 +750,14 @@
         "required": "End date is required"
       },
       "end_before_start": "End date cannot be before start date",
+      "recurrence_rule_required": "Recurrence rule is required when event is recurring",
+      "recurrence_end_before_start": "Recurrence end date cannot be before start date",
       "not_found": "Event not found",
       "invalid_attendees": "One or more selected attendees are invalid",
       "invalid_attendee": "Invalid attendee",
       "attendee_already_added": "Attendee is already added to this event",
       "attendee_not_found": "Attendee not found"
     }
-  }
+  },
+  "location": "Location"
 }
