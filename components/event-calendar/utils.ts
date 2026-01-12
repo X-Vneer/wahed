@@ -27,6 +27,32 @@ export function getEventColorClasses(color?: EventColor | string): string {
 }
 
 /**
+ * Get CSS classes for event border colors
+ */
+export function getEventBorderColorClasses(
+  color?: EventColor | string
+): string {
+  const eventColor = color || "sky"
+
+  switch (eventColor) {
+    case "sky":
+      return "border-l-sky-500 dark:border-l-sky-400"
+    case "amber":
+      return "border-l-amber-500 dark:border-l-amber-400"
+    case "violet":
+      return "border-l-violet-500 dark:border-l-violet-400"
+    case "rose":
+      return "border-l-rose-500 dark:border-l-rose-400"
+    case "emerald":
+      return "border-l-emerald-500 dark:border-l-emerald-400"
+    case "orange":
+      return "border-l-orange-500 dark:border-l-orange-400"
+    default:
+      return "border-l-sky-500 dark:border-l-sky-400"
+  }
+}
+
+/**
  * Get CSS classes for border radius based on event position in multi-day events
  */
 export function getBorderRadiusClasses(

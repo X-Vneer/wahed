@@ -63,6 +63,7 @@ import { useUsers } from "@/hooks/use-users"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "../ui/scroll-area"
 import { User } from "lucide-react"
+import UserAvatar from "../use-avatar"
 
 // Form schema for the event dialog
 const eventFormSchema = z
@@ -601,37 +602,25 @@ export function EventDialog({
                         <SelectTrigger className="w-full" id="attendees">
                           <SelectValue>
                             {" "}
-                            {form.values.attendeeIds.length > 0
-                              ? users
-                                  .map((user) =>
+                            {form.values.attendeeIds.length > 0 ? (
+                              <span className="flex gap-1">
+                                {users
+                                  .filter((user) =>
                                     form.values.attendeeIds.includes(user.id)
-                                      ? user.name
-                                      : ""
                                   )
-                                  .join(", ")
-                              : t("attendeesPlaceholder")}{" "}
+                                  .map((user) => (
+                                    <UserAvatar key={user.id} {...user} />
+                                  ))}
+                              </span>
+                            ) : (
+                              t("attendeesPlaceholder")
+                            )}{" "}
                           </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">
-                            {t("attendeesPlaceholder")}
-                          </SelectItem>
-
                           {users.map((user) => (
                             <SelectItem key={user.id} value={user.id}>
-                              <div className="flex gap-1 py-1">
-                                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg bg-black">
-                                  <User className="size-4" />
-                                </div>
-                                <div className="grid flex-1 text-sm leading-tight">
-                                  <span className="line-clamp-1 font-semibold">
-                                    {user.name}
-                                  </span>
-                                  <span className="line-clamp-1 text-xs">
-                                    {user.email}
-                                  </span>
-                                </div>
-                              </div>
+                              <UserAvatar {...user} />
                             </SelectItem>
                           ))}
                         </SelectContent>

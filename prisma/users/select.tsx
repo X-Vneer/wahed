@@ -8,6 +8,13 @@ export const userSelect = {
   roleName: true,
   role: true,
   isActive: true,
+  image: true,
+  dateOfBirth: true,
+  gender: true,
+  nationality: true,
+  address: true,
+  city: true,
+  country: true,
   permissions: {
     select: {
       permission: {
@@ -32,6 +39,13 @@ export const transformUser = (user: UserSelect) => {
     role: user.role,
     isActive: user.isActive,
     permissions: user.permissions.map((p) => p.permission.key),
+    image: user.image,
+    dateOfBirth: user.dateOfBirth,
+    gender: user.gender,
+    nationality: user.nationality,
+    address: user.address,
+    city: user.city,
+    country: user.country,
   }
 }
 

@@ -36,26 +36,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     // Fetch event
     const event = await db.event.findUnique({
       where: { id },
-      include: {
-        createdBy: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        attendees: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-      },
+      include: eventInclude,
     })
 
     if (!event) {
@@ -71,8 +52,8 @@ export async function GET(request: NextRequest, context: RouteContext) {
     // Admin can view all events
     const canView =
       isAdmin ||
-      event.createdById === userId || // User is creator
-      event.isPublic || // Event is public
+      event.createdById === userId ||
+      event.attendees.length === 0 || // User is creator
       event.attendees.some((attendee) => attendee.userId === userId) // User is attendee and event is not private
 
     if (!canView) {
@@ -84,38 +65,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       )
     }
 
-    // Transform event to match CalendarEvent format
-    const transformedEvent = {
-      id: event.id,
-      title: event.title,
-      description: event.description || undefined,
-      start: event.start,
-      end: event.end,
-      allDay: event.allDay,
-      color: event.color.toLowerCase() as
-        | "sky"
-        | "amber"
-        | "violet"
-        | "rose"
-        | "emerald"
-        | "orange",
-      location: event.location || undefined,
-      isPublic: event.isPublic,
-      createdBy: {
-        id: event.createdBy.id,
-        name: event.createdBy.name,
-        email: event.createdBy.email,
-      },
-      attendees: event.attendees.map((attendee) => ({
-        id: attendee.user.id,
-        name: attendee.user.name,
-        email: attendee.user.email,
-      })),
-      createdAt: event.createdAt,
-      updatedAt: event.updatedAt,
-    }
-
-    return NextResponse.json(transformedEvent)
+    return NextResponse.json(transformEvent(event))
   } catch (error) {
     console.error("Error fetching event:", error)
     const locale = await getReqLocale(request)

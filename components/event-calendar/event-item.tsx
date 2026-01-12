@@ -3,7 +3,13 @@
 import { useMemo } from "react"
 import type { DraggableAttributes } from "@dnd-kit/core"
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities"
-import { differenceInMinutes, format, getMinutes, isPast } from "date-fns"
+import {
+  differenceInMinutes,
+  format,
+  getMinutes,
+  isPast,
+  isSameDay,
+} from "date-fns"
 import { ar, enUS, type Locale } from "date-fns/locale"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -11,8 +17,15 @@ import { cn } from "@/lib/utils"
 import {
   getBorderRadiusClasses,
   getEventColorClasses,
+  getEventBorderColorClasses,
   type CalendarEvent,
 } from "@/components/event-calendar"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import UserAvatar from "../use-avatar"
 
 // Using date-fns format with custom formatting:
 // 'h' - hours (1-12)
@@ -39,6 +52,70 @@ interface EventWrapperProps {
   onTouchStart?: (e: React.TouchEvent) => void
 }
 
+// Helper component to render hover card content
+function EventHoverCardContent({
+  event,
+  displayStart,
+  displayEnd,
+  dateFnsLocale,
+  t,
+}: {
+  event: CalendarEvent
+  displayStart: Date
+  displayEnd: Date
+  dateFnsLocale: Locale
+  t: (key: string) => string
+}) {
+  const formatDate = (date: Date) => {
+    return format(date, "PPp", { locale: dateFnsLocale })
+  }
+
+  const formatTime = (date: Date) => {
+    return formatTimeWithOptionalMinutes(date, dateFnsLocale)
+  }
+
+  return (
+    <div className="space-y-2">
+      <div className="font-semibold">{event.title}</div>
+      <div className="text-muted-foreground space-y-1 text-sm">
+        {event.allDay ? (
+          <div>
+            <span className="font-medium">{t("allDay")}</span>
+            <div className="text-xs text-gray-600">
+              {format(displayStart, "PP", { locale: dateFnsLocale })}
+              {!isSameDay(displayStart, displayEnd) &&
+                ` - ${format(displayEnd, "PP", { locale: dateFnsLocale })}`}
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="font-medium">
+              {formatTime(displayStart)} - {formatTime(displayEnd)}
+            </div>
+            <div className="text-sm text-gray-600">
+              {formatDate(displayStart)}
+            </div>
+          </div>
+        )}
+        {event.location && (
+          <div className="pt-1">
+            <span className="font-medium">{t("location")}: </span>
+            <span>{event.location}</span>
+          </div>
+        )}
+        {event.description && (
+          <div className="pt-1 text-sm text-gray-950">{event.description}</div>
+        )}
+        {event.attendees &&
+          event.attendees.length > 0 &&
+          event.attendees.map((attendee) => (
+            <UserAvatar key={attendee.id} {...attendee} />
+          ))}
+      </div>
+    </div>
+  )
+}
+
 // Shared wrapper component for event styling
 function EventWrapper({
   event,
@@ -53,7 +130,12 @@ function EventWrapper({
   dndAttributes,
   onMouseDown,
   onTouchStart,
-}: EventWrapperProps) {
+  showHoverCard = true,
+  hoverCardContent,
+}: EventWrapperProps & {
+  showHoverCard?: boolean
+  hoverCardContent?: React.ReactNode
+}) {
   // Always use the currentTime (if provided) to determine if the event is in the past
   const displayEnd = currentTime
     ? new Date(
@@ -64,11 +146,12 @@ function EventWrapper({
 
   const isEventInPast = isPast(displayEnd)
 
-  return (
+  const buttonContent = (
     <button
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 flex h-full w-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2",
+        "focus-visible:border-ring focus-visible:ring-ring/50 flex h-full w-full overflow-hidden border-l-4 px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2",
         getEventColorClasses(event.color),
+        getEventBorderColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className
       )}
@@ -82,6 +165,17 @@ function EventWrapper({
     >
       {children}
     </button>
+  )
+
+  if (!showHoverCard || isDragging) {
+    return buttonContent
+  }
+
+  return (
+    <HoverCard>
+      <HoverCardTrigger>{buttonContent}</HoverCardTrigger>
+      <HoverCardContent>{hoverCardContent}</HoverCardContent>
+    </HoverCard>
   )
 }
 
@@ -154,6 +248,16 @@ export function EventItem({
     return `${formatTimeWithOptionalMinutes(displayStart, dateFnsLocale)} - ${formatTimeWithOptionalMinutes(displayEnd, dateFnsLocale)}`
   }
 
+  const hoverCardContent = (
+    <EventHoverCardContent
+      event={event}
+      displayStart={displayStart}
+      displayEnd={displayEnd}
+      dateFnsLocale={dateFnsLocale}
+      t={t}
+    />
+  )
+
   if (view === "month") {
     return (
       <EventWrapper
@@ -171,6 +275,7 @@ export function EventItem({
         dndAttributes={dndAttributes}
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
+        hoverCardContent={hoverCardContent}
       >
         {children || (
           <span className="truncate">
@@ -208,6 +313,7 @@ export function EventItem({
         dndAttributes={dndAttributes}
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
+        hoverCardContent={hoverCardContent}
       >
         {durationMinutes < 45 ? (
           <div className="truncate">
@@ -233,11 +339,12 @@ export function EventItem({
   }
 
   // Agenda view - kept separate since it's significantly different
-  return (
+  const agendaButton = (
     <button
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
+        "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded border-l-4 p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
         getEventColorClasses(eventColor),
+        getEventBorderColorClasses(eventColor),
         className
       )}
       data-past-event={isPast(new Date(event.end)) || undefined}
@@ -268,5 +375,16 @@ export function EventItem({
         <div className="my-1 text-xs opacity-90">{event.description}</div>
       )}
     </button>
+  )
+
+  if (isDragging) {
+    return agendaButton
+  }
+
+  return (
+    <HoverCard>
+      <HoverCardTrigger>{agendaButton}</HoverCardTrigger>
+      <HoverCardContent>{hoverCardContent}</HoverCardContent>
+    </HoverCard>
   )
 }

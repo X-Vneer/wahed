@@ -62,14 +62,26 @@ enum EventColor {
   ORANGE
 }
 
+enum Gender {
+  MALE
+  FEMALE
+}
+
 model User {
-  id       String   @id @default(cuid())
-  name     String
-  email    String   @unique
-  password String
-  phone    String?
-  roleName String?
-  role     UserRole @default(STAFF)
+  id          String    @id @default(cuid())
+  name        String
+  email       String    @unique
+  password    String
+  phone       String?
+  roleName    String?
+  role        UserRole  @default(STAFF)
+  dateOfBirth DateTime?
+  gender      Gender    @default(MALE)
+  nationality String?
+  address     String?
+  city        String?
+  country     String?
+  image       String?
 
   isActive Boolean @default(true)
 
