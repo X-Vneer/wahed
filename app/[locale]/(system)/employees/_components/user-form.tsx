@@ -18,13 +18,32 @@ import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { zod4Resolver } from "mantine-form-zod-resolver"
-import { useTranslations } from "next-intl"
-import { useEffect, useMemo } from "react"
+import { useTranslations, useLocale } from "next-intl"
+import { useEffect, useMemo, useState } from "react"
 import type { Value as PhoneValue } from "react-phone-number-input"
 import { PermissionsSelector } from "./permissions-selector"
 import { parseAsString, useQueryState } from "nuqs"
 import { toast } from "sonner"
 import apiClient from "@/services"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Calendar as CalendarIcon, X } from "lucide-react"
+import { format } from "date-fns"
+import { ar, enUS } from "date-fns/locale"
+import { Gender } from "@/lib/generated/prisma/enums"
+import Uploader from "@/components/uploader"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -32,9 +51,11 @@ type UserFormProps = {
 
 export function UserForm({ selectedUser }: UserFormProps) {
   const t = useTranslations()
+  const locale = useLocale()
+  const [datePickerOpen, setDatePickerOpen] = useState(false)
 
   //   selected user
-  const [_, setSelectedUserId] = useQueryState(
+  const [, setSelectedUserId] = useQueryState(
     "user_id",
     parseAsString.withDefault("")
   )
@@ -56,6 +77,14 @@ export function UserForm({ selectedUser }: UserFormProps) {
       confirmPassword: "",
       allowAllPermissions: false,
       permissions: [] as string[],
+      dateOfBirth: null as Date | null,
+      gender: "MALE" as Gender | undefined,
+      nationality: "",
+      address: "",
+      city: "",
+      country: "",
+      image: "",
+      isActive: true,
     },
     validate: zod4Resolver(schema),
   })
@@ -72,6 +101,16 @@ export function UserForm({ selectedUser }: UserFormProps) {
         confirmPassword: "",
         permissions: selectedUser.permissions,
         allowAllPermissions: false,
+        dateOfBirth: selectedUser.dateOfBirth
+          ? new Date(selectedUser.dateOfBirth)
+          : null,
+        gender: selectedUser.gender,
+        nationality: selectedUser.nationality || "",
+        address: selectedUser.address || "",
+        city: selectedUser.city || "",
+        country: selectedUser.country || "",
+        image: selectedUser.image || "",
+        isActive: selectedUser.isActive ?? true,
       })
     } else {
       form.reset()
@@ -126,6 +165,51 @@ export function UserForm({ selectedUser }: UserFormProps) {
       <CardContent>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <FieldGroup>
+            <div className="mb-2 max-w-sm">
+              {/* Image Upload */}
+              <Field data-invalid={!!form.errors.image}>
+                {!form.values.image ? (
+                  <div className="relative">
+                    <Uploader
+                      endpoint="userImageUploader"
+                      onClientUploadComplete={(res) => {
+                        if (res && res.length > 0) {
+                          form.setFieldValue("image", res[0].ufsUrl)
+                        }
+                      }}
+                      onUploadError={(error: Error) => {
+                        toast.error(error.message || t("errors.upload_failed"))
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="relative inline-block w-full">
+                    <div className="relative h-[200px] w-full overflow-hidden rounded-lg border p-1">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={form.values.image}
+                        alt="User"
+                        className="h-full w-full object-contain"
+                      />
+                      <Button
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        variant="destructive"
+                        type="button"
+                        onClick={() => form.setFieldValue("image", "")}
+                      >
+                        <X className="size-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                {form.errors.image && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.image) }]}
+                  />
+                )}
+              </Field>
+            </div>
             <div className="grid-cols-2 gap-4 md:grid">
               {/* Full Name */}
               <Field data-invalid={!!form.errors.name}>
@@ -246,6 +330,181 @@ export function UserForm({ selectedUser }: UserFormProps) {
                 )}
               </Field>
             </div>
+
+            <div className="grid-cols-2 gap-4 md:grid">
+              {/* Date of Birth */}
+              <Field data-invalid={!!form.errors.dateOfBirth}>
+                <FieldLabel htmlFor="dateOfBirth">
+                  {t("employees.form.dateOfBirth")}
+                </FieldLabel>
+                <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+                  <PopoverTrigger
+                    render={(props) => (
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start bg-white text-left font-normal"
+                        type="button"
+                        {...props}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {form.values.dateOfBirth ? (
+                          format(form.values.dateOfBirth, "PPP", {
+                            locale: locale === "ar" ? ar : enUS,
+                          })
+                        ) : (
+                          <span>{t("employees.form.selectDate")}</span>
+                        )}
+                      </Button>
+                    )}
+                  />
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={form.values.dateOfBirth || undefined}
+                      onSelect={(date) => {
+                        form.setFieldValue("dateOfBirth", date || null)
+                        setDatePickerOpen(false)
+                      }}
+                      locale={locale === "ar" ? ar : enUS}
+                    />
+                  </PopoverContent>
+                </Popover>
+                {form.errors.dateOfBirth && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.dateOfBirth) }]}
+                  />
+                )}
+              </Field>
+
+              {/* Gender */}
+              <Field data-invalid={!!form.errors.gender}>
+                <FieldLabel htmlFor="gender">
+                  {t("employees.form.gender")}
+                </FieldLabel>
+                <Select
+                  value={form.values.gender}
+                  onValueChange={(value) =>
+                    form.setFieldValue("gender", value as Gender)
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue>
+                      {form.values.gender
+                        ? form.values.gender === Gender.MALE
+                          ? t("employees.form.male")
+                          : t("employees.form.female")
+                        : t("employees.form.selectGender")}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={Gender.MALE}>
+                      {t("employees.form.male")}
+                    </SelectItem>
+                    <SelectItem value={Gender.FEMALE}>
+                      {t("employees.form.female")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                {form.errors.gender && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.gender) }]}
+                  />
+                )}
+              </Field>
+            </div>
+
+            <div className="grid-cols-2 gap-4 md:grid">
+              {/* Nationality */}
+              <Field data-invalid={!!form.errors.nationality}>
+                <FieldLabel htmlFor="nationality">
+                  {t("employees.form.nationality")}
+                </FieldLabel>
+                <Input
+                  id="nationality"
+                  {...form.getInputProps("nationality")}
+                  placeholder={t("employees.form.nationalityPlaceholder")}
+                  aria-invalid={!!form.errors.nationality}
+                />
+                {form.errors.nationality && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.nationality) }]}
+                  />
+                )}
+              </Field>
+
+              {/* City */}
+              <Field data-invalid={!!form.errors.city}>
+                <FieldLabel htmlFor="city">
+                  {t("employees.form.city")}
+                </FieldLabel>
+                <Input
+                  id="city"
+                  {...form.getInputProps("city")}
+                  placeholder={t("employees.form.cityPlaceholder")}
+                  aria-invalid={!!form.errors.city}
+                />
+                {form.errors.city && (
+                  <FieldError
+                    errors={[{ message: String(form.errors.city) }]}
+                  />
+                )}
+              </Field>
+            </div>
+
+            {/* Country */}
+            <Field data-invalid={!!form.errors.country}>
+              <FieldLabel htmlFor="country">
+                {t("employees.form.country")}
+              </FieldLabel>
+              <Input
+                id="country"
+                {...form.getInputProps("country")}
+                placeholder={t("employees.form.countryPlaceholder")}
+                aria-invalid={!!form.errors.country}
+              />
+              {form.errors.country && (
+                <FieldError
+                  errors={[{ message: String(form.errors.country) }]}
+                />
+              )}
+            </Field>
+
+            {/* Address */}
+            <Field data-invalid={!!form.errors.address}>
+              <FieldLabel htmlFor="address">
+                {t("employees.form.address")}
+              </FieldLabel>
+              <Input
+                id="address"
+                {...form.getInputProps("address")}
+                placeholder={t("employees.form.addressPlaceholder")}
+                aria-invalid={!!form.errors.address}
+              />
+              {form.errors.address && (
+                <FieldError
+                  errors={[{ message: String(form.errors.address) }]}
+                />
+              )}
+            </Field>
+
+            {/* Is Active */}
+            <Field>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="isActive"
+                  checked={form.values.isActive}
+                  onCheckedChange={(checked) =>
+                    form.setFieldValue("isActive", checked === true)
+                  }
+                />
+                <FieldLabel
+                  htmlFor="isActive"
+                  className="mb-0! cursor-pointer font-normal"
+                >
+                  {t("employees.form.isActive")}
+                </FieldLabel>
+              </div>
+            </Field>
 
             {/* Permissions Section */}
             <PermissionsSelector

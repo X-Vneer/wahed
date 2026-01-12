@@ -63,7 +63,7 @@ import { useUsers } from "@/hooks/use-users"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "../ui/scroll-area"
 import { User } from "lucide-react"
-import UserAvatar from "../use-avatar"
+import UserAvatar from "../user-avatar"
 
 // Form schema for the event dialog
 const eventFormSchema = z

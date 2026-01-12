@@ -88,6 +88,30 @@ export const ourFileRouter = {
         },
       }
     }),
+  userImageUploader: f({
+    image: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(async () => {
+      const user = await auth()
+      if (!user) throw new UploadThingError("Unauthorized")
+      return { user }
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      return {
+        uploadedBy: metadata.user.userId,
+        url: file.ufsUrl,
+        file: {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified,
+          customId: file.customId,
+        },
+      }
+    }),
 } satisfies FileRouter
 
 export type OurFileRouter = typeof ourFileRouter

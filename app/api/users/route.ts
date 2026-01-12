@@ -129,6 +129,14 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         phone: data.phone || null,
         roleName: data.roleName || null,
+        dateOfBirth: data.dateOfBirth || null,
+        gender: data.gender,
+        nationality: data.nationality || null,
+        address: data.address || null,
+        city: data.city || null,
+        country: data.country || null,
+        image: data.image || null,
+        isActive: data.isActive ?? true,
         permissions:
           permissionKeys.length > 0
             ? {

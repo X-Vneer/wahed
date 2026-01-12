@@ -1,5 +1,9 @@
 import db from "@/lib/db"
-import { UserRole, type PermissionKey } from "@/lib/generated/prisma/enums"
+import {
+  UserRole,
+  type PermissionKey,
+  Gender,
+} from "@/lib/generated/prisma/enums"
 import { updateUserSchema } from "@/lib/schemas/user"
 import { transformZodError } from "@/lib/transform-errors"
 import { transformUser, userSelect } from "@/prisma/users/select"
@@ -84,12 +88,36 @@ export async function PUT(
       email: string
       phone: string | null
       roleName: string | null
+      dateOfBirth: Date | null
+      gender?: Gender
+      nationality: string | null
+      address: string | null
+      city: string | null
+      country: string | null
+      image: string | null
+      isActive?: boolean
       password?: string
     } = {
       name: data.name,
       email: data.email,
       phone: data.phone || null,
       roleName: data.roleName || null,
+      dateOfBirth: data.dateOfBirth || null,
+      nationality: data.nationality || null,
+      address: data.address || null,
+      city: data.city || null,
+      country: data.country || null,
+      image: data.image || null,
+    }
+
+    // Set gender if provided
+    if (data.gender !== undefined) {
+      updateData.gender = data.gender
+    }
+
+    // Set isActive if provided
+    if (data.isActive !== undefined) {
+      updateData.isActive = data.isActive
     }
 
     // Hash password only if provided

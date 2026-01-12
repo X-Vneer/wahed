@@ -25,7 +25,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import UserAvatar from "../use-avatar"
+import UserAvatar from "../user-avatar"
 
 // Using date-fns format with custom formatting:
 // 'h' - hours (1-12)

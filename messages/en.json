@@ -84,7 +84,8 @@
     "user_not_found": "User not found",
     "account_inactive": "Account is inactive",
     "internal_server_error": "Internal server error",
-    "failed_to_fetch_user_data": "Failed to fetch user data"
+    "failed_to_fetch_user_data": "Failed to fetch user data",
+    "upload_failed": "Failed to upload image"
   },
   "welcome": {
     "title": "Welcome back",
@@ -113,7 +114,24 @@
       "confirmPassword": "Confirm Password",
       "allowAllPermissions": "Allow all permissions",
       "permissions": "Permissions",
-      "role": "Role"
+      "role": "Role",
+      "dateOfBirth": "Date of Birth",
+      "selectDate": "Select date",
+      "gender": "Gender",
+      "selectGender": "Select gender",
+      "male": "Male",
+      "female": "Female",
+      "nationality": "Nationality",
+      "nationalityPlaceholder": "Enter nationality",
+      "city": "City",
+      "cityPlaceholder": "Enter city",
+      "country": "Country",
+      "countryPlaceholder": "Enter country",
+      "image": "Upload image",
+      "imagePlaceholder": "Enter image URL",
+      "address": "Address",
+      "addressPlaceholder": "Enter address",
+      "isActive": "Active"
     },
     "errors": {
       "fullName": {

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 interface UserAvatarProps {
   name: string
   email: string
-  src?: string
+  image?: string | null
   size?: "default" | "sm" | "lg"
   orientation?: "horizontal" | "vertical"
   className?: string
@@ -17,7 +17,7 @@ interface UserAvatarProps {
 const UserAvatar = ({
   name,
   email,
-  src,
+  image,
   size = "default",
   orientation = "horizontal",
   className,
@@ -37,7 +37,7 @@ const UserAvatar = ({
       size={size}
       className={cn(orientation === "vertical" && "mx-auto", className)}
     >
-      <AvatarImage src={src} alt={name} />
+      <AvatarImage src={image || ""} alt={name} />
       <AvatarFallback>{getInitials(name)}</AvatarFallback>
     </Avatar>
   )
