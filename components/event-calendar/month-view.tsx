@@ -106,10 +106,7 @@ export function MonthView({
     <div data-slot="month-view" className="contents">
       <div className="border-border/70 grid grid-cols-7 border-b">
         {weekdays.map((day) => (
-          <div
-            key={day}
-            className="text-muted-foreground/70 py-2 text-center text-sm"
-          >
+          <div key={day} className="py-2 text-center text-sm text-gray-700">
             {day}
           </div>
         ))}
@@ -143,7 +140,7 @@ export function MonthView({
               return (
                 <div
                   key={day.toString()}
-                  className="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0"
+                  className="group border-border/70 data-outside-cell:bg-muted/25 border-r border-b last:border-r-0 data-outside-cell:text-gray-700"
                   data-today={isToday(day) || undefined}
                   data-outside-cell={!isCurrentMonth || undefined}
                 >

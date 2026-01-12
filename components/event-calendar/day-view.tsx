@@ -199,7 +199,7 @@ export function DayView({
         <div className="border-border/70 bg-muted/50 border-t">
           <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">
             <div className="relative">
-              <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
+              <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-gray-700 sm:pe-4 sm:text-xs">
                 {t("allDay")}
               </span>
             </div>
@@ -237,7 +237,7 @@ export function DayView({
               className="border-border/70 relative h-[var(--week-cells-height)] border-b last:border-b-0"
             >
               {index > 0 && (
-                <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
+                <span className="bg-background absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] text-gray-700 sm:pe-4 sm:text-xs">
                   {format(hour, "h a", { locale: dateFnsLocale })}
                 </span>
               )}
