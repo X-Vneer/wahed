@@ -50,9 +50,17 @@ export function DraggableEvent({
   const isMultiDayEvent =
     isMultiDay || event.allDay || differenceInDays(eventEnd, eventStart) >= 1
 
+  // Check if this is a recurring event instance
+  // Recurring event instances have IDs in format: `${originalId}-${dateISOString}`
+  // Pattern: -YYYY-MM-DDTHH:mm:ss.sssZ or -YYYY-MM-DDTHH:mm:ss.sss+HH:mm
+  const isoDatePattern =
+    /-\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|[+-]\d{2}:\d{2})$/
+  const isRecurringEvent = isoDatePattern.test(event.id)
+
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: `${event.id}-${view}`,
+      disabled: isRecurringEvent, // Disable dragging for recurring events
       data: {
         event,
         view,
@@ -133,8 +141,8 @@ export function DraggableEvent({
         onClick={onClick}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-        dndListeners={listeners}
-        dndAttributes={attributes}
+        dndListeners={isRecurringEvent ? undefined : listeners}
+        dndAttributes={isRecurringEvent ? undefined : attributes}
         aria-hidden={ariaHidden}
       />
     </div>
