@@ -442,7 +442,7 @@ export function EventDialog({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className="flex flex-col gap-0 p-0 sm:max-h-[min(640px,80vh)] sm:max-w-md [&>button:last-child]:hidden">
+        <DialogContent className="flex max-h-[90svh] flex-col gap-0 p-0 sm:max-h-[min(640px,80vh)] sm:max-w-md [&>button:last-child]:hidden">
           <ScrollArea className="flex max-h-full flex-col overflow-hidden">
             <div className="p-6">
               <DialogHeader>

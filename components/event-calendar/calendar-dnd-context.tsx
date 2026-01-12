@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useId,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -25,7 +26,20 @@ import { addMinutes, differenceInMinutes } from "date-fns"
 
 import { EventItem, type CalendarEvent } from "@/components/event-calendar"
 
-// Define the context type
+// Split context into two parts to prevent unnecessary re-renders
+// DroppableCell only needs activeEvent, so it won't re-render when currentTime changes
+
+// Context for activeEvent only (used by DroppableCell to minimize re-renders)
+type CalendarDndActiveEventContextType = {
+  activeEvent: CalendarEvent | null
+}
+
+const CalendarDndActiveEventContext =
+  createContext<CalendarDndActiveEventContextType>({
+    activeEvent: null,
+  })
+
+// Full context type (used by other components that need all values)
 type CalendarDndContextType = {
   activeEvent: CalendarEvent | null
   activeId: UniqueIdentifier | null
@@ -44,7 +58,7 @@ type CalendarDndContextType = {
   } | null
 }
 
-// Create the context
+// Create the full context
 const CalendarDndContext = createContext<CalendarDndContextType>({
   activeEvent: null,
   activeId: null,
@@ -56,8 +70,12 @@ const CalendarDndContext = createContext<CalendarDndContextType>({
   dragHandlePosition: null,
 })
 
-// Hook to use the context
+// Hook to use the full context
 export const useCalendarDnd = () => useContext(CalendarDndContext)
+
+// Hook to use only activeEvent (prevents re-renders when currentTime changes)
+export const useCalendarDndActiveEvent = () =>
+  useContext(CalendarDndActiveEventContext)
 
 // Props for the provider
 interface CalendarDndProviderProps {
@@ -323,6 +341,38 @@ export function CalendarDndProvider({
     }
   }
 
+  // Memoize context values separately to prevent unnecessary re-renders
+  // Split activeEvent into its own context so DroppableCell doesn't re-render when currentTime changes
+  const activeEventContextValue = useMemo(
+    () => ({
+      activeEvent,
+    }),
+    [activeEvent]
+  )
+
+  const contextValue = useMemo(
+    () => ({
+      activeEvent,
+      activeId,
+      activeView,
+      currentTime,
+      eventHeight,
+      isMultiDay,
+      multiDayWidth,
+      dragHandlePosition,
+    }),
+    [
+      activeEvent,
+      activeId,
+      activeView,
+      currentTime,
+      eventHeight,
+      isMultiDay,
+      multiDayWidth,
+      dragHandlePosition,
+    ]
+  )
+
   return (
     <DndContext
       id={dndContextId}
@@ -331,43 +381,34 @@ export function CalendarDndProvider({
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <CalendarDndContext.Provider
-        value={{
-          activeEvent,
-          activeId,
-          activeView,
-          currentTime,
-          eventHeight,
-          isMultiDay,
-          multiDayWidth,
-          dragHandlePosition,
-        }}
-      >
-        {children}
+      <CalendarDndActiveEventContext.Provider value={activeEventContextValue}>
+        <CalendarDndContext.Provider value={contextValue}>
+          {children}
 
-        <DragOverlay adjustScale={false} dropAnimation={null}>
-          {activeEvent && activeView && (
-            <div
-              style={{
-                height: eventHeight ? `${eventHeight}px` : "auto",
-                width:
-                  isMultiDay && multiDayWidth ? `${multiDayWidth}%` : "100%",
-                // Remove the transform that was causing the shift
-              }}
-            >
-              <EventItem
-                event={activeEvent}
-                view={activeView}
-                isDragging={true}
-                showTime={activeView !== "month"}
-                currentTime={currentTime || undefined}
-                isFirstDay={dragHandlePosition?.data?.isFirstDay !== false}
-                isLastDay={dragHandlePosition?.data?.isLastDay !== false}
-              />
-            </div>
-          )}
-        </DragOverlay>
-      </CalendarDndContext.Provider>
+          <DragOverlay adjustScale={false} dropAnimation={null}>
+            {activeEvent && activeView && (
+              <div
+                style={{
+                  height: eventHeight ? `${eventHeight}px` : "auto",
+                  width:
+                    isMultiDay && multiDayWidth ? `${multiDayWidth}%` : "100%",
+                  // Remove the transform that was causing the shift
+                }}
+              >
+                <EventItem
+                  event={activeEvent}
+                  view={activeView}
+                  isDragging={true}
+                  showTime={activeView !== "month"}
+                  currentTime={currentTime || undefined}
+                  isFirstDay={dragHandlePosition?.data?.isFirstDay !== false}
+                  isLastDay={dragHandlePosition?.data?.isLastDay !== false}
+                />
+              </div>
+            )}
+          </DragOverlay>
+        </CalendarDndContext.Provider>
+      </CalendarDndActiveEventContext.Provider>
     </DndContext>
   )
 }

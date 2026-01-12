@@ -48,6 +48,62 @@ interface PositionedEvent {
   zIndex: number
 }
 
+// Memoized cell component to prevent re-renders
+const WeekCell = React.memo(
+  ({
+    cellId,
+    day,
+    quarterHourTime,
+    hourValue,
+    quarter,
+    onEventCreate,
+  }: {
+    cellId: string
+    day: Date
+    quarterHourTime: number
+    hourValue: number
+    quarter: number
+    onEventCreate: (startTime: Date) => void
+  }) => {
+    const cellClassName = cn(
+      "absolute h-[calc(var(--week-cells-height)/4)] w-full",
+      quarter === 0 && "top-0",
+      quarter === 1 && "top-[calc(var(--week-cells-height)/4)]",
+      quarter === 2 && "top-[calc(var(--week-cells-height)/4*2)]",
+      quarter === 3 && "top-[calc(var(--week-cells-height)/4*3)]"
+    )
+
+    const handleCellClick = useCallback(() => {
+      const startTime = new Date(day)
+      startTime.setHours(hourValue)
+      startTime.setMinutes(quarter * 15)
+      onEventCreate(startTime)
+    }, [day, hourValue, quarter, onEventCreate])
+
+    return (
+      <DroppableCell
+        id={cellId}
+        date={day}
+        time={quarterHourTime}
+        className={cellClassName}
+        onClick={handleCellClick}
+      />
+    )
+  },
+  (prevProps, nextProps) => {
+    // Only re-render if these props actually change
+    return (
+      prevProps.cellId === nextProps.cellId &&
+      prevProps.day.getTime() === nextProps.day.getTime() &&
+      prevProps.quarterHourTime === nextProps.quarterHourTime &&
+      prevProps.hourValue === nextProps.hourValue &&
+      prevProps.quarter === nextProps.quarter &&
+      prevProps.onEventCreate === nextProps.onEventCreate
+    )
+  }
+)
+WeekCell.displayName = "WeekCell"
+
 export function WeekView({
   currentDate,
   events,
@@ -383,28 +439,16 @@ export function WeekView({
                   {/* Quarter-hour intervals */}
                   {[0, 1, 2, 3].map((quarter) => {
                     const quarterHourTime = hourValue + quarter * 0.25
+                    const cellId = `week-cell-${day.toISOString()}-${quarterHourTime}`
                     return (
-                      <DroppableCell
-                        key={`${hour.toString()}-${quarter}`}
-                        id={`week-cell-${day.toISOString()}-${quarterHourTime}`}
-                        date={day}
-                        time={quarterHourTime}
-                        className={cn(
-                          "absolute h-[calc(var(--week-cells-height)/4)] w-full",
-                          quarter === 0 && "top-0",
-                          quarter === 1 &&
-                            "top-[calc(var(--week-cells-height)/4)]",
-                          quarter === 2 &&
-                            "top-[calc(var(--week-cells-height)/4*2)]",
-                          quarter === 3 &&
-                            "top-[calc(var(--week-cells-height)/4*3)]"
-                        )}
-                        onClick={() => {
-                          const startTime = new Date(day)
-                          startTime.setHours(hourValue)
-                          startTime.setMinutes(quarter * 15)
-                          onEventCreate(startTime)
-                        }}
+                      <WeekCell
+                        key={cellId}
+                        cellId={cellId}
+                        day={day}
+                        quarterHourTime={quarterHourTime}
+                        hourValue={hourValue}
+                        quarter={quarter}
+                        onEventCreate={onEventCreate}
                       />
                     )
                   })}
