@@ -111,7 +111,35 @@
       "features": "يمكنك:",
       "feature1": "عرض وإدارة المشاريع والمهام المخصصة لك",
       "feature2": "تحديث حالة المهام وتتبع تقدمك",
-      "feature3": "الوصول إلى التقويم وإدارة أحداثك"
+      "feature3": "الوصول إلى التقويم وإدارة أحداثك",
+      "home": {
+        "after": "بعد",
+        "prayerTimes": {
+          "fajr": "الفجر",
+          "sunrise": "شروق",
+          "dhuhr": "الظهر",
+          "asr": "العصر",
+          "maghrib": "المغرب",
+          "isha": "العشاء"
+        },
+        "currentTask": "مهامة الحالية:",
+        "task": "مهمة",
+        "taskContentWriting": "كتابة المحتوى",
+        "project": "مشروع",
+        "daysRemaining": "أيام متبقية",
+        "comments": "لديك {count} تعليقات",
+        "current": "الحالية",
+        "quickAccess": {
+          "fileManager": "مدير الملفات",
+          "goToFiles": "دخول الى مدير الملفات",
+          "calendar": "التقويم",
+          "goToAttendance": "دخول الى الحضور والانصراف",
+          "projects": "المشاريع",
+          "viewProjects": "مشاهدة المشاريعي",
+          "goToCalendar": "انتقل إلى التقويم"
+        },
+        "weeklySchedule": "الجدول الأسبوعي"
+      }
     }
   },
   "employees": {
@@ -657,9 +685,8 @@
       "residential": "سكني"
     },
     "currentTask": "المهمة الحالية",
-    "task": {
-      "contentWriting": "كتابة المحتوى"
-    },
+    "task": "مهمة",
+    "taskContentWriting": "كتابة المحتوى",
     "quickAccess": "وصول سريع",
     "viewProject": "عرض المشروع",
     "noProjects": "لم يتم العثور على مشاريع",
@@ -790,5 +817,14 @@
       "attendee_not_found": "الحضور غير موجود"
     }
   },
-  "location": "الموقع"
+  "location": "الموقع",
+  "prayer": {
+    "remaining": "بعد",
+    "fajr": "الفجر",
+    "sunrise": "شروق",
+    "dhuhr": "الظهر",
+    "asr": "العصر",
+    "maghrib": "المغرب",
+    "isha": "العشاء"
+  }
 }

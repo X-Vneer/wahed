@@ -1,6 +1,5 @@
 "use client"
 
-import { useTranslations } from "next-intl"
 import {
   Card,
   CardContent,
@@ -8,10 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useUserData } from "@/hooks/use-user-data"
 import { Spinner } from "@/components/ui/spinner"
+import { useUserData } from "@/hooks/use-user-data"
 import { UserRole } from "@/lib/generated/prisma/enums"
-import StaffPage from "./_components/staff-page"
+import { useTranslations } from "next-intl"
+import StaffPage from "./_components/staff/home"
 
 export default function Page() {
   const t = useTranslations("welcome")

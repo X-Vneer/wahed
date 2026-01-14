@@ -111,7 +111,35 @@
       "features": "You can:",
       "feature1": "View and manage your assigned projects and tasks",
       "feature2": "Update task status and track your progress",
-      "feature3": "Access the calendar and manage your events"
+      "feature3": "Access the calendar and manage your events",
+      "home": {
+        "after": "After",
+        "prayerTimes": {
+          "fajr": "Fajr",
+          "sunrise": "Sunrise",
+          "dhuhr": "Dhuhr",
+          "asr": "Asr",
+          "maghrib": "Maghrib",
+          "isha": "Isha"
+        },
+        "currentTask": "Current Task:",
+        "task": "Task",
+        "taskContentWriting": "Content Writing",
+        "project": "Project",
+        "daysRemaining": "days remaining",
+        "comments": "You have {count} comments",
+        "current": "Current",
+        "quickAccess": {
+          "fileManager": "File Manager",
+          "goToFiles": "Go to File Manager",
+          "calendar": "Calendar",
+          "goToAttendance": "Go to attendance and departure",
+          "projects": "Projects",
+          "viewProjects": "View my projects",
+          "goToCalendar": "Go to Calendar"
+        },
+        "weeklySchedule": "Weekly Schedule"
+      }
     }
   },
   "employees": {
@@ -789,5 +817,14 @@
       "attendee_not_found": "Attendee not found"
     }
   },
-  "location": "Location"
+  "location": "Location",
+  "prayer": {
+    "remaining": "After",
+    "fajr": "Fajr",
+    "sunrise": "Sunrise",
+    "dhuhr": "Dhuhr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha"
+  }
 }
