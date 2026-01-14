@@ -58,14 +58,13 @@ function EventHoverCardContent({
   displayStart,
   displayEnd,
   dateFnsLocale,
-  t,
 }: {
   event: CalendarEvent
   displayStart: Date
   displayEnd: Date
   dateFnsLocale: Locale
-  t: (key: string) => string
 }) {
+  const t = useTranslations("calendar")
   const formatDate = (date: Date) => {
     return format(date, "PPp", { locale: dateFnsLocale })
   }
@@ -254,7 +253,6 @@ export function EventItem({
       displayStart={displayStart}
       displayEnd={displayEnd}
       dateFnsLocale={dateFnsLocale}
-      t={t}
     />
   )
 

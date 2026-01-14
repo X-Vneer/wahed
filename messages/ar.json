@@ -794,7 +794,8 @@
       "update_failed": "فشل في تحديث الحدث",
       "delete_failed": "فشل في حذف الحدث",
       "failedToLoad": "فشل في تحميل الأحداث"
-    }
+    },
+    "location": "الموقع"
   },
   "events": {
     "errors": {

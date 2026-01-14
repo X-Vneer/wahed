@@ -794,7 +794,8 @@
       "update_failed": "Failed to update event",
       "delete_failed": "Failed to delete event",
       "failedToLoad": "Failed to load events"
-    }
+    },
+    "location": "Location"
   },
   "events": {
     "errors": {
