@@ -5,6 +5,8 @@ import { useProjects } from "@/hooks/use-projects"
 import { useTranslations } from "next-intl"
 import ProjectCard from "./project-card"
 import { Card, CardContent } from "@/components/ui/card"
+import { useUserData } from "@/hooks/use-user-data"
+import { UserRole } from "@/lib/generated/prisma/enums"
 
 type ListProjectsProps = {
   archived?: boolean
@@ -15,6 +17,8 @@ export function ListProjects({ archived }: ListProjectsProps = {}) {
   const { data, isLoading, error } = useProjects(
     archived ? { archived: "true" } : undefined
   )
+  const { data: user } = useUserData()
+  const isAdmin = user?.role === UserRole.ADMIN
 
   if (isLoading) {
     return (
@@ -41,58 +45,60 @@ export function ListProjects({ archived }: ListProjectsProps = {}) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {/* Total Tasks Card */}
-        <Card className="ring-0">
-          <CardContent>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-muted-foreground font-medium">
-                {t("statusCards.allTasks")}
-              </h3>
-              <div className="flex items-end gap-2">
-                <p className="text-4xl font-bold">{totalTasks}</p>
-                <p className="text-muted-foreground text-sm">
-                  {t("statusCards.task")}
-                </p>
+      {isAdmin && (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {/* Total Tasks Card */}
+          <Card className="ring-0">
+            <CardContent>
+              <div className="flex flex-col gap-2">
+                <h3 className="text-muted-foreground font-medium">
+                  {t("statusCards.allTasks")}
+                </h3>
+                <div className="flex items-end gap-2">
+                  <p className="text-4xl font-bold">{totalTasks}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {t("statusCards.task")}
+                  </p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Archived Projects Card */}
-        <Card className="ring-0">
-          <CardContent>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-muted-foreground font-medium">
-                {t("statusCards.archived")}
-              </h3>
-              <div className="flex items-end gap-2">
-                <p className="text-4xl font-bold">{archivedProjects}</p>
-                <p className="text-muted-foreground text-sm">
-                  {t("statusCards.archivedProject")}
-                </p>
+          {/* Archived Projects Card */}
+          <Card className="ring-0">
+            <CardContent>
+              <div className="flex flex-col gap-2">
+                <h3 className="text-muted-foreground font-medium">
+                  {t("statusCards.archived")}
+                </h3>
+                <div className="flex items-end gap-2">
+                  <p className="text-4xl font-bold">{archivedProjects}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {t("statusCards.archivedProject")}
+                  </p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Total Projects Card */}
-        <Card className="ring-0">
-          <CardContent>
-            <div className="flex flex-col gap-2">
-              <h3 className="text-muted-foreground font-medium">
-                {t("statusCards.numberOfProjects")}
-              </h3>
-              <div className="flex items-end gap-2">
-                <p className="text-4xl font-bold">{totalProjects}</p>
-                <p className="text-muted-foreground text-sm">
-                  {t("statusCards.project")}
-                </p>
+          {/* Total Projects Card */}
+          <Card className="ring-0">
+            <CardContent>
+              <div className="flex flex-col gap-2">
+                <h3 className="text-muted-foreground font-medium">
+                  {t("statusCards.numberOfProjects")}
+                </h3>
+                <div className="flex items-end gap-2">
+                  <p className="text-4xl font-bold">{totalProjects}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {t("statusCards.project")}
+                  </p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
       {projects.length > 0 ? (
         projects.map((project) => (
           <ProjectCard key={project.id} project={project} />

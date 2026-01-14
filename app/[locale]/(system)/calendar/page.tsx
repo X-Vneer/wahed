@@ -73,7 +73,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="flex flex-col rounded-md bg-white p-2">
+    <div className="relative flex flex-col rounded-md bg-white p-2">
       {isLoading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50">
           <Spinner />

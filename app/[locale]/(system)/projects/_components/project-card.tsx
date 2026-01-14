@@ -1,33 +1,33 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { type TransformedProject } from "@/prisma/projects"
-import { useTranslations } from "next-intl"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Link } from "@/lib/i18n/navigation"
-import {
-  MapPin,
-  Building2,
-  Clock,
-  ExternalLink,
-  ChevronDown,
-  ChevronUp,
-  Eye,
-  Play,
-  FileText,
-  CheckSquare,
-} from "lucide-react"
-import { cn } from "@/lib/utils"
+import { loginBg } from "@/assets"
+import { AttachmentPreview } from "@/components/attachment-preview"
 import { Badge } from "@/components/ui/badge"
-import { loginBg, logo } from "@/assets"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Collapsible,
-  CollapsibleTrigger,
   CollapsibleContent,
+  CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { Link } from "@/lib/i18n/navigation"
+import { cn } from "@/lib/utils"
+import { type TransformedProject } from "@/prisma/projects"
+import {
+  Building2,
+  CheckSquare,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  ExternalLink,
+  Eye,
+  FileText,
+  MapPin,
+  Play,
+} from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useState } from "react"
-import { AttachmentPreview } from "@/components/attachment-preview"
 
 function ProjectCard({ project }: { project: TransformedProject }) {
   const t = useTranslations("projects")
@@ -82,7 +82,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
         <Card className="shadow-none ring-0">
           <CardContent>
             <div className={cn("flex flex-col gap-4", "md:flex-row")}>
-              <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-xl md:w-64">
+              <div className="relative h-50 w-full shrink-0 overflow-hidden rounded-xl md:w-66">
                 <img
                   src={project.image || loginBg.src}
                   alt={project.name}

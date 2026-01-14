@@ -1,7 +1,7 @@
 "use client"
 
 import { useLocale } from "next-intl"
-import { usePathname } from "@/lib/i18n/navigation"
+import { usePathname, useRouter } from "@/lib/i18n/navigation"
 import {
   Select,
   SelectContent,
@@ -19,12 +19,17 @@ const languages = [
 export function LangSwitcher() {
   const locale = useLocale()
   const pathname = usePathname()
+  const router = useRouter()
 
   const handleLocaleChange = (newLocale: string | null) => {
     if (!newLocale || newLocale === locale) return
-    // Construct the new path with the new locale
-    const newPath = `/${newLocale}${pathname === "/" ? "" : pathname}`
-    window.location.href = newPath
+
+    router.push(
+      {
+        pathname: pathname,
+      },
+      { locale: newLocale }
+    )
   }
 
   const currentLanguage = languages.find((lang) => lang.value === locale)

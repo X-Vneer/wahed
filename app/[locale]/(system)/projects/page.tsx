@@ -12,26 +12,32 @@ import { Link } from "@/lib/i18n/navigation"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { ListProjects } from "./_components/list-projects"
+import { useUserData } from "@/hooks/use-user-data"
+import { UserRole } from "@/lib/generated/prisma/enums"
 
 const ProjectsPage = () => {
   const t = useTranslations()
+  const { data: user } = useUserData()
+  const isAdmin = user?.role === UserRole.ADMIN
   return (
     <div className="flex h-full flex-col gap-6">
       {/* Header */}
       <div className="flex flex-wrap justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold">{t("sidebar.projects")}</h1>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">{t("sidebar.home")}</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{t("sidebar.projects")}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          {isAdmin && (
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">{t("sidebar.home")}</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{t("sidebar.projects")}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          )}
         </div>
         <div className="flex grow justify-end gap-2">
           <Button

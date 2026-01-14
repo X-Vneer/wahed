@@ -70,7 +70,7 @@ export function NavProjects() {
                       {project.name.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="line-clamp-1 text-lg font-medium">
+                  <span className="line-clamp-1 font-medium">
                     {project.name}
                   </span>
                 </Link>

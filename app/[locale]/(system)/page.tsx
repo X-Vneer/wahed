@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/card"
 import { useUserData } from "@/hooks/use-user-data"
 import { Spinner } from "@/components/ui/spinner"
+import { UserRole } from "@/lib/generated/prisma/enums"
+import StaffPage from "./_components/staff-page"
 
 export default function Page() {
   const t = useTranslations("welcome")
@@ -23,19 +25,37 @@ export default function Page() {
     )
   }
 
+  const isAdmin = user?.role === UserRole.ADMIN
+  const roleKey = isAdmin ? "admin" : "staff"
+
+  // Show hero section for staff users
+  if (!isAdmin) {
+    return <StaffPage />
+  }
+
+  // Show card view for admin users
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-full items-center justify-center p-4">
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <CardTitle className="text-2xl">
-            {t("title")}, {user?.name || t("greeting")}!
+            {t(`${roleKey}.title`)}, {user?.name || t("greeting")}!
           </CardTitle>
           <CardDescription className="text-base">
-            {t("subtitle")}
+            {t(`${roleKey}.subtitle`)}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">{t("description")}</p>
+        <CardContent className="space-y-4">
+          <p className="text-muted-foreground">{t(`${roleKey}.description`)}</p>
+          <div className="mt-6 space-y-2">
+            <h3 className="text-sm font-semibold">{t("admin.features")}</h3>
+            <ul className="text-muted-foreground list-inside list-disc space-y-1 text-sm">
+              <li>{t("admin.feature1")}</li>
+              <li>{t("admin.feature2")}</li>
+              <li>{t("admin.feature3")}</li>
+              <li>{t("admin.feature4")}</li>
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </div>

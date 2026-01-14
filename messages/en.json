@@ -43,6 +43,7 @@
     "tasksArchive": "Archive",
     "tasksAdd": "Add Task",
     "calendar": "Calendar",
+    "settings": "Settings",
     "lists": "Lists",
     "listsProjectTypes": "Project Types",
     "listsJobTitles": "Job Titles",
@@ -91,7 +92,27 @@
     "title": "Welcome back",
     "subtitle": "We're glad to see you again",
     "description": "Get started by exploring the system features from the sidebar menu.",
-    "greeting": "Hello"
+    "greeting": "Hello",
+    "admin": {
+      "title": "Welcome back, Administrator",
+      "subtitle": "Manage and oversee all system operations",
+      "description": "You have full access to all system features and can manage users, projects, tasks, and system settings.",
+      "features": "Your capabilities include:",
+      "feature1": "Full system administration and user management",
+      "feature2": "Complete project and task oversight",
+      "feature3": "System configuration and permissions management",
+      "feature4": "Access to all reports and analytics"
+    },
+    "staff": {
+      "pageTitle": "Employee Page",
+      "title": "Welcome back",
+      "subtitle": "We're glad to see you again",
+      "description": "Access your assigned projects and tasks, manage your work, and stay updated with your schedule.",
+      "features": "You can:",
+      "feature1": "View and manage your assigned projects and tasks",
+      "feature2": "Update task status and track your progress",
+      "feature3": "Access the calendar and manage your events"
+    }
   },
   "employees": {
     "title": "Users & Permissions",
