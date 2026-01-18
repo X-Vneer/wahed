@@ -39,11 +39,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Calendar as CalendarIcon, X } from "lucide-react"
+import { Calendar as CalendarIcon, Edit, X } from "lucide-react"
 import { format } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import { Gender } from "@/lib/generated/prisma/enums"
 import Uploader from "@/components/uploader"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -165,12 +166,13 @@ export function UserForm({ selectedUser }: UserFormProps) {
       <CardContent>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <FieldGroup>
-            <div className="mb-2 max-w-sm">
+          <div className="mb-2 max-w-sm w-fit">
               {/* Image Upload */}
               <Field data-invalid={!!form.errors.image}>
                 {!form.values.image ? (
                   <div className="relative">
                     <Uploader
+                    variant="circular"
                       endpoint="userImageUploader"
                       onClientUploadComplete={(res) => {
                         if (res && res.length > 0) {
@@ -183,22 +185,25 @@ export function UserForm({ selectedUser }: UserFormProps) {
                     />
                   </div>
                 ) : (
-                  <div className="relative inline-block w-full">
-                    <div className="relative h-[200px] w-full overflow-hidden rounded-lg border p-1">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={form.values.image}
-                        alt="User"
-                        className="h-full w-full object-contain"
-                      />
+                  <div className="relative inline-block">
+                    <div className="relative h-[200px] w-[200px]">
+                      <Avatar className="h-full w-full rounded-lg">
+                        <AvatarImage
+                          src={form.values.image }
+                          alt="User"
+                        />
+                        <AvatarFallback >
+                          
+                        </AvatarFallback>
+                      </Avatar>
                       <Button
                         size="icon"
-                        className="absolute top-2 right-2"
+                        className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2"
                         variant="destructive"
                         type="button"
                         onClick={() => form.setFieldValue("image", "")}
                       >
-                        <X className="size-4" />
+                        <Edit className="size-4" />
                       </Button>
                     </div>
                   </div>

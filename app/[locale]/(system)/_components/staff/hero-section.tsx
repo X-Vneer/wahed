@@ -7,15 +7,32 @@ import { Spinner } from "@/components/ui/spinner"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 import StaffTabs from "./tabs"
-import { usePathname } from "@/lib/i18n/navigation"
+import { usePathname, useRouter } from "@/lib/i18n/navigation"
+import { LogOut } from "lucide-react"
+import apiClient from "@/services"
+import { useState } from "react"
 
 export default function StaffPage() {
   const t = useTranslations("welcome.staff")
   const { data: user, isLoading } = useUserData()
+  const router = useRouter()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const pathname = usePathname()
   const length = pathname.split("/")
   const hideHeroSection = length.length > 2
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true)
+      await apiClient.post("/api/auth/logout")
+      router.refresh()
+      router.push("/auth/login")
+    } catch (error) {
+      console.error("Logout error:", error)
+      setIsLoggingOut(false)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -97,13 +114,22 @@ export default function StaffPage() {
           </h1>
 
           {/* Profile Picture */}
-          <div className="relative">
+          <div className="group relative">
             <Avatar className="size-20 border-2 border-white/20 shadow-2xl md:size-30">
               <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
               <AvatarFallback className="text-xl font-bold md:text-3xl">
                 {user?.name ? getInitials(user.name) : "U"}
               </AvatarFallback>
             </Avatar>
+            {/* Logout Icon Overlay - appears on hover */}
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="absolute cursor-pointer inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity duration-200 hover:opacity-100 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Logout"
+            >
+              <LogOut className="size-6 text-destructive md:size-8 stroke-1" />
+            </button>
           </div>
 
           {/* User Name - Large */}
