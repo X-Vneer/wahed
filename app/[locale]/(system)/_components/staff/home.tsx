@@ -41,14 +41,12 @@ export default function StaffPage() {
         <div className="w-full space-y-4">
           {/* Prayer Times Countdown Card */}
           <PrayerTimer />
-          {/* Quick Access Cards and Weekly Schedule */}
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {/* Quick Access Cards */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:col-span-3">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {/* Projects Card */}
               <Card className="aspect-square cursor-pointer">
                 <CardContent className="flex h-full flex-col items-center justify-center space-y-2">
-                  <Building className="text-foreground size-8 stroke-1" />
+                  <Building className="text-foreground size-8 xl:size-10 stroke-1" />
                   <div className="text-center">
                     <CardTitle className="text-base font-medium">
                       {t("quickAccess.projects")}
@@ -74,7 +72,7 @@ export default function StaffPage() {
               {/* Calendar Card */}
               <Card className="aspect-square cursor-pointer">
                 <CardContent className="flex h-full flex-col items-center justify-center space-y-2">
-                  <CalendarIcon className="text-foreground size-8 stroke-1" />
+                  <CalendarIcon className="text-foreground size-8 xl:size-10 stroke-1" />
                   <div className="text-center">
                     <CardTitle className="text-base font-medium">
                       {t("quickAccess.calendar")}
@@ -100,7 +98,7 @@ export default function StaffPage() {
               {/* File Manager Card */}
               <Card className="aspect-square cursor-pointer">
                 <CardContent className="flex h-full flex-col items-center justify-center space-y-2">
-                  <Folder className="text-foreground size-8 stroke-1" />
+                  <Folder className="text-foreground size-8 xl:size-10 stroke-1" />
                   <div className="text-center">
                     <CardTitle className="text-base font-medium">
                       {t("quickAccess.fileManager")}
@@ -123,7 +121,6 @@ export default function StaffPage() {
                 </CardFooter>
               </Card>
             </div>
-          </div>
         </div>
       </div>
     </div>

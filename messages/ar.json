@@ -86,7 +86,8 @@
     "account_inactive": "الحساب غير نشط",
     "internal_server_error": "خطأ في الخادم الداخلي",
     "failed_to_fetch_user_data": "فشل في جلب بيانات المستخدم",
-    "upload_failed": "فشل تحميل الصورة"
+    "upload_failed": "فشل تحميل الصورة",
+    "failed_to_load": "فشل تحميل بيانات المستخدم"
   },
   "welcome": {
     "title": "مرحباً بعودتك",
@@ -827,5 +828,12 @@
     "asr": "العصر",
     "maghrib": "المغرب",
     "isha": "العشاء"
+  },
+  "settings": {
+    "profile": "الملف الشخصي",
+    "update": "تحديث",
+    "success": {
+      "profile_updated": "تم تحديث الملف الشخصي بنجاح"
+    }
   }
 }

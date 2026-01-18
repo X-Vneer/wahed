@@ -86,7 +86,8 @@
     "account_inactive": "Account is inactive",
     "internal_server_error": "Internal server error",
     "failed_to_fetch_user_data": "Failed to fetch user data",
-    "upload_failed": "Failed to upload image"
+    "upload_failed": "Failed to upload image",
+    "failed_to_load": "Failed to load user data"
   },
   "welcome": {
     "title": "Welcome back",
@@ -827,5 +828,12 @@
     "asr": "Asr",
     "maghrib": "Maghrib",
     "isha": "Isha"
+  },
+  "settings": {
+    "profile": "Profile",
+    "update": "Update",
+    "success": {
+      "profile_updated": "Profile updated successfully "
+    }
   }
 }

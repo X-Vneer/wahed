@@ -88,4 +88,26 @@ export const updateUserSchema = z
     }
   )
 
+export const updateUserSettingsSchema = z.object({
+  name: z.string().min(1, { error: "employees.errors.fullName.required" }),
+  phone: z.string().refine(
+    (value) => {
+      return isValidPhoneNumber(value || "")
+    },
+    {
+      error: "employees.errors.phoneNumber.invalid",
+    }
+  ),
+
+  email: z.email({ error: "employees.errors.email.invalid" }),
+  dateOfBirth: z.coerce.date().optional().nullable(),
+  gender: z.enum([Gender.MALE, Gender.FEMALE]).optional(),
+  nationality: z.string().optional().nullable(),
+  address: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  country: z.string().optional().nullable(),
+  image: z.string().optional().nullable(),
+})
+
 export type CreateUserInput = z.infer<typeof createUserSchema>
+export type UpdateUserSettingsInput = z.infer<typeof updateUserSettingsSchema>
