@@ -79,7 +79,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <div className="w-full">
-        <Card className="shadow-none ring-0">
+        <Card className="shadow-none ring-0 max-md:py-4">
           <CardContent>
             <div className={cn("flex flex-col gap-4", "md:flex-row")}>
               <div className="relative h-50 w-full shrink-0 overflow-hidden rounded-xl md:w-66">
@@ -91,24 +91,24 @@ function ProjectCard({ project }: { project: TransformedProject }) {
               </div>
               <div className="flex flex-1 flex-col justify-between">
                 {/* Status Badges - Top Left */}
-                <div className="flex flex-wrap items-center justify-end gap-2">
+                <div className="flex  items-center lg:justify-end gap-2 mb-2">
                   <Badge
                     variant="outline"
-                    className="rounded-sm px-5 py-3 text-xs font-medium text-gray-700"
+                    className="rounded-sm  lg:px-5 py-3 text-xs font-medium text-gray-700"
                   >
                     <Clock className="size-3" />
                     {t("daysRemaining", { count: 20 })}
                   </Badge>
                   <Badge
                     variant="outline"
-                    className="rounded-sm px-5 py-3 text-xs font-medium text-gray-700"
+                    className="rounded-sm lg:px-5 py-3 text-xs font-medium text-gray-700"
                   >
                     <Clock className="size-3" />
                     {t("stage", { current: 5, total: 10 })}
                   </Badge>
                   <Badge
                     className={cn(
-                      "inline-b rounded-sm p-3 px-5 text-xs font-medium",
+                      "inline-b rounded-sm p-3 lg:px-5 text-xs font-medium",
                       statusBadge.className
                     )}
                   >
@@ -163,7 +163,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-                  <div className="flex items-center gap-8 rounded-lg border bg-gray-50 px-3 py-2">
+                  <div className="flex items-center gap-8 rounded-lg  bg-[#F7F7F7] max-md:w-full justify-between px-3 py-2">
                     <div className="flex items-center gap-1">
                       <p>عنوان المهمة الحالية</p>
                     </div>
@@ -176,10 +176,11 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                       <Play className="text-muted-foreground size-4 rtl:rotate-180" />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 max-sm:mt-2 max-sm:w-full max-sm:justify-between">
+                  <div className="flex items-center gap-2 max-md:mt-2 max-md:w-full max-md:flex-col">
                     <Button
                       variant="outline"
                       size="sm"
+                      className="max-md:w-full text-base max-md:h-10 "
                       nativeButton={false}
                       render={
                         <Link
@@ -195,7 +196,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                       render={
                         <Button
                           variant="outline"
-                          className="text-primary border-primary hover:text-primary bg-white"
+                          className="text-primary border-primary hover:text-primary bg-white  max-md:h-10 max-md:w-full"
                           size={"sm"}
                         >
                           {isOpen ? (
