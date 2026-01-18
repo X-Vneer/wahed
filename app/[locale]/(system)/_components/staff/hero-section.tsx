@@ -34,6 +34,20 @@ export default function StaffPage() {
     return name.charAt(0).toUpperCase()
   }
 
+  // Get time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour >= 5 && hour < 12) {
+      return t("goodMorning", { defaultValue: "Good morning" })
+    } else if (hour >= 12 && hour < 17) {
+      return t("goodAfternoon", { defaultValue: "Good afternoon" })
+    } else if (hour >= 17 && hour < 21) {
+      return t("goodEvening", { defaultValue: "Good evening" })
+    } else {
+      return t("goodNight", { defaultValue: "Good night" })
+    }
+  }
+
   if (hideHeroSection) {
     return null
   }
@@ -79,7 +93,7 @@ export default function StaffPage() {
         <div className="relative flex flex-col items-center gap-6 px-4 py-12 text-center">
           {/* Page Title */}
           <h1 className="text-xl font-bold text-white md:text-2xl">
-            {t("pageTitle")}
+            {getGreeting()}, {user?.name || t("title")}
           </h1>
 
           {/* Profile Picture */}

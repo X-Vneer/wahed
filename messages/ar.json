@@ -140,7 +140,11 @@
           "goToCalendar": "انتقل إلى التقويم"
         },
         "weeklySchedule": "الجدول الأسبوعي"
-      }
+      },
+      "goodMorning": "صباح الخير",
+      "goodAfternoon": "مساء الخير",
+      "goodEvening": "مساء الخير",
+      "goodNight": "طاب مساؤك"
     }
   },
   "employees": {

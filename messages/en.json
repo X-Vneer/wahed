@@ -140,7 +140,11 @@
           "goToCalendar": "Go to Calendar"
         },
         "weeklySchedule": "Weekly Schedule"
-      }
+      },
+      "goodMorning": "Good morning ",
+      "goodAfternoon": "Good afternoon",
+      "goodEvening": "Good evening",
+      "goodNight": "Good night"
     }
   },
   "employees": {
