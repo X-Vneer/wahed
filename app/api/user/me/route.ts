@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { error: t("errors.user_not_found") },
-        { status: 404 }
+        { status: 401 }
       )
     }
 
@@ -96,7 +96,7 @@ export async function PUT(request: NextRequest) {
         {
           error: t("errors.user_not_found"),
         },
-        { status: 404 }
+        { status: 401 }
       )
     }
 

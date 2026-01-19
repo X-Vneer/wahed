@@ -30,12 +30,16 @@
         "account_inactive": "حسابك غير نشط. يرجى الاتصال بالدعم.",
         "server_error": "حدث خطأ. يرجى المحاولة مرة أخرى لاحقاً."
       }
+    },
+    "logout": {
+      "title": "تسجيل الخروج",
+      "subtitle": "جاري تسجيل الخروج"
     }
   },
   "sidebar": {
     "home": "الرئيسية",
     "projects": "المشاريع",
-    "projectsMain": "رئيسية",
+    "projectsMain": "الرئيسية",
     "projectsArchive": "أرشيف",
     "projectsAdd": "إضافة مشروع",
     "tasks": "المهام",
@@ -60,7 +64,9 @@
     "system": "النظام",
     "companyName": "وهد العمرانية",
     "listsRegions": "المناطق",
-    "view-project": "عرض المشروع"
+    "view-project": "عرض المشروع",
+    "staff-page": "بوابة الموظفين",
+    "staff-banners": "البنرات"
   },
   "lists": {
     "projectCategories": {
@@ -838,6 +844,95 @@
     "update": "تحديث",
     "success": {
       "profile_updated": "تم تحديث الملف الشخصي بنجاح"
+    }
+  },
+  "banners": {
+    "title": "البنرات",
+    "banners": "البنرات",
+    "bannerDetails": "تفاصيل البانر",
+    "addNew": "إضافة جديد",
+    "add": "إضافة",
+    "update": "تحديث",
+    "search": "بحث عن...",
+    "no_banners_found": "لم يتم العثور على بنرات",
+    "form": {
+      "title": "العنوان",
+      "titlePlaceholder": "أدخل عنوان البانر",
+      "titleAr": "العنوان (عربي)",
+      "titleArPlaceholder": "أدخل عنوان البانر بالعربية",
+      "titleEn": "العنوان (إنجليزي)",
+      "titleEnPlaceholder": "أدخل عنوان البانر بالإنجليزية",
+      "description": "الوصف",
+      "descriptionPlaceholder": "أدخل وصف البانر",
+      "descriptionAr": "الوصف (عربي)",
+      "descriptionArPlaceholder": "أدخل وصف البانر بالعربية",
+      "descriptionEn": "الوصف (إنجليزي)",
+      "descriptionEnPlaceholder": "أدخل وصف البانر بالإنجليزية",
+      "content": "المحتوى",
+      "contentPlaceholder": "أدخل محتوى البانر",
+      "image": "صورة البانر",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية",
+      "selectStartDate": "اختر تاريخ البداية",
+      "selectEndDate": "اختر تاريخ النهاية",
+      "visibleTo": "مرئي لـ",
+      "public": "عام",
+      "selectStaff": "اختر موظف",
+      "isActive": "نشط"
+    },
+    "table": {
+      "image": "الصورة",
+      "titleAr": "العنوان (عربي)",
+      "titleEn": "العنوان (إنجليزي)",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية",
+      "visibleTo": "مرئي لـ",
+      "status": "الحالة"
+    },
+    "editTitle": "تعديل البانر",
+    "createTitle": "إنشاء بانر",
+    "editDescription": "تعديل تفاصيل البانر",
+    "createDescription": "إنشاء بانر جديد",
+    "errors": {
+      "title": {
+        "required": "العنوان مطلوب"
+      },
+      "titleAr": {
+        "required": "العنوان بالعربية مطلوب"
+      },
+      "titleEn": {
+        "required": "العنوان بالإنجليزية مطلوب"
+      },
+      "image": {
+        "required": "الصورة مطلوبة"
+      },
+      "startDate": {
+        "required": "تاريخ البداية مطلوب"
+      },
+      "endDate": {
+        "required": "تاريخ النهاية مطلوب"
+      },
+      "endDate_before_startDate": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية",
+      "banner_not_found": "البانر غير موجود",
+      "user_not_found": "المستخدم غير موجود"
+    },
+    "success": {
+      "banner_created": "تم إنشاء البانر بنجاح",
+      "banner_updated": "تم تحديث البانر بنجاح",
+      "banner_deleted": "تم حذف البانر بنجاح"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "scheduled": "مجدول",
+      "expired": "منتهي الصلاحية"
+    },
+    "deleteConfirm": {
+      "title": "حذف البانر",
+      "description": "هل أنت متأكد من حذف \"{title}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
     }
   }
 }

@@ -51,6 +51,10 @@ enum PermissionKey {
   WEBSITE_MANAGEMENT
   REPORT_VIEW
   REPORT_EXPORT
+  BANNER_CREATE
+  BANNER_UPDATE
+  BANNER_DELETE
+  BANNER_VIEW
 }
 
 enum EventColor {
@@ -91,6 +95,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  banners Banner[]
 }
 
 model Permission {
@@ -265,4 +271,21 @@ model EventAttendee {
   createdAt DateTime @default(now())
 
   @@unique([eventId, userId])
+}
+
+model Banner {
+  id            String   @id @default(cuid())
+  titleAr       String
+  titleEn       String
+  descriptionAr String?
+  descriptionEn String?
+  content       String?
+  image         String
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
 }

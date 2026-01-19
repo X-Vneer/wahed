@@ -23,12 +23,14 @@ async function verifyToken(token: string): Promise<boolean> {
 export default async function middleware(request: NextRequest) {
   // Get the pathname
   const pathname = request.nextUrl.pathname
+  console.log("🚀 ~ middleware ~ pathname:", pathname)
 
   // Check if this is an API route
   const isApiRoute = pathname.startsWith("/api")
 
   // Check if this is the login page
-  const isLoginPage = pathname.includes("/auth/login")
+  const publicPages = ["/auth/login", "/auth/logout"]
+  const isPublicPage = publicPages.some((page) => pathname.includes(page))
 
   // Public API routes that don't require authentication
   const publicApiRoutes = [
@@ -38,7 +40,7 @@ export default async function middleware(request: NextRequest) {
     "/api/uploadthing",
   ]
   const isPublicApiRoute = publicApiRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.includes(route)
   )
 
   // Get the access token from cookies
@@ -74,7 +76,7 @@ export default async function middleware(request: NextRequest) {
 
   // Handle page routes (existing logic)
   // If user is not authenticated and not on login page, redirect to login
-  if (!isLoginPage) {
+  if (!isPublicPage) {
     if (!token) {
       // Extract locale from pathname or use default
       const locale = pathname.split("/")[1] || routing.defaultLocale
@@ -95,7 +97,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   // If user is authenticated and on login page, redirect to home
-  if (isLoginPage && token) {
+  if (isPublicPage && token) {
     const isValid = await verifyToken(token)
     if (isValid) {
       const locale = pathname.split("/")[1] || routing.defaultLocale

@@ -60,4 +60,12 @@ apiClient.interceptors.request.use(
   }
 )
 
+// Response interceptor to handle 401 (Unauthorized) globally
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    return Promise.reject(error)
+  }
+)
+
 export default apiClient

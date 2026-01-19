@@ -30,6 +30,10 @@
         "account_inactive": "Your account is inactive. Please contact support.",
         "server_error": "An error occurred. Please try again later."
       }
+    },
+    "logout": {
+      "title": "Logout",
+      "subtitle": "Logging out..."
     }
   },
   "sidebar": {
@@ -60,7 +64,9 @@
     "system": "System",
     "companyName": "Wahed",
     "listsRegions": "Regions",
-    "view-project": "View project"
+    "view-project": "View project",
+    "staff-page": "Staff page",
+    "staff-banners": "Banners"
   },
   "lists": {
     "projectCategories": {
@@ -838,6 +844,95 @@
     "update": "Update",
     "success": {
       "profile_updated": "Profile updated successfully "
+    }
+  },
+  "banners": {
+    "title": "Banners",
+    "banners": "Banners",
+    "bannerDetails": "Banner Details",
+    "addNew": "Add New",
+    "add": "Add",
+    "update": "Update",
+    "search": "Search for...",
+    "no_banners_found": "No banners found",
+    "form": {
+      "title": "Title",
+      "titlePlaceholder": "Enter banner title",
+      "titleAr": "Title (Arabic)",
+      "titleArPlaceholder": "Enter banner title in Arabic",
+      "titleEn": "Title (English)",
+      "titleEnPlaceholder": "Enter banner title in English",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter banner description",
+      "descriptionAr": "Description (Arabic)",
+      "descriptionArPlaceholder": "Enter banner description in Arabic",
+      "descriptionEn": "Description (English)",
+      "descriptionEnPlaceholder": "Enter banner description in English",
+      "content": "Content",
+      "contentPlaceholder": "Enter banner content",
+      "image": "Banner Image",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "selectStartDate": "Select start date",
+      "selectEndDate": "Select end date",
+      "visibleTo": "Visible To",
+      "public": "Public",
+      "selectStaff": "Select staff member",
+      "isActive": "Active"
+    },
+    "table": {
+      "image": "Image",
+      "titleAr": "Title (Arabic)",
+      "titleEn": "Title (English)",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "visibleTo": "Visible To",
+      "status": "Status"
+    },
+    "editTitle": "Edit Banner",
+    "createTitle": "Create Banner",
+    "editDescription": "Edit banner details",
+    "createDescription": "Create a new banner",
+    "errors": {
+      "title": {
+        "required": "Title is required"
+      },
+      "titleAr": {
+        "required": "Arabic title is required"
+      },
+      "titleEn": {
+        "required": "English title is required"
+      },
+      "image": {
+        "required": "Image is required"
+      },
+      "startDate": {
+        "required": "Start date is required"
+      },
+      "endDate": {
+        "required": "End date is required"
+      },
+      "endDate_before_startDate": "End date must be after start date",
+      "banner_not_found": "Banner not found",
+      "user_not_found": "User not found"
+    },
+    "success": {
+      "banner_created": "Banner created successfully",
+      "banner_updated": "Banner updated successfully",
+      "banner_deleted": "Banner deleted successfully"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "scheduled": "Scheduled",
+      "expired": "Expired"
+    },
+    "deleteConfirm": {
+      "title": "Delete Banner",
+      "description": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
     }
   }
 }

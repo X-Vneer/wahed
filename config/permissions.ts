@@ -57,6 +57,12 @@ export const PERMISSIONS_GROUPED = {
     VIEW: PrismaPermissionKey.REPORT_VIEW,
     EXPORT: PrismaPermissionKey.REPORT_EXPORT,
   },
+  BANNER: {
+    CREATE: PrismaPermissionKey.BANNER_CREATE,
+    UPDATE: PrismaPermissionKey.BANNER_UPDATE,
+    DELETE: PrismaPermissionKey.BANNER_DELETE,
+    VIEW: PrismaPermissionKey.BANNER_VIEW,
+  },
 } as const
 
 /**

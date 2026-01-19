@@ -10,6 +10,7 @@ import {
   List,
   Settings,
   Users,
+  Users2,
   Waves,
 } from "lucide-react"
 import * as React from "react"
@@ -36,23 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const isRtl = locale === "ar"
 
   const data = {
-    teams: [
-      {
-        name: "Acme Inc",
-        logo: Layout,
-        plan: "Enterprise",
-      },
-      {
-        name: "Acme Corp.",
-        logo: Waves,
-        plan: "Startup",
-      },
-      {
-        name: "Evil Corp.",
-        logo: Command,
-        plan: "Free",
-      },
-    ],
+   
     navMain: [
       {
         title: t("home"),
@@ -141,12 +126,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         isActive: pathname === "/employees",
       },
       {
+        title: t("staff-page"),
+        url: "#",
+        icon: Users2,
+        items: [
+          {
+            title: t("staff-banners"),
+            url: "/staff/banners",
+          },
+        ],
+        isActive: false,
+      },
+      {
         title: t("website"),
         url: "#",
         icon: Globe,
         items: [],
         isActive: false,
       },
+      
     ],
   }
   return (

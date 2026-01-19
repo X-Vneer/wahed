@@ -42,7 +42,7 @@ export async function hasPermission(permission: Permission): Promise<{
       hasPermission: false,
       error: NextResponse.json(
         { error: t("errors.user_not_found") },
-        { status: 404 }
+        { status: 401 }
       ),
     }
   }
