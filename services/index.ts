@@ -64,6 +64,14 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
+    if (error?.response?.status === 401) {
+      if (typeof window !== "undefined") {
+        const locale = getLocaleFromPath()
+        // Redirect to localized login page on unauthorized
+        window.location.href = `/${locale}/auth/logout`
+      }
+    }
+
     return Promise.reject(error)
   }
 )
