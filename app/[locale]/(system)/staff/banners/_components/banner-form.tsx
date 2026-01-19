@@ -41,16 +41,13 @@ import { useCreateBanner, useUpdateBanner } from "@/hooks/use-banners"
 import { useUsers } from "@/hooks/use-users"
 import { BannerInclude } from "@/prisma/banners"
 import UserAvatar from "@/components/user-avatar"
+import { useRouter } from "@/lib/i18n/navigation"
 
 type BannerFormContentProps = {
   selectedBanner: BannerInclude | null
-  onSuccess?: () => void
 }
 
-export function BannerFormContent({
-  selectedBanner,
-  onSuccess,
-}: BannerFormContentProps) {
+export function BannerFormContent({ selectedBanner }: BannerFormContentProps) {
   const t = useTranslations()
   const locale = useLocale()
   const [startDatePickerOpen, setStartDatePickerOpen] = useState(false)
@@ -107,6 +104,11 @@ export function BannerFormContent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBanner?.id])
 
+  const router = useRouter()
+  const handleSuccess = () => {
+    router.push(`/staff/banners`)
+  }
+
   const handleSubmit = async (values: typeof form.values) => {
     try {
       if (selectedBanner) {
@@ -129,7 +131,10 @@ export function BannerFormContent({
       } else {
         // Create new banner
         if (!values.startDate || !values.endDate) {
-          form.setFieldError("startDate", t("banners.errors.startDate.required"))
+          form.setFieldError(
+            "startDate",
+            t("banners.errors.startDate.required")
+          )
           form.setFieldError("endDate", t("banners.errors.endDate.required"))
           return
         }
@@ -145,11 +150,11 @@ export function BannerFormContent({
           users: values.users.length > 0 ? values.users : null,
           isActive: values.isActive,
         })
+        form.reset()
       }
 
       // Success - reset form
-      form.reset()
-      onSuccess?.()
+      handleSuccess()
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const rootError = handleFormErrors(error, form)
@@ -209,17 +214,13 @@ export function BannerFormContent({
             </div>
           )}
           {form.errors.image && (
-            <FieldError
-              errors={[{ message: String(form.errors.image) }]}
-            />
+            <FieldError errors={[{ message: String(form.errors.image) }]} />
           )}
         </Field>
 
         {/* Title Arabic */}
         <Field data-invalid={!!form.errors.titleAr}>
-          <FieldLabel htmlFor="titleAr">
-            {t("banners.form.titleAr")}
-          </FieldLabel>
+          <FieldLabel htmlFor="titleAr">{t("banners.form.titleAr")}</FieldLabel>
           <Input
             id="titleAr"
             {...form.getInputProps("titleAr")}
@@ -233,9 +234,7 @@ export function BannerFormContent({
 
         {/* Title English */}
         <Field data-invalid={!!form.errors.titleEn}>
-          <FieldLabel htmlFor="titleEn">
-            {t("banners.form.titleEn")}
-          </FieldLabel>
+          <FieldLabel htmlFor="titleEn">{t("banners.form.titleEn")}</FieldLabel>
           <Input
             id="titleEn"
             {...form.getInputProps("titleEn")}
@@ -285,22 +284,47 @@ export function BannerFormContent({
           )}
         </Field>
 
-        {/* Content */}
+        {/* Content as file upload */}
         <Field data-invalid={!!form.errors.content}>
-          <FieldLabel htmlFor="content">
-            {t("banners.form.content")}
-          </FieldLabel>
-          <Textarea
-            id="content"
-            {...form.getInputProps("content")}
-            placeholder={t("banners.form.contentPlaceholder")}
-            aria-invalid={!!form.errors.content}
-            rows={4}
-          />
+          <FieldLabel htmlFor="content">{t("banners.form.content")}</FieldLabel>
+          {!form.values.content ? (
+            <div className="relative">
+              <Uploader
+                endpoint="projectAttachmentsUploader"
+                onClientUploadComplete={(res) => {
+                  if (res && res.length > 0) {
+                    // Store the uploaded file URL in the content field
+                    // so it can be sent to the backend.
+                    form.setFieldValue("content", res[0].ufsUrl)
+                  }
+                }}
+                onUploadError={(error: Error) => {
+                  toast.error(error.message || t("errors.upload_failed"))
+                }}
+              />
+            </div>
+          ) : (
+            <div className="flex items-center justify-between rounded-lg border px-3 py-2">
+              <a
+                href={form.values.content}
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary truncate text-sm underline"
+              >
+                {form.values.content}
+              </a>
+              <Button
+                size="icon"
+                variant="ghost"
+                type="button"
+                onClick={() => form.setFieldValue("content", "")}
+              >
+                <X className="size-4" />
+              </Button>
+            </div>
+          )}
           {form.errors.content && (
-            <FieldError
-              errors={[{ message: String(form.errors.content) }]}
-            />
+            <FieldError errors={[{ message: String(form.errors.content) }]} />
           )}
         </Field>
 
@@ -399,18 +423,13 @@ export function BannerFormContent({
               </PopoverContent>
             </Popover>
             {form.errors.endDate && (
-              <FieldError
-                errors={[{ message: String(form.errors.endDate) }]}
-              />
+              <FieldError errors={[{ message: String(form.errors.endDate) }]} />
             )}
           </Field>
         </div>
 
-
         <Field>
-          <FieldLabel htmlFor="users">
-            {t("banners.form.visibleTo")}
-          </FieldLabel>
+          <FieldLabel htmlFor="users">{t("banners.form.visibleTo")}</FieldLabel>
           <Select
             multiple
             value={form.values.users}
@@ -421,11 +440,9 @@ export function BannerFormContent({
             <SelectTrigger className="w-full" id="users">
               <SelectValue>
                 {form.values.users.length > 0 ? (
-                  <span className="flex gap-1">
+                  <span className="flex gap-2 p-1">
                     {users
-                      .filter((user) =>
-                        form.values.users.includes(user.id)
-                      )
+                      .filter((user) => form.values.users.includes(user.id))
                       .map((user) => (
                         <UserAvatar key={user.id} {...user} />
                       ))}
@@ -482,9 +499,7 @@ export function BannerFormContent({
           {(createBanner.isPending || updateBanner.isPending) && (
             <Spinner className="mr-2 size-4" />
           )}
-          {selectedBanner
-            ? t("banners.update")
-            : t("banners.add")}
+          {selectedBanner ? t("banners.update") : t("banners.add")}
         </Button>
       </div>
     </form>
@@ -503,4 +518,3 @@ export function BannerForm({ selectedBanner }: BannerFormProps) {
     </div>
   )
 }
-

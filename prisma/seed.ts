@@ -217,6 +217,11 @@ async function main() {
   const adminPassword = await bcrypt.hash("admin123", saltRounds)
   const staff1Password = await bcrypt.hash("staff123", saltRounds)
   const staff2Password = await bcrypt.hash("staff456", saltRounds)
+  const staff3Password = await bcrypt.hash("staff789", saltRounds)
+  const staff4Password = await bcrypt.hash("staff012", saltRounds)
+  const staff5Password = await bcrypt.hash("staff345", saltRounds)
+  const staff6Password = await bcrypt.hash("staff678", saltRounds)
+  const staff7Password = await bcrypt.hash("staff901", saltRounds)
 
   // Create admin user
   const admin = await db.user.upsert({
@@ -262,6 +267,81 @@ async function main() {
   })
 
   console.log("✅ Created staff user 2:", staff2.email)
+
+  // Create third staff user
+  const staff3 = await db.user.upsert({
+    where: { email: "staff3@wahed.com" },
+    update: {},
+    create: {
+      name: "Staff Member Three",
+      email: "staff3@wahed.com",
+      password: staff3Password,
+      role: UserRole.STAFF,
+      isActive: true,
+    },
+  })
+
+  console.log("✅ Created staff user 3:", staff3.email)
+
+  // Create fourth staff user
+  const staff4 = await db.user.upsert({
+    where: { email: "staff4@wahed.com" },
+    update: {},
+    create: {
+      name: "Staff Member Four",
+      email: "staff4@wahed.com",
+      password: staff4Password,
+      role: UserRole.STAFF,
+      isActive: true,
+    },
+  })
+
+  console.log("✅ Created staff user 4:", staff4.email)
+
+  // Create fifth staff user
+  const staff5 = await db.user.upsert({
+    where: { email: "staff5@wahed.com" },
+    update: {},
+    create: {
+      name: "Staff Member Five",
+      email: "staff5@wahed.com",
+      password: staff5Password,
+      role: UserRole.STAFF,
+      isActive: true,
+    },
+  })
+
+  console.log("✅ Created staff user 5:", staff5.email)
+
+  // Create sixth staff user
+  const staff6 = await db.user.upsert({
+    where: { email: "staff6@wahed.com" },
+    update: {},
+    create: {
+      name: "Staff Member Six",
+      email: "staff6@wahed.com",
+      password: staff6Password,
+      role: UserRole.STAFF,
+      isActive: true,
+    },
+  })
+
+  console.log("✅ Created staff user 6:", staff6.email)
+
+  // Create seventh staff user
+  const staff7 = await db.user.upsert({
+    where: { email: "staff7@wahed.com" },
+    update: {},
+    create: {
+      name: "Staff Member Seven",
+      email: "staff7@wahed.com",
+      password: staff7Password,
+      role: UserRole.STAFF,
+      isActive: true,
+    },
+  })
+
+  console.log("✅ Created staff user 7:", staff7.email)
 
   // Seed Saudi Arabia regions and cities
   for (const region of saudiRegions) {
@@ -449,6 +529,11 @@ async function main() {
   console.log("   Admin: admin@wahed.com / admin123")
   console.log("   Staff 1: staff1@wahed.com / staff123")
   console.log("   Staff 2: staff2@wahed.com / staff456")
+  console.log("   Staff 3: staff3@wahed.com / staff789")
+  console.log("   Staff 4: staff4@wahed.com / staff012")
+  console.log("   Staff 5: staff5@wahed.com / staff345")
+  console.log("   Staff 6: staff6@wahed.com / staff678")
+  console.log("   Staff 7: staff7@wahed.com / staff901")
   console.log("   Regions: 13 Saudi regions with major cities")
   console.log("   Task Statuses: 4 default statuses")
   console.log("   Task Categories: 4 default categories")

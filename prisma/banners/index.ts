@@ -22,7 +22,11 @@ export const transformBanner = (banner: BannerInclude, locale: string) => {
   return {
     id: banner.id,
     title: title,
+    titleAr: banner.titleAr,
+    titleEn: banner.titleEn,
     description: description,
+    descriptionAr: banner.descriptionAr,
+    descriptionEn: banner.descriptionEn,
     image: banner.image,
     startDate: banner.startDate,
     endDate: banner.endDate,
