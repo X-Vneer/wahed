@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "./_components/app-sidebar"
 import { LangSwitcher } from "./_components/lang-switcher"
+import { LogoutButton } from "./_components/logout-button"
 
 import { QueryClient } from "@tanstack/react-query"
 import { getUserDataServerSide } from "@/lib/get-user-data-server-side"
@@ -62,7 +63,10 @@ export default async function SystemLayout({
                   className="h-10 rounded-full"
                 />
               </div>
-              <LangSwitcher />
+              <div className="flex items-center gap-2">
+                <LogoutButton />
+                <LangSwitcher />
+              </div>
             </header>
             <div className="flex flex-1 flex-col gap-4 p-4">
               <StaffHeroSection />

@@ -231,12 +231,38 @@ async function main() {
       name: "Admin User",
       email: "admin@wahed.com",
       password: adminPassword,
+      phone: "+966501234567",
+      roleName: "System Administrator",
       role: UserRole.ADMIN,
       isActive: true,
     },
   })
 
   console.log("✅ Created admin user:", admin.email)
+
+  // Assign all permissions to admin
+  for (const perm of permissions) {
+    const permission = await db.permission.findUnique({
+      where: { key: perm.key },
+    })
+    if (permission) {
+      await db.userPermission.upsert({
+        where: {
+          userId_permissionId: {
+            userId: admin.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: admin.id,
+          permissionId: permission.id,
+        },
+      })
+    }
+  }
+
+  console.log("✅ Assigned all permissions to admin")
 
   // Create first staff user
   const staff1 = await db.user.upsert({
@@ -246,12 +272,49 @@ async function main() {
       name: "Staff Member One",
       email: "staff1@wahed.com",
       password: staff1Password,
+      phone: "+966502345678",
+      roleName: "Project Manager",
       role: UserRole.STAFF,
       isActive: true,
     },
   })
 
   console.log("✅ Created staff user 1:", staff1.email)
+
+  // Assign permissions to staff1
+  const staff1Permissions = [
+    PermissionKey.PROJECT_VIEW,
+    PermissionKey.PROJECT_CREATE,
+    PermissionKey.PROJECT_UPDATE,
+    PermissionKey.TASK_VIEW,
+    PermissionKey.TASK_CREATE,
+    PermissionKey.TASK_UPDATE,
+    PermissionKey.TASK_ASSIGN,
+    PermissionKey.FILE_UPLOAD,
+    PermissionKey.REPORT_VIEW,
+  ]
+  for (const permKey of staff1Permissions) {
+    const permission = await db.permission.findUnique({
+      where: { key: permKey },
+    })
+    if (permission) {
+      await db.userPermission.upsert({
+        where: {
+          userId_permissionId: {
+            userId: staff1.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: staff1.id,
+          permissionId: permission.id,
+        },
+      })
+    }
+  }
+
+  console.log("✅ Assigned permissions to staff user 1")
 
   // Create second staff user
   const staff2 = await db.user.upsert({
@@ -261,12 +324,46 @@ async function main() {
       name: "Staff Member Two",
       email: "staff2@wahed.com",
       password: staff2Password,
+      phone: "+966503456789",
+      roleName: "Developer",
       role: UserRole.STAFF,
       isActive: true,
     },
   })
 
   console.log("✅ Created staff user 2:", staff2.email)
+
+  // Assign permissions to staff2
+  const staff2Permissions = [
+    PermissionKey.PROJECT_VIEW,
+    PermissionKey.TASK_VIEW,
+    PermissionKey.TASK_CREATE,
+    PermissionKey.TASK_UPDATE,
+    PermissionKey.TASK_COMPLETE,
+    PermissionKey.FILE_UPLOAD,
+  ]
+  for (const permKey of staff2Permissions) {
+    const permission = await db.permission.findUnique({
+      where: { key: permKey },
+    })
+    if (permission) {
+      await db.userPermission.upsert({
+        where: {
+          userId_permissionId: {
+            userId: staff2.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: staff2.id,
+          permissionId: permission.id,
+        },
+      })
+    }
+  }
+
+  console.log("✅ Assigned permissions to staff user 2")
 
   // Create third staff user
   const staff3 = await db.user.upsert({
@@ -276,12 +373,48 @@ async function main() {
       name: "Staff Member Three",
       email: "staff3@wahed.com",
       password: staff3Password,
+      phone: "+966504567890",
+      roleName: "Designer",
       role: UserRole.STAFF,
       isActive: true,
     },
   })
 
   console.log("✅ Created staff user 3:", staff3.email)
+
+  // Assign permissions to staff3
+  const staff3Permissions = [
+    PermissionKey.PROJECT_VIEW,
+    PermissionKey.TASK_VIEW,
+    PermissionKey.TASK_CREATE,
+    PermissionKey.TASK_UPDATE,
+    PermissionKey.FILE_UPLOAD,
+    PermissionKey.BANNER_VIEW,
+    PermissionKey.BANNER_CREATE,
+    PermissionKey.BANNER_UPDATE,
+  ]
+  for (const permKey of staff3Permissions) {
+    const permission = await db.permission.findUnique({
+      where: { key: permKey },
+    })
+    if (permission) {
+      await db.userPermission.upsert({
+        where: {
+          userId_permissionId: {
+            userId: staff3.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: staff3.id,
+          permissionId: permission.id,
+        },
+      })
+    }
+  }
+
+  console.log("✅ Assigned permissions to staff user 3")
 
   // Create fourth staff user
   const staff4 = await db.user.upsert({
@@ -291,12 +424,48 @@ async function main() {
       name: "Staff Member Four",
       email: "staff4@wahed.com",
       password: staff4Password,
+      phone: "+966505678901",
+      roleName: "Content Manager",
       role: UserRole.STAFF,
       isActive: true,
     },
   })
 
   console.log("✅ Created staff user 4:", staff4.email)
+
+  // Assign permissions to staff4
+  const staff4Permissions = [
+    PermissionKey.PROJECT_VIEW,
+    PermissionKey.TASK_VIEW,
+    PermissionKey.WEBSITE_MANAGEMENT,
+    PermissionKey.BANNER_VIEW,
+    PermissionKey.BANNER_CREATE,
+    PermissionKey.BANNER_UPDATE,
+    PermissionKey.BANNER_DELETE,
+    PermissionKey.FILE_UPLOAD,
+  ]
+  for (const permKey of staff4Permissions) {
+    const permission = await db.permission.findUnique({
+      where: { key: permKey },
+    })
+    if (permission) {
+      await db.userPermission.upsert({
+        where: {
+          userId_permissionId: {
+            userId: staff4.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: staff4.id,
+          permissionId: permission.id,
+        },
+      })
+    }
+  }
+
+  console.log("✅ Assigned permissions to staff user 4")
 
   // Create fifth staff user
   const staff5 = await db.user.upsert({
@@ -306,12 +475,44 @@ async function main() {
       name: "Staff Member Five",
       email: "staff5@wahed.com",
       password: staff5Password,
+      phone: "+966506789012",
+      roleName: "Analyst",
       role: UserRole.STAFF,
       isActive: true,
     },
   })
 
   console.log("✅ Created staff user 5:", staff5.email)
+
+  // Assign permissions to staff5
+  const staff5Permissions = [
+    PermissionKey.PROJECT_VIEW,
+    PermissionKey.TASK_VIEW,
+    PermissionKey.REPORT_VIEW,
+    PermissionKey.REPORT_EXPORT,
+  ]
+  for (const permKey of staff5Permissions) {
+    const permission = await db.permission.findUnique({
+      where: { key: permKey },
+    })
+    if (permission) {
+      await db.userPermission.upsert({
+        where: {
+          userId_permissionId: {
+            userId: staff5.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: staff5.id,
+          permissionId: permission.id,
+        },
+      })
+    }
+  }
+
+  console.log("✅ Assigned permissions to staff user 5")
 
   // Create sixth staff user
   const staff6 = await db.user.upsert({
@@ -321,12 +522,48 @@ async function main() {
       name: "Staff Member Six",
       email: "staff6@wahed.com",
       password: staff6Password,
+      phone: "+966507890123",
+      roleName: "Coordinator",
       role: UserRole.STAFF,
       isActive: true,
     },
   })
 
   console.log("✅ Created staff user 6:", staff6.email)
+
+  // Assign permissions to staff6
+  const staff6Permissions = [
+    PermissionKey.PROJECT_VIEW,
+    PermissionKey.TASK_VIEW,
+    PermissionKey.TASK_CREATE,
+    PermissionKey.TASK_UPDATE,
+    PermissionKey.TASK_ASSIGN,
+    PermissionKey.LIST_CREATE,
+    PermissionKey.LIST_UPDATE,
+    PermissionKey.LIST_DELETE,
+  ]
+  for (const permKey of staff6Permissions) {
+    const permission = await db.permission.findUnique({
+      where: { key: permKey },
+    })
+    if (permission) {
+      await db.userPermission.upsert({
+        where: {
+          userId_permissionId: {
+            userId: staff6.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: staff6.id,
+          permissionId: permission.id,
+        },
+      })
+    }
+  }
+
+  console.log("✅ Assigned permissions to staff user 6")
 
   // Create seventh staff user
   const staff7 = await db.user.upsert({
@@ -336,12 +573,43 @@ async function main() {
       name: "Staff Member Seven",
       email: "staff7@wahed.com",
       password: staff7Password,
+      phone: "+966508901234",
+      roleName: "Viewer",
       role: UserRole.STAFF,
       isActive: true,
     },
   })
 
   console.log("✅ Created staff user 7:", staff7.email)
+
+  // Assign permissions to staff7 (read-only access)
+  const staff7Permissions = [
+    PermissionKey.PROJECT_VIEW,
+    PermissionKey.TASK_VIEW,
+    PermissionKey.BANNER_VIEW,
+  ]
+  for (const permKey of staff7Permissions) {
+    const permission = await db.permission.findUnique({
+      where: { key: permKey },
+    })
+    if (permission) {
+      await db.userPermission.upsert({
+        where: {
+          userId_permissionId: {
+            userId: staff7.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: staff7.id,
+          permissionId: permission.id,
+        },
+      })
+    }
+  }
+
+  console.log("✅ Assigned permissions to staff user 7")
 
   // Seed Saudi Arabia regions and cities
   for (const region of saudiRegions) {
