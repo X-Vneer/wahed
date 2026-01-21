@@ -13,10 +13,13 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import UserAvatar from "@/components/user-avatar"
+import { Switch } from "@/components/ui/switch"
+import { useUpdateBanner } from "@/hooks/use-banners"
 
 export const useBannerColumns = () => {
   const t = useTranslations()
   const locale = useLocale()
+  const updateBannerMutation = useUpdateBanner()
 
   const getBannerStatus = (banner: BannerInclude) => {
     const now = new Date()
@@ -120,6 +123,27 @@ export const useBannerColumns = () => {
               </div>
             </HoverCardContent>
           </HoverCard>
+        )
+      },
+    },
+    {
+      id: "activity",
+      header: t("banners.table.activity"),
+      cell: ({ row }) => {
+        const banner = row.original
+
+        return (
+          <Switch
+            checked={banner.isActive}
+            disabled={updateBannerMutation.isPending}
+            onCheckedChange={(checked) => {
+              updateBannerMutation.mutate({
+                id: banner.id,
+                data: { isActive: checked },
+              })
+            }}
+            aria-label={t("banners.table.activity")}
+          />
         )
       },
     },

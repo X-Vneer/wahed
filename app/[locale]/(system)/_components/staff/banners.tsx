@@ -32,7 +32,7 @@ type BannersSliderProps = {
 export function BannersSlider({ className }: BannersSliderProps) {
   const t = useTranslations()
   const locale = useLocale()
-  const { data, isLoading, isError } = useBanners()
+  const { data, isLoading, isError } = useBanners({ status: "active" })
 
   if (isLoading) {
     return (

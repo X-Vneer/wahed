@@ -20,12 +20,14 @@ export function BannersTable() {
     searchParams: URLSearchParams
   ): Promise<TableQueryResponse<BannerInclude>> => {
     const search = searchParams.get("q") || ""
+    const status = searchParams.get("status") || "all"
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
     const response = await apiClient.get("/api/banners", {
       params: {
         q: search || undefined,
+        status: status !== "all" ? status : undefined,
         page,
         per_page: perPage,
       },
@@ -57,12 +59,21 @@ export function BannersTable() {
 
   const allColumns = [...columns, actionsColumn]
 
+  // Status filter options
+  const statusOptions = [
+    { value: "active", label: t("banners.status.active") },
+    { value: "inactive", label: t("banners.status.inactive") },
+    { value: "scheduled", label: t("banners.status.scheduled") },
+    { value: "expired", label: t("banners.status.expired") },
+  ]
+
   return (
     <BaseTable<BannerInclude>
       columns={allColumns}
       queryKey={["banners"]}
       queryFn={queryFn}
       emptyMessage={t("banners.no_banners_found")}
+      statuses={statusOptions}
     ></BaseTable>
   )
 }

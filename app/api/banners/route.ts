@@ -8,28 +8,75 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { bannerInclude } from "@/prisma/banners"
 import { transformBanner } from "@/prisma/banners"
+import { Prisma } from "@/lib/generated/prisma/client"
 
 export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
   const t = await getTranslations({ locale })
   try {
-    // Get search query from URL params
+    // Get search query and status filter from URL params
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
+    const status = searchParams.get("status")
+
+    const now = new Date()
+
+    // Build where clause
+    const whereConditions: Prisma.BannerWhereInput[] = []
+
+    // Search condition
+    if (search) {
+      whereConditions.push({
+        OR: [
+          { titleAr: { contains: search, mode: "insensitive" } },
+          { titleEn: { contains: search, mode: "insensitive" } },
+          { descriptionAr: { contains: search, mode: "insensitive" } },
+          { descriptionEn: { contains: search, mode: "insensitive" } },
+          { content: { contains: search, mode: "insensitive" } },
+        ],
+      })
+    }
+
+    // Status filter condition
+    if (status && status !== "all") {
+      switch (status) {
+        case "active":
+          // Active: isActive = true AND within date range
+          whereConditions.push({
+            isActive: true,
+            startDate: { lte: now },
+            endDate: { gte: now },
+          })
+          break
+        case "inactive":
+          // Inactive: isActive = false
+          whereConditions.push({
+            isActive: false,
+          })
+          break
+        case "scheduled":
+          // Scheduled: isActive = true AND startDate > now
+          whereConditions.push({
+            isActive: true,
+            startDate: { gt: now },
+          })
+          break
+        case "expired":
+          // Expired: endDate < now
+          whereConditions.push({
+            endDate: { lt: now },
+          })
+          break
+      }
+    }
+
+    // Combine conditions
+    const where: Prisma.BannerWhereInput =
+      whereConditions.length > 0 ? { AND: whereConditions } : {}
 
     // Fetch banners from database
     const banners = await db.banner.findMany({
-      where: search
-        ? {
-            OR: [
-              { titleAr: { contains: search, mode: "insensitive" } },
-              { titleEn: { contains: search, mode: "insensitive" } },
-              { descriptionAr: { contains: search, mode: "insensitive" } },
-              { descriptionEn: { contains: search, mode: "insensitive" } },
-              { content: { contains: search, mode: "insensitive" } },
-            ],
-          }
-        : {},
+      where,
       include: bannerInclude,
       orderBy: {
         createdAt: "desc",

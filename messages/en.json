@@ -891,6 +891,7 @@
       "startDate": "Start Date",
       "endDate": "End Date",
       "visibleTo": "Visible To",
+      "activity": "Activity",
       "status": "Status"
     },
     "editTitle": "Edit Banner",

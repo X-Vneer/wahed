@@ -1,17 +1,23 @@
 "use client"
 
-import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from "@tanstack/react-query"
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  type UseQueryOptions,
+} from "@tanstack/react-query"
 import apiClient from "@/services"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
 import { BannerInclude } from "@/prisma/banners"
 import { UpdateBannerInput } from "@/lib/schemas/banner"
 
-
-
 export const useBanners = (
-  params?: { q?: string },
-  options?: Omit<UseQueryOptions<BannerInclude[], Error>, "queryKey" | "queryFn">
+  params?: { q?: string; status?: string },
+  options?: Omit<
+    UseQueryOptions<BannerInclude[], Error>,
+    "queryKey" | "queryFn"
+  >
 ) => {
   const fetchBanners = async () => {
     const response = await apiClient.get<BannerInclude[]>("/api/banners", {
@@ -21,7 +27,7 @@ export const useBanners = (
   }
 
   return useQuery<BannerInclude[], Error>({
-    queryKey: ["banners", params?.q || ""],
+    queryKey: ["banners", params?.q || "", params?.status || ""],
     queryFn: fetchBanners,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
@@ -72,15 +78,70 @@ export const useUpdateBanner = () => {
       id: string
       data: UpdateBannerInput
     }) => {
-      const response = await apiClient.put<BannerInclude>(`/api/banners/${id}`, data)
+      const response = await apiClient.put<BannerInclude>(
+        `/api/banners/${id}`,
+        data
+      )
       return response.data
     },
+    // Optimistic update so the UI (table & slider) reflects the new status immediately
+    onMutate: async ({ id, data }) => {
+      await queryClient.cancelQueries({ queryKey: ["banners"] })
+
+      const previousQueries = queryClient.getQueriesData({
+        queryKey: ["banners"],
+      })
+
+      queryClient.setQueriesData(
+        { queryKey: ["banners"] },
+        (old: unknown | undefined) => {
+          if (!old) return old
+
+          // Simple list of banners (used by useBanners)
+          if (Array.isArray(old)) {
+            return old.map((banner) =>
+              (banner as BannerInclude).id === id
+                ? ({ ...banner, ...data } as BannerInclude)
+                : banner
+            )
+          }
+
+          // Paginated table data (BaseTable)
+          const maybePaginated = old as {
+            data?: BannerInclude[]
+            [key: string]: unknown
+          }
+
+          if (Array.isArray(maybePaginated.data)) {
+            return {
+              ...maybePaginated,
+              data: maybePaginated.data.map((banner) =>
+                banner.id === id ? { ...banner, ...data } : banner
+              ),
+            }
+          }
+
+          return old
+        }
+      )
+
+      return { previousQueries }
+    },
+    onError: (error: Error, _variables, context) => {
+      // Rollback optimistic updates
+      if (context?.previousQueries) {
+        for (const [queryKey, previousData] of context.previousQueries) {
+          queryClient.setQueryData(queryKey, previousData)
+        }
+      }
+
+      toast.error(error.message || t("errors.internal_server_error"))
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["banners"] })
       toast.success(t("banners.success.banner_updated"))
     },
-    onError: (error: Error) => {
-      toast.error(error.message || t("errors.internal_server_error"))
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["banners"] })
     },
   })
 }
@@ -102,4 +163,3 @@ export const useDeleteBanner = () => {
     },
   })
 }
-

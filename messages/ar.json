@@ -891,6 +891,7 @@
       "startDate": "تاريخ البداية",
       "endDate": "تاريخ النهاية",
       "visibleTo": "مرئي لـ",
+      "activity": "النشاط",
       "status": "الحالة"
     },
     "editTitle": "تعديل البانر",
