@@ -59,12 +59,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { useEvent } from "@/hooks/use-events"
 import { useUsersList } from "@/hooks/use-users"
+import { extractOriginalEventId } from "@/lib/recurrence"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "../ui/scroll-area"
-import UserAvatar from "../user-avatar"
-import { extractOriginalEventId } from "@/lib/recurrence"
-import { useEvent } from "@/hooks/use-events"
+import UsersSelect from "../users-select"
 
 // Form schema for the event dialog
 const eventFormSchema = z
@@ -223,7 +223,6 @@ export function EventDialog({
     }
 
     if (eventToUse) {
-      console.log("🚀 ~ EventDialog ~ event:", eventToUse)
       const start = new Date(eventToUse.start)
       const end = new Date(eventToUse.end)
 
@@ -981,45 +980,15 @@ export function EventDialog({
                       )}
                     </div>
 
-                    <Field>
-                      <FieldLabel htmlFor="attendees">
-                        {t("attendees")}
-                      </FieldLabel>
-                      <Select
-                        multiple
-                        value={form.values.attendeeIds}
-                        onValueChange={(value) => {
-                          form.setFieldValue("attendeeIds", value || [])
-                        }}
-                      >
-                        <SelectTrigger className="w-full" id="attendees">
-                          <SelectValue>
-                            {" "}
-                            {form.values.attendeeIds.length > 0 ? (
-                              <span className="flex gap-1">
-                                {users
-                                  .filter((user) =>
-                                    form.values.attendeeIds.includes(user.id)
-                                  )
-                                  .map((user) => (
-                                    <UserAvatar key={user.id} {...user} />
-                                  ))}
-                              </span>
-                            ) : (
-                              t("attendeesPlaceholder")
-                            )}{" "}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {users.map((user) => (
-                            <SelectItem key={user.id} value={user.id}>
-                              <UserAvatar {...user} />
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </Field>
-
+                    <UsersSelect
+                      form={form}
+                      name="attendeeIds"
+                      label={t("attendees")}
+                      publicLabel={t("attendeesPlaceholder")}
+                      onValueChange={(value) => {
+                        form.setFieldValue("attendeeIds", value as string[])
+                      }}
+                    />
                     <fieldset className="space-y-4">
                       <legend className="text-foreground text-sm leading-none font-medium">
                         {t("etiquette")}

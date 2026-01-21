@@ -176,30 +176,16 @@ export function EventCalendar({
     (event: CalendarEvent) => {
       if (event.id) {
         onEventUpdate?.(event)
-        // Show toast notification when an event is updated
-        toast(t("toasts.eventUpdated", { title: event.title }), {
-          description: format(new Date(event.start), "MMM d, yyyy", {
-            locale: dateFnsLocale,
-          }),
-          position: "bottom-left",
-        })
       } else {
         onEventAdd?.({
           ...event,
           id: Math.random().toString(36).substring(2, 11),
         })
-        // Show toast notification when an event is added
-        toast(t("toasts.eventAdded", { title: event.title }), {
-          description: format(new Date(event.start), "MMM d, yyyy", {
-            locale: dateFnsLocale,
-          }),
-          position: "bottom-left",
-        })
       }
       setIsEventDialogOpen(false)
       setSelectedEvent(null)
     },
-    [onEventAdd, onEventUpdate, t, dateFnsLocale]
+    [onEventAdd, onEventUpdate]
   )
 
   const handleEventDelete = useCallback(
@@ -225,16 +211,8 @@ export function EventCalendar({
   const handleEventUpdate = useCallback(
     (updatedEvent: CalendarEvent) => {
       onEventUpdate?.(updatedEvent)
-
-      // Show toast notification when an event is updated via drag and drop
-      toast(t("toasts.eventMoved", { title: updatedEvent.title }), {
-        description: format(new Date(updatedEvent.start), "MMM d, yyyy", {
-          locale: dateFnsLocale,
-        }),
-        position: "bottom-left",
-      })
     },
-    [onEventUpdate, t, dateFnsLocale]
+    [onEventUpdate]
   )
 
   const handleDialogClose = useCallback(() => {

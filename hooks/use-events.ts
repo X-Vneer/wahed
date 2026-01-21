@@ -12,6 +12,10 @@ import { format, startOfMonth, endOfMonth } from "date-fns"
 import { Event } from "@/prisma/events"
 import { CreateEventInput, UpdateEventInput } from "@/lib/schemas/event"
 import { EventColor } from "@/lib/generated/prisma/enums"
+import { toast } from "sonner"
+import { useLocale, useTranslations } from "next-intl"
+import { extractOriginalEventId } from "@/lib/recurrence"
+import { ar, enUS } from "date-fns/locale"
 
 // API event response type (includes extra fields we don't need)
 type ApiEvent = Event
@@ -100,10 +104,12 @@ export const useEvent = (eventId: string | null) => {
 
 export const useCreateEvent = () => {
   const queryClient = useQueryClient()
+  const t = useTranslations()
+  const locale = useLocale()
+  const dateFnsLocale = locale === "ar" ? ar : enUS
 
   return useMutation({
     mutationFn: async (event: Omit<CalendarEvent, "id">) => {
-      console.log("🚀 ~ useCreateEvent ~ event:", event)
       // Transform to API format
       const eventWithRecurrence = event as CalendarEvent & {
         isRecurring?: boolean
@@ -169,6 +175,9 @@ export const useCreateEvent = () => {
           queryClient.setQueryData(queryKey, data)
         })
       }
+      toast.error(
+        (error as Error).message || t("calendar.errors.create_failed")
+      )
     },
     onSuccess: (data, newEvent, context) => {
       // Replace the temporary event with the real one from the server
@@ -182,6 +191,13 @@ export const useCreateEvent = () => {
             .concat(data)
         }
       )
+      // Show toast notification when an event is added
+      toast(t("calendar.toasts.eventAdded", { title: data.title }), {
+        description: format(new Date(data.start), "MMM d, yyyy", {
+          locale: dateFnsLocale,
+        }),
+        position: "bottom-left",
+      })
     },
     onSettled: () => {
       // Invalidate to ensure we're in sync with the server
@@ -192,6 +208,9 @@ export const useCreateEvent = () => {
 
 export const useUpdateEvent = () => {
   const queryClient = useQueryClient()
+  const t = useTranslations()
+  const locale = useLocale()
+  const dateFnsLocale = locale === "ar" ? ar : enUS
 
   return useMutation({
     mutationFn: async ({ id, ...event }: CalendarEvent) => {
@@ -261,6 +280,9 @@ export const useUpdateEvent = () => {
           queryClient.setQueryData(queryKey, data)
         })
       }
+      toast.error(
+        (error as Error).message || t("calendar.errors.update_failed")
+      )
     },
     onSuccess: (data) => {
       // Update cache with server response to ensure consistency
@@ -271,6 +293,13 @@ export const useUpdateEvent = () => {
           return old.map((event) => (event.id === data.id ? data : event))
         }
       )
+      // Show toast notification when an event is updated
+      toast(t("calendar.toasts.eventUpdated", { title: data.title }), {
+        description: format(new Date(data.start), "MMM d, yyyy", {
+          locale: dateFnsLocale,
+        }),
+        position: "bottom-left",
+      })
     },
     onSettled: () => {
       // Invalidate to ensure we're in sync with the server
@@ -279,10 +308,9 @@ export const useUpdateEvent = () => {
   })
 }
 
-import { extractOriginalEventId } from "@/lib/recurrence"
-
 export const useDeleteEvent = () => {
   const queryClient = useQueryClient()
+  const t = useTranslations()
 
   return useMutation({
     mutationFn: async (eventId: string) => {
@@ -332,13 +360,23 @@ export const useDeleteEvent = () => {
           queryClient.setQueryData(queryKey, data)
         })
       }
+      toast.error(
+        (error as Error).message || t("calendar.errors.delete_failed")
+      )
     },
-    onSuccess: () => {
+    onSuccess: (originalId, eventId, context) => {
       // Event is already removed optimistically, just ensure consistency
       queryClient.setQueriesData<CalendarEvent[]>(
         { queryKey: ["events"] },
         (old) => old // Keep the optimistic update
       )
+      if (context?.deletedEvent) {
+        toast.success(
+          t("calendar.toasts.eventDeleted", {
+            title: context.deletedEvent.title,
+          })
+        )
+      }
     },
     onSettled: () => {
       // Invalidate to ensure we're in sync with the server
