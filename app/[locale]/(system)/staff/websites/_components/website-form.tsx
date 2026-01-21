@@ -67,8 +67,7 @@ export function WebsiteFormContent({
       form.setValues({
         nameAr: selectedWebsite.nameAr || "",
         nameEn: selectedWebsite.nameEn || "",
-        descriptionAr: selectedWebsite.descriptionAr || "",
-        descriptionEn: selectedWebsite.descriptionEn || "",
+
         url: selectedWebsite.url || "",
         image: selectedWebsite.image || "",
         isActive: selectedWebsite.isActive ?? true,
