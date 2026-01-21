@@ -56,14 +56,7 @@ export async function PUT(
       data: {
         nameAr: data.nameAr ?? existingWebsite.nameAr,
         nameEn: data.nameEn ?? existingWebsite.nameEn,
-        descriptionAr:
-          data.descriptionAr !== undefined
-            ? data.descriptionAr
-            : existingWebsite.descriptionAr,
-        descriptionEn:
-          data.descriptionEn !== undefined
-            ? data.descriptionEn
-            : existingWebsite.descriptionEn,
+
         url: data.url ?? existingWebsite.url,
         image: data.image !== undefined ? data.image : existingWebsite.image,
         isActive:

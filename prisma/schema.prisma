@@ -292,8 +292,6 @@ model Website {
   id String @id @default(cuid())
   nameAr String
   nameEn String
-  descriptionAr String?
-  descriptionEn String?
   url String
   image String?
   isActive Boolean @default(true)

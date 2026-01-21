@@ -24,8 +24,7 @@ export async function GET(request: NextRequest) {
         OR: [
           { nameAr: { contains: search, mode: "insensitive" } },
           { nameEn: { contains: search, mode: "insensitive" } },
-          { descriptionAr: { contains: search, mode: "insensitive" } },
-          { descriptionEn: { contains: search, mode: "insensitive" } },
+
           { url: { contains: search, mode: "insensitive" } },
         ],
       })
@@ -97,8 +96,7 @@ export async function POST(request: NextRequest) {
       data: {
         nameAr: data.nameAr,
         nameEn: data.nameEn,
-        descriptionAr: data.descriptionAr ?? null,
-        descriptionEn: data.descriptionEn ?? null,
+
         url: data.url,
         image: data.image ?? null,
         isActive: data.isActive ?? true,

@@ -4,7 +4,5 @@ export const transformWebsite = (website: Website, locale: string) => {
   return {
     ...website,
     name: locale === "ar" ? website.nameAr : website.nameEn,
-    description:
-      locale === "ar" ? website.descriptionAr : website.descriptionEn,
   }
 }
