@@ -311,7 +311,7 @@ export function PrayerTimer() {
           </div>
 
           {/* Bottom Section: Prayer Times List */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:justify-center md:gap-3 md:pb-2">
+          <div className="flex items-center justify-center gap-1.5 overflow-x-auto pb-1 md:gap-3 md:pb-2">
             {prayerTimes.map((prayer) => {
               const isCurrent = prayer.nameKey === displayPrayer?.nameKey
               return (

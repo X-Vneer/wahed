@@ -19,7 +19,7 @@ type UsefulWebsitesSliderProps = {
 
 function WebsiteCard({ website }: { website: WebsiteWithLocale }) {
   return (
-    <Card className="group h-full w-50 bg-transparent p-0 shadow-none">
+    <Card className="group h-full w-40 bg-transparent p-0 shadow-none lg:w-50">
       <CardContent className="flex items-center justify-center p-0">
         <a
           href={website.url}
@@ -27,9 +27,9 @@ function WebsiteCard({ website }: { website: WebsiteWithLocale }) {
           rel="noopener noreferrer"
           className="relative flex items-center justify-center"
         >
-          <Avatar className="size-40 border-0 transition-transform duration-300 ease-out group-hover:scale-105">
+          <Avatar className="size-32 border-0 transition-transform duration-300 ease-out group-hover:scale-105 lg:size-40">
             <AvatarImage src={website.image || ""} alt={website.name} />
-            <AvatarFallback className="size-40 bg-white">
+            <AvatarFallback className="size-32 bg-white lg:size-40">
               {website.name.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -47,7 +47,7 @@ function WebsiteCard({ website }: { website: WebsiteWithLocale }) {
 }
 
 function WebsiteCardSkeleton() {
-  return <Skeleton className="size-40 rounded-full bg-white" />
+  return <Skeleton className="size-32 rounded-full bg-white lg:size-40" />
 }
 
 export function UsefulWebsitesSlider({ className }: UsefulWebsitesSliderProps) {

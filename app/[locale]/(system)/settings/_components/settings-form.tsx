@@ -6,23 +6,23 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover"
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import Uploader from "@/components/uploader"
@@ -56,23 +56,19 @@ export function SettingsForm({ user }: SettingsFormProps) {
   const form = useForm({
     mode: "controlled",
     initialValues: {
-        name: user.name,
-        email: user.email,
-        phone: user.phone || "",
-        dateOfBirth: user.dateOfBirth
-          ? new Date(user.dateOfBirth)
-          : null,
-        gender: user.gender,
-        nationality: user.nationality || "",
-        address: user.address || "",
-        city: user.city || "",
-        country: user.country || "",
-        image: user.image || "",
+      name: user.name,
+      email: user.email,
+      phone: user.phone || "",
+      dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
+      gender: user.gender,
+      nationality: user.nationality || "",
+      address: user.address || "",
+      city: user.city || "",
+      country: user.country || "",
+      image: user.image || "",
     },
     validate: zod4Resolver(updateUserSettingsSchema),
   })
-
-  
 
   const handleSubmit = async (values: typeof form.values) => {
     try {
@@ -80,7 +76,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
 
       // Success - refresh user data
       queryClient.invalidateQueries({ queryKey: ["user", "me"] })
-      
+
       // Show success toast
       toast.success(t("settings.success.profile_updated"))
     } catch (error) {
@@ -102,20 +98,20 @@ export function SettingsForm({ user }: SettingsFormProps) {
   }
 
   return (
-    <Card className="flex-1  ">
+    <Card className="flex-1">
       <CardHeader>
         <CardTitle>{t("settings.profile")}</CardTitle>
       </CardHeader>
       <CardContent className="lg:px-8">
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <FieldGroup>
-            <div className="mb-2 max-w-sm w-fit">
+            <div className="mb-2 w-fit max-w-sm max-md:mx-auto">
               {/* Image Upload */}
               <Field data-invalid={!!form.errors.image}>
                 {!form.values.image ? (
                   <div className="relative">
                     <Uploader
-                    variant="circular"
+                      variant="circular"
                       endpoint="userImageUploader"
                       onClientUploadComplete={(res) => {
                         if (res && res.length > 0) {
@@ -131,13 +127,8 @@ export function SettingsForm({ user }: SettingsFormProps) {
                   <div className="relative inline-block">
                     <div className="relative h-[200px] w-[200px]">
                       <Avatar className="h-full w-full rounded-lg">
-                        <AvatarImage
-                          src={form.values.image }
-                          alt="User"
-                        />
-                        <AvatarFallback >
-                          
-                        </AvatarFallback>
+                        <AvatarImage src={form.values.image} alt="User" />
+                        <AvatarFallback></AvatarFallback>
                       </Avatar>
                       <Button
                         size="icon"
@@ -176,8 +167,6 @@ export function SettingsForm({ user }: SettingsFormProps) {
                   />
                 )}
               </Field>
-
-              
             </div>
 
             <div className="grid-cols-2 gap-4 md:grid">
@@ -220,7 +209,6 @@ export function SettingsForm({ user }: SettingsFormProps) {
                   />
                 )}
               </Field>
-
             </div>
 
             <div className="grid-cols-2 gap-4 md:grid">
@@ -403,4 +391,3 @@ export function SettingsForm({ user }: SettingsFormProps) {
     </Card>
   )
 }
-
