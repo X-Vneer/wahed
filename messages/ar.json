@@ -6,7 +6,8 @@
     "save": "حفظ",
     "edit": "تعديل المشروع",
     "update": "تعديل",
-    "attendeesPlaceholder": "حدد الحضور"
+    "attendeesPlaceholder": "حدد الحضور",
+    "moreUsers": "{count, plural, one {مستخدم واحد إضافي} other {# مستخدمين إضافيين}}"
   },
   "auth": {
     "login": {

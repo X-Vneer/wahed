@@ -25,23 +25,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Calendar as CalendarIcon, X } from "lucide-react"
 import { format } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import Uploader from "@/components/uploader"
 import { useCreateBanner, useUpdateBanner } from "@/hooks/use-banners"
-import { useUsers } from "@/hooks/use-users"
 import { BannerInclude } from "@/prisma/banners"
-import UserAvatar from "@/components/user-avatar"
 import { useRouter } from "@/lib/i18n/navigation"
+import UsersSelect from "@/components/users-select"
 
 type BannerFormContentProps = {
   selectedBanner: BannerInclude | null
@@ -52,8 +44,6 @@ export function BannerFormContent({ selectedBanner }: BannerFormContentProps) {
   const locale = useLocale()
   const [startDatePickerOpen, setStartDatePickerOpen] = useState(false)
   const [endDatePickerOpen, setEndDatePickerOpen] = useState(false)
-
-  const { data: users = [] } = useUsers()
   const createBanner = useCreateBanner()
   const updateBanner = useUpdateBanner()
 
@@ -428,39 +418,15 @@ export function BannerFormContent({ selectedBanner }: BannerFormContentProps) {
           </Field>
         </div>
 
-        <Field>
-          <FieldLabel htmlFor="users">{t("banners.form.visibleTo")}</FieldLabel>
-          <Select
-            multiple
-            value={form.values.users}
-            onValueChange={(value) => {
-              form.setFieldValue("users", value || [])
-            }}
-          >
-            <SelectTrigger className="w-full" id="users">
-              <SelectValue>
-                {form.values.users.length > 0 ? (
-                  <span className="flex gap-2 p-1">
-                    {users
-                      .filter((user) => form.values.users.includes(user.id))
-                      .map((user) => (
-                        <UserAvatar key={user.id} {...user} />
-                      ))}
-                  </span>
-                ) : (
-                  <span>{t("banners.form.public")}</span>
-                )}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {users.map((user) => (
-                <SelectItem key={user.id} value={user.id}>
-                  <UserAvatar {...user} />
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
+        <UsersSelect
+          form={form}
+          name="users"
+          label={t("banners.form.visibleTo")}
+          publicLabel={t("banners.form.public")}
+          onValueChange={(value) =>
+            form.setFieldValue("users", value as string[])
+          }
+        />
 
         {/* Is Active */}
         <Field>

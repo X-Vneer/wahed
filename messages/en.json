@@ -6,7 +6,8 @@
     "save": "Save",
     "edit": "Edit project",
     "update": "Edit",
-    "attendeesPlaceholder": "Select Attendess"
+    "attendeesPlaceholder": "Select Attendess",
+    "moreUsers": "{count, plural, one {# more user} other {# more users}}"
   },
   "auth": {
     "login": {
