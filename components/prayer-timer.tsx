@@ -6,7 +6,6 @@ import { useTranslations, useLocale } from "next-intl"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import {
-  format,
   addDays,
   isAfter,
   isBefore,
@@ -17,9 +16,13 @@ import {
 } from "date-fns"
 import { usePrayerTimes } from "@/hooks/use-prayer-times"
 
+// ============================================================================
+// Types
+// ============================================================================
+
 export interface PrayerTime {
   name: string
-  time: string // Format: "HH:mm"
+  time: string // Format: "HH:mm" or "HH:mm:ss"
   nameKey: string // Translation key
 }
 
@@ -29,65 +32,161 @@ interface PrayerCountdownProps {
   onPrayerChange?: (prayer: PrayerTime | null) => void
 }
 
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+/**
+ * Parses a time string (HH:mm or HH:mm:ss) and returns hours and minutes
+ */
+function parseTimeString(time: string): { hours: number; minutes: number } {
+  const timeParts = time.split(":")
+  return {
+    hours: parseInt(timeParts[0], 10),
+    minutes: parseInt(timeParts[1] || "0", 10),
+  }
+}
+
+/**
+ * Converts a prayer time string to a Date object for today
+ */
+function timeStringToDate(
+  time: string,
+  referenceDate: Date = new Date()
+): Date {
+  const { hours, minutes } = parseTimeString(time)
+  const today = startOfDay(referenceDate)
+  return setSeconds(setMinutes(setHours(today, hours), minutes), 0)
+}
+
+/**
+ * Finds the next prayer time from the current time
+ */
+function findNextPrayer(
+  now: Date,
+  prayerTimes: PrayerTime[]
+): PrayerTime | null {
+  if (!prayerTimes.length) return null
+
+  const today = startOfDay(now)
+
+  for (const prayer of prayerTimes) {
+    const prayerTime = timeStringToDate(prayer.time, today)
+    if (isAfter(prayerTime, now)) {
+      return prayer
+    }
+  }
+
+  // If no prayer found for today, return the first prayer of tomorrow
+  return prayerTimes[0] || null
+}
+
+/**
+ * Gets the Date object for a prayer time, handling next day if needed
+ */
+function getPrayerDate(now: Date, prayer: PrayerTime): Date {
+  const prayerTime = timeStringToDate(prayer.time, now)
+
+  // If the prayer time has passed, it's for tomorrow
+  if (isBefore(prayerTime, now)) {
+    return addDays(prayerTime, 1)
+  }
+
+  return prayerTime
+}
+
+/**
+ * Formats countdown time as HH:mm:ss
+ */
+function formatCountdownTime(
+  hours: number,
+  minutes: number,
+  seconds: number
+): string {
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+    2,
+    "0"
+  )}:${String(seconds).padStart(2, "0")}`
+}
+
+/**
+ * Displays time as-is from API (strips seconds if present to show HH:mm format)
+ */
+function displayTime(time: string): string {
+  // API returns time in "HH:mm" or "HH:mm:ss" format, show as HH:mm
+  return time.split(":").slice(0, 2).join(":")
+}
+
+/**
+ * Transforms API prayer timings to PrayerTime array
+ */
+function transformPrayerTimes(timings: {
+  Fajr: string
+  Sunrise: string
+  Dhuhr: string
+  Asr: string
+  Maghrib: string
+  Isha: string
+}): PrayerTime[] {
+  return [
+    { name: "الفجر", nameKey: "fajr", time: timings.Fajr },
+    { name: "الشروق", nameKey: "sunrise", time: timings.Sunrise },
+    { name: "الظهر", nameKey: "dhuhr", time: timings.Dhuhr },
+    { name: "العصر", nameKey: "asr", time: timings.Asr },
+    { name: "المغرب", nameKey: "maghrib", time: timings.Maghrib },
+    { name: "العشاء", nameKey: "isha", time: timings.Isha },
+  ]
+}
+
+// ============================================================================
+// Hooks
+// ============================================================================
+
+/**
+ * Hook to get the initial display prayer based on current time
+ */
+function useDisplayPrayer(prayerTimes: PrayerTime[]) {
+  // Create a stable key from prayer times for dependency tracking
+  const prayerTimesKey = useMemo(
+    () => prayerTimes.map((p) => `${p.nameKey}:${p.time}`).join("|"),
+    [prayerTimes]
+  )
+
+  const [displayPrayer, setDisplayPrayer] = useState<PrayerTime | null>(() => {
+    if (!prayerTimes.length) return null
+    const now = new Date()
+    const next = findNextPrayer(now, prayerTimes)
+    return next || prayerTimes[0] || null
+  })
+
+  useEffect(() => {
+    if (!prayerTimes.length) {
+      setDisplayPrayer(null)
+      return
+    }
+
+    const now = new Date()
+    const next = findNextPrayer(now, prayerTimes)
+    setDisplayPrayer(next || prayerTimes[0] || null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prayerTimesKey])
+
+  return [displayPrayer, setDisplayPrayer] as const
+}
+
+// ============================================================================
+// Components
+// ============================================================================
+
 function PrayerCountdown({
   prayerTimes,
   initialPrayer,
   onPrayerChange,
 }: PrayerCountdownProps) {
-  const findNextPrayer = (
-    now: Date,
-    times: PrayerTime[]
-  ): PrayerTime | null => {
-    const today = startOfDay(now)
-    let next: PrayerTime | null = null
-
-    for (let i = 0; i < times.length; i++) {
-      const prayer = times[i]
-      const timeParts = prayer.time.split(":")
-      const hours = parseInt(timeParts[0], 10)
-      const minutes = parseInt(timeParts[1] || "0", 10)
-
-      const prayerTime = setSeconds(
-        setMinutes(setHours(today, hours), minutes),
-        0
-      )
-
-      if (isAfter(prayerTime, now)) {
-        next = prayer
-        break
-      }
-    }
-
-    if (!next && times.length > 0) {
-      next = times[0]
-    }
-
-    return next
-  }
-
-  const getPrayerDate = (now: Date, prayer: PrayerTime) => {
-    const timeParts = prayer.time.split(":")
-    const hours = parseInt(timeParts[0], 10)
-    const minutes = parseInt(timeParts[1] || "0", 10)
-
-    const today = startOfDay(now)
-    let nextPrayerTime = setSeconds(
-      setMinutes(setHours(today, hours), minutes),
-      0
-    )
-
-    if (isBefore(nextPrayerTime, now)) {
-      nextPrayerTime = addDays(nextPrayerTime, 1)
-    }
-
-    return nextPrayerTime
-  }
-
   const [targetDate, setTargetDate] = useState<Date | null>(() => {
     if (!prayerTimes.length) return null
 
     const now = new Date()
-
     const basePrayer =
       initialPrayer &&
       prayerTimes.some((p) => p.nameKey === initialPrayer.nameKey)
@@ -99,44 +198,40 @@ function PrayerCountdown({
     return getPrayerDate(now, basePrayer)
   })
 
-  const formatTime = (hours: number, minutes: number, seconds: number) => {
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-      2,
-      "0"
-    )}:${String(seconds).padStart(2, "0")}`
+  const handleCountdownComplete = () => {
+    const now = new Date()
+
+    if (!prayerTimes.length) {
+      onPrayerChange?.(null)
+      setTargetDate(null)
+      return
+    }
+
+    const nextPrayer = findNextPrayer(now, prayerTimes)
+
+    if (!nextPrayer) {
+      onPrayerChange?.(null)
+      setTargetDate(null)
+      return
+    }
+
+    onPrayerChange?.(nextPrayer)
+    setTargetDate(getPrayerDate(now, nextPrayer))
   }
 
   return (
-    <span className="text-primary text-2xl font-medium tabular-nums">
+    <span className="text-primary text-lg font-semibold tabular-nums md:text-2xl md:font-medium">
       {targetDate ? (
         <Countdown
           key={targetDate.getTime()}
           date={targetDate}
-          onComplete={() => {
-            const now = new Date()
-            if (!prayerTimes.length) {
-              onPrayerChange?.(null)
-              setTargetDate(null)
-              return
-            }
-
-            const nextPrayer = findNextPrayer(now, prayerTimes)
-
-            if (!nextPrayer) {
-              onPrayerChange?.(null)
-              setTargetDate(null)
-              return
-            }
-
-            onPrayerChange?.(nextPrayer)
-            setTargetDate(getPrayerDate(now, nextPrayer))
-          }}
+          onComplete={handleCountdownComplete}
           renderer={({ hours, minutes, seconds }) => (
-            <span>{formatTime(hours, minutes, seconds)}</span>
+            <span>{formatCountdownTime(hours, minutes, seconds)}</span>
           )}
         />
       ) : (
-        <span>{formatTime(0, 0, 0)}</span>
+        <span>{formatCountdownTime(0, 0, 0)}</span>
       )}
     </span>
   )
@@ -146,24 +241,13 @@ export function PrayerTimer() {
   const t = useTranslations("prayer")
   const locale = useLocale()
   const isArabic = locale === "ar"
-
   const { data: prayerData } = usePrayerTimes()
 
-  // Transform timings to array format
   const prayerTimes = useMemo(() => {
     if (!prayerData?.timings) return []
-
-    return [
-      { name: "الفجر", nameKey: "fajr", time: prayerData.timings.Fajr },
-      { name: "الشروق", nameKey: "sunrise", time: prayerData.timings.Sunrise },
-      { name: "الظهر", nameKey: "dhuhr", time: prayerData.timings.Dhuhr },
-      { name: "العصر", nameKey: "asr", time: prayerData.timings.Asr },
-      { name: "المغرب", nameKey: "maghrib", time: prayerData.timings.Maghrib },
-      { name: "العشاء", nameKey: "isha", time: prayerData.timings.Isha },
-    ]
+    return transformPrayerTimes(prayerData.timings)
   }, [prayerData])
 
-  // Extract hijri date from API response
   const hijriDate = useMemo(() => {
     if (!prayerData?.date?.hijri) {
       return { day: "", month: "" }
@@ -176,113 +260,45 @@ export function PrayerTimer() {
     }
   }, [prayerData, isArabic])
 
-  const [displayPrayer, setDisplayPrayer] = useState<PrayerTime | null>(null)
-
-  // Compute the initial next prayer only when prayer times change.
-  // The live countdown (and future prayer transitions) are handled in the
-  // dedicated PrayerCountdown component so the rest of the UI does not
-  // re-render every second.
-  useEffect(() => {
-    const updateDisplayPrayer = () => {
-      if (!prayerTimes.length) {
-        setDisplayPrayer(null)
-        return
-      }
-
-      const now = new Date()
-      const today = startOfDay(now)
-      let next: PrayerTime | null = null
-
-      for (let i = 0; i < prayerTimes.length; i++) {
-        const prayer = prayerTimes[i]
-        const timeParts = prayer.time.split(":")
-        const hours = parseInt(timeParts[0], 10)
-        const minutes = parseInt(timeParts[1] || "0", 10)
-
-        const prayerTime = setSeconds(
-          setMinutes(setHours(today, hours), minutes),
-          0
-        )
-
-        if (isAfter(prayerTime, now)) {
-          next = prayer
-          break
-        }
-      }
-
-      if (!next && prayerTimes.length > 0) {
-        next = prayerTimes[0]
-      }
-
-      setDisplayPrayer(next || prayerTimes[0])
-    }
-
-    updateDisplayPrayer()
-  }, [prayerTimes])
-
-  const formatPrayerTime = (time: string) => {
-    // Handle time format that might include seconds (e.g., "15:30:00" or "15:30")
-    const timeParts = time.split(":")
-    const hours = parseInt(timeParts[0], 10)
-    const minutes = parseInt(timeParts[1] || "0", 10)
-
-    const today = startOfDay(new Date())
-    const date = setSeconds(setMinutes(setHours(today, hours), minutes), 0)
-    const formatted = format(date, "hh:mm a")
-    // For Arabic, replace AM/PM with Arabic equivalents
-    if (isArabic) {
-      return formatted.replace("AM", "ص").replace("PM", "م")
-    }
-    return formatted
-  }
-
-  const formatPrayerTimeShort = (time: string) => {
-    // Handle time format that might include seconds (e.g., "15:30:00" or "15:30")
-    const timeParts = time.split(":")
-    const hours = parseInt(timeParts[0], 10)
-    const minutes = parseInt(timeParts[1] || "0", 10)
-
-    const today = startOfDay(new Date())
-    const date = setSeconds(setMinutes(setHours(today, hours), minutes), 0)
-    return format(date, "hh:mm")
-  }
+  const [displayPrayer, setDisplayPrayer] = useDisplayPrayer(prayerTimes)
 
   return (
     <Card className="w-full">
-      <CardContent className="px-6">
-        <div className="flex flex-col gap-6">
+      <CardContent className="px-3 py-3 md:px-6 md:py-6">
+        <div className="flex flex-col gap-3 md:gap-6">
           {/* Top Section: Countdown and Current Prayer */}
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center justify-between gap-2 md:items-start md:gap-4">
             {/* Right: Current Prayer and Hijri Date */}
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-2 md:gap-4">
               {/* Current Prayer */}
               {displayPrayer && (
-                <div className="flex flex-col items-end">
-                  <span className="text-primary text-4xl font-medium">
+                <div className="flex flex-col items-start">
+                  <span className="text-primary text-xl leading-tight font-semibold md:text-4xl md:leading-normal md:font-medium">
                     {isArabic ? displayPrayer.name : t(displayPrayer.nameKey)}
                   </span>
-                  <span className="text-muted-foreground text-log">
-                    {formatPrayerTime(displayPrayer.time)}
+                  <span className="text-muted-foreground text-xs md:text-base">
+                    {displayTime(displayPrayer.time)}
                   </span>
                 </div>
               )}
 
               {/* Separator */}
-              <div className="bg-border h-12 w-px" />
+              <div className="bg-border h-8 w-px md:h-12" />
 
               {/* Hijri Date */}
-              <div className="flex flex-col items-end">
-                <span className="text-primary text-4xl font-medium">
+              <div className="flex flex-col items-start">
+                <span className="text-primary text-xl leading-tight font-semibold md:text-4xl md:leading-normal md:font-medium">
                   {hijriDate.day}
                 </span>
-                <span className="text-muted-foreground text-log">
+                <span className="text-muted-foreground text-xs md:text-base">
                   {hijriDate.month}
                 </span>
               </div>
             </div>
+
             {/* Left: Countdown */}
-            <div className="flex flex-col">
-              <span className="text-muted-foreground mb-1 text-sm">
+            <div className="flex flex-col items-end">
+              <span className="text-muted-foreground mb-0.5 text-[10px] uppercase md:mb-1 md:text-sm md:normal-case">
                 {t("remaining")}
               </span>
               <PrayerCountdown
@@ -295,21 +311,22 @@ export function PrayerTimer() {
           </div>
 
           {/* Bottom Section: Prayer Times List */}
-          <div className="flex items-center justify-center gap-3 overflow-x-auto pb-2">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:justify-center md:gap-3 md:pb-2">
             {prayerTimes.map((prayer) => {
-              // Highlight the next prayer (the one we're counting down to)
               const isCurrent = prayer.nameKey === displayPrayer?.nameKey
               return (
                 <div
                   key={prayer.nameKey}
                   className={cn(
-                    "flex min-w-[70px] flex-col items-center gap-1 rounded-lg px-3 py-2 transition-colors",
-                    isCurrent ? "bg-primary/10" : "hover:bg-muted/50"
+                    "flex min-w-[50px] flex-col items-center gap-0.5 rounded-md px-2 py-1.5 transition-colors md:min-w-[70px] md:gap-1 md:rounded-lg md:px-3 md:py-2",
+                    isCurrent
+                      ? "bg-primary/10"
+                      : "bg-muted/30 md:hover:bg-muted/50"
                   )}
                 >
                   <span
                     className={cn(
-                      "text-sm font-medium",
+                      "text-[10px] leading-tight font-medium md:text-sm md:leading-normal",
                       isCurrent ? "text-primary" : "text-muted-foreground"
                     )}
                   >
@@ -317,13 +334,11 @@ export function PrayerTimer() {
                   </span>
                   <span
                     className={cn(
-                      "text-xs",
-                      isCurrent
-                        ? "text-primary font-semibold"
-                        : "text-muted-foreground"
+                      "text-[11px] font-semibold tabular-nums md:text-xs",
+                      isCurrent ? "text-primary" : "text-muted-foreground"
                     )}
                   >
-                    {formatPrayerTimeShort(prayer.time)}
+                    {displayTime(prayer.time)}
                   </span>
                 </div>
               )

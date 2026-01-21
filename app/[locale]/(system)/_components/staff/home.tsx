@@ -20,10 +20,10 @@ export default function StaffPage() {
   const t = useTranslations("welcome.staff.home")
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 md:p-6">
       {/* Top Row: Prayer Times, Current Time, Calendar */}
 
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 md:flex-row">
         <div className="w-full max-w-xs space-y-4">
           <Card>
             <CardContent>
@@ -42,6 +42,7 @@ export default function StaffPage() {
         </div>
         <div className="w-full space-y-4">
           {/* Prayer Times Countdown Card */}
+
           <PrayerTimer />
           {/* Quick Access Cards */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
