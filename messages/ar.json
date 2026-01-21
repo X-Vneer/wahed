@@ -7,7 +7,10 @@
     "edit": "تعديل المشروع",
     "update": "تعديل",
     "attendeesPlaceholder": "حدد الحضور",
-    "moreUsers": "{count, plural, one {مستخدم واحد إضافي} other {# مستخدمين إضافيين}}"
+    "moreUsers": "{count, plural, one {مستخدم واحد إضافي} other {# مستخدمين إضافيين}}",
+    "loading": "جاري التحميل...",
+    "previous": "السابق",
+    "next": "التالي"
   },
   "auth": {
     "login": {
@@ -922,6 +925,7 @@
       "banner_updated": "تم تحديث البانر بنجاح",
       "banner_deleted": "تم حذف البانر بنجاح"
     },
+    "download": "تحميل المحتوى",
     "status": {
       "active": "نشط",
       "inactive": "غير نشط",

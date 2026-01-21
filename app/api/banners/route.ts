@@ -13,12 +13,6 @@ export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
   const t = await getTranslations({ locale })
   try {
-    // Check permission
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.BANNER.VIEW)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
-
     // Get search query from URL params
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")

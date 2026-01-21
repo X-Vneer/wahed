@@ -7,7 +7,10 @@
     "edit": "Edit project",
     "update": "Edit",
     "attendeesPlaceholder": "Select Attendess",
-    "moreUsers": "{count, plural, one {# more user} other {# more users}}"
+    "moreUsers": "{count, plural, one {# more user} other {# more users}}",
+    "loading": "Loading...",
+    "previous": "Previous",
+    "next": "Next"
   },
   "auth": {
     "login": {
@@ -922,6 +925,7 @@
       "banner_updated": "Banner updated successfully",
       "banner_deleted": "Banner deleted successfully"
     },
+    "download": "Download content",
     "status": {
       "active": "Active",
       "inactive": "Inactive",

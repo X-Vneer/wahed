@@ -28,7 +28,6 @@ export function LogoutButton() {
   return (
     <Button
       variant="outline"
-      size="sm"
       onClick={handleLogout}
       disabled={isLoggingOut}
       className="border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive focus-visible:ring-destructive/20"

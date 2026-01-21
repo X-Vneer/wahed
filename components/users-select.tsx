@@ -117,6 +117,9 @@ const UsersSelect = <FormValues extends Record<string, unknown>>({
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
+          <SelectItem value={null}>
+            <span>{publicLabel}</span>
+          </SelectItem>
           {users.map((user) => (
             <SelectItem key={user.id} value={user.id}>
               <UserAvatar {...user} />
