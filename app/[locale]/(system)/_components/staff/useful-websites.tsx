@@ -11,11 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import type { WebsiteWithLocale } from "@/hooks/use-websites"
 import { useWebsites } from "@/hooks/use-websites"
 import { ExternalLink } from "lucide-react"
-import { useTranslations } from "next-intl"
-
-type UsefulWebsitesSliderProps = {
-  className?: string
-}
+import { useLocale, useTranslations } from "next-intl"
 
 function WebsiteCard({ website }: { website: WebsiteWithLocale }) {
   return (
@@ -50,10 +46,10 @@ function WebsiteCardSkeleton() {
   return <Skeleton className="size-32 rounded-full bg-white lg:size-40" />
 }
 
-export function UsefulWebsitesSlider({ className }: UsefulWebsitesSliderProps) {
+export function UsefulWebsitesSlider() {
   const t = useTranslations()
   const { data, status } = useWebsites({ status: "active" })
-
+  const locale = useLocale()
   if (status === "error") {
     return (
       <div>
@@ -67,7 +63,7 @@ export function UsefulWebsitesSlider({ className }: UsefulWebsitesSliderProps) {
   if (data?.length === 0) return null
 
   return (
-    <section className={className}>
+    <section className="w-full select-none">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-base font-semibold">{t("websites.title")}</h2>
       </div>
@@ -76,6 +72,7 @@ export function UsefulWebsitesSlider({ className }: UsefulWebsitesSliderProps) {
         opts={{
           align: "start",
           loop: true,
+          direction: locale === "ar" ? "rtl" : "ltr",
         }}
       >
         <CarouselContent>

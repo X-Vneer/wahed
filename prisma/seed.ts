@@ -1,6 +1,10 @@
 import "dotenv/config"
 import { UserRole } from "../lib/generated/prisma/client"
-import { PermissionKey } from "../lib/generated/prisma/enums"
+import {
+  PermissionKey,
+  ProjectStatus,
+  EventColor,
+} from "../lib/generated/prisma/enums"
 import db from "../lib/db"
 import bcrypt from "bcryptjs"
 
@@ -194,13 +198,11 @@ async function main() {
     { key: PermissionKey.FILE_UPLOAD, name: "Upload File" },
     { key: PermissionKey.FILE_DELETE, name: "Delete File" },
     { key: PermissionKey.STAFF_MANAGEMENT, name: "Staff Management" },
+    { key: PermissionKey.STAFF_PAGE_MANAGEMENT, name: "Staff Page Management" },
     { key: PermissionKey.LIST_CREATE, name: "Create List" },
     { key: PermissionKey.LIST_UPDATE, name: "Update List" },
     { key: PermissionKey.LIST_DELETE, name: "Delete List" },
-    { key: "WEBSITE_CREATE" as PermissionKey, name: "Create Website" },
-    { key: "WEBSITE_UPDATE" as PermissionKey, name: "Update Website" },
-    { key: "WEBSITE_DELETE" as PermissionKey, name: "Delete Website" },
-    { key: "WEBSITE_VIEW" as PermissionKey, name: "View Website" },
+
     { key: PermissionKey.REPORT_VIEW, name: "View Report" },
     { key: PermissionKey.REPORT_EXPORT, name: "Export Report" },
   ]
@@ -437,11 +439,6 @@ async function main() {
   const staff4Permissions = [
     PermissionKey.PROJECT_VIEW,
     PermissionKey.TASK_VIEW,
-    "WEBSITE_VIEW" as PermissionKey,
-    "WEBSITE_CREATE" as PermissionKey,
-    "WEBSITE_UPDATE" as PermissionKey,
-    "WEBSITE_DELETE" as PermissionKey,
-
     PermissionKey.FILE_UPLOAD,
   ]
   for (const permKey of staff4Permissions) {
@@ -792,6 +789,407 @@ async function main() {
 
   console.log("✅ Seeded project categories")
 
+  // Seed projects
+  const riyadhCity = await db.city.findUnique({
+    where: { id: "city-riyadh" },
+  })
+
+  const residentialCategory = await db.projectCategory.findUnique({
+    where: { id: "project-category-residential" },
+  })
+
+  if (riyadhCity && residentialCategory) {
+    const projects = [
+      {
+        id: "project-1",
+        nameAr: "مشروع سكني النخيل",
+        nameEn: "Al Nakheel Residential Project",
+        image:
+          "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+        descriptionAr:
+          "مشروع سكني فاخر في قلب الرياض يضم وحدات سكنية عصرية مع مرافق متكاملة",
+        descriptionEn:
+          "Luxurious residential project in the heart of Riyadh featuring modern residential units with integrated facilities",
+        area: 2500.5,
+        numberOfFloors: 5,
+        deedNumber: "DEED-2024-001",
+        workDuration: 24,
+        status: ProjectStatus.IN_PROGRESS,
+        cityId: riyadhCity.id,
+        categoryIds: [residentialCategory.id],
+      },
+      {
+        id: "project-2",
+        nameAr: "مشروع الواحة السكني",
+        nameEn: "Al Waha Residential Project",
+        image:
+          "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI",
+        descriptionAr:
+          "مجمع سكني متكامل يوفر بيئة معيشية راقية مع مساحات خضراء واسعة",
+        descriptionEn:
+          "Integrated residential complex providing an upscale living environment with extensive green spaces",
+        area: 3200.75,
+        numberOfFloors: 7,
+        deedNumber: "DEED-2024-002",
+        workDuration: 30,
+        status: ProjectStatus.PLANNING,
+        cityId: riyadhCity.id,
+        categoryIds: [residentialCategory.id],
+      },
+      {
+        id: "project-3",
+        nameAr: "مشروع الجنان السكني",
+        nameEn: "Al Jannah Residential Project",
+        image:
+          "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+        descriptionAr:
+          "مشروع سكني حديث يتميز بتصميم عصري ومرافق ترفيهية متقدمة",
+        descriptionEn:
+          "Modern residential project featuring contemporary design and advanced recreational facilities",
+        area: 1800.25,
+        numberOfFloors: 4,
+        deedNumber: "DEED-2024-003",
+        workDuration: 18,
+        status: ProjectStatus.IN_PROGRESS,
+        cityId: riyadhCity.id,
+        categoryIds: [residentialCategory.id],
+      },
+    ]
+
+    for (const projectData of projects) {
+      const { categoryIds, ...projectFields } = projectData
+      await db.project.upsert({
+        where: { id: projectData.id },
+        update: {
+          ...projectFields,
+          categories: {
+            set: categoryIds.map((id) => ({ id })),
+          },
+        },
+        create: {
+          ...projectFields,
+          categories: {
+            connect: categoryIds.map((id) => ({ id })),
+          },
+        },
+      })
+    }
+
+    console.log("✅ Seeded 3 projects")
+  } else {
+    console.log("⚠️  Could not seed projects: city or category not found")
+  }
+
+  // Seed banners
+  const now = new Date()
+  const banners = [
+    {
+      id: "banner-1",
+      titleAr: "ترحيب بفريق العمل",
+      titleEn: "Welcome to Our Team",
+      descriptionAr: "نحن سعداء بانضمامك إلى فريقنا المتميز",
+      descriptionEn: "We're excited to have you join our exceptional team",
+      content: "ابدأ رحلتك معنا اليوم واكتشف الفرص المتاحة",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+      startDate: new Date(now.getFullYear(), now.getMonth(), 1),
+      endDate: new Date(now.getFullYear() + 1, now.getMonth(), 31),
+      isActive: true,
+    },
+    {
+      id: "banner-2",
+      titleAr: "مشاريع جديدة قادمة",
+      titleEn: "New Projects Coming Soon",
+      descriptionAr: "استعد لمشاريع مثيرة ومبتكرة قريباً",
+      descriptionEn:
+        "Get ready for exciting and innovative projects coming soon",
+      content: "تابعنا للحصول على آخر التحديثات والإعلانات",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI",
+      startDate: new Date(now.getFullYear(), now.getMonth(), 1),
+      endDate: new Date(now.getFullYear() + 1, now.getMonth(), 31),
+      isActive: true,
+    },
+    {
+      id: "banner-3",
+      titleAr: "تحديثات النظام",
+      titleEn: "System Updates",
+      descriptionAr: "اكتشف الميزات الجديدة والتحسينات في النظام",
+      descriptionEn: "Discover new features and improvements in the system",
+      content: "نعمل باستمرار على تحسين تجربتك معنا",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+      startDate: new Date(now.getFullYear(), now.getMonth(), 1),
+      endDate: new Date(now.getFullYear() + 1, now.getMonth(), 31),
+      isActive: true,
+    },
+    {
+      id: "banner-4",
+      titleAr: "فعاليات وورش عمل",
+      titleEn: "Events & Workshops",
+      descriptionAr: "انضم إلى فعالياتنا وورش العمل القادمة",
+      descriptionEn: "Join our upcoming events and workshops",
+      content: "احجز مكانك الآن واستفد من فرص التعلم والتطوير",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI",
+      startDate: new Date(now.getFullYear(), now.getMonth(), 1),
+      endDate: new Date(now.getFullYear() + 1, now.getMonth(), 31),
+      isActive: true,
+    },
+  ]
+
+  for (const banner of banners) {
+    await db.banner.upsert({
+      where: { id: banner.id },
+      update: banner,
+      create: banner,
+    })
+  }
+
+  console.log("✅ Seeded 4 banners")
+
+  // Seed useful websites
+  const websites = [
+    {
+      id: "website-1",
+      nameAr: "منصة أبشر",
+      nameEn: "Absher Platform",
+      url: "https://www.absher.sa",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+      isActive: true,
+    },
+    {
+      id: "website-2",
+      nameAr: "منصة ناجز",
+      nameEn: "Najiz Platform",
+      url: "https://najiz.sa",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI",
+      isActive: true,
+    },
+    {
+      id: "website-3",
+      nameAr: "وزارة الشؤون البلدية والقروية",
+      nameEn: "Ministry of Municipal and Rural Affairs",
+      url: "https://www.momra.gov.sa",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+      isActive: true,
+    },
+    {
+      id: "website-4",
+      nameAr: "منصة معاملاتي",
+      nameEn: "Muamalat Platform",
+      url: "https://muamalat.sa",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI",
+      isActive: true,
+    },
+    {
+      id: "website-5",
+      nameAr: "منصة سابر",
+      nameEn: "SABER Platform",
+      url: "https://saber.sa",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+      isActive: true,
+    },
+    {
+      id: "website-6",
+      nameAr: "Google Drive",
+      nameEn: "Google Drive",
+      url: "https://drive.google.com",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI",
+      isActive: true,
+    },
+    {
+      id: "website-7",
+      nameAr: "Microsoft 365",
+      nameEn: "Microsoft 365",
+      url: "https://www.microsoft.com/microsoft-365",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+      isActive: true,
+    },
+    {
+      id: "website-8",
+      nameAr: "منصة إحكام",
+      nameEn: "Ehkam Platform",
+      url: "https://ehkam.sa",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI",
+      isActive: true,
+    },
+    {
+      id: "website-9",
+      nameAr: "منصة قوى",
+      nameEn: "Qiwa Platform",
+      url: "https://qiwa.sa",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj",
+      isActive: true,
+    },
+    {
+      id: "website-10",
+      nameAr: "منصة بلدي",
+      nameEn: "Balady Platform",
+      url: "https://balady.gov.sa",
+      image:
+        "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI",
+      isActive: true,
+    },
+  ]
+
+  for (const website of websites) {
+    await db.website.upsert({
+      where: { id: website.id },
+      update: website,
+      create: website,
+    })
+  }
+
+  console.log("✅ Seeded 10 useful websites")
+
+  // Seed events for this month and next month
+  const adminUser = await db.user.findUnique({
+    where: { email: "admin@wahed.com" },
+  })
+
+  if (adminUser) {
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const currentMonth = now.getMonth()
+    const nextMonth = currentMonth + 1
+
+    // Helper function to create date
+    const createDate = (
+      year: number,
+      month: number,
+      day: number,
+      hour = 9,
+      minute = 0
+    ) => {
+      return new Date(year, month, day, hour, minute)
+    }
+
+    const events = [
+      {
+        title: "Team Meeting",
+        description:
+          "Weekly team sync meeting to discuss project progress and upcoming tasks",
+        start: createDate(currentYear, currentMonth, 5, 10, 0),
+        end: createDate(currentYear, currentMonth, 5, 11, 30),
+        allDay: false,
+        color: EventColor.SKY,
+        location: "Conference Room A",
+        createdById: adminUser.id,
+      },
+      {
+        title: "Project Review",
+        description: "Monthly project review session with stakeholders",
+        start: createDate(currentYear, currentMonth, 10, 14, 0),
+        end: createDate(currentYear, currentMonth, 10, 16, 0),
+        allDay: false,
+        color: EventColor.EMERALD,
+        location: "Main Office",
+        createdById: adminUser.id,
+      },
+      {
+        title: "Training Workshop",
+        description: "Technical training workshop on new system features",
+        start: createDate(currentYear, currentMonth, 15, 9, 0),
+        end: createDate(currentYear, currentMonth, 15, 17, 0),
+        allDay: true,
+        color: EventColor.VIOLET,
+        location: "Training Center",
+        createdById: adminUser.id,
+      },
+      {
+        title: "Client Presentation",
+        description: "Presenting quarterly results to key clients",
+        start: createDate(currentYear, currentMonth, 18, 13, 0),
+        end: createDate(currentYear, currentMonth, 18, 15, 0),
+        allDay: false,
+        color: EventColor.AMBER,
+        location: "Client Meeting Room",
+        createdById: adminUser.id,
+      },
+      {
+        title: "Deadline: Project Phase 1",
+        description: "Final deadline for Phase 1 deliverables",
+        start: createDate(currentYear, currentMonth, 22, 0, 0),
+        end: createDate(currentYear, currentMonth, 22, 23, 59),
+        allDay: true,
+        color: EventColor.ROSE,
+        location: null,
+        createdById: adminUser.id,
+      },
+      {
+        title: "Monthly Planning Session",
+        description: "Planning session for next month's activities and goals",
+        start: createDate(currentYear, nextMonth, 2, 9, 0),
+        end: createDate(currentYear, nextMonth, 2, 12, 0),
+        allDay: false,
+        color: EventColor.SKY,
+        location: "Planning Room",
+        createdById: adminUser.id,
+      },
+      {
+        title: "Team Building Activity",
+        description:
+          "Outdoor team building activity to strengthen collaboration",
+        start: createDate(currentYear, nextMonth, 8, 8, 0),
+        end: createDate(currentYear, nextMonth, 8, 18, 0),
+        allDay: true,
+        color: EventColor.EMERALD,
+        location: "Outdoor Venue",
+        createdById: adminUser.id,
+      },
+      {
+        title: "System Maintenance",
+        description: "Scheduled system maintenance and updates",
+        start: createDate(currentYear, nextMonth, 12, 2, 0),
+        end: createDate(currentYear, nextMonth, 12, 6, 0),
+        allDay: false,
+        color: EventColor.ORANGE,
+        location: null,
+        createdById: adminUser.id,
+      },
+      {
+        title: "Quarterly Review Meeting",
+        description: "Quarterly business review with management team",
+        start: createDate(currentYear, nextMonth, 18, 10, 0),
+        end: createDate(currentYear, nextMonth, 18, 14, 0),
+        allDay: false,
+        color: EventColor.VIOLET,
+        location: "Executive Boardroom",
+        createdById: adminUser.id,
+      },
+      {
+        title: "Holiday - National Day",
+        description: "National Day celebration - Office closed",
+        start: createDate(currentYear, nextMonth, 23, 0, 0),
+        end: createDate(currentYear, nextMonth, 23, 23, 59),
+        allDay: true,
+        color: EventColor.AMBER,
+        location: null,
+        createdById: adminUser.id,
+      },
+    ]
+
+    for (const event of events) {
+      await db.event.create({
+        data: event,
+      })
+    }
+
+    console.log("✅ Seeded 10 events for this month and next month")
+  } else {
+    console.log("⚠️  Could not seed events: admin user not found")
+  }
+
   console.log("\n📋 Seed Summary:")
   console.log("   Admin: admin@wahed.com / admin123")
   console.log("   Staff 1: staff1@wahed.com / staff123")
@@ -805,6 +1203,10 @@ async function main() {
   console.log("   Task Statuses: 4 default statuses")
   console.log("   Task Categories: 4 default categories")
   console.log("   Project Categories: 8 default categories")
+  console.log("   Projects: 3 sample projects")
+  console.log("   Banners: 4 sample banners")
+  console.log("   Websites: 10 useful websites")
+  console.log("   Events: 10 events for this month and next month")
   console.log("\n✨ Seed completed successfully!")
 }
 

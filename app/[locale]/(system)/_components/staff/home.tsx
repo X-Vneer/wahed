@@ -14,7 +14,7 @@ export default function StaffPage() {
       {/* Top Row: Prayer Times, Current Time, Calendar */}
 
       <div className="flex flex-col-reverse gap-6 lg:flex-row">
-        <div className="w-full space-y-4 lg:max-w-xs">
+        <div className="w-full items-start gap-4 space-y-4 sm:flex lg:block lg:max-w-xs">
           <Card>
             <CardContent>
               <Calendar
@@ -30,7 +30,7 @@ export default function StaffPage() {
           {/* Weekly Schedule Card */}
           <WeeklySchedule />
         </div>
-        <div className="w-full space-y-4">
+        <div className="space-y-4 lg:max-w-[calc(100%-340px)]">
           {/* Prayer Times Countdown Card */}
 
           <PrayerTimer />

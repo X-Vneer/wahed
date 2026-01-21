@@ -75,7 +75,7 @@ export function BannersSlider({ className }: BannersSliderProps) {
 
             return (
               <CarouselItem key={banner.id}>
-                <div className="relative overflow-hidden rounded-2xl">
+                <div className="relative overflow-hidden rounded-2xl select-none">
                   {banner.image && (
                     <div
                       className="absolute inset-0 bg-cover bg-center"
