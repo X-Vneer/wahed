@@ -59,7 +59,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { useUsers } from "@/hooks/use-users"
+import { useUsersList } from "@/hooks/use-users"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "../ui/scroll-area"
 import UserAvatar from "../user-avatar"
@@ -159,7 +159,7 @@ export function EventDialog({
   const [endDateOpen, setEndDateOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
-  const { data: users = [] } = useUsers()
+  const { data: users = [] } = useUsersList()
 
   // Check if this is an expanded recurring event and fetch the original event
   const originalEventId = event?.id ? extractOriginalEventId(event.id) : null

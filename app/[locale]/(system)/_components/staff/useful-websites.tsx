@@ -15,7 +15,7 @@ import { useLocale, useTranslations } from "next-intl"
 
 function WebsiteCard({ website }: { website: WebsiteWithLocale }) {
   return (
-    <Card className="group h-full w-40 bg-transparent p-0 shadow-none lg:w-50">
+    <Card className="group h-full w-40 bg-transparent p-2 shadow-none lg:w-50">
       <CardContent className="flex items-center justify-center p-0">
         <a
           href={website.url}

@@ -27,7 +27,19 @@ export const userSelect = {
   },
 } satisfies Prisma.UserSelect
 
+export const userListSelect = {
+  id: true,
+  name: true,
+  email: true,
+  phone: true,
+  roleName: true,
+  image: true,
+} satisfies Prisma.UserSelect
+
 export type UserSelect = Prisma.UserGetPayload<{ select: typeof userSelect }>
+export type UserListSelect = Prisma.UserGetPayload<{
+  select: typeof userListSelect
+}>
 
 export const transformUser = (user: UserSelect) => {
   return {

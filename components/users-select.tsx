@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import UserAvatar from "@/components/user-avatar"
-import { useUsers } from "@/hooks/use-users"
+import { useUsersList } from "@/hooks/use-users"
 import { Badge } from "./ui/badge"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card"
 
@@ -37,7 +37,7 @@ const UsersSelect = <FormValues extends Record<string, unknown>>({
   multiple = true,
   onValueChange,
 }: UsersSelectProps<FormValues>) => {
-  const { data: users = [] } = useUsers()
+  const { data: users = [] } = useUsersList()
   const tCommon = useTranslations("common")
 
   const selectedUsers = form.values[name] as string[] | string
