@@ -14,6 +14,7 @@ import {
 import { useTranslations } from "next-intl"
 import WeeklySchedule from "./weekly-schedule"
 import { BannersSlider } from "./banners"
+import { UsefulWebsitesSlider } from "./useful-websites"
 
 export default function StaffPage() {
   const t = useTranslations("welcome.staff.home")
@@ -123,6 +124,7 @@ export default function StaffPage() {
             </Card>
           </div>
           <BannersSlider />
+          <UsefulWebsitesSlider />
         </div>
       </div>
     </div>
