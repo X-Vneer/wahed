@@ -45,23 +45,18 @@ export const PERMISSIONS_GROUPED = {
   STAFF: {
     MANAGEMENT: PrismaPermissionKey.STAFF_MANAGEMENT,
   },
+  STAFF_PAGE: {
+    MANAGEMENT: PrismaPermissionKey.STAFF_PAGE_MANAGEMENT,
+  },
   LIST: {
     CREATE: PrismaPermissionKey.LIST_CREATE,
     UPDATE: PrismaPermissionKey.LIST_UPDATE,
     DELETE: PrismaPermissionKey.LIST_DELETE,
   },
-  WEBSITE: {
-    MANAGEMENT: PrismaPermissionKey.WEBSITE_MANAGEMENT,
-  },
+
   REPORT: {
     VIEW: PrismaPermissionKey.REPORT_VIEW,
     EXPORT: PrismaPermissionKey.REPORT_EXPORT,
-  },
-  BANNER: {
-    CREATE: PrismaPermissionKey.BANNER_CREATE,
-    UPDATE: PrismaPermissionKey.BANNER_UPDATE,
-    DELETE: PrismaPermissionKey.BANNER_DELETE,
-    VIEW: PrismaPermissionKey.BANNER_VIEW,
   },
 } as const
 

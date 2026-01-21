@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
   try {
     // Check permission
     const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.BANNER.CREATE
+      PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!

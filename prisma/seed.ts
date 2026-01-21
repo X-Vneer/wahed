@@ -197,7 +197,10 @@ async function main() {
     { key: PermissionKey.LIST_CREATE, name: "Create List" },
     { key: PermissionKey.LIST_UPDATE, name: "Update List" },
     { key: PermissionKey.LIST_DELETE, name: "Delete List" },
-    { key: PermissionKey.WEBSITE_MANAGEMENT, name: "Website Management" },
+    { key: "WEBSITE_CREATE" as PermissionKey, name: "Create Website" },
+    { key: "WEBSITE_UPDATE" as PermissionKey, name: "Update Website" },
+    { key: "WEBSITE_DELETE" as PermissionKey, name: "Delete Website" },
+    { key: "WEBSITE_VIEW" as PermissionKey, name: "View Website" },
     { key: PermissionKey.REPORT_VIEW, name: "View Report" },
     { key: PermissionKey.REPORT_EXPORT, name: "Export Report" },
   ]
@@ -389,9 +392,6 @@ async function main() {
     PermissionKey.TASK_CREATE,
     PermissionKey.TASK_UPDATE,
     PermissionKey.FILE_UPLOAD,
-    PermissionKey.BANNER_VIEW,
-    PermissionKey.BANNER_CREATE,
-    PermissionKey.BANNER_UPDATE,
   ]
   for (const permKey of staff3Permissions) {
     const permission = await db.permission.findUnique({
@@ -437,11 +437,11 @@ async function main() {
   const staff4Permissions = [
     PermissionKey.PROJECT_VIEW,
     PermissionKey.TASK_VIEW,
-    PermissionKey.WEBSITE_MANAGEMENT,
-    PermissionKey.BANNER_VIEW,
-    PermissionKey.BANNER_CREATE,
-    PermissionKey.BANNER_UPDATE,
-    PermissionKey.BANNER_DELETE,
+    "WEBSITE_VIEW" as PermissionKey,
+    "WEBSITE_CREATE" as PermissionKey,
+    "WEBSITE_UPDATE" as PermissionKey,
+    "WEBSITE_DELETE" as PermissionKey,
+
     PermissionKey.FILE_UPLOAD,
   ]
   for (const permKey of staff4Permissions) {
@@ -586,7 +586,6 @@ async function main() {
   const staff7Permissions = [
     PermissionKey.PROJECT_VIEW,
     PermissionKey.TASK_VIEW,
-    PermissionKey.BANNER_VIEW,
   ]
   for (const permKey of staff7Permissions) {
     const permission = await db.permission.findUnique({

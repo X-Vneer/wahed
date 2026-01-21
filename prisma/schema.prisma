@@ -51,10 +51,7 @@ enum PermissionKey {
   WEBSITE_MANAGEMENT
   REPORT_VIEW
   REPORT_EXPORT
-  BANNER_CREATE
-  BANNER_UPDATE
-  BANNER_DELETE
-  BANNER_VIEW
+  STAFF_PAGE_MANAGEMENT
 }
 
 enum EventColor {
@@ -288,4 +285,18 @@ model Banner {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   users     User[]
+}
+
+
+model Website {
+  id String @id @default(cuid())
+  nameAr String
+  nameEn String
+  descriptionAr String?
+  descriptionEn String?
+  url String
+  image String?
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

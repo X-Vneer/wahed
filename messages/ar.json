@@ -70,7 +70,8 @@
     "listsRegions": "المناطق",
     "view-project": "عرض المشروع",
     "staff-page": "بوابة الموظفين",
-    "staff-banners": "البنرات"
+    "staff-banners": "البنرات",
+    "staff-websites": "مواقع مفيدة"
   },
   "lists": {
     "projectCategories": {
@@ -271,7 +272,10 @@
       "LIST_CREATE": "إنشاء قائمة",
       "LIST_UPDATE": "تحديث قائمة",
       "LIST_DELETE": "حذف قائمة",
-      "WEBSITE_MANAGEMENT": "إدارة الموقع",
+      "WEBSITE_CREATE": "إنشاء عنصر في سلايدر الموقع",
+      "WEBSITE_UPDATE": "تحديث عنصر في سلايدر الموقع",
+      "WEBSITE_DELETE": "حذف عنصر من سلايدر الموقع",
+      "WEBSITE_VIEW": "عرض عناصر سلايدر الموقع",
       "REPORT_VIEW": "عرض تقرير",
       "REPORT_EXPORT": "تصدير تقرير"
     },
@@ -936,6 +940,67 @@
     "deleteConfirm": {
       "title": "حذف البانر",
       "description": "هل أنت متأكد من حذف \"{title}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    }
+  },
+  "websites": {
+    "title": "المواقع الإلكترونية",
+    "addNew": "إضافة جديد",
+    "add": "إضافة",
+    "update": "تحديث",
+    "createTitle": "إنشاء موقع إلكتروني",
+    "editTitle": "تعديل موقع إلكتروني",
+    "no_websites_found": "لم يتم العثور على مواقع إلكترونية",
+    "form": {
+      "nameAr": "الاسم (عربي)",
+      "nameArPlaceholder": "أدخل الاسم بالعربية",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+      "descriptionAr": "الوصف (عربي)",
+      "descriptionArPlaceholder": "أدخل الوصف بالعربية",
+      "descriptionEn": "الوصف (إنجليزي)",
+      "descriptionEnPlaceholder": "أدخل الوصف بالإنجليزية",
+      "url": "الرابط",
+      "urlPlaceholder": "https://example.com",
+      "image": "صورة الموقع",
+      "isActive": "نشط"
+    },
+    "table": {
+      "image": "الصورة",
+      "nameAr": "الاسم (عربي)",
+      "nameEn": "الاسم (إنجليزي)",
+      "description": "الوصف",
+      "url": "الرابط",
+      "createdAt": "تاريخ الإنشاء",
+      "activity": "النشاط",
+      "status": "الحالة"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم العربي مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم الإنجليزي مطلوب"
+      },
+      "url": {
+        "invalid": "يرجى إدخال رابط موقع إلكتروني صحيح"
+      },
+      "website_not_found": "الموقع غير موجود"
+    },
+    "success": {
+      "website_created": "تم إنشاء الموقع بنجاح",
+      "website_updated": "تم تحديث الموقع بنجاح",
+      "website_deleted": "تم حذف الموقع بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف الموقع",
+      "description": "هل أنت متأكد من حذف \"{name}\"؟ لا يمكن التراجع عن هذا الإجراء.",
       "delete": "حذف",
       "deleting": "جاري الحذف...",
       "cancel": "إلغاء"

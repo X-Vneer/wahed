@@ -17,7 +17,9 @@ export async function GET(
   const t = await getTranslations({ locale })
   try {
     // Check permission
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.BANNER.VIEW)
+    const permissionCheck = await hasPermission(
+      PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
+    )
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }
@@ -59,7 +61,7 @@ export async function PUT(
   try {
     // Check permission
     const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.BANNER.UPDATE
+      PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
@@ -193,7 +195,7 @@ export async function DELETE(
   try {
     // Check permission
     const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.BANNER.DELETE
+      PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!

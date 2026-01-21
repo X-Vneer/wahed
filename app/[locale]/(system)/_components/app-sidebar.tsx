@@ -37,7 +37,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const isRtl = locale === "ar"
 
   const data = {
-   
     navMain: [
       {
         title: t("home"),
@@ -134,6 +133,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: t("staff-banners"),
             url: "/staff/banners",
           },
+          {
+            title: t("staff-websites"),
+            url: "/staff/websites",
+          },
         ],
         isActive: false,
       },
@@ -144,7 +147,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [],
         isActive: false,
       },
-      
     ],
   }
   return (
