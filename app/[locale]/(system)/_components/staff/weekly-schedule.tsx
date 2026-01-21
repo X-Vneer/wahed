@@ -7,7 +7,6 @@ import { toast } from "sonner"
 
 import type { ErrorResponse } from "@/@types/error"
 import {
-  EventCalendar,
   SimpleAgendaCalendar,
   type CalendarEvent,
 } from "@/components/event-calendar"

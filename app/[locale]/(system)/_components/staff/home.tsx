@@ -12,9 +12,9 @@ import {
   Folder,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import WeeklySchedule from "./weekly-schedule"
 import { BannersSlider } from "./banners"
 import { UsefulWebsitesSlider } from "./useful-websites"
+import WeeklySchedule from "./weekly-schedule"
 
 export default function StaffPage() {
   const t = useTranslations("welcome.staff.home")

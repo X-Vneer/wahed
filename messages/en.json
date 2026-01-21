@@ -946,7 +946,7 @@
     }
   },
   "websites": {
-    "title": "Websites",
+    "title": "Useful Websites",
     "addNew": "Add New",
     "add": "Add",
     "update": "Update",
@@ -1005,5 +1005,6 @@
       "deleting": "Deleting...",
       "cancel": "Cancel"
     }
-  }
+  },
+  "something wrong happened": "Something wrong happened"
 }

@@ -1,19 +1,17 @@
 "use client"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { useWebsites } from "@/hooks/use-websites"
 import type { WebsiteWithLocale } from "@/hooks/use-websites"
-import { useTranslations } from "next-intl"
+import { useWebsites } from "@/hooks/use-websites"
 import { ExternalLink } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 type UsefulWebsitesSliderProps = {
   className?: string
@@ -49,48 +47,24 @@ function WebsiteCard({ website }: { website: WebsiteWithLocale }) {
 }
 
 function WebsiteCardSkeleton() {
-  return (
-    <Card className="h-full">
-      <Skeleton className="h-40 w-full" />
-      <CardHeader>
-        <Skeleton className="mb-2 h-4 w-2/3" />
-        <Skeleton className="mb-1 h-3 w-full" />
-        <Skeleton className="h-3 w-5/6" />
-      </CardHeader>
-      <CardContent>
-        <Skeleton className="h-3 w-3/4" />
-      </CardContent>
-      <CardFooter>
-        <Skeleton className="h-8 w-20" />
-      </CardFooter>
-    </Card>
-  )
+  return <Skeleton className="size-40 rounded-full bg-white" />
 }
 
 export function UsefulWebsitesSlider({ className }: UsefulWebsitesSliderProps) {
   const t = useTranslations()
-  const { data, isLoading, isError } = useWebsites({ status: "active" })
+  const { data, status } = useWebsites({ status: "active" })
 
-  if (isLoading) {
+  if (status === "error") {
     return (
-      <section className={className}>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-base font-semibold">
-            {t("websites.title", { default: "Websites" })}
-          </h2>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <WebsiteCardSkeleton />
-          <WebsiteCardSkeleton />
-          <WebsiteCardSkeleton />
-        </div>
-      </section>
+      <div>
+        <p className="text-destructive text-sm">
+          {t("something wrong happened")}
+        </p>
+      </div>
     )
   }
 
-  if (isError || !data || data.length === 0) {
-    return null
-  }
+  if (data?.length === 0) return null
 
   return (
     <section className={className}>
@@ -105,14 +79,22 @@ export function UsefulWebsitesSlider({ className }: UsefulWebsitesSliderProps) {
         }}
       >
         <CarouselContent>
-          {data.map((website) => (
-            <CarouselItem key={website.id}>
-              <WebsiteCard website={website} />
-            </CarouselItem>
-          ))}
+          {status === "success"
+            ? data &&
+              data.map((website) => (
+                <CarouselItem className="max-w-fit" key={website.id}>
+                  <WebsiteCard website={website} />
+                </CarouselItem>
+              ))
+            : null}
+          {status === "pending"
+            ? Array.from({ length: 5 }).map((_, index) => (
+                <CarouselItem className="max-w-fit" key={index}>
+                  <WebsiteCardSkeleton />
+                </CarouselItem>
+              ))
+            : null}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
       </Carousel>
     </section>
   )
