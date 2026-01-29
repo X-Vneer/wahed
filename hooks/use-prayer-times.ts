@@ -8,8 +8,8 @@ import { useLocale } from "next-intl"
 import { useState, useEffect } from "react"
 
 // Macau coordinates as default
-const DEFAULT_LATITUDE = 22.2109
-const DEFAULT_LONGITUDE = 113.5439
+const DEFAULT_LATITUDE = 24.774265
+const DEFAULT_LONGITUDE = 46.738586
 
 const fetchPrayerTimes = async (
   date: string,
