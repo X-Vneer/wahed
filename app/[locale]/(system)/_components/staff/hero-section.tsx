@@ -11,6 +11,7 @@ import { usePathname, useRouter } from "@/lib/i18n/navigation"
 import { LogOut } from "lucide-react"
 import apiClient from "@/services"
 import { useState } from "react"
+import { PrayerTimer } from "@/components/prayer-timer"
 
 export default function StaffPage() {
   const t = useTranslations("welcome.staff")
@@ -105,43 +106,48 @@ export default function StaffPage() {
           }}
           className="absolute inset-0 opacity-30"
         ></div>
-
-        {/* Content */}
-        <div className="relative flex flex-col items-center gap-6 px-4 py-12 text-center">
-          {/* Page Title */}
-          <h1 className="text-xl font-bold text-white md:text-2xl">
-            {getGreeting()}, {user?.name || t("title")}
-          </h1>
-
-          {/* Profile Picture */}
-          <div className="group relative">
-            <Avatar className="size-20 border-2 border-white/20 shadow-2xl md:size-30">
-              <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
-              <AvatarFallback className="text-xl font-bold md:text-3xl">
-                {user?.name ? getInitials(user.name) : "U"}
-              </AvatarFallback>
-            </Avatar>
-            {/* Logout Icon Overlay - appears on hover */}
-            <button
-              onClick={handleLogout}
-              disabled={isLoggingOut}
-              className="absolute cursor-pointer inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity duration-200 hover:opacity-100 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Logout"
-            >
-              <LogOut className="size-6 text-destructive md:size-8 stroke-1" />
-            </button>
+        <div className="relative container grid grid-cols-4 items-center">
+          <div>
+            <PrayerTimer compact />
           </div>
+          {/* Content */}
+          <div className="relative col-span-2 flex flex-col items-center gap-6 px-4 py-12 text-center">
+            {/* Page Title */}
+            <h1 className="text-xl font-bold text-white md:text-2xl">
+              {getGreeting()}, {user?.name || t("title")}
+            </h1>
 
-          {/* User Name - Large */}
-          <div className="space-y-1">
-            <h2 className="text-xl font-bold text-white md:text-2xl">
-              {user?.name || t("title")}
-            </h2>
-            {/* User Name - Small (duplicate) */}
-            <p className="text-white/70 md:text-lg">
-              {user?.name || t("title")}
-            </p>
+            {/* Profile Picture */}
+            <div className="group relative">
+              <Avatar className="size-20 border-2 border-white/20 shadow-2xl md:size-30">
+                <AvatarImage src={user?.image || ""} alt={user?.name || ""} />
+                <AvatarFallback className="text-xl font-bold md:text-3xl">
+                  {user?.name ? getInitials(user.name) : "U"}
+                </AvatarFallback>
+              </Avatar>
+              {/* Logout Icon Overlay - appears on hover */}
+              <button
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100 hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Logout"
+              >
+                <LogOut className="text-destructive size-6 stroke-1 md:size-8" />
+              </button>
+            </div>
+
+            {/* User Name - Large */}
+            <div className="space-y-1">
+              <h2 className="text-xl font-bold text-white md:text-2xl">
+                {user?.name || t("title")}
+              </h2>
+              {/* User Name - Small (duplicate) */}
+              <p className="text-white/70 md:text-lg">
+                {user?.name || t("title")}
+              </p>
+            </div>
           </div>
+          <div></div>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           <StaffTabs />

@@ -33,8 +33,6 @@ export default function StaffPage() {
         <div className="space-y-4 lg:max-w-[calc(100%-340px)]">
           {/* Prayer Times Countdown Card */}
 
-          <PrayerTimer />
-          {/* Quick Access Cards */}
           <QuickAccessCards />
           <BannersSlider />
           <UsefulWebsitesSlider />

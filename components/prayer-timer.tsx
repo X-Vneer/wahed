@@ -237,7 +237,7 @@ function PrayerCountdown({
   )
 }
 
-export function PrayerTimer() {
+export function PrayerTimer({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("prayer")
   const locale = useLocale()
   const isArabic = locale === "ar"
@@ -263,20 +263,27 @@ export function PrayerTimer() {
   const [displayPrayer, setDisplayPrayer] = useDisplayPrayer(prayerTimes)
 
   return (
-    <Card className="w-full">
+    <Card
+      className={cn("w-full", compact ? "z-10 w-fit bg-transparent py-0" : "")}
+    >
       <CardContent className="px-3 py-3 md:px-6 md:py-6">
         <div className="flex flex-col gap-3 md:gap-6">
           {/* Top Section: Countdown and Current Prayer */}
-          <div className="flex items-center justify-between gap-2 md:items-start md:gap-4">
+          <div
+            className={cn(
+              "flex items-center justify-between gap-2 md:items-start md:gap-4",
+              compact ? "flex-col" : ""
+            )}
+          >
             {/* Right: Current Prayer and Hijri Date */}
             <div className="flex items-start gap-2 md:gap-4">
               {/* Current Prayer */}
               {displayPrayer && (
                 <div className="flex flex-col items-start">
-                  <span className="text-primary text-xl leading-tight font-semibold md:text-4xl md:leading-normal md:font-medium">
+                  <span className="text-primary text-lg leading-tight font-semibold md:text-3xl md:leading-normal md:font-medium">
                     {isArabic ? displayPrayer.name : t(displayPrayer.nameKey)}
                   </span>
-                  <span className="text-muted-foreground text-xs md:text-base">
+                  <span className="text-xs text-white md:text-base">
                     {displayTime(displayPrayer.time)}
                   </span>
                 </div>
@@ -287,18 +294,23 @@ export function PrayerTimer() {
 
               {/* Hijri Date */}
               <div className="flex flex-col items-start">
-                <span className="text-primary text-xl leading-tight font-semibold md:text-4xl md:leading-normal md:font-medium">
+                <span className="text-primary text-lg leading-tight font-semibold md:text-3xl md:leading-normal md:font-medium">
                   {hijriDate.day}
                 </span>
-                <span className="text-muted-foreground text-xs md:text-base">
+                <span className="text-xs text-white md:text-base">
                   {hijriDate.month}
                 </span>
               </div>
             </div>
 
             {/* Left: Countdown */}
-            <div className="flex flex-col items-end">
-              <span className="text-muted-foreground mb-0.5 text-[10px] uppercase md:mb-1 md:text-sm md:normal-case">
+            <div
+              className={cn(
+                "flex flex-col items-end",
+                compact ? "w-full grow items-center" : ""
+              )}
+            >
+              <span className="mb-0.5 text-[10px] text-white uppercase md:mb-1 md:text-sm md:normal-case">
                 {t("remaining")}
               </span>
               <PrayerCountdown
@@ -311,39 +323,41 @@ export function PrayerTimer() {
           </div>
 
           {/* Bottom Section: Prayer Times List */}
-          <div className="flex items-center justify-center gap-1.5 overflow-x-auto pb-1 md:gap-3 md:pb-2">
-            {prayerTimes.map((prayer) => {
-              const isCurrent = prayer.nameKey === displayPrayer?.nameKey
-              return (
-                <div
-                  key={prayer.nameKey}
-                  className={cn(
-                    "flex min-w-[50px] flex-col items-center gap-0.5 rounded-md px-2 py-1.5 transition-colors md:min-w-[70px] md:gap-1 md:rounded-lg md:px-3 md:py-2",
-                    isCurrent
-                      ? "bg-primary/10"
-                      : "bg-muted/30 md:hover:bg-muted/50"
-                  )}
-                >
-                  <span
+          {!compact && (
+            <div className="flex items-center justify-center gap-1.5 overflow-x-auto pb-1 md:gap-3 md:pb-2">
+              {prayerTimes.map((prayer) => {
+                const isCurrent = prayer.nameKey === displayPrayer?.nameKey
+                return (
+                  <div
+                    key={prayer.nameKey}
                     className={cn(
-                      "text-[10px] leading-tight font-medium md:text-sm md:leading-normal",
-                      isCurrent ? "text-primary" : "text-muted-foreground"
+                      "flex min-w-[50px] flex-col items-center gap-0.5 rounded-md px-2 py-1.5 transition-colors md:min-w-[70px] md:gap-1 md:rounded-lg md:px-3 md:py-2",
+                      isCurrent
+                        ? "bg-primary/10"
+                        : "bg-muted/30 md:hover:bg-muted/50"
                     )}
                   >
-                    {isArabic ? prayer.name : t(prayer.nameKey)}
-                  </span>
-                  <span
-                    className={cn(
-                      "text-[11px] font-semibold tabular-nums md:text-xs",
-                      isCurrent ? "text-primary" : "text-muted-foreground"
-                    )}
-                  >
-                    {displayTime(prayer.time)}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
+                    <span
+                      className={cn(
+                        "text-[10px] leading-tight font-medium md:text-sm md:leading-normal",
+                        isCurrent ? "text-primary" : "text-white"
+                      )}
+                    >
+                      {isArabic ? prayer.name : t(prayer.nameKey)}
+                    </span>
+                    <span
+                      className={cn(
+                        "text-[11px] font-semibold tabular-nums md:text-xs",
+                        isCurrent ? "text-primary" : "text-white"
+                      )}
+                    >
+                      {displayTime(prayer.time)}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
