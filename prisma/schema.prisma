@@ -68,6 +68,12 @@ enum Gender {
   FEMALE
 }
 
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
 model User {
   id          String    @id @default(cuid())
   name        String
@@ -93,7 +99,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  banners Banner[]
+  banners       Banner[]
+  tasks         Task[]        @relation("createdTasks")
+  assignedTasks Task[]        @relation("assignedTasks")
+  taskComments  TaskComment[]
+  subTasks      SubTasks[]
 }
 
 model Permission {
@@ -158,6 +168,8 @@ model TaskStatus {
   color     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  tasks Task[]
 }
 
 model TaskCategory {
@@ -167,6 +179,7 @@ model TaskCategory {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tasks     Task[]
 }
 
 model Project {
@@ -192,6 +205,7 @@ model Project {
   categories     ProjectCategory[]
   attachments    ProjectAttachment[]
   additionalData ProjectAdditionalData[]
+  tasks          Task[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -287,14 +301,82 @@ model Banner {
   users     User[]
 }
 
-
 model Website {
-  id String @id @default(cuid())
-  nameAr String
-  nameEn String
-  url String
-  image String?
-  isActive Boolean @default(true)
+  id        String   @id @default(cuid())
+  nameAr    String
+  nameEn    String
+  url       String
+  image     String?
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// tasks
+model Task {
+  id                   String           @id @default(cuid())
+  title                String
+  description          String?
+  statusId             String
+  status               TaskStatus       @relation(fields: [statusId], references: [id], onDelete: Cascade)
+  category             TaskCategory[]
+  estimatedWorkingDays Int?
+  dueDate              DateTime?
+  priority             TaskPriority     @default(MEDIUM)
+  assignedTo           User[]           @relation("assignedTasks")
+  createdById          String
+  createdBy            User             @relation("createdTasks", fields: [createdById], references: [id], onDelete: Cascade)
+  taskAttachments      TaskAttachment[]
+  comments             TaskComment[]
+  done                 Boolean          @default(false)
+  doneAt               DateTime?
+  finalFileId          String?          @unique
+  finalFile            TaskAttachment?  @relation("finalFile", fields: [finalFileId], references: [id])
+  projectId            String
+  project              Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  subTasks             SubTasks[]
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+}
+
+model TaskComment {
+  id          String   @id @default(cuid())
+  content     String
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TaskAttachment {
+  id             String  @id @default(cuid())
+  fileUrl        String
+  fileName       String?
+  fileType       String?
+  fileSize       Int? // in bytes
+  additionalInfo Json? // for storing additional important information as JSON
+  taskId         String
+  task           Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Reverse relation: task that has this attachment as its final file
+  taskAsFinalFile Task? @relation("finalFile")
+}
+
+model SubTasks {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  taskId      String
+  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  done        Boolean   @default(false)
+  doneAt      DateTime?
+  createdById String
+  createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
