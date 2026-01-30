@@ -6,6 +6,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { WebsiteWithLocale } from "@/hooks/use-websites"
@@ -63,7 +65,7 @@ export function UsefulWebsitesSlider() {
   if (data?.length === 0) return null
 
   return (
-    <section className="w-full select-none">
+    <section className="mb-7 w-full select-none">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-base font-semibold">{t("websites.title")}</h2>
       </div>
@@ -75,11 +77,13 @@ export function UsefulWebsitesSlider() {
           direction: locale === "ar" ? "rtl" : "ltr",
         }}
       >
+        <CarouselPrevious className="top-[unset] -bottom-10 left-[calc(50%-30px)] z-10 bg-white" />
+        <CarouselNext className="top-[unset] right-[calc(50%-30px)] -bottom-10 z-10 bg-white" />
         <CarouselContent>
           {status === "success"
             ? data &&
               data.map((website) => (
-                <CarouselItem className="max-w-fit" key={website.id}>
+                <CarouselItem className="max-w-fit pl-0" key={website.id}>
                   <WebsiteCard website={website} />
                 </CarouselItem>
               ))
