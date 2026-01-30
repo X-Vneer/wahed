@@ -44,18 +44,6 @@ export const useWebsiteColumns = () => {
       cell: ({ row }) => row.original.nameEn || "-",
     },
     {
-      accessorKey: "description",
-      header: t("websites.table.description"),
-      cell: ({ row }) => {
-        const description = row.original.description
-        return description ? (
-          <span className="max-w-xs truncate text-sm">{description}</span>
-        ) : (
-          <span className="text-muted-foreground text-sm">-</span>
-        )
-      },
-    },
-    {
       accessorKey: "url",
       header: t("websites.table.url"),
       cell: ({ row }) => {

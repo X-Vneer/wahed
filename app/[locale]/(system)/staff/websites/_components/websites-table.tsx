@@ -65,6 +65,7 @@ export function WebsitesTable({ onEdit }: WebsitesTableProps) {
 
   return (
     <BaseTable<WebsiteWithLocale>
+      className="min-w-2xl"
       columns={allColumns}
       queryKey={["websites"]}
       queryFn={queryFn}
