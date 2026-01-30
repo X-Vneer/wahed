@@ -12,6 +12,7 @@ import { LogOut } from "lucide-react"
 import apiClient from "@/services"
 import { useState } from "react"
 import { PrayerTimer } from "@/components/prayer-timer"
+import { WeatherStatus } from "@/components/weather-status"
 
 export default function StaffPage() {
   const t = useTranslations("welcome.staff")
@@ -147,7 +148,9 @@ export default function StaffPage() {
               </p>
             </div>
           </div>
-          <div></div>
+          <div>
+            <WeatherStatus compact />
+          </div>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           <StaffTabs />

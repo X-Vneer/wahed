@@ -847,6 +847,19 @@
     "maghrib": "Maghrib",
     "isha": "Isha"
   },
+  "weather": {
+    "loading": "Loading...",
+    "unavailable": "Weather unavailable",
+    "feelsLike": "Feels like {temp}°C",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "windSpeed": "{speed} m/s",
+    "errors": {
+      "api_key_not_configured": "OPEN_WEATHER_API_KEY is not configured",
+      "missing_params": "Missing lat or lon query parameters",
+      "fetch_error": "Error fetching weather data"
+    }
+  },
   "settings": {
     "profile": "Profile",
     "update": "Update",

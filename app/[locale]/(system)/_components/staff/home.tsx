@@ -1,8 +1,8 @@
 "use client"
 
-import { PrayerTimer } from "@/components/prayer-timer"
 import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent } from "@/components/ui/card"
+import { WeatherStatus } from "@/components/weather-status"
 import { BannersSlider } from "./banners"
 import { QuickAccessCards } from "./quick-access-cards"
 import { UsefulWebsitesSlider } from "./useful-websites"
@@ -31,8 +31,6 @@ export default function StaffPage() {
           <WeeklySchedule />
         </div>
         <div className="space-y-4 lg:max-w-[calc(100%-340px)]">
-          {/* Prayer Times Countdown Card */}
-
           <QuickAccessCards />
           <BannersSlider />
           <UsefulWebsitesSlider />

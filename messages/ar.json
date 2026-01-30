@@ -847,6 +847,19 @@
     "maghrib": "المغرب",
     "isha": "العشاء"
   },
+  "weather": {
+    "loading": "جاري التحميل...",
+    "unavailable": "الطقس غير متاح",
+    "feelsLike": "يشعر كـ {temp}°م",
+    "humidity": "الرطوبة",
+    "wind": "الرياح",
+    "windSpeed": "{speed} م/ث",
+    "errors": {
+      "api_key_not_configured": "مفتاح OPEN_WEATHER_API_KEY غير مُعد",
+      "missing_params": "معلمات lat أو lon مفقودة",
+      "fetch_error": "خطأ في جلب بيانات الطقس"
+    }
+  },
   "settings": {
     "profile": "الملف الشخصي",
     "update": "تحديث",
