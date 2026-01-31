@@ -13,10 +13,10 @@ const taskTemplateSubItemSchema = z.object({
 export const createTaskTemplateSchema = z.object({
   title: z.string().min(1, { message: "taskTemplate.errors.title.required" }),
   description: z.string().optional(),
-  estimatedWorkingDays: z.number().int().min(0).optional(),
+  estimatedWorkingDays: z.coerce.number().int().min(0).optional(),
   priority: taskPriorityEnum.default("MEDIUM"),
-  defaultStatusId: z.cuid().optional().nullable(),
-  categoryIds: z.array(z.cuid()).default([]),
+  defaultStatusId: z.string().optional().nullable(),
+  categoryIds: z.array(z.string()).default([]),
   subItems: z.array(taskTemplateSubItemSchema).default([]),
   isActive: z.boolean().default(true),
 })

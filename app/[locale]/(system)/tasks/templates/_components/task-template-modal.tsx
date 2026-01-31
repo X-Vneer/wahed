@@ -204,7 +204,7 @@ export function TaskTemplateModal({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex w-full flex-col sm:max-w-lg">
+      <SheetContent className="flex max-h-svh w-full flex-col sm:max-w-lg">
         <SheetHeader>
           <SheetTitle>
             {selectedTemplate
@@ -217,7 +217,7 @@ export function TaskTemplateModal({
           onSubmit={form.onSubmit(handleSubmit)}
           className="flex flex-1 flex-col overflow-hidden"
         >
-          <ScrollArea className="flex-1 px-1">
+          <ScrollArea className="min-h-0 flex-1 overflow-hidden pe-4">
             <div className="space-y-4 py-4 pr-4">
               <FieldGroup>
                 <Field data-invalid={!!form.errors.title}>
@@ -513,15 +513,16 @@ export function TaskTemplateModal({
             </div>
           </ScrollArea>
 
-          <SheetFooter className="mt-4 border-t pt-4">
+          <SheetFooter className="mt-4 flex-row border-t pt-4">
             <Button
+              className="grow"
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
               {t("common.cancel")}
             </Button>
-            <Button type="submit" disabled={form.submitting}>
+            <Button className="grow" type="submit" disabled={form.submitting}>
               {form.submitting && <Spinner className="mr-2 size-4" />}
               {selectedTemplate
                 ? t("taskTemplate.update")
