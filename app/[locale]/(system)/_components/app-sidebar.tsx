@@ -74,6 +74,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/tasks",
           },
           {
+            title: t("tasksTemplates"),
+            url: "/tasks/templates",
+          },
+          {
             title: t("tasksArchive"),
             url: "/tasks/archive",
           },

@@ -9,14 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useProjectFormContext } from "./project-form-context"
-import { useTranslations } from "next-intl"
-import { useProjectCategories } from "@/hooks/use-project-categories"
 import { useCities } from "@/hooks/use-cities"
+import { useProjectCategories } from "@/hooks/use-project-categories"
 import { useRegions } from "@/hooks/use-regions"
-import type { City } from "@/prisma/cities"
-import type { ProjectCategory } from "@/prisma/project-categories"
-import type { Region } from "@/prisma/regions"
+import { useTranslations } from "next-intl"
+import { useProjectFormContext } from "./project-form-context"
 
 export function ProjectDetailsSection() {
   const t = useTranslations()
@@ -26,9 +23,9 @@ export function ProjectDetailsSection() {
   const { data: regionsData } = useRegions()
   const { data: citiesData } = useCities(form.values.regionId || null)
 
-  const categories: ProjectCategory[] = categoriesData?.data?.data || []
-  const regions: Region[] = regionsData?.data?.data || []
-  const cities: City[] = citiesData?.data?.data || []
+  const categories = categoriesData?.data?.data ?? []
+  const regions = regionsData?.data?.data ?? []
+  const cities = citiesData?.data?.data || []
 
   return (
     <>

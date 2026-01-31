@@ -1,5 +1,5 @@
 import db from "@/lib/db"
-import { transformRegion } from "@/prisma/regions"
+import { transformTaskCategory } from "@/prisma/task-categories"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { getTranslations } from "next-intl/server"
 import { NextRequest, NextResponse } from "next/server"
@@ -8,24 +8,23 @@ export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
   const t = await getTranslations({ locale })
   try {
-    // Fetch project categories from database
-    const regions = await db.region.findMany({
+    const taskCategories = await db.taskCategory.findMany({
       orderBy: {
         createdAt: "desc",
       },
     })
 
-    const transformedRegions = regions.map((region) => {
-      return transformRegion(region, locale)
-    })
+    const transformedTaskCategories = taskCategories.map((taskCategory) =>
+      transformTaskCategory(taskCategory, locale)
+    )
 
     return NextResponse.json({
-      data: transformedRegions,
+      data: transformedTaskCategories,
       success: true,
       status: 200,
     })
   } catch (error) {
-    console.error("Error fetching project categories:", error)
+    console.error("Error fetching task categories:", error)
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

@@ -4,6 +4,7 @@ import {
   PermissionKey,
   ProjectStatus,
   EventColor,
+  TaskPriority,
 } from "../lib/generated/prisma/enums"
 import db from "../lib/db"
 import bcrypt from "bcryptjs"
@@ -723,6 +724,118 @@ async function main() {
 
   console.log("✅ Seeded task categories")
 
+  // Seed task templates
+  const taskTemplates = [
+    {
+      id: "task-template-site-survey",
+      title: "Site Survey",
+      description:
+        "Standard template for conducting site surveys and documenting initial conditions",
+      estimatedWorkingDays: 2,
+      priority: TaskPriority.HIGH,
+      defaultStatusId: "task-status-pending",
+      categoryIds: ["task-category-development"],
+      isActive: true,
+      subItems: [
+        { title: "Prepare survey checklist", description: "Review scope and prepare checklist", order: 0 },
+        { title: "Visit site", description: "Conduct on-site visit and take photos", order: 1 },
+        { title: "Document findings", description: "Compile report with findings and recommendations", order: 2 },
+      ],
+    },
+    {
+      id: "task-template-design-review",
+      title: "Design Review",
+      description: "Template for reviewing design documents and drawings",
+      estimatedWorkingDays: 3,
+      priority: TaskPriority.MEDIUM,
+      defaultStatusId: "task-status-in-progress",
+      categoryIds: ["task-category-design"],
+      isActive: true,
+      subItems: [
+        { title: "Review drawings", description: "Check drawings against specifications", order: 0 },
+        { title: "Check compliance", description: "Verify compliance with codes and standards", order: 1 },
+        { title: "Sign off", description: "Approve or request revisions", order: 2 },
+      ],
+    },
+    {
+      id: "task-template-quality-inspection",
+      title: "Quality Inspection",
+      description: "Quality control inspection checklist for completed work",
+      estimatedWorkingDays: 1,
+      priority: TaskPriority.HIGH,
+      defaultStatusId: "task-status-pending",
+      categoryIds: ["task-category-testing"],
+      isActive: true,
+      subItems: [
+        { title: "Pre-inspection preparation", description: "Gather specs and checklists", order: 0 },
+        { title: "Conduct inspection", description: "Inspect work against quality criteria", order: 1 },
+        { title: "Inspection report", description: "Document results and non-conformances", order: 2 },
+      ],
+    },
+    {
+      id: "task-template-documentation",
+      title: "Documentation Package",
+      description: "Compile and submit project documentation package",
+      estimatedWorkingDays: 5,
+      priority: TaskPriority.LOW,
+      defaultStatusId: "task-status-pending",
+      categoryIds: ["task-category-documentation"],
+      isActive: true,
+      subItems: [
+        { title: "Gather documents", description: "Collect all required documents", order: 0 },
+        { title: "Compile package", description: "Organize and index documentation", order: 1 },
+        { title: "Submit for review", description: "Submit to authority or client", order: 2 },
+      ],
+    },
+    {
+      id: "task-template-handover",
+      title: "Handover Checklist",
+      description: "Project handover and closure checklist",
+      estimatedWorkingDays: 3,
+      priority: TaskPriority.MEDIUM,
+      defaultStatusId: "task-status-completed",
+      categoryIds: ["task-category-development", "task-category-documentation"],
+      isActive: true,
+      subItems: [
+        { title: "Verify completion", description: "Confirm all work is complete", order: 0 },
+        { title: "Collect signatures", description: "Obtain handover signatures", order: 1 },
+        { title: "Archive records", description: "Archive project files and as-builts", order: 2 },
+      ],
+    },
+  ]
+
+  for (const template of taskTemplates) {
+    const { categoryIds, subItems, ...templateFields } = template
+    await db.taskTemplate.upsert({
+      where: { id: template.id },
+      update: {
+        ...templateFields,
+        categories: { set: categoryIds.map((id) => ({ id })) },
+        subItems: {
+          deleteMany: {},
+          create: subItems.map((item) => ({
+            title: item.title,
+            description: item.description,
+            order: item.order,
+          })),
+        },
+      },
+      create: {
+        ...templateFields,
+        categories: { connect: categoryIds.map((id) => ({ id })) },
+        subItems: {
+          create: subItems.map((item) => ({
+            title: item.title,
+            description: item.description,
+            order: item.order,
+          })),
+        },
+      },
+    })
+  }
+
+  console.log("✅ Seeded 5 task templates")
+
   // Seed project categories
   const projectCategories = [
     {
@@ -1202,6 +1315,7 @@ async function main() {
   console.log("   Regions: 13 Saudi regions with major cities")
   console.log("   Task Statuses: 4 default statuses")
   console.log("   Task Categories: 4 default categories")
+  console.log("   Task Templates: 5 task templates")
   console.log("   Project Categories: 8 default categories")
   console.log("   Projects: 3 sample projects")
   console.log("   Banners: 4 sample banners")

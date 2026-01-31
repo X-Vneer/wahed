@@ -3,6 +3,7 @@
     "welcome": "مرحباً",
     "hello": "مرحبا",
     "cancel": "إلغاء",
+    "add": "إضافة",
     "save": "حفظ",
     "edit": "تعديل المشروع",
     "update": "تعديل",
@@ -48,6 +49,7 @@
     "projectsAdd": "إضافة مشروع",
     "tasks": "المهام",
     "tasksMain": "رئيسية",
+    "tasksTemplates": "قوالب المهام",
     "tasksArchive": "أرشيف",
     "tasksAdd": "إضافة مهمة",
     "calendar": "تقويم",
@@ -88,6 +90,9 @@
     },
     "taskCategory": {
       "title": "فئات المهام"
+    },
+    "taskTemplate": {
+      "title": "قوالب المهام"
     }
   },
   "errors": {
@@ -498,6 +503,61 @@
     },
     "deleteConfirm": {
       "title": "حذف فئة المهمة",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    }
+  },
+  "taskTemplate": {
+    "createTitle": "إنشاء قالب مهمة",
+    "editTitle": "تعديل قالب المهمة",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "form": {
+      "title": "العنوان",
+      "titlePlaceholder": "أدخل عنوان القالب",
+      "description": "الوصف",
+      "descriptionPlaceholder": "أدخل الوصف",
+      "estimatedWorkingDays": "الأيام العملية المتوقعة",
+      "estimatedWorkingDaysPlaceholder": "عدد الأيام",
+      "priority": "الأولوية",
+      "priorityLow": "منخفضة",
+      "priorityMedium": "متوسطة",
+      "priorityHigh": "عالية",
+      "defaultStatus": "الحالة الافتراضية",
+      "defaultStatusPlaceholder": "اختر الحالة الافتراضية",
+      "categories": "الفئات",
+      "categoriesPlaceholder": "اختر الفئات",
+      "subItems": "العناصر الفرعية",
+      "subItemTitle": "عنوان العنصر الفرعي",
+      "subItemTitlePlaceholder": "أدخل عنوان العنصر الفرعي",
+      "subItemDescription": "الوصف",
+      "subItemOrder": "الترتيب",
+      "isActive": "نشط",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث",
+      "actions": "الإجراءات"
+    },
+    "errors": {
+      "title": {
+        "required": "العنوان مطلوب"
+      },
+      "subItemTitle": {
+        "required": "عنوان العنصر الفرعي مطلوب"
+      },
+      "not_found": "قالب المهمة غير موجود",
+      "create_failed": "فشل في إنشاء قالب المهمة",
+      "update_failed": "فشل في تحديث قالب المهمة",
+      "delete_failed": "فشل في حذف قالب المهمة"
+    },
+    "success": {
+      "created": "تم إنشاء قالب المهمة بنجاح",
+      "updated": "تم تحديث قالب المهمة بنجاح",
+      "deleted": "تم حذف قالب المهمة بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف قالب المهمة",
       "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
       "delete": "حذف",
       "deleting": "جاري الحذف...",

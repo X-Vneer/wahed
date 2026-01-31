@@ -169,7 +169,8 @@ model TaskStatus {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tasks Task[]
+  tasks         Task[]
+  taskTemplates TaskTemplate[]
 }
 
 model TaskCategory {
@@ -179,7 +180,8 @@ model TaskCategory {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tasks     Task[]
+  tasks          Task[]
+  taskTemplates  TaskTemplate[]
 }
 
 model Project {
@@ -379,4 +381,32 @@ model SubTasks {
   createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+// Reusable task definitions stored at system level; can be added to any project later
+model TaskTemplate {
+  id                   String                @id @default(cuid())
+  title                String
+  description          String?
+  estimatedWorkingDays Int?
+  priority             TaskPriority          @default(MEDIUM)
+  defaultStatusId      String?
+  defaultStatus        TaskStatus?           @relation(fields: [defaultStatusId], references: [id], onDelete: SetNull)
+  categories           TaskCategory[]
+  subItems             TaskTemplateSubItem[]
+  isActive             Boolean               @default(true)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+}
+
+// Subtask definitions for a task template; created as SubTasks when template is added to a project
+model TaskTemplateSubItem {
+  id              String       @id @default(cuid())
+  title           String
+  description     String?
+  order           Int          @default(0)
+  taskTemplateId String
+  taskTemplate   TaskTemplate  @relation(fields: [taskTemplateId], references: [id], onDelete: Cascade)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 }

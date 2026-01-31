@@ -3,6 +3,7 @@
     "welcome": "Welcome",
     "hello": "Hello",
     "cancel": "Cancel",
+    "add": "Add",
     "save": "Save",
     "edit": "Edit project",
     "update": "Edit",
@@ -48,6 +49,7 @@
     "projectsAdd": "Add Project",
     "tasks": "Tasks",
     "tasksMain": "Main",
+    "tasksTemplates": "Task Templates",
     "tasksArchive": "Archive",
     "tasksAdd": "Add Task",
     "calendar": "Calendar",
@@ -88,6 +90,9 @@
     },
     "taskCategory": {
       "title": "Task Categories"
+    },
+    "taskTemplate": {
+      "title": "Task Templates"
     }
   },
   "errors": {
@@ -497,6 +502,61 @@
     },
     "deleteConfirm": {
       "title": "Delete Task Category",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
+    }
+  },
+  "taskTemplate": {
+    "createTitle": "Create Task Template",
+    "editTitle": "Edit Task Template",
+    "create": "Create",
+    "update": "Update",
+    "form": {
+      "title": "Title",
+      "titlePlaceholder": "Enter template title",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter description",
+      "estimatedWorkingDays": "Estimated Working Days",
+      "estimatedWorkingDaysPlaceholder": "Number of days",
+      "priority": "Priority",
+      "priorityLow": "Low",
+      "priorityMedium": "Medium",
+      "priorityHigh": "High",
+      "defaultStatus": "Default Status",
+      "defaultStatusPlaceholder": "Select default status",
+      "categories": "Categories",
+      "categoriesPlaceholder": "Select categories",
+      "subItems": "Sub-items",
+      "subItemTitle": "Sub-item title",
+      "subItemTitlePlaceholder": "Enter sub-item title",
+      "subItemDescription": "Description",
+      "subItemOrder": "Order",
+      "isActive": "Active",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "actions": "Actions"
+    },
+    "errors": {
+      "title": {
+        "required": "Title is required"
+      },
+      "subItemTitle": {
+        "required": "Sub-item title is required"
+      },
+      "not_found": "Task template not found",
+      "create_failed": "Failed to create task template",
+      "update_failed": "Failed to update task template",
+      "delete_failed": "Failed to delete task template"
+    },
+    "success": {
+      "created": "Task template created successfully",
+      "updated": "Task template updated successfully",
+      "deleted": "Task template deleted successfully"
+    },
+    "deleteConfirm": {
+      "title": "Delete Task Template",
       "description": "Are you sure you want to delete {name}? This action cannot be undone.",
       "delete": "Delete",
       "deleting": "Deleting...",
