@@ -768,6 +768,7 @@
     },
     "quickAccess": "Quick Access",
     "viewProject": "View Project",
+    "viewTasks": "View Tasks",
     "noProjects": "No projects found",
     "statusCards": {
       "allTasks": "All Tasks",
