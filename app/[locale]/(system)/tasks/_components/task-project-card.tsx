@@ -33,7 +33,7 @@ export function TaskProjectCard({ project }: { project: TransformedProject }) {
             nativeButton={false}
             render={
               <Link
-                href={`/projects/${project.id}`}
+                href={`/tasks/${project.id}`}
                 className="flex items-center justify-center gap-2"
               >
                 <ChevronLeft className="size-4 rtl:rotate-180" />

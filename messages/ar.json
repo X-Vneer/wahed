@@ -784,6 +784,16 @@
     },
     "noTasks": "لا توجد مهام"
   },
+  "tasks": {
+    "urgent": "مستعجل",
+    "periodBetween": "فترة بين : {start} الى {end}",
+    "dueDate": "مستحق: {date}",
+    "by": "من طرف {name}",
+    "commentsCount": "لديك {count} تعليقات",
+    "daysRemaining": "{count, plural, =0 {لا متبقي} =1 {متبقي يوم واحد} other {متبقي # أيام}}",
+    "current": "الحالية",
+    "progress": "التقدم"
+  },
   "calendar": {
     "today": "اليوم",
     "newEvent": "حدث جديد",
