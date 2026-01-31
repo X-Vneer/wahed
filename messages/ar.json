@@ -792,7 +792,10 @@
     "commentsCount": "لديك {count} تعليقات",
     "daysRemaining": "{count, plural, =0 {لا متبقي} =1 {متبقي يوم واحد} other {متبقي # أيام}}",
     "current": "الحالية",
-    "progress": "التقدم"
+    "progress": "التقدم",
+    "reorderSuccess": "تم تحديث ترتيب المهام",
+    "reorderError": "فشل تحديث الترتيب",
+    "noTasksInProject": "لا توجد مهام في هذا المشروع"
   },
   "calendar": {
     "today": "اليوم",

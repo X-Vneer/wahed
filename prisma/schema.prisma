@@ -336,6 +336,7 @@ model Task {
   finalFile            TaskAttachment?  @relation("finalFile", fields: [finalFileId], references: [id])
   projectId            String
   project              Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  order                Int              @default(0) // order within project for drag-and-drop
   subTasks             SubTasks[]
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
