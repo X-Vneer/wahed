@@ -1,14 +1,20 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { StackedUserAvatars } from "@/components/stacked-user-avatars"
 import { Card, CardContent } from "@/components/ui/card"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { Task } from "@/prisma/tasks"
-import { format, differenceInDays } from "date-fns"
+import { format, differenceInDays, addDays } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
-import { Bell, ChevronLeft, Circle, MessageCircle, Clock } from "lucide-react"
+import {
+  AlertCircle,
+  ChevronRight,
+  Circle,
+  MessageCircle,
+  Clock,
+} from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 export type TaskCardData = Task
@@ -26,62 +32,94 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
   const locale = useLocale()
   const localeDate = dateFnsLocale(locale)
 
-  const statusName =
-    task.status &&
-    (locale === "ar" ? task.status.nameAr : task.status.nameEn)
-  const statusColor = task.status?.color ?? undefined
-  const projectName =
-    task.project &&
-    (locale === "ar" ? task.project.nameAr : task.project.nameEn)
-  const assignee = task.assignedTo?.[0]
-    ? {
-        name: task.assignedTo[0].name,
-        image: task.assignedTo[0].image ?? undefined,
-      }
-    : null
-  const commentsCount = task.comments?.length ?? 0
+  const assignees = task.assignedTo
+  const createdBy = task.createdBy
   const daysRemaining =
-    task.dueDate != null
-      ? Math.max(0, differenceInDays(new Date(task.dueDate), new Date()))
+    task.startedAt != null
+      ? Math.max(0, differenceInDays(new Date(task.startedAt), new Date()))
       : null
   const totalSubTasks = task.subTasks?.length ?? 0
   const doneSubTasks = task.subTasks?.filter((s) => s.done).length ?? 0
   const progressPercent =
     totalSubTasks > 0 ? (doneSubTasks / totalSubTasks) * 100 : null
-  const isUrgent = task.priority === "HIGH"
+  const priority = task.priority ?? "MEDIUM"
 
-  const startStr =
-    task.createdAt &&
-    format(new Date(task.createdAt), dateFormat, { locale: localeDate })
-  const endStr =
-    task.dueDate &&
-    format(new Date(task.dueDate), dateFormat, { locale: localeDate })
-  const periodLabel =
-    startStr && endStr
-      ? t("periodBetween", { start: startStr, end: endStr })
-      : endStr
-      ? t("dueDate", { date: endStr })
+  const startStr = task.startedAt
+    ? format(task.startedAt, dateFormat, { locale: localeDate })
+    : null
+  const workingDays = task.estimatedWorkingDays ?? null
+  const estimatedDueDate =
+    task.startedAt != null && workingDays != null && workingDays > 0
+      ? addDays(task.startedAt, workingDays)
       : null
+  const estimatedDueStr =
+    estimatedDueDate &&
+    format(estimatedDueDate, dateFormat, { locale: localeDate })
 
   const content = (
     <Card
       className={cn(
-        "bg-card hover:bg-muted/30 flex flex-col overflow-hidden rounded-xl border shadow-none ring-0 transition-colors",
+        "flex flex-col overflow-hidden rounded-xl ring-0 transition-colors",
         className
       )}
     >
-      <CardContent className="flex flex-1 flex-col gap-3 px-5 py-4">
-        {/* Top row: status badges (start) | title + urgent | chevron (end in RTL) */}
-        <div className="flex flex-wrap items-start justify-between gap-2">
-          {/* Start side: comments, remaining, status, chevron */}
+      <CardContent className="flex flex-1 flex-col gap-3 px-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          {/* Title block: urgent + title + circle — appears on right in RTL */}
+          <div className="flex min-w-0 flex-1 flex-col items-end gap-1 text-end sm:flex-row sm:items-start sm:justify-between sm:gap-2 sm:text-start">
+            <div className="flex min-w-0 items-center gap-2">
+              <button
+                type="button"
+                className="text-muted-foreground hover:text-foreground focus-visible:ring-ring shrink-0 cursor-pointer rounded-full p-0.5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                aria-label={task.doneAt ? "Mark incomplete" : "Mark complete"}
+              >
+                <Circle
+                  className={cn(
+                    "size-5",
+                    task.doneAt && "fill-primary text-primary"
+                  )}
+                />
+              </button>
+              <h3 className="text-foreground truncate text-base font-semibold">
+                {task.title}
+              </h3>
+              {priority === "HIGH" && (
+                <Badge
+                  variant="destructive"
+                  className="shrink-0 rounded-sm border-0 bg-red-600 py-2 text-xs text-white"
+                >
+                  <AlertCircle className="size-3.5" />
+                  {t("priority.high")}
+                </Badge>
+              )}
+              {priority === "MEDIUM" && (
+                <Badge
+                  variant="secondary"
+                  className="shrink-0 rounded-sm border-0 bg-amber-100 py-2 text-xs text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
+                >
+                  {t("priority.medium")}
+                </Badge>
+              )}
+              {priority === "LOW" && (
+                <Badge
+                  variant="secondary"
+                  className="bg-muted text-muted-foreground shrink-0 rounded-sm border-0 py-2 text-xs"
+                >
+                  {t("priority.low")}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* Metadata: comments, remaining, status, chevron — appears on left in RTL */}
           <div className="flex flex-wrap items-center gap-2">
-            {commentsCount > 0 && (
+            {task.comments.length > 0 && (
               <Badge
                 variant="secondary"
-                className="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200"
+                className="rounded-md bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200"
               >
                 <MessageCircle className="size-3.5" />
-                {t("commentsCount", { count: commentsCount })}
+                {t("commentsCount", { count: task.comments.length })}
               </Badge>
             )}
             {daysRemaining != null && (
@@ -91,79 +129,58 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
               </span>
             )}
             <Badge
-              className="shrink-0 border-0"
+              className="h-7 shrink-0 rounded-sm border-0"
               style={
-                statusColor
-                  ? { backgroundColor: statusColor, color: "white" }
+                task.status.color
+                  ? { backgroundColor: task.status.color, color: "white" }
                   : undefined
               }
             >
-              {statusName}
+              {task.status.name}
             </Badge>
-            <ChevronLeft className="text-muted-foreground size-4 shrink-0 rtl:rotate-180" />
-          </div>
-
-          {/* End side: urgent badge + title */}
-          <div className="flex min-w-0 flex-1 flex-col items-end gap-1 text-end sm:flex-row sm:items-start sm:gap-2 sm:text-start">
-            {isUrgent && (
-              <Badge
-                variant="destructive"
-                className="shrink-0 border-0 bg-red-600 text-white"
-              >
-                <Bell className="size-3.5" />
-                {t("urgent")}
-              </Badge>
-            )}
-            <div className="flex min-w-0 items-center gap-2">
-              <button
-                type="button"
-                className="text-muted-foreground hover:text-foreground focus-visible:ring-ring shrink-0 rounded-full p-0.5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                aria-label={task.done ? "Mark incomplete" : "Mark complete"}
-              >
-                <Circle
-                  className={cn(
-                    "size-5",
-                    task.done && "fill-primary text-primary"
-                  )}
-                />
-              </button>
-              <h3 className="text-foreground truncate text-base font-semibold">
-                {task.title}
-              </h3>
-            </div>
+            <ChevronRight className="text-muted-foreground size-4 shrink-0 rtl:rotate-180" />
           </div>
         </div>
 
         {/* Project name */}
-        {projectName && (
-          <p className="text-muted-foreground text-sm">{projectName}</p>
+        {task.project.name && (
+          <p className="text-muted-foreground text-sm">{task.project.name}</p>
         )}
 
-        {/* Date range + assignee */}
+        {/* Start date, estimated working days, estimated due + assignee */}
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          {periodLabel && (
-            <span className="text-muted-foreground">{periodLabel}</span>
-          )}
-          {assignee && (
-            <span className="text-muted-foreground flex items-center gap-2">
-              <Avatar className="size-6">
-                {assignee.image ? (
-                  <AvatarImage
-                    src={assignee.image}
-                    alt={assignee.name}
-                  />
-                ) : null}
-                <AvatarFallback className="text-xs">
-                  {assignee.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .slice(0, 2)
-                    .toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              {t("by", { name: assignee.name })}
+          {startStr != null && (
+            <span className="text-muted-foreground">
+              {t("startDate", { date: startStr })}
             </span>
+          )}
+          {workingDays != null && workingDays > 0 && (
+            <span className="text-muted-foreground">
+              {t("estimatedWorkingDaysShort", { count: workingDays })}
+            </span>
+          )}
+          {estimatedDueStr != null && (
+            <span className="text-muted-foreground">
+              {t("estimatedDueDate", { date: estimatedDueStr })}
+            </span>
+          )}
+          {assignees.length > 0 ? (
+            <span className="text-muted-foreground flex items-center gap-2">
+              <StackedUserAvatars
+                users={assignees.map((u) => ({
+                  id: u.id,
+                  name: u.name,
+                  image: u.image,
+                  email: u.email,
+                }))}
+                size="sm"
+                maxVisible={3}
+                popoverTitle={t("assignees")}
+              />
+              {t("by", { name: createdBy.name })}
+            </span>
+          ) : (
+            <span className="text-muted-foreground">{t("noAssignee")}</span>
           )}
         </div>
 
@@ -175,9 +192,15 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
             </span>
             <div className="bg-muted h-2.5 min-w-0 flex-1 overflow-hidden rounded-full">
               <div
-                className="h-full rounded-full bg-green-500 transition-[width]"
+                className={cn(
+                  "h-full rounded-full transition-[width]",
+                  !task.status.color && "bg-green-500"
+                )}
                 style={{
                   width: `${Math.min(100, Math.max(0, progressPercent))}%`,
+                  ...(task.status.color && {
+                    backgroundColor: task.status.color,
+                  }),
                 }}
               />
             </div>

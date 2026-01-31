@@ -174,14 +174,14 @@ model TaskStatus {
 }
 
 model TaskCategory {
-  id        String   @id @default(cuid())
-  nameAr    String
-  nameEn    String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tasks          Task[]
-  taskTemplates  TaskTemplate[]
+  id            String         @id @default(cuid())
+  nameAr        String
+  nameEn        String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  tasks         Task[]
+  taskTemplates TaskTemplate[]
 }
 
 model Project {
@@ -323,14 +323,13 @@ model Task {
   status               TaskStatus       @relation(fields: [statusId], references: [id], onDelete: Cascade)
   category             TaskCategory[]
   estimatedWorkingDays Int?
-  dueDate              DateTime?
+  startedAt            DateTime?
   priority             TaskPriority     @default(MEDIUM)
   assignedTo           User[]           @relation("assignedTasks")
   createdById          String
   createdBy            User             @relation("createdTasks", fields: [createdById], references: [id], onDelete: Cascade)
   taskAttachments      TaskAttachment[]
   comments             TaskComment[]
-  done                 Boolean          @default(false)
   doneAt               DateTime?
   finalFileId          String?          @unique
   finalFile            TaskAttachment?  @relation("finalFile", fields: [finalFileId], references: [id])
@@ -402,12 +401,12 @@ model TaskTemplate {
 
 // Subtask definitions for a task template; created as SubTasks when template is added to a project
 model TaskTemplateSubItem {
-  id              String       @id @default(cuid())
-  title           String
-  description     String?
-  order           Int          @default(0)
+  id             String       @id @default(cuid())
+  title          String
+  description    String?
+  order          Int          @default(0)
   taskTemplateId String
-  taskTemplate   TaskTemplate  @relation(fields: [taskTemplateId], references: [id], onDelete: Cascade)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  taskTemplate   TaskTemplate @relation(fields: [taskTemplateId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }

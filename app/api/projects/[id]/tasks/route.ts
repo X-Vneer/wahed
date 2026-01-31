@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
+import { transformTask } from "@/prisma/tasks"
 
 type RouteContext = {
   params: Promise<{ id: string }>
@@ -13,9 +14,7 @@ type RouteContext = {
 
 export async function GET(request: NextRequest, context: RouteContext) {
   try {
-    const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.TASK.VIEW
-    )
+    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }
@@ -47,7 +46,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({
       project: { id: project.id, name: projectName },
-      tasks,
+      tasks: tasks.map((task) => transformTask(task, locale)),
     })
   } catch (error) {
     console.error("Error fetching project tasks:", error)

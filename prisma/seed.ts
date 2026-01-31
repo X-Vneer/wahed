@@ -989,6 +989,46 @@ async function main() {
     }
 
     console.log("✅ Seeded 3 projects")
+
+    // Seed 3 tasks per project
+    const taskTitles = [
+      { titleEn: "Initial site assessment", titleAr: "التقييم المبدئي للموقع" },
+      { titleEn: "Design review and approval", titleAr: "مراجعة التصميم والموافقة" },
+      { titleEn: "Progress documentation", titleAr: "توثيق التقدم" },
+    ]
+    const defaultStatusId = "task-status-pending"
+    const devCategoryId = "task-category-development"
+
+    for (const projectData of projects) {
+      for (let i = 0; i < 3; i++) {
+        const { titleEn, titleAr } = taskTitles[i]
+        await db.task.upsert({
+          where: { id: `task-${projectData.id}-${i + 1}` },
+          update: {
+            title: titleEn,
+            description: `Seed task ${i + 1} for ${projectData.nameEn}`,
+            statusId: defaultStatusId,
+            estimatedWorkingDays: 3 + i,
+            priority: i === 0 ? TaskPriority.HIGH : TaskPriority.MEDIUM,
+            order: i,
+          },
+          create: {
+            id: `task-${projectData.id}-${i + 1}`,
+            title: titleEn,
+            description: `Seed task ${i + 1} for ${projectData.nameEn}`,
+            statusId: defaultStatusId,
+            projectId: projectData.id,
+            createdById: admin.id,
+            estimatedWorkingDays: 3 + i,
+            priority: i === 0 ? TaskPriority.HIGH : TaskPriority.MEDIUM,
+            order: i,
+            category: { connect: [{ id: devCategoryId }] },
+          },
+        })
+      }
+    }
+
+    console.log("✅ Seeded 3 tasks per project (9 tasks total)")
   } else {
     console.log("⚠️  Could not seed projects: city or category not found")
   }
