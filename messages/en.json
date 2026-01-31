@@ -103,7 +103,8 @@
     "internal_server_error": "Internal server error",
     "failed_to_fetch_user_data": "Failed to fetch user data",
     "upload_failed": "Failed to upload image",
-    "failed_to_load": "Failed to load user data"
+    "failed_to_load": "Failed to load user data",
+    "validation_failed": "Validation failed"
   },
   "welcome": {
     "title": "Welcome back",
@@ -785,6 +786,16 @@
     "noTasks": "There is no tasks"
   },
   "tasks": {
+    "errors": {
+      "title_required": "Title is required",
+      "subtask_title_required": "Sub-task title is required",
+      "project_required": "Project is required",
+      "status_required": "Status is required",
+      "invalid_status": "Invalid status",
+      "invalid_categories": "One or more selected categories are invalid",
+      "invalid_assigned_to": "One or more assigned users are invalid or inactive",
+      "create_failed": "Failed to create task"
+    },
     "urgent": "Urgent",
     "priority": {
       "low": "Low",

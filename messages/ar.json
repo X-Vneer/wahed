@@ -103,7 +103,8 @@
     "internal_server_error": "خطأ في الخادم الداخلي",
     "failed_to_fetch_user_data": "فشل في جلب بيانات المستخدم",
     "upload_failed": "فشل تحميل الصورة",
-    "failed_to_load": "فشل تحميل بيانات المستخدم"
+    "failed_to_load": "فشل تحميل بيانات المستخدم",
+    "validation_failed": "فشل التحقق"
   },
   "welcome": {
     "title": "مرحباً بعودتك",
@@ -785,6 +786,16 @@
     "noTasks": "لا توجد مهام"
   },
   "tasks": {
+    "errors": {
+      "title_required": "العنوان مطلوب",
+      "subtask_title_required": "عنوان المهمة الفرعية مطلوب",
+      "project_required": "المشروع مطلوب",
+      "status_required": "الحالة مطلوبة",
+      "invalid_status": "حالة غير صالحة",
+      "invalid_categories": "واحدة أو أكثر من الفئات المحددة غير صالحة",
+      "invalid_assigned_to": "واحد أو أكثر من المستخدمين المعينين غير صالحين أو غير نشطين",
+      "create_failed": "فشل إنشاء المهمة"
+    },
     "urgent": "مستعجل",
     "priority": {
       "low": "منخفضة",
