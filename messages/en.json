@@ -794,7 +794,9 @@
       "invalid_status": "Invalid status",
       "invalid_categories": "One or more selected categories are invalid",
       "invalid_assigned_to": "One or more assigned users are invalid or inactive",
-      "create_failed": "Failed to create task"
+      "create_failed": "Failed to create task",
+      "not_found": "Task not found",
+      "subtask_not_found": "Sub-task not found"
     },
     "urgent": "Urgent",
     "priority": {

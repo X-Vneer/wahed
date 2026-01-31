@@ -1,0 +1,56 @@
+import { PERMISSIONS_GROUPED } from "@/config"
+import db from "@/lib/db"
+import { getLocaleFromRequest } from "@/lib/i18n/utils"
+import { taskInclude, transformTask } from "@/prisma/tasks"
+import { getReqLocale } from "@/utils/get-req-locale"
+import { hasPermission } from "@/utils/has-permission"
+import { getTranslations } from "next-intl/server"
+import { type NextRequest, NextResponse } from "next/server"
+
+type RouteContext = {
+  params: Promise<{ id: string }>
+}
+
+export async function PATCH(request: NextRequest, context: RouteContext) {
+  try {
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    const permissionCheck = await hasPermission(
+      PERMISSIONS_GROUPED.TASK.COMPLETE
+    )
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
+    const { id } = await context.params
+
+    const existing = await db.task.findUnique({
+      where: { id },
+      select: { id: true },
+    })
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: t("tasks.errors.not_found") },
+        { status: 404 }
+      )
+    }
+
+    const task = await db.task.update({
+      where: { id },
+      data: { doneAt: new Date() },
+      include: taskInclude,
+    })
+
+    const responseLocale = getLocaleFromRequest(request)
+    return NextResponse.json(transformTask(task, responseLocale))
+  } catch (error) {
+    console.error("Error setting task done:", error)
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}
