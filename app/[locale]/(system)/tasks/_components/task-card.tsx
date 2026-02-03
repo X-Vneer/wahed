@@ -2,8 +2,10 @@
 
 import { StackedUserAvatars } from "@/components/stacked-user-avatars"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress, ProgressValue } from "@/components/ui/progress"
+import { TASK_STATUS_ID_IN_PROGRESS, TASK_STATUS_ID_PENDING } from "@/config"
 import { useToggleTaskDone } from "@/hooks/use-toggle-task-done"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
@@ -20,19 +22,17 @@ import {
 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { TaskStatusDropdown } from "./task-status-dropdown"
-import { TASK_STATUS_ID_IN_PROGRESS, TASK_STATUS_ID_PENDING } from "@/config"
 
 export type TaskCardData = Task
 type TaskCardProps = {
   task: TaskCardData
-  href?: string
   className?: string
 }
 
 const dateFnsLocale = (locale: string) => (locale === "ar" ? ar : enUS)
 const dateFormat = "d - MMM - yyyy"
 
-export function TaskCard({ task, href, className }: TaskCardProps) {
+export function TaskCard({ task, className }: TaskCardProps) {
   const t = useTranslations("tasks")
   const locale = useLocale()
   const localeDate = dateFnsLocale(locale)
@@ -79,7 +79,7 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
   const isOverdue =
     estimatedDueDate != null && estimatedDueDate < now && !task.doneAt
 
-  const content = (
+  return (
     <Card
       className={cn(
         "flex flex-col overflow-hidden rounded-xl py-4 ring-0 transition-colors",
@@ -166,7 +166,13 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
               </span>
             ) : null}
             <TaskStatusDropdown task={task} />
-            <ChevronRight className="text-muted-foreground size-4 shrink-0 rtl:rotate-180" />
+            <Button
+              variant="ghost"
+              size="icon"
+              render={<Link href={`/task/${task.id}`} />}
+            >
+              <ChevronRight className="text-muted-foreground size-4 shrink-0 rtl:rotate-180" />
+            </Button>
           </div>
         </div>
 
@@ -224,17 +230,4 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
       </CardContent>
     </Card>
   )
-
-  if (href) {
-    return (
-      <Link
-        href={href}
-        className="focus-visible:ring-ring block rounded-xl focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-      >
-        {content}
-      </Link>
-    )
-  }
-
-  return content
 }

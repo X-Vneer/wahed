@@ -45,7 +45,6 @@ function ReorderTaskItem({
 }: ReorderTaskItemProps) {
   const t = useTranslations("tasks")
   const controls = useDragControls()
-
   const handlePointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
     if (!dragEnabled) return
     event.preventDefault()
