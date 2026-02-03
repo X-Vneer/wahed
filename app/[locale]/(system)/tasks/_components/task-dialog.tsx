@@ -255,12 +255,43 @@ export function TaskDialog({ open, onOpenChange, projectId }: TaskDialogProps) {
                     <SelectTrigger className="w-full" id="statusId">
                       <SelectValue
                         placeholder={t("tasks.form.statusPlaceholder")}
-                      />
+                      >
+                        {form.values.statusId
+                          ? (() => {
+                              const s = statuses.find(
+                                (x) => x.id === form.values.statusId
+                              )
+                              return s ? (
+                                <span className="flex items-center gap-2">
+                                  <span
+                                    className="inline-block size-3 shrink-0 rounded-full"
+                                    style={
+                                      s.color
+                                        ? { backgroundColor: s.color }
+                                        : undefined
+                                    }
+                                  />
+                                  {s.name}
+                                </span>
+                              ) : null
+                            })()
+                          : null}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent alignItemWithTrigger={false}>
                       {statuses.map((s) => (
                         <SelectItem key={s.id} value={s.id}>
-                          {s.name}
+                          <span className="flex items-center gap-2">
+                            <span
+                              className="inline-block size-3 shrink-0 rounded-full"
+                              style={
+                                s.color
+                                  ? { backgroundColor: s.color }
+                                  : undefined
+                              }
+                            />
+                            {s.name}
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>

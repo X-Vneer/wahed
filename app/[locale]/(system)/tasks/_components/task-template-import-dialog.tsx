@@ -184,24 +184,55 @@ export function TaskTemplateImportDialog({
                     <SelectTrigger className="w-full">
                       <SelectValue
                         placeholder={t("tasks.form.statusPlaceholder")}
-                      />
+                      >
+                        {statusId
+                          ? (() => {
+                              const s = statuses.find((x) => x.id === statusId)
+                              return s ? (
+                                <span className="flex items-center gap-2">
+                                  <span
+                                    className="inline-block size-3 shrink-0 rounded-full"
+                                    style={
+                                      s.color
+                                        ? { backgroundColor: s.color }
+                                        : undefined
+                                    }
+                                  />
+                                  {s.name}
+                                </span>
+                              ) : null
+                            })()
+                          : null}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent alignItemWithTrigger={false}>
                       {statuses.map((s) => (
                         <SelectItem key={s.id} value={s.id}>
-                          {s.name}
+                          <span className="flex items-center gap-2">
+                            <span
+                              className="inline-block size-3 shrink-0 rounded-full"
+                              style={
+                                s.color
+                                  ? { backgroundColor: s.color }
+                                  : undefined
+                              }
+                            />
+                            {s.name}
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </Field>
 
-                <Field data-invalid={!!rootError && selectedTemplateIds.length === 0}>
+                <Field
+                  data-invalid={!!rootError && selectedTemplateIds.length === 0}
+                >
                   <FieldLabel>{t("tasks.addFromSystem")}</FieldLabel>
-                  <div className="border-input bg-background mt-1 max-h-64 space-y-2 overflow-auto rounded-md border p-2">
+                  <div className="mt-1 max-h-64 space-y-2 overflow-auto rounded-md border p-2">
                     {loadingTemplates && (
                       <div className="flex items-center justify-center py-4">
-                        <Spinner className="mr-2 size-4" />
+                        <Spinner className="me-2 size-4" />
                         <span className="text-muted-foreground text-sm">
                           {t("common.loading")}
                         </span>
@@ -218,11 +249,13 @@ export function TaskTemplateImportDialog({
 
                     {!loadingTemplates &&
                       templates.map((template) => {
-                        const checked = selectedTemplateIds.includes(template.id)
+                        const checked = selectedTemplateIds.includes(
+                          template.id
+                        )
                         return (
                           <label
                             key={template.id}
-                            className="hover:bg-muted/50 flex cursor-pointer items-start gap-2 rounded-md p-2 transition-colors"
+                            className="hover:bg-muted flex cursor-pointer items-start gap-2 rounded-md p-2 transition-colors"
                           >
                             <Checkbox
                               checked={checked}
@@ -286,4 +319,3 @@ export function TaskTemplateImportDialog({
     </Dialog>
   )
 }
-
