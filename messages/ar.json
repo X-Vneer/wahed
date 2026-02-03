@@ -818,7 +818,10 @@
     "reorderError": "فشل تحديث الترتيب",
     "noTasksInProject": "لا توجد مهام في هذا المشروع",
     "noAssignee": "لم يتم تعيينه لأحد",
-    "assignees": "معين إلى"
+    "assignees": "معين إلى",
+    "notStarted": "لم تبدأ بعد",
+    "taskDoneUpdated": "تم وضع علامة على المهمة كمكتملة",
+    "taskUndoneUpdated": "تم وضع علامة على المهمة بأنها غير مكتملة"
   },
   "calendar": {
     "today": "اليوم",

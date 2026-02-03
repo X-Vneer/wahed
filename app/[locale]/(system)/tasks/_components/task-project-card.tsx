@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Link } from "@/lib/i18n/navigation"
 import { type TransformedProject } from "@/prisma/projects"
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 export function TaskProjectCard({ project }: { project: TransformedProject }) {
@@ -36,8 +36,8 @@ export function TaskProjectCard({ project }: { project: TransformedProject }) {
                 href={`/tasks/${project.id}`}
                 className="flex items-center justify-center gap-2"
               >
-                <ChevronLeft className="size-4 rtl:rotate-180" />
                 {t("viewTasks")}
+                <ChevronRight className="size-4 rtl:rotate-180" />
               </Link>
             }
           />

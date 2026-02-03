@@ -816,9 +816,12 @@
     "progress": "Progress",
     "reorderSuccess": "Task order updated",
     "reorderError": "Failed to update task order",
+    "taskDoneUpdated": "Task marked as complete",
+    "taskUndoneUpdated": "Task marked as incomplete",
     "noTasksInProject": "No tasks in this project",
     "noAssignee": "Not assigned to anyone",
-    "assignees": "Assigned to"
+    "assignees": "Assigned to",
+    "notStarted": "Not started yet"
   },
   "calendar": {
     "today": "Today",

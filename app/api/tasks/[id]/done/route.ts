@@ -36,9 +36,21 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       )
     }
 
+    let body: { done?: boolean } = {}
+    try {
+      const raw = await request.json()
+      if (raw && typeof raw === "object" && "done" in raw) {
+        body = { done: Boolean(raw.done) }
+      }
+    } catch {
+      // No body or invalid JSON: default to marking done
+    }
+
+    const done = body.done !== false
+
     const task = await db.task.update({
       where: { id },
-      data: { doneAt: new Date() },
+      data: { doneAt: done ? new Date() : null },
       include: taskInclude,
     })
 

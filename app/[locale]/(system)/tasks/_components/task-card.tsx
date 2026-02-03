@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { Task } from "@/prisma/tasks"
+import { useToggleTaskDone } from "@/hooks/use-toggle-task-done"
 import { format, differenceInDays, addDays } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import {
@@ -14,6 +15,7 @@ import {
   Circle,
   MessageCircle,
   Clock,
+  CircleCheckBig,
 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -31,6 +33,17 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
   const t = useTranslations("tasks")
   const locale = useLocale()
   const localeDate = dateFnsLocale(locale)
+  const toggleDoneMutation = useToggleTaskDone()
+
+  const handleToggleDone = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (toggleDoneMutation.isPending) return
+    toggleDoneMutation.mutate({
+      taskId: task.id,
+      done: !task.doneAt,
+    })
+  }
 
   const assignees = task.assignedTo
   const createdBy = task.createdBy
@@ -41,7 +54,7 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
   const totalSubTasks = task.subTasks?.length ?? 0
   const doneSubTasks = task.subTasks?.filter((s) => s.done).length ?? 0
   const progressPercent =
-    totalSubTasks > 0 ? (doneSubTasks / totalSubTasks) * 100 : null
+    totalSubTasks > 0 ? (doneSubTasks / totalSubTasks) * 100 : 0
   const priority = task.priority ?? "MEDIUM"
 
   const startStr = task.startedAt
@@ -59,26 +72,27 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
   const content = (
     <Card
       className={cn(
-        "flex flex-col overflow-hidden rounded-xl ring-0 transition-colors",
+        "flex flex-col overflow-hidden rounded-xl py-4 ring-0 transition-colors",
         className
       )}
     >
-      <CardContent className="flex flex-1 flex-col gap-3 px-5">
+      <CardContent className="flex flex-1 flex-col gap-2 px-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           {/* Title block: urgent + title + circle — appears on right in RTL */}
           <div className="flex min-w-0 flex-1 flex-col items-end gap-1 text-end sm:flex-row sm:items-start sm:justify-between sm:gap-2 sm:text-start">
             <div className="flex min-w-0 items-center gap-2">
               <button
                 type="button"
-                className="text-muted-foreground hover:text-foreground focus-visible:ring-ring shrink-0 cursor-pointer rounded-full p-0.5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                onClick={handleToggleDone}
+                disabled={toggleDoneMutation.isPending}
+                className="text-muted-foreground hover:text-foreground focus-visible:ring-ring shrink-0 cursor-pointer rounded-full p-0.5 transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
                 aria-label={task.doneAt ? "Mark incomplete" : "Mark complete"}
               >
-                <Circle
-                  className={cn(
-                    "size-5",
-                    task.doneAt && "fill-primary text-primary"
-                  )}
-                />
+                {task.doneAt ? (
+                  <CircleCheckBig className="text-primary size-5" />
+                ) : (
+                  <Circle className="size-5" />
+                )}
               </button>
               <h3 className="text-foreground truncate text-base font-semibold">
                 {task.title}
@@ -113,19 +127,22 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
 
           {/* Metadata: comments, remaining, status, chevron — appears on left in RTL */}
           <div className="flex flex-wrap items-center gap-2">
-            {task.comments.length > 0 && (
-              <Badge
-                variant="secondary"
-                className="rounded-md bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200"
-              >
-                <MessageCircle className="size-3.5" />
-                {t("commentsCount", { count: task.comments.length })}
-              </Badge>
-            )}
-            {daysRemaining != null && (
+            <Badge
+              variant="secondary"
+              className="text-primary h-7 rounded-sm bg-[#ffcdbd5b]"
+            >
+              <MessageCircle className="size-3.5" />
+              {t("commentsCount", { count: task.comments.length })}
+            </Badge>
+            {daysRemaining != null ? (
               <span className="text-muted-foreground flex items-center gap-1 text-sm">
                 <Clock className="size-3.5" />
                 {t("daysRemaining", { count: daysRemaining })}
+              </span>
+            ) : (
+              <span className="text-muted-foreground flex items-center gap-1 text-sm">
+                <Clock className="size-3.5" />
+                {t("notStarted")}
               </span>
             )}
             <Badge
@@ -187,9 +204,6 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
         {/* Progress bar */}
         {progressPercent != null && (
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground shrink-0 text-sm">
-              {Math.round(progressPercent)}%
-            </span>
             <div className="bg-muted h-2.5 min-w-0 flex-1 overflow-hidden rounded-full">
               <div
                 className={cn(
@@ -204,6 +218,9 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
                 }}
               />
             </div>
+            <span className="text-muted-foreground shrink-0 text-sm">
+              {Math.round(progressPercent)}%
+            </span>
           </div>
         )}
       </CardContent>

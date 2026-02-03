@@ -218,7 +218,7 @@ export function TaskTemplateModal({
           className="flex flex-1 flex-col overflow-hidden"
         >
           <ScrollArea className="min-h-0 flex-1 overflow-hidden pe-4">
-            <div className="space-y-4 py-4 pr-4">
+            <div className="space-y-4 py-4 ps-4">
               <FieldGroup>
                 <Field data-invalid={!!form.errors.title}>
                   <FieldLabel htmlFor="title">
