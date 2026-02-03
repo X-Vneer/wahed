@@ -816,6 +816,8 @@
     "progress": "التقدم",
     "reorderSuccess": "تم تحديث ترتيب المهام",
     "reorderError": "فشل تحديث الترتيب",
+    "enableReorder": "إعادة ترتيب المهام",
+    "disableReorder": "إنهاء إعادة الترتيب",
     "noTasksInProject": "لا توجد مهام في هذا المشروع",
     "noAssignee": "لم يتم تعيينه لأحد",
     "assignees": "معين إلى",

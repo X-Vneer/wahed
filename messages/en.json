@@ -816,6 +816,8 @@
     "progress": "Progress",
     "reorderSuccess": "Task order updated",
     "reorderError": "Failed to update task order",
+    "enableReorder": "Reorder tasks",
+    "disableReorder": "Done reordering",
     "taskDoneUpdated": "Task marked as complete",
     "taskUndoneUpdated": "Task marked as incomplete",
     "noTasksInProject": "No tasks in this project",

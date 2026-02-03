@@ -53,7 +53,7 @@ export const useReorderTasks = (projectId: string | null) => {
       })
       return response.data
     },
-    onSuccess: (_, __, context) => {
+    onSuccess: () => {
       if (projectId) {
         queryClient.invalidateQueries({ queryKey: ["project-tasks", projectId] })
       }
