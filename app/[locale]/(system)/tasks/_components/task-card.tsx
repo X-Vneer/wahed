@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge"
 import { StackedUserAvatars } from "@/components/stacked-user-avatars"
 import { Card, CardContent } from "@/components/ui/card"
+import { Progress, ProgressValue } from "@/components/ui/progress"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { Task } from "@/prisma/tasks"
@@ -203,25 +204,12 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
 
         {/* Progress bar */}
         {progressPercent != null && (
-          <div className="flex items-center gap-2">
-            <div className="bg-muted h-2.5 min-w-0 flex-1 overflow-hidden rounded-full">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-[width]",
-                  !task.status.color && "bg-green-500"
-                )}
-                style={{
-                  width: `${Math.min(100, Math.max(0, progressPercent))}%`,
-                  ...(task.status.color && {
-                    backgroundColor: task.status.color,
-                  }),
-                }}
-              />
-            </div>
-            <span className="text-muted-foreground shrink-0 text-sm">
-              {Math.round(progressPercent)}%
-            </span>
-          </div>
+          <Progress
+            value={Math.min(100, Math.max(0, progressPercent))}
+            className="flex min-w-0 flex-1 flex-nowrap items-center gap-2 **:data-[slot=progress-track]:h-2.5"
+          >
+            <ProgressValue className="order-1 shrink-0" />
+          </Progress>
         )}
       </CardContent>
     </Card>
