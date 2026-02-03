@@ -125,6 +125,14 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       )
     }
 
+    // System statuses cannot be deleted (fixed: Pending, In Progress, Canceled, Done)
+    if (existingTaskStatus.isSystem) {
+      return NextResponse.json(
+        { error: t("taskStatus.errors.cannot_delete_system") },
+        { status: 403 }
+      )
+    }
+
     // Delete task status
     await db.taskStatus.delete({
       where: { id },

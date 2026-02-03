@@ -32,12 +32,10 @@ export async function GET(request: NextRequest) {
     // Get total count for pagination
     const total = await db.taskStatus.count({ where })
 
-    // Fetch task statuses from database with pagination
+    // Fetch task statuses: system statuses first, then by createdAt desc
     const taskStatuses = await db.taskStatus.findMany({
       where,
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [{ isSystem: "desc" }, { createdAt: "desc" }],
       skip: (page - 1) * perPage,
       take: perPage,
     })

@@ -1,22 +1,22 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
 import { StackedUserAvatars } from "@/components/stacked-user-avatars"
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress, ProgressValue } from "@/components/ui/progress"
+import { useToggleTaskDone } from "@/hooks/use-toggle-task-done"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { Task } from "@/prisma/tasks"
-import { useToggleTaskDone } from "@/hooks/use-toggle-task-done"
-import { format, differenceInDays, addDays } from "date-fns"
+import { addDays, format, formatDistanceToNow } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import {
   AlertCircle,
   ChevronRight,
   Circle,
-  MessageCircle,
-  Clock,
   CircleCheckBig,
+  Clock,
+  MessageCircle,
 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { TaskStatusDropdown } from "./task-status-dropdown"
@@ -49,10 +49,7 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
 
   const assignees = task.assignedTo
   const createdBy = task.createdBy
-  const daysRemaining =
-    task.startedAt != null
-      ? Math.max(0, differenceInDays(new Date(task.startedAt), new Date()))
-      : null
+
   const totalSubTasks = task.subTasks?.length ?? 0
   const doneSubTasks = task.subTasks?.filter((s) => s.done).length ?? 0
   const progressPercent =
@@ -69,7 +66,17 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
       : null
   const estimatedDueStr =
     estimatedDueDate &&
-    format(estimatedDueDate, dateFormat, { locale: localeDate })
+    formatDistanceToNow(estimatedDueDate, { locale: localeDate })
+  const now = new Date()
+  const dueDistance =
+    estimatedDueDate != null
+      ? formatDistanceToNow(estimatedDueDate, {
+          addSuffix: true,
+          locale: localeDate,
+        })
+      : null
+  const isOverdue =
+    estimatedDueDate != null && estimatedDueDate < now && !task.doneAt
 
   const content = (
     <Card
@@ -136,10 +143,19 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
               <MessageCircle className="size-3.5" />
               {t("commentsCount", { count: task.comments.length })}
             </Badge>
-            {daysRemaining != null ? (
-              <span className="text-muted-foreground flex items-center gap-1 text-sm">
-                <Clock className="size-3.5" />
-                {t("daysRemaining", { count: daysRemaining })}
+            {dueDistance != null ? (
+              <span
+                className={cn(
+                  "flex items-center gap-1 text-sm",
+                  isOverdue
+                    ? "text-destructive font-medium"
+                    : "text-muted-foreground"
+                )}
+              >
+                <Clock className="size-3.5 shrink-0" />
+                {isOverdue
+                  ? t("overdue", { distance: dueDistance })
+                  : t("dueIn", { distance: dueDistance })}
               </span>
             ) : (
               <span className="text-muted-foreground flex items-center gap-1 text-sm">

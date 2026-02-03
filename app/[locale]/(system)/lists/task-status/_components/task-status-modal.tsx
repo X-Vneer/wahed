@@ -124,6 +124,11 @@ export function TaskStatusModal({
               ? t("taskStatus.editTitle")
               : t("taskStatus.createTitle")}
           </SheetTitle>
+          {selectedTaskStatus?.isSystem && (
+            <p className="text-muted-foreground text-sm">
+              {t("taskStatus.systemStatusNote")}
+            </p>
+          )}
         </SheetHeader>
 
         <form

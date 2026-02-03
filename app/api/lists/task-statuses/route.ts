@@ -9,9 +9,7 @@ export async function GET(request: NextRequest) {
   const t = await getTranslations({ locale })
   try {
     const taskStatuses = await db.taskStatus.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [{ isSystem: "desc" }, { createdAt: "desc" }],
     })
 
     const transformedTaskStatuses = taskStatuses.map((taskStatus) =>

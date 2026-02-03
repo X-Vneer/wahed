@@ -10,6 +10,24 @@ export function useTaskStatusColumns(): ColumnDef<TaskStatus>[] {
 
   return [
     {
+      accessorKey: "isSystem",
+      header: t("taskStatus.form.type"),
+      cell: ({ row }) => {
+        const isSystem = row.getValue("isSystem") as boolean
+        return (
+          <span
+            className={
+              isSystem
+                ? "rounded bg-muted px-2 py-0.5 text-xs font-medium"
+                : "rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
+            }
+          >
+            {isSystem ? t("taskStatus.type.system") : t("taskStatus.type.custom")}
+          </span>
+        )
+      },
+    },
+    {
       accessorKey: "nameAr",
       header: t("taskStatus.form.nameAr"),
     },

@@ -1,10 +1,9 @@
-import { PERMISSIONS_GROUPED } from "@/config"
+import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
+import { TaskPriority } from "@/lib/generated/prisma/enums"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { updateTaskSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
-import { TaskPriority } from "@/lib/generated/prisma/enums"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
@@ -112,7 +111,12 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     if (data.title !== undefined) updateData.title = data.title
     if (data.description !== undefined)
       updateData.description = data.description
-    if (data.statusId !== undefined) updateData.statusId = data.statusId
+    if (data.statusId !== undefined) {
+      updateData.statusId = data.statusId
+      if (data.statusId === TASK_STATUS_ID_IN_PROGRESS) {
+        updateData.startedAt = new Date()
+      }
+    }
     if (data.estimatedWorkingDays !== undefined)
       updateData.estimatedWorkingDays = data.estimatedWorkingDays
     if (data.priority !== undefined)

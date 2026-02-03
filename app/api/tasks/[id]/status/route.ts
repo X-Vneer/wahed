@@ -1,4 +1,4 @@
-import { PERMISSIONS_GROUPED } from "@/config"
+import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { changeTaskStatusSchema } from "@/lib/schemas/task"
@@ -64,7 +64,12 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     const task = await db.task.update({
       where: { id },
-      data: { statusId },
+      data: {
+        statusId,
+        ...(statusId === TASK_STATUS_ID_IN_PROGRESS && {
+          startedAt: new Date(),
+        }),
+      },
       include: taskInclude,
     })
 

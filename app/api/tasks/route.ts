@@ -1,4 +1,4 @@
-import { PERMISSIONS_GROUPED } from "@/config"
+import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
@@ -111,6 +111,9 @@ export async function POST(request: NextRequest) {
         description: data.description ?? null,
         projectId: data.projectId,
         statusId: data.statusId,
+        ...(data.statusId === TASK_STATUS_ID_IN_PROGRESS && {
+          startedAt: new Date(),
+        }),
         estimatedWorkingDays: data.estimatedWorkingDays ?? null,
         priority: data.priority as TaskPriority,
         order,

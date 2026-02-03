@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useState } from "react"
 
 import {
   Breadcrumb,
@@ -10,15 +10,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Spinner } from "@/components/ui/spinner"
-import { useProjectTasks } from "@/hooks/use-project-tasks"
-import { useTaskStatuses } from "@/hooks/use-task-status"
-import { useParams } from "next/navigation"
-import { useTranslations } from "next-intl"
-import { parseAsBoolean, parseAsString, useQueryStates } from "nuqs"
-import { TaskFilters } from "../_components/task-filters"
-import { TaskListWithReorder } from "../_components/task-list-with-reorder"
-import { ChevronDown, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -26,9 +17,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { TaskDialog } from "../_components/task-dialog"
-import { TaskTemplateImportDialog } from "../_components/task-template-import-dialog"
+import { Spinner } from "@/components/ui/spinner"
+import { useProjectTasks } from "@/hooks/use-project-tasks"
 import type { Task } from "@/prisma/tasks"
+import { ChevronDown, Plus } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useParams } from "next/navigation"
+import { parseAsBoolean, parseAsString, useQueryStates } from "nuqs"
+import { TaskDialog } from "../_components/task-dialog"
+import { TaskFilters } from "../_components/task-filters"
+import { TaskListWithReorder } from "../_components/task-list-with-reorder"
+import { TaskTemplateImportDialog } from "../_components/task-template-import-dialog"
 
 const TasksProjectPage = () => {
   const t = useTranslations()

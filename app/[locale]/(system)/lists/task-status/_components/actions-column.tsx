@@ -59,6 +59,8 @@ function ActionsCell({ taskStatus, onEdit }: ActionsCellProps) {
     deleteMutation.mutate(taskStatus.id)
   }
 
+  const isSystem = taskStatus.isSystem === true
+
   return (
     <>
       <div className="flex items-center gap-1">
@@ -70,15 +72,17 @@ function ActionsCell({ taskStatus, onEdit }: ActionsCellProps) {
         >
           <Edit className="size-4" />
         </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => setDeleteDialogOpen(true)}
-          aria-label="Delete"
-          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-        >
-          <Trash2 className="size-4" />
-        </Button>
+        {!isSystem && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => setDeleteDialogOpen(true)}
+            aria-label="Delete"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="size-4" />
+          </Button>
+        )}
       </div>
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

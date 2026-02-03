@@ -166,6 +166,7 @@ model TaskStatus {
   nameAr    String
   nameEn    String
   color     String
+  isSystem  Boolean  @default(false) // Fixed statuses (Pending, In Progress, Canceled, Done) - editable labels, cannot delete
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -640,41 +640,46 @@ async function main() {
 
   console.log("✅ Seeded Saudi Arabia regions and cities")
 
-  // Seed task statuses
-  const taskStatuses = [
+  // Seed 4 fixed system task statuses (labels editable in AR/EN, cannot be deleted)
+  const systemTaskStatuses = [
     {
       id: "task-status-pending",
       nameAr: "قيد الانتظار",
       nameEn: "Pending",
       color: "#F59E0B", // Amber/Orange
+      isSystem: true,
     },
     {
       id: "task-status-in-progress",
       nameAr: "قيد التنفيذ",
       nameEn: "In Progress",
       color: "#3B82F6", // Blue
+      isSystem: true,
     },
     {
       id: "task-status-completed",
-      nameAr: "مكتمل",
-      nameEn: "Completed",
+      nameAr: "منتهي",
+      nameEn: "Done",
       color: "#10B981", // Green
+      isSystem: true,
     },
     {
       id: "task-status-cancelled",
       nameAr: "ملغي",
-      nameEn: "Cancelled",
+      nameEn: "Canceled",
       color: "#EF4444", // Red
+      isSystem: true,
     },
   ]
 
-  for (const status of taskStatuses) {
+  for (const status of systemTaskStatuses) {
     await db.taskStatus.upsert({
       where: { id: status.id },
       update: {
         nameAr: status.nameAr,
         nameEn: status.nameEn,
         color: status.color,
+        isSystem: status.isSystem,
       },
       create: status,
     })
