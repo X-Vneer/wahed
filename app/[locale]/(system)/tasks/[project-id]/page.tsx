@@ -17,7 +17,6 @@ import { useTranslations } from "next-intl"
 import { TaskListWithReorder } from "../_components/task-list-with-reorder"
 import { ChevronDown, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Link } from "@/lib/i18n/navigation"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,12 +24,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { TaskDialog } from "../_components/task-dialog"
+import { TaskTemplateImportDialog } from "../_components/task-template-import-dialog"
 
 const TasksProjectPage = () => {
   const t = useTranslations()
   const params = useParams()
   const projectId = (params?.["project-id"] as string) ?? null
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false)
+  const [isTemplateImportDialogOpen, setIsTemplateImportDialogOpen] =
+    useState(false)
 
   const { data, isLoading, error } = useProjectTasks(projectId)
   const tasks = data?.tasks ?? []
@@ -81,16 +83,18 @@ const TasksProjectPage = () => {
               }
             />
             <DropdownMenuContent align="end" sideOffset={4}>
-              <DropdownMenuItem className="cursor-pointer">
-                <Link href="/tasks/import-from-system" className="flex w-full">
-                  {t("tasks.addFromSystem")}
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => setIsTaskDialogOpen(true)}
               >
                 {t("tasks.addNew")}
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => setIsTemplateImportDialogOpen(true)}
+              >
+                {t("tasks.addFromSystem")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -118,6 +122,12 @@ const TasksProjectPage = () => {
       <TaskDialog
         open={isTaskDialogOpen}
         onOpenChange={setIsTaskDialogOpen}
+        projectId={projectId}
+      />
+
+      <TaskTemplateImportDialog
+        open={isTemplateImportDialogOpen}
+        onOpenChange={setIsTemplateImportDialogOpen}
         projectId={projectId}
       />
     </div>

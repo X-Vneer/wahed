@@ -563,7 +563,8 @@
       "delete": "حذف",
       "deleting": "جاري الحذف...",
       "cancel": "إلغاء"
-    }
+    },
+    "emptyMessage": "لا توجد قوالب."
   },
   "table-status-filter": {
     "all": "الكل",
@@ -791,9 +792,12 @@
       "subtask_title_required": "عنوان المهمة الفرعية مطلوب",
       "project_required": "المشروع مطلوب",
       "status_required": "الحالة مطلوبة",
+      "templates_required": "اختر قالباً واحداً على الأقل",
       "invalid_status": "حالة غير صالحة",
       "invalid_categories": "واحدة أو أكثر من الفئات المحددة غير صالحة",
       "invalid_assigned_to": "واحد أو أكثر من المستخدمين المعينين غير صالحين أو غير نشطين",
+      "invalid_templates": "واحد أو أكثر من القوالب المحددة غير صالحة أو غير نشطة",
+      "templates_missing_status": "بعض القوالب لا تحتوي على حالة افتراضية. حدد حالة لجميع المهام.",
       "create_failed": "فشل إنشاء المهمة",
       "not_found": "المهمة غير موجودة",
       "subtask_not_found": "المهمة الفرعية غير موجودة"
@@ -828,6 +832,7 @@
     "statusUpdated": "تم تحديث حالة المهمة",
     "addFromSystem": "إضافة مهام من سيستم",
     "addNew": "إضافة مهمة جديدة",
+    "importFromTemplatesDescription": "اختر قالباً أو أكثر لإنشاء مهام في هذا المشروع.",
     "form": {
       "title": "عنوان المهمة",
       "titlePlaceholder": "أدخل عنوان المهمة",
@@ -854,7 +859,8 @@
     },
     "create": "إضافة مهمة",
     "success": {
-      "created": "تم إنشاء المهمة بنجاح"
+      "created": "تم إنشاء المهمة بنجاح",
+      "importedFromTemplates": "تم استيراد المهام من القوالب بنجاح"
     }
   },
   "calendar": {

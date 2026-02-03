@@ -562,7 +562,8 @@
       "delete": "Delete",
       "deleting": "Deleting...",
       "cancel": "Cancel"
-    }
+    },
+    "emptyMessage": "No templates found."
   },
   "table-status-filter": {
     "all": "All",
@@ -791,9 +792,12 @@
       "subtask_title_required": "Sub-task title is required",
       "project_required": "Project is required",
       "status_required": "Status is required",
+      "templates_required": "Select at least one template",
       "invalid_status": "Invalid status",
       "invalid_categories": "One or more selected categories are invalid",
       "invalid_assigned_to": "One or more assigned users are invalid or inactive",
+      "invalid_templates": "One or more selected templates are invalid or inactive",
+      "templates_missing_status": "Some templates have no default status. Select a status for all tasks.",
       "create_failed": "Failed to create task",
       "not_found": "Task not found",
       "subtask_not_found": "Sub-task not found"
@@ -828,6 +832,7 @@
     "notStarted": "Not started yet",
     "addFromSystem": "Add tasks from system",
     "addNew": "Add new task",
+    "importFromTemplatesDescription": "Select one or more templates to create tasks in this project.",
     "form": {
       "title": "Task title",
       "titlePlaceholder": "Enter task title",
@@ -854,7 +859,8 @@
     },
     "create": "Create task",
     "success": {
-      "created": "Task created successfully"
+      "created": "Task created successfully",
+      "importedFromTemplates": "Tasks imported from templates successfully"
     }
   },
   "calendar": {

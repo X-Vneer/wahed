@@ -57,3 +57,18 @@ export const changeTaskStatusSchema = z.object({
 })
 
 export type ChangeTaskStatusInput = z.infer<typeof changeTaskStatusSchema>
+
+export const importTasksFromTemplatesSchema = z.object({
+  projectId: z.string().min(1, { message: "tasks.errors.project_required" }),
+  templateIds: z
+    .array(z.string().min(1))
+    .min(1, { message: "tasks.errors.templates_required" }),
+  statusId: z
+    .string()
+    .min(1, { message: "tasks.errors.status_required" })
+    .optional(),
+})
+
+export type ImportTasksFromTemplatesInput = z.infer<
+  typeof importTasksFromTemplatesSchema
+>
