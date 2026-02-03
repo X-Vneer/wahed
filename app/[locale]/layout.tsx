@@ -10,6 +10,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app"
 import { extractRouterConfig } from "uploadthing/server"
 import "../globals.css"
 import QueryProvider from "@/lib/tanstack-query"
+import { DirectionProvider } from "@/components/ui/direction"
 
 export const metadata: Metadata = {
   title: "Wahd",
@@ -53,7 +54,9 @@ export default async function LocaleLayout({
                  */
                 routerConfig={extractRouterConfig(ourFileRouter)}
               />
-              {children}
+              <DirectionProvider direction={locale === "ar" ? "rtl" : "ltr"}>
+                {children}
+              </DirectionProvider>
             </NuqsAdapter>
             <Toaster />
           </NextIntlClientProvider>
