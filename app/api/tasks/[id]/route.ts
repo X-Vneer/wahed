@@ -146,3 +146,40 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     )
   }
 }
+
+export async function DELETE(request: NextRequest, context: RouteContext) {
+  try {
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.DELETE)
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
+    const { id } = await context.params
+
+    const existing = await db.task.findUnique({
+      where: { id },
+      select: { id: true, projectId: true },
+    })
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: t("tasks.errors.not_found") },
+        { status: 404 }
+      )
+    }
+
+    await db.task.delete({ where: { id } })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Error deleting task:", error)
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}

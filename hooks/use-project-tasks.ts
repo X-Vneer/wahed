@@ -64,3 +64,44 @@ export const useReorderTasks = (projectId: string | null) => {
     },
   })
 }
+
+export const useDeleteTask = (projectId: string | null) => {
+  const queryClient = useQueryClient()
+  const t = useTranslations("tasks")
+
+  return useMutation({
+    mutationFn: async (taskId: string) => {
+      const response = await apiClient.delete(`/api/tasks/${taskId}`)
+      return response.data
+    },
+    onMutate: async (taskId) => {
+      if (!projectId) return undefined
+      const queryKey = ["project-tasks", projectId]
+      await queryClient.cancelQueries({ queryKey })
+      const previous = queryClient.getQueryData<ProjectTasksResponse>(queryKey)
+      queryClient.setQueryData<ProjectTasksResponse>(queryKey, (old) => {
+        if (!old) return old
+        return {
+          ...old,
+          tasks: old.tasks.filter((task) => task.id !== taskId),
+        }
+      })
+      return { previous }
+    },
+    onError: (_err, _taskId, context) => {
+      if (context?.previous && projectId) {
+        queryClient.setQueryData(
+          ["project-tasks", projectId],
+          context.previous
+        )
+      }
+      toast.error(t("deleteError") ?? "Failed to delete task")
+    },
+    onSuccess: () => {
+      if (projectId) {
+        queryClient.invalidateQueries({ queryKey: ["project-tasks", projectId] })
+      }
+      toast.success(t("deleteSuccess") ?? "Task deleted")
+    },
+  })
+}

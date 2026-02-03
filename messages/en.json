@@ -821,6 +821,14 @@
     "progress": "Progress",
     "reorderSuccess": "Task order updated",
     "reorderError": "Failed to update task order",
+    "deleteSuccess": "Task deleted",
+    "deleteError": "Failed to delete task",
+    "deleteConfirm": {
+      "title": "Delete task",
+      "description": "Are you sure you want to delete this task? This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
     "enableReorder": "Reorder tasks",
     "disableReorder": "Done reordering",
     "taskDoneUpdated": "Task marked as complete",
@@ -861,7 +869,9 @@
     "success": {
       "created": "Task created successfully",
       "importedFromTemplates": "Tasks imported from templates successfully"
-    }
+    },
+    "viewMode": "View mode",
+    "editMode": "Edit mode"
   },
   "calendar": {
     "today": "Today",

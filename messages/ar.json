@@ -821,6 +821,14 @@
     "progress": "التقدم",
     "reorderSuccess": "تم تحديث ترتيب المهام",
     "reorderError": "فشل تحديث الترتيب",
+    "deleteSuccess": "تم حذف المهمة",
+    "deleteError": "فشل حذف المهمة",
+    "deleteConfirm": {
+      "title": "حذف المهمة",
+      "description": "هل أنت متأكد من حذف هذه المهمة؟ لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "إلغاء",
+      "delete": "حذف"
+    },
     "enableReorder": "إعادة ترتيب المهام",
     "disableReorder": "إنهاء إعادة الترتيب",
     "noTasksInProject": "لا توجد مهام في هذا المشروع",
@@ -861,7 +869,9 @@
     "success": {
       "created": "تم إنشاء المهمة بنجاح",
       "importedFromTemplates": "تم استيراد المهام من القوالب بنجاح"
-    }
+    },
+    "viewMode": "وضع العرض",
+    "editMode": "وضع التحرير"
   },
   "calendar": {
     "today": "اليوم",

@@ -1,13 +1,23 @@
 "use client"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { useReorderTasks } from "@/hooks/use-project-tasks"
+import { useDeleteTask, useReorderTasks } from "@/hooks/use-project-tasks"
+import type { Task } from "@/prisma/tasks"
+import { Edit, Eye, GripVertical, Pen, Trash2 } from "lucide-react"
+import { Reorder, useDragControls } from "motion/react"
 import { useTranslations } from "next-intl"
 import { useMemo, useRef, useState } from "react"
-import type { Task } from "@/prisma/tasks"
 import { TaskCard } from "./task-card"
-import { GripVertical } from "lucide-react"
-import { Reorder, useDragControls } from "motion/react"
 
 type TaskListWithReorderProps = {
   tasks: Task[]
@@ -18,15 +28,18 @@ type ReorderTaskItemProps = {
   task: Task
   dragEnabled: boolean
   onDragEnd: () => void
-  isDragMode: boolean
+  isEditMode: boolean
+  onDeleteClick: (task: Task) => void
 }
 
 function ReorderTaskItem({
   task,
   dragEnabled,
   onDragEnd,
-  isDragMode,
+  isEditMode,
+  onDeleteClick,
 }: ReorderTaskItemProps) {
+  const t = useTranslations("tasks")
   const controls = useDragControls()
 
   const handlePointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
@@ -44,15 +57,33 @@ function ReorderTaskItem({
       className="flex items-stretch gap-2"
       onDragEnd={onDragEnd}
     >
-      {isDragMode && (
-        <button
-          type="button"
-          className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex cursor-grab touch-none items-center rounded p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none active:cursor-grabbing"
-          aria-label="Drag to reorder"
-          onPointerDown={handlePointerDown}
-        >
-          <GripVertical className="size-5" />
-        </button>
+      {isEditMode && (
+        <div className="flex flex-col items-center gap-1">
+          <button
+            type="button"
+            className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex cursor-grab touch-none items-center rounded p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none active:cursor-grabbing"
+            aria-label="Drag to reorder"
+            onPointerDown={handlePointerDown}
+          >
+            <GripVertical className="size-5" />
+          </button>
+          <Button type="button" variant="ghost" size="icon">
+            <Edit className="size-4" />
+            <span className="sr-only">Edit</span>
+          </Button>
+
+          <Button
+            type="button"
+            variant="ghost"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+            size="icon"
+            onClick={() => onDeleteClick(task)}
+            aria-label={t("deleteConfirm.delete")}
+          >
+            <Trash2 className="size-4" />
+            <span className="sr-only">Delete</span>
+          </Button>
+        </div>
       )}
       <div className="min-w-0 flex-1">
         <TaskCard task={task} />
@@ -65,11 +96,13 @@ export function TaskListWithReorder({
   tasks: serverTasks,
   projectId,
 }: TaskListWithReorderProps) {
-  const tTasks = useTranslations("tasks")
-  const [isDragMode, setIsDragMode] = useState(false)
+  const t = useTranslations("tasks")
+  const [isEditMode, setIsEditMode] = useState(false)
   const [orderedIds, setOrderedIds] = useState<string[] | null>(null)
   const orderedIdsRef = useRef<string[] | null>(null)
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null)
   const reorderMutation = useReorderTasks(projectId)
+  const deleteMutation = useDeleteTask(projectId)
 
   // Map tasks by id for quick lookup
   const tasksById = useMemo(() => {
@@ -93,12 +126,25 @@ export function TaskListWithReorder({
     reorderMutation.mutate(orderedIdsRef.current)
   }
 
+  const handleDeleteClick = (task: Task) => setTaskToDelete(task)
+
+  const handleConfirmDelete = () => {
+    if (!taskToDelete) return
+    const taskId = taskToDelete.id
+    setOrderedIds((prev) => (prev ? prev.filter((id) => id !== taskId) : null))
+    if (orderedIdsRef.current) {
+      orderedIdsRef.current = orderedIdsRef.current.filter(
+        (id) => id !== taskId
+      )
+    }
+    deleteMutation.mutate(taskId)
+    setTaskToDelete(null)
+  }
+
   if (tasks.length === 0) {
     return (
       <div className="flex justify-center py-12">
-        <p className="text-muted-foreground text-sm">
-          {tTasks("noTasksInProject")}
-        </p>
+        <p className="text-muted-foreground text-sm">{t("noTasksInProject")}</p>
       </div>
     )
   }
@@ -108,13 +154,13 @@ export function TaskListWithReorder({
       <div className="flex justify-end">
         <Button
           type="button"
-          variant={isDragMode ? "default" : "outline"}
+          variant={isEditMode ? "default" : "outline"}
           size="sm"
-          onClick={() => setIsDragMode((prev) => !prev)}
-          aria-pressed={isDragMode}
+          onClick={() => setIsEditMode((prev) => !prev)}
+          aria-pressed={isEditMode}
         >
-          <GripVertical className="size-4" />
-          {isDragMode ? tTasks("disableReorder") : tTasks("enableReorder")}
+          {isEditMode ? <Pen className="size-4" /> : <Eye className="size-4" />}
+          {isEditMode ? t("editMode") : t("viewMode")}
         </Button>
       </div>
 
@@ -132,12 +178,39 @@ export function TaskListWithReorder({
           <ReorderTaskItem
             key={task.id}
             task={task}
-            dragEnabled={isDragMode}
+            dragEnabled={isEditMode}
             onDragEnd={handleDragEnd}
-            isDragMode={isDragMode}
+            isEditMode={isEditMode}
+            onDeleteClick={handleDeleteClick}
           />
         ))}
       </Reorder.Group>
+
+      <AlertDialog
+        open={!!taskToDelete}
+        onOpenChange={(open) => !open && setTaskToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("deleteConfirm.title")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("deleteConfirm.description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setTaskToDelete(null)}>
+              {t("deleteConfirm.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={deleteMutation.isPending}
+              className="bg-destructive hover:bg-destructive/90 text-white"
+            >
+              {t("deleteConfirm.delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
