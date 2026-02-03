@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
 import {
   Breadcrumb,
@@ -12,8 +12,11 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Spinner } from "@/components/ui/spinner"
 import { useProjectTasks } from "@/hooks/use-project-tasks"
+import { useTaskStatuses } from "@/hooks/use-task-status"
 import { useParams } from "next/navigation"
 import { useTranslations } from "next-intl"
+import { parseAsBoolean, parseAsString, useQueryStates } from "nuqs"
+import { TaskFilters } from "../_components/task-filters"
 import { TaskListWithReorder } from "../_components/task-list-with-reorder"
 import { ChevronDown, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -25,6 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { TaskDialog } from "../_components/task-dialog"
 import { TaskTemplateImportDialog } from "../_components/task-template-import-dialog"
+import type { Task } from "@/prisma/tasks"
 
 const TasksProjectPage = () => {
   const t = useTranslations()
@@ -34,9 +38,29 @@ const TasksProjectPage = () => {
   const [isTemplateImportDialogOpen, setIsTemplateImportDialogOpen] =
     useState(false)
 
+  const [filters] = useQueryStates({
+    query: parseAsString.withDefault(""),
+    status: parseAsString.withDefault("all"),
+    done: parseAsString.withDefault("all"),
+    editMode: parseAsBoolean.withDefault(false),
+  })
+
   const { data, isLoading, error } = useProjectTasks(projectId)
-  const tasks = data?.tasks ?? []
+  const allTasks = data?.tasks ?? []
   const projectName = data?.project?.name
+
+  const filteredTasks = allTasks.filter((task: Task) => {
+    if (filters.status !== "all" && task.status.id !== filters.status)
+      return false
+    if (filters.done === "done" && !task.doneAt) return false
+    if (filters.done === "not_done" && task.doneAt) return false
+    if (
+      filters.query &&
+      !task.title.toLowerCase().includes(filters.query.toLowerCase())
+    )
+      return false
+    return true
+  })
 
   if (!projectId) {
     return (
@@ -116,7 +140,10 @@ const TasksProjectPage = () => {
       )}
 
       {!isLoading && !error && (
-        <TaskListWithReorder tasks={tasks} projectId={projectId} />
+        <>
+          {allTasks.length > 0 && <TaskFilters />}
+          <TaskListWithReorder tasks={filteredTasks} projectId={projectId} />
+        </>
       )}
 
       <TaskDialog

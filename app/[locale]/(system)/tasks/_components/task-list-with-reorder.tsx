@@ -13,9 +13,10 @@ import {
 import { Button } from "@/components/ui/button"
 import { useDeleteTask, useReorderTasks } from "@/hooks/use-project-tasks"
 import type { Task } from "@/prisma/tasks"
-import { Edit, Eye, GripVertical, Pen, Trash2 } from "lucide-react"
+import { Edit, GripVertical, Trash2 } from "lucide-react"
 import { Reorder, useDragControls } from "motion/react"
 import { useTranslations } from "next-intl"
+import { parseAsBoolean, useQueryState } from "nuqs"
 import { useMemo, useRef, useState } from "react"
 import { TaskCard } from "./task-card"
 import { TaskDialog } from "./task-dialog"
@@ -106,7 +107,10 @@ export function TaskListWithReorder({
   projectId,
 }: TaskListWithReorderProps) {
   const t = useTranslations("tasks")
-  const [isEditMode, setIsEditMode] = useState(false)
+  const [isEditMode] = useQueryState(
+    "editMode",
+    parseAsBoolean.withDefault(false)
+  )
   const [orderedIds, setOrderedIds] = useState<string[] | null>(null)
   const orderedIdsRef = useRef<string[] | null>(null)
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null)
@@ -162,19 +166,6 @@ export function TaskListWithReorder({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          variant={isEditMode ? "default" : "outline"}
-          size="sm"
-          onClick={() => setIsEditMode((prev) => !prev)}
-          aria-pressed={isEditMode}
-        >
-          {isEditMode ? <Pen className="size-4" /> : <Eye className="size-4" />}
-          {isEditMode ? t("editMode") : t("viewMode")}
-        </Button>
-      </div>
-
       <Reorder.Group
         as="ul"
         axis="y"

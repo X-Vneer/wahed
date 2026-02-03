@@ -874,7 +874,19 @@
       "importedFromTemplates": "تم استيراد المهام من القوالب بنجاح"
     },
     "viewMode": "وضع العرض",
-    "editMode": "وضع التحرير"
+    "editMode": "وضع التحرير",
+    "filters": "فلاتر",
+    "filterStatus": "الحالة",
+    "filterStatusAll": "جميع الحالات",
+    "filterDone": "منجزة",
+    "filterDoneAll": "الكل",
+    "filterDoneDone": "منجزة",
+    "filterDoneNotDone": "غير منجزة",
+    "filterWorkingDays": "أيام العمل",
+    "filterWorkingDaysAll": "الكل",
+    "filterWorkingDaysHas": "لها تقدير",
+    "filterWorkingDaysNone": "بدون تقدير",
+    "filterQueryPlaceholder": "بحث..."
   },
   "calendar": {
     "today": "اليوم",

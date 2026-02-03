@@ -874,7 +874,19 @@
       "importedFromTemplates": "Tasks imported from templates successfully"
     },
     "viewMode": "View mode",
-    "editMode": "Edit mode"
+    "editMode": "Edit mode",
+    "filters": "Filters",
+    "filterStatus": "Status",
+    "filterStatusAll": "All statuses",
+    "filterDone": "Done",
+    "filterDoneAll": "All",
+    "filterDoneDone": "Done",
+    "filterDoneNotDone": "Not done",
+    "filterWorkingDays": "Working days",
+    "filterWorkingDaysAll": "All",
+    "filterWorkingDaysHas": "Has estimate",
+    "filterWorkingDaysNone": "No estimate",
+    "filterQueryPlaceholder": "Search..."
   },
   "calendar": {
     "today": "Today",
