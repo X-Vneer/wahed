@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,13 +15,22 @@ import { useProjectTasks } from "@/hooks/use-project-tasks"
 import { useParams } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { TaskListWithReorder } from "../_components/task-list-with-reorder"
-import { Link, Plus } from "lucide-react"
+import { ChevronDown, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Link } from "@/lib/i18n/navigation"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { TaskDialog } from "../_components/task-dialog"
 
 const TasksProjectPage = () => {
   const t = useTranslations()
   const params = useParams()
   const projectId = (params?.["project-id"] as string) ?? null
+  const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false)
 
   const { data, isLoading, error } = useProjectTasks(projectId)
   const tasks = data?.tasks ?? []
@@ -59,15 +70,30 @@ const TasksProjectPage = () => {
           </Breadcrumb>
         </div>
         <div className="flex grow justify-end gap-2">
-          <Button
-            nativeButton={false}
-            render={
-              <Link href="/tasks/add">
-                <Plus className="size-4" />
-                {t("sidebar.tasksAdd")}
-              </Link>
-            }
-          />
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button className="gap-2">
+                  <Plus className="size-4" />
+                  <span>{t("sidebar.tasksAdd")}</span>
+                  <ChevronDown className="size-4" />
+                </Button>
+              }
+            />
+            <DropdownMenuContent align="end" sideOffset={4}>
+              <DropdownMenuItem className="cursor-pointer">
+                <Link href="/tasks/import-from-system" className="flex w-full">
+                  {t("tasks.addFromSystem")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => setIsTaskDialogOpen(true)}
+              >
+                {t("tasks.addNew")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -88,6 +114,12 @@ const TasksProjectPage = () => {
       {!isLoading && !error && (
         <TaskListWithReorder tasks={tasks} projectId={projectId} />
       )}
+
+      <TaskDialog
+        open={isTaskDialogOpen}
+        onOpenChange={setIsTaskDialogOpen}
+        projectId={projectId}
+      />
     </div>
   )
 }

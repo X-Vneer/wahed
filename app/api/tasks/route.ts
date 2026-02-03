@@ -13,18 +13,13 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    const [permissionCheck, locale] = await Promise.all([
-      hasPermission(PERMISSIONS_GROUPED.TASK.CREATE),
-      getReqLocale(request),
-    ])
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.CREATE)
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }
-
-    const [payload, t] = await Promise.all([
-      getAccessTokenPayload(),
-      getTranslations({ locale }),
-    ])
+    const payload = await getAccessTokenPayload()
     if (!payload || !payload.userId) {
       return NextResponse.json(
         { error: t("errors.unauthorized") },
@@ -88,14 +83,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (data.categoryIds.length > 0 && categories.length !== data.categoryIds.length) {
+    if (
+      data.categoryIds.length > 0 &&
+      categories.length !== data.categoryIds.length
+    ) {
       return NextResponse.json(
         { error: t("tasks.errors.invalid_categories") },
         { status: 400 }
       )
     }
 
-    if (data.assignedToIds.length > 0 && users.length !== data.assignedToIds.length) {
+    if (
+      data.assignedToIds.length > 0 &&
+      users.length !== data.assignedToIds.length
+    ) {
       return NextResponse.json(
         { error: t("tasks.errors.invalid_assigned_to") },
         { status: 400 }
@@ -135,6 +136,39 @@ export async function POST(request: NextRequest) {
       },
       include: taskInclude,
     })
+
+    // Optionally save this task as a reusable template
+    if (data.saveAsTemplate) {
+      try {
+        await db.taskTemplate.create({
+          data: {
+            title: data.title,
+            description: data.description ?? undefined,
+            estimatedWorkingDays: data.estimatedWorkingDays ?? undefined,
+            priority: (data.priority as TaskPriority) ?? TaskPriority.MEDIUM,
+            defaultStatusId: data.statusId,
+            isActive: true,
+            categories:
+              data.categoryIds.length > 0
+                ? { connect: data.categoryIds.map((id) => ({ id })) }
+                : undefined,
+            subItems:
+              data.subTasks.length > 0
+                ? {
+                    create: data.subTasks.map((st, index) => ({
+                      title: st.title,
+                      description: st.description ?? undefined,
+                      order: index,
+                    })),
+                  }
+                : undefined,
+          },
+        })
+      } catch (error) {
+        // Template creation is non-blocking; log and continue
+        console.error("Error creating task template from task:", error)
+      }
+    }
 
     const responseLocale = getLocaleFromRequest(request)
     return NextResponse.json(transformTask(task, responseLocale), {

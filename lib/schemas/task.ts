@@ -10,7 +10,10 @@ export const createSubTaskSchema = z.object({
 export type CreateSubTaskInput = z.infer<typeof createSubTaskSchema>
 
 export const updateSubTaskSchema = z.object({
-  title: z.string().min(1, { message: "tasks.errors.subtask_title_required" }).optional(),
+  title: z
+    .string()
+    .min(1, { message: "tasks.errors.subtask_title_required" })
+    .optional(),
   description: z.string().optional().nullable(),
 })
 
@@ -22,18 +25,25 @@ export const createTaskSchema = z.object({
   projectId: z.string().min(1, { message: "tasks.errors.project_required" }),
   statusId: z.string().min(1, { message: "tasks.errors.status_required" }),
   categoryIds: z.array(z.string().min(1)).optional().default([]),
-  estimatedWorkingDays: z.number().int().nonnegative().optional(),
+  estimatedWorkingDays: z.coerce.number().int().nonnegative().optional(),
   priority: TaskPriorityEnum.optional().default("MEDIUM"),
   assignedToIds: z.array(z.string().min(1)).optional().default([]),
   subTasks: z.array(createSubTaskSchema).optional().default([]),
+  saveAsTemplate: z.boolean().optional().default(false),
 })
 
 export type CreateTaskInput = z.infer<typeof createTaskSchema>
 
 export const updateTaskSchema = z.object({
-  title: z.string().min(1, { message: "tasks.errors.title_required" }).optional(),
+  title: z
+    .string()
+    .min(1, { message: "tasks.errors.title_required" })
+    .optional(),
   description: z.string().optional().nullable(),
-  statusId: z.string().min(1, { message: "tasks.errors.status_required" }).optional(),
+  statusId: z
+    .string()
+    .min(1, { message: "tasks.errors.status_required" })
+    .optional(),
   categoryIds: z.array(z.string().min(1)).optional(),
   estimatedWorkingDays: z.number().int().nonnegative().optional().nullable(),
   priority: TaskPriorityEnum.optional(),

@@ -800,9 +800,10 @@
     },
     "urgent": "مستعجل",
     "priority": {
+      "label": "الأولوية",
       "low": "منخفضة",
       "medium": "متوسطة",
-      "high": "اولوية قصوى"
+      "high": "أولوية قصوى"
     },
     "periodBetween": "فترة بين : {start} الى {end}",
     "dueDate": "مستحق: {date}",
@@ -824,7 +825,37 @@
     "notStarted": "لم تبدأ بعد",
     "taskDoneUpdated": "تم وضع علامة على المهمة كمكتملة",
     "taskUndoneUpdated": "تم وضع علامة على المهمة بأنها غير مكتملة",
-    "statusUpdated": "تم تحديث حالة المهمة"
+    "statusUpdated": "تم تحديث حالة المهمة",
+    "addFromSystem": "إضافة مهام من سيستم",
+    "addNew": "إضافة مهمة جديدة",
+    "form": {
+      "title": "عنوان المهمة",
+      "titlePlaceholder": "أدخل عنوان المهمة",
+      "description": "وصف المهمة",
+      "descriptionPlaceholder": "أدخل وصف المهمة",
+      "status": "الحالة",
+      "statusPlaceholder": "اختر الحالة",
+      "estimatedWorkingDays": "مدة العمل (أيام)",
+      "estimatedWorkingDaysPlaceholder": "أدخل عدد أيام العمل",
+      "categories": "التصنيفات",
+      "categoriesPlaceholder": "اختر التصنيفات",
+      "assignees": "المكلفين",
+      "assigneesPublic": "مرئي للجميع",
+      "saveAsTemplate": "حفظ كقالب",
+      "subTasks": "المهام الفرعية",
+      "subTaskTitle": "عنوان المهمة الفرعية",
+      "subTaskTitlePlaceholder": "أدخل عنوان المهمة الفرعية",
+      "subTaskDescription": "وصف المهمة الفرعية",
+      "subTaskDescriptionPlaceholder": "أدخل وصف المهمة الفرعية",
+      "priority": {
+        "label": "الأولوية",
+        "placeholder": "حدد الأولوية"
+      }
+    },
+    "create": "إضافة مهمة",
+    "success": {
+      "created": "تم إنشاء المهمة بنجاح"
+    }
   },
   "calendar": {
     "today": "اليوم",

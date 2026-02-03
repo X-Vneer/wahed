@@ -800,6 +800,7 @@
     },
     "urgent": "Urgent",
     "priority": {
+      "label": "Priority",
       "low": "Low",
       "medium": "Medium",
       "high": "High Priority"
@@ -824,7 +825,37 @@
     "noTasksInProject": "No tasks in this project",
     "noAssignee": "Not assigned to anyone",
     "assignees": "Assigned to",
-    "notStarted": "Not started yet"
+    "notStarted": "Not started yet",
+    "addFromSystem": "Add tasks from system",
+    "addNew": "Add new task",
+    "form": {
+      "title": "Task title",
+      "titlePlaceholder": "Enter task title",
+      "description": "Task description",
+      "descriptionPlaceholder": "Describe the task",
+      "status": "Status",
+      "statusPlaceholder": "Select status",
+      "estimatedWorkingDays": "Working days",
+      "estimatedWorkingDaysPlaceholder": "Enter number of working days",
+      "categories": "Categories",
+      "categoriesPlaceholder": "Select categories",
+      "assignees": "Assignees",
+      "assigneesPublic": "Visible to all",
+      "saveAsTemplate": "Save as template",
+      "subTasks": "Sub-tasks",
+      "subTaskTitle": "Sub-task title",
+      "subTaskTitlePlaceholder": "Enter sub-task title",
+      "subTaskDescription": "Sub-task description",
+      "subTaskDescriptionPlaceholder": "Enter sub-task description",
+      "priority": {
+        "label": "Priority",
+        "placeholder": "Select priority "
+      }
+    },
+    "create": "Create task",
+    "success": {
+      "created": "Task created successfully"
+    }
   },
   "calendar": {
     "today": "Today",
