@@ -820,6 +820,7 @@
     "disableReorder": "Done reordering",
     "taskDoneUpdated": "Task marked as complete",
     "taskUndoneUpdated": "Task marked as incomplete",
+    "statusUpdated": "Task status updated",
     "noTasksInProject": "No tasks in this project",
     "noAssignee": "Not assigned to anyone",
     "assignees": "Assigned to",

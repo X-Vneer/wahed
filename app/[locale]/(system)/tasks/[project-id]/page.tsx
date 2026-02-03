@@ -13,10 +13,11 @@ import { useProjectTasks } from "@/hooks/use-project-tasks"
 import { useParams } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { TaskListWithReorder } from "../_components/task-list-with-reorder"
+import { Link, Plus } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 const TasksProjectPage = () => {
   const t = useTranslations()
-  const tTasks = useTranslations("tasks")
   const params = useParams()
   const projectId = (params?.["project-id"] as string) ?? null
 
@@ -28,7 +29,7 @@ const TasksProjectPage = () => {
     return (
       <div className="flex justify-center py-12">
         <p className="text-muted-foreground text-sm">
-          {tTasks("noTasksInProject")}
+          {t("tasks.noTasksInProject")}
         </p>
       </div>
     )
@@ -36,23 +37,38 @@ const TasksProjectPage = () => {
 
   return (
     <div className="flex h-full flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold">{t("sidebar.tasks")}</h1>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">{t("sidebar.home")}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/tasks">{t("sidebar.tasks")}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{projectName ?? projectId}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+      <div className="flex flex-wrap justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold">{t("sidebar.tasks")}</h1>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">{t("sidebar.home")}</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/tasks">
+                  {t("sidebar.tasks")}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{projectName ?? projectId}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        <div className="flex grow justify-end gap-2">
+          <Button
+            nativeButton={false}
+            render={
+              <Link href="/tasks/add">
+                <Plus className="size-4" />
+                {t("sidebar.tasksAdd")}
+              </Link>
+            }
+          />
+        </div>
       </div>
 
       {isLoading && (

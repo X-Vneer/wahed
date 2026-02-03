@@ -19,6 +19,7 @@ import {
   CircleCheckBig,
 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
+import { TaskStatusDropdown } from "./task-status-dropdown"
 
 export type TaskCardData = Task
 type TaskCardProps = {
@@ -146,16 +147,7 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
                 {t("notStarted")}
               </span>
             )}
-            <Badge
-              className="h-7 shrink-0 rounded-sm border-0"
-              style={
-                task.status.color
-                  ? { backgroundColor: task.status.color, color: "white" }
-                  : undefined
-              }
-            >
-              {task.status.name}
-            </Badge>
+            <TaskStatusDropdown task={task} />
             <ChevronRight className="text-muted-foreground size-4 shrink-0 rtl:rotate-180" />
           </div>
         </div>

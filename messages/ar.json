@@ -823,7 +823,8 @@
     "assignees": "معين إلى",
     "notStarted": "لم تبدأ بعد",
     "taskDoneUpdated": "تم وضع علامة على المهمة كمكتملة",
-    "taskUndoneUpdated": "تم وضع علامة على المهمة بأنها غير مكتملة"
+    "taskUndoneUpdated": "تم وضع علامة على المهمة بأنها غير مكتملة",
+    "statusUpdated": "تم تحديث حالة المهمة"
   },
   "calendar": {
     "today": "اليوم",
