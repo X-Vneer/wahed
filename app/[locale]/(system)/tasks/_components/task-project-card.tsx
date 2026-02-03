@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Link } from "@/lib/i18n/navigation"
 import { type TransformedProject } from "@/prisma/projects"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 export function TaskProjectCard({ project }: { project: TransformedProject }) {

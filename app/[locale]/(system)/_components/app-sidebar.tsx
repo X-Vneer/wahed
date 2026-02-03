@@ -3,15 +3,12 @@
 import {
   Calendar,
   CheckSquare,
-  Command,
   Globe,
   Home,
-  Layout,
   List,
   Settings,
   Users,
   Users2,
-  Waves,
 } from "lucide-react"
 import * as React from "react"
 
@@ -23,9 +20,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { usePathname } from "@/lib/i18n/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "next/image"
-import { usePathname } from "@/lib/i18n/navigation"
 import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
