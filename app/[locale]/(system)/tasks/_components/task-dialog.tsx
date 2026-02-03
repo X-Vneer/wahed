@@ -32,7 +32,12 @@ import UsersSelect from "@/components/users-select"
 import { useTaskStatuses } from "@/hooks/use-task-status"
 import { useTaskCategories } from "@/hooks/use-task-category"
 import { handleFormErrors } from "@/lib/handle-form-errors"
-import { createTaskSchema, type CreateTaskInput } from "@/lib/schemas/task"
+import {
+  createTaskSchema,
+  type CreateTaskInput,
+  type UpdateTaskInput,
+} from "@/lib/schemas/task"
+import type { Task } from "@/prisma/tasks"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"
 import { zod4Resolver } from "mantine-form-zod-resolver"
@@ -47,6 +52,7 @@ type TaskDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   projectId: string
+  task?: Task | null
 }
 
 type SubTaskFormValue = {
@@ -68,7 +74,13 @@ const PRIORITY_OPTIONS: {
   { value: "HIGH", labelKey: "tasks.priority.high" },
 ]
 
-export function TaskDialog({ open, onOpenChange, projectId }: TaskDialogProps) {
+export function TaskDialog({
+  open,
+  onOpenChange,
+  projectId,
+  task: taskToEdit,
+}: TaskDialogProps) {
+  const isEditMode = !!taskToEdit
   const t = useTranslations()
   const queryClient = useQueryClient()
 
@@ -102,23 +114,71 @@ export function TaskDialog({ open, onOpenChange, projectId }: TaskDialogProps) {
 
   useEffect(() => {
     if (!open) return
-    form.setValues({
-      title: "",
-      description: "",
-      projectId,
-      statusId: "",
-      categoryIds: [],
-      estimatedWorkingDays: undefined,
-      priority: "MEDIUM",
-      assignedToIds: [],
-      subTasks: [],
-      saveAsTemplate: false,
-    })
+    if (taskToEdit) {
+      form.setValues({
+        title: taskToEdit.title,
+        description: taskToEdit.description ?? "",
+        projectId,
+        statusId: taskToEdit.status.id,
+        categoryIds: taskToEdit.category.map((c) => c.id),
+        estimatedWorkingDays: taskToEdit.estimatedWorkingDays ?? undefined,
+        priority: taskToEdit.priority ?? "MEDIUM",
+        assignedToIds: taskToEdit.assignedTo?.map((u) => u.id) ?? [],
+        subTasks:
+          taskToEdit.subTasks?.map((s) => ({
+            title: s.title,
+            description: s.description ?? undefined,
+          })) ?? [],
+        saveAsTemplate: false,
+      })
+    } else {
+      form.setValues({
+        title: "",
+        description: "",
+        projectId,
+        statusId: "",
+        categoryIds: [],
+        estimatedWorkingDays: undefined,
+        priority: "MEDIUM",
+        assignedToIds: [],
+        subTasks: [],
+        saveAsTemplate: false,
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, projectId])
+  }, [open, projectId, taskToEdit?.id])
 
   const handleSubmit = async (values: TaskFormValues) => {
     try {
+      if (isEditMode && taskToEdit) {
+        const payload: UpdateTaskInput = {
+          title: values.title.trim(),
+          description: values.description?.trim() || null,
+          statusId: values.statusId || undefined,
+          categoryIds: values.categoryIds ?? [],
+          estimatedWorkingDays:
+            values.estimatedWorkingDays != null
+              ? Number(values.estimatedWorkingDays)
+              : undefined,
+          priority: values.priority ?? "MEDIUM",
+          assignedToIds: values.assignedToIds ?? [],
+        }
+
+        await apiClient.patch(`/api/tasks/${taskToEdit.id}`, payload)
+
+        queryClient.invalidateQueries({
+          queryKey: ["project-tasks", values.projectId],
+        })
+
+        toast.success(
+          t("tasks.success.updated", {
+            default: "Task updated successfully",
+          })
+        )
+        onOpenChange(false)
+        return
+      }
+
       const payload: CreateTaskInput = {
         title: values.title,
         description: values.description || undefined,
@@ -193,10 +253,14 @@ export function TaskDialog({ open, onOpenChange, projectId }: TaskDialogProps) {
           <div className="p-4">
             <DialogHeader className="mb-2">
               <DialogTitle className="text-lg font-bold">
-                {t("sidebar.tasksAdd")}
+                {isEditMode
+                  ? t("tasks.edit", { default: "Edit task" })
+                  : t("sidebar.tasksAdd")}
               </DialogTitle>
               <DialogDescription className="sr-only">
-                {t("sidebar.tasksAdd")}
+                {isEditMode
+                  ? t("tasks.edit", { default: "Edit task" })
+                  : t("sidebar.tasksAdd")}
               </DialogDescription>
             </DialogHeader>
 
@@ -420,39 +484,43 @@ export function TaskDialog({ open, onOpenChange, projectId }: TaskDialogProps) {
                   }
                 />
 
-                <Field>
-                  <div className="flex items-center justify-between gap-2">
-                    <FieldLabel htmlFor="saveAsTemplate">
-                      {t("tasks.form.saveAsTemplate")}
-                    </FieldLabel>
-                    <Switch
-                      id="saveAsTemplate"
-                      checked={form.values.saveAsTemplate ?? false}
-                      onCheckedChange={(checked) =>
-                        form.setFieldValue("saveAsTemplate", checked)
-                      }
-                    />
-                  </div>
-                </Field>
+                {!isEditMode && (
+                  <Field>
+                    <div className="flex items-center justify-between gap-2">
+                      <FieldLabel htmlFor="saveAsTemplate">
+                        {t("tasks.form.saveAsTemplate")}
+                      </FieldLabel>
+                      <Switch
+                        id="saveAsTemplate"
+                        checked={form.values.saveAsTemplate ?? false}
+                        onCheckedChange={(checked) =>
+                          form.setFieldValue("saveAsTemplate", checked)
+                        }
+                      />
+                    </div>
+                  </Field>
+                )}
               </FieldGroup>
 
-              <Separator />
+              {!isEditMode && (
+                <>
+                  <Separator />
 
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <FieldLabel>{t("tasks.form.subTasks")}</FieldLabel>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={addSubTask}
-                  >
-                    <Plus className="mr-1 size-4" />
-                    {t("common.add")}
-                  </Button>
-                </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <FieldLabel>{t("tasks.form.subTasks")}</FieldLabel>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={addSubTask}
+                      >
+                        <Plus className="mr-1 size-4" />
+                        {t("common.add")}
+                      </Button>
+                    </div>
 
-                {form.values.subTasks?.length > 0 && (
+                    {form.values.subTasks?.length > 0 && (
                   <div className="space-y-3">
                     {form.values.subTasks.map((_, index) => (
                       <div
@@ -502,8 +570,10 @@ export function TaskDialog({ open, onOpenChange, projectId }: TaskDialogProps) {
                       </div>
                     ))}
                   </div>
-                )}
-              </div>
+                    )}
+                  </div>
+                </>
+              )}
 
               {form.errors.root && (
                 <div className="text-destructive text-sm font-medium">
@@ -526,7 +596,9 @@ export function TaskDialog({ open, onOpenChange, projectId }: TaskDialogProps) {
                   disabled={form.submitting}
                 >
                   {form.submitting && <Spinner className="mr-2 size-4" />}
-                  {t("tasks.create")}
+                  {isEditMode
+                    ? t("tasks.save", { default: "Save" })
+                    : t("tasks.create")}
                 </Button>
               </div>
             </form>

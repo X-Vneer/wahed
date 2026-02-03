@@ -866,8 +866,11 @@
       }
     },
     "create": "Create task",
+    "edit": "Edit task",
+    "save": "Save",
     "success": {
       "created": "Task created successfully",
+      "updated": "Task updated successfully",
       "importedFromTemplates": "Tasks imported from templates successfully"
     },
     "viewMode": "View mode",

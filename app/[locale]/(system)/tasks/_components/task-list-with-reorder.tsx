@@ -18,6 +18,7 @@ import { Reorder, useDragControls } from "motion/react"
 import { useTranslations } from "next-intl"
 import { useMemo, useRef, useState } from "react"
 import { TaskCard } from "./task-card"
+import { TaskDialog } from "./task-dialog"
 
 type TaskListWithReorderProps = {
   tasks: Task[]
@@ -29,6 +30,7 @@ type ReorderTaskItemProps = {
   dragEnabled: boolean
   onDragEnd: () => void
   isEditMode: boolean
+  onEditClick: (task: Task) => void
   onDeleteClick: (task: Task) => void
 }
 
@@ -37,6 +39,7 @@ function ReorderTaskItem({
   dragEnabled,
   onDragEnd,
   isEditMode,
+  onEditClick,
   onDeleteClick,
 }: ReorderTaskItemProps) {
   const t = useTranslations("tasks")
@@ -67,7 +70,13 @@ function ReorderTaskItem({
           >
             <GripVertical className="size-5" />
           </button>
-          <Button type="button" variant="ghost" size="icon">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => onEditClick(task)}
+            aria-label={t("edit")}
+          >
             <Edit className="size-4" />
             <span className="sr-only">Edit</span>
           </Button>
@@ -101,6 +110,7 @@ export function TaskListWithReorder({
   const [orderedIds, setOrderedIds] = useState<string[] | null>(null)
   const orderedIdsRef = useRef<string[] | null>(null)
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null)
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null)
   const reorderMutation = useReorderTasks(projectId)
   const deleteMutation = useDeleteTask(projectId)
 
@@ -126,6 +136,7 @@ export function TaskListWithReorder({
     reorderMutation.mutate(orderedIdsRef.current)
   }
 
+  const handleEditClick = (task: Task) => setTaskToEdit(task)
   const handleDeleteClick = (task: Task) => setTaskToDelete(task)
 
   const handleConfirmDelete = () => {
@@ -181,6 +192,7 @@ export function TaskListWithReorder({
             dragEnabled={isEditMode}
             onDragEnd={handleDragEnd}
             isEditMode={isEditMode}
+            onEditClick={handleEditClick}
             onDeleteClick={handleDeleteClick}
           />
         ))}
@@ -211,6 +223,13 @@ export function TaskListWithReorder({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <TaskDialog
+        open={!!taskToEdit}
+        onOpenChange={(open) => !open && setTaskToEdit(null)}
+        projectId={projectId}
+        task={taskToEdit}
+      />
     </div>
   )
 }

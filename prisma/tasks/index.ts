@@ -35,6 +35,7 @@ export const transformTask = (task: TaskInclude, locale: string) => {
       id: category.id,
     })),
     status: {
+      id: task.status.id,
       name: locale === "ar" ? task.status.nameAr : task.status.nameEn,
       color: task.status.color,
     },
