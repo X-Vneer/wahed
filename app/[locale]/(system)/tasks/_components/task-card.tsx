@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { TaskStatusDropdown } from "./task-status-dropdown"
+import { TASK_STATUS_ID_IN_PROGRESS, TASK_STATUS_ID_PENDING } from "@/config"
 
 export type TaskCardData = Task
 type TaskCardProps = {
@@ -143,7 +144,8 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
               <MessageCircle className="size-3.5" />
               {t("commentsCount", { count: task.comments.length })}
             </Badge>
-            {dueDistance != null ? (
+            {task.status.id === TASK_STATUS_ID_IN_PROGRESS &&
+            dueDistance != null ? (
               <span
                 className={cn(
                   "flex items-center gap-1 text-sm",
@@ -157,12 +159,12 @@ export function TaskCard({ task, href, className }: TaskCardProps) {
                   ? t("overdue", { distance: dueDistance })
                   : t("dueIn", { distance: dueDistance })}
               </span>
-            ) : (
+            ) : task.status.id === TASK_STATUS_ID_PENDING ? (
               <span className="text-muted-foreground flex items-center gap-1 text-sm">
                 <Clock className="size-3.5" />
                 {t("notStarted")}
               </span>
-            )}
+            ) : null}
             <TaskStatusDropdown task={task} />
             <ChevronRight className="text-muted-foreground size-4 shrink-0 rtl:rotate-180" />
           </div>
