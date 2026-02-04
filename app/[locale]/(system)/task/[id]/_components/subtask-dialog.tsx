@@ -15,20 +15,19 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { Textarea } from "@/components/ui/textarea"
 import { SubTasks } from "@/lib/generated/prisma/client"
+import { handleFormErrors } from "@/lib/handle-form-errors"
 import { createSubTaskSchema } from "@/lib/schemas/task"
 import apiClient from "@/services"
-import { useDeleteSubtask } from "@/hooks/use-delete-subtask"
 import { useForm } from "@mantine/form"
+import { useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import { useEffect } from "react"
 import { toast } from "sonner"
-import { Textarea } from "@/components/ui/textarea"
-import { Spinner } from "@/components/ui/spinner"
-import { useQueryClient } from "@tanstack/react-query"
-import { handleFormErrors } from "@/lib/handle-form-errors"
-import axios from "axios"
 
 type SubtaskFormValues = { title: string; description: string }
 
@@ -46,7 +45,6 @@ export function SubtaskDialog({
   editingSubtask,
 }: SubtaskDialogProps) {
   const t = useTranslations()
-  const deleteSubtaskMutation = useDeleteSubtask()
   const queryClient = useQueryClient()
   const form = useForm<SubtaskFormValues>({
     mode: "controlled",

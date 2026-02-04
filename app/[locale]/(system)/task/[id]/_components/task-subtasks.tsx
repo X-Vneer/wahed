@@ -18,17 +18,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { SubTasks } from "@/lib/generated/prisma/client"
 import { useDeleteSubtask } from "@/hooks/use-delete-subtask"
 import { useToggleSubtaskDone } from "@/hooks/use-toggle-subtask-done"
+import { SubTasks } from "@/lib/generated/prisma/client"
+import { cn } from "@/lib/utils"
 import type { TaskDetail } from "@/prisma/tasks"
+import { useQueryClient } from "@tanstack/react-query"
 import { MoreVertical, Pencil, Plus, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { SubtaskDialog } from "./subtask-dialog"
-import { useQueryClient } from "@tanstack/react-query"
-import { cn } from "@/lib/utils"
 
 type TaskSubtasksProps = {
   taskId: string
@@ -37,7 +36,6 @@ type TaskSubtasksProps = {
 
 export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
   const t = useTranslations()
-  const router = useRouter()
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
