@@ -74,14 +74,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: t("tasksTemplates"),
             url: "/tasks/templates",
           },
-          {
-            title: t("tasksArchive"),
-            url: "/tasks/archive",
-          },
-          {
-            title: t("tasksAdd"),
-            url: "/tasks/add",
-          },
         ],
         isActive: pathname?.startsWith("/tasks") ?? false,
       },

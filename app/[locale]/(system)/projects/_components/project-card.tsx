@@ -11,9 +11,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { type TransformedProject } from "@/prisma/projects"
+import { addDays } from "date-fns"
+import { formatDistanceToNow } from "date-fns"
+import { ar, enUS } from "date-fns/locale"
 import {
   Building2,
   CheckSquare,
@@ -26,34 +30,38 @@ import {
   MapPin,
   Play,
 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useState } from "react"
 
+const dateFnsLocale = (locale: string) => (locale === "ar" ? ar : enUS)
+
 function ProjectCard({ project }: { project: TransformedProject }) {
-  const t = useTranslations("projects")
+  const t = useTranslations()
+  const locale = useLocale()
+  const localeDate = dateFnsLocale(locale)
   const [isOpen, setIsOpen] = useState(false)
 
   // Get status badge text and color
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { text: string; className: string }> = {
       COMPLETED: {
-        text: t("status.completed"),
+        text: t("projects.status.completed"),
         className: "bg-purple-100 text-purple-700 border-purple-200",
       },
       IN_PROGRESS: {
-        text: t("status.inProgress"),
+        text: t("projects.status.inProgress"),
         className: "bg-blue-100 text-blue-700 border-blue-200",
       },
       PLANNING: {
-        text: t("status.planning"),
+        text: t("projects.status.planning"),
         className: "bg-yellow-100 text-yellow-700 border-yellow-200",
       },
       ON_HOLD: {
-        text: t("status.onHold"),
+        text: t("projects.status.onHold"),
         className: "bg-orange-100 text-orange-700 border-orange-200",
       },
       CANCELLED: {
-        text: t("status.cancelled"),
+        text: t("projects.status.cancelled"),
         className: "bg-red-100 text-red-700 border-red-200",
       },
     }
@@ -68,13 +76,41 @@ function ProjectCard({ project }: { project: TransformedProject }) {
   const statusBadge = getStatusBadge(project.status)
 
   // Get project type (first category or default)
-  const projectType = project.categories?.[0] || t("type.residential")
+  const projectType = project.categories?.[0] || t("projects.type.residential")
 
   // Get attachments (files)
   const attachments = project.attachments || []
 
-  // Placeholder for tasks - this can be replaced with actual task data later
+  const taskCount = project.taskCount ?? 0
+  const doneTaskCount = project.doneTaskCount ?? 0
+  const remainingDays = project.remainingDays ?? 0
+  const currentTask =
+    project.tasks?.find(
+      (task) => task.status.id === TASK_STATUS_ID_IN_PROGRESS
+    ) ?? project.tasks?.find((task) => task.doneAt == null)
   const tasks: Array<{ id: string; title: string; status?: string }> = []
+
+  const currentTaskStartedAt = currentTask?.startedAt
+    ? new Date(currentTask.startedAt)
+    : null
+  const currentTaskWorkingDays = currentTask?.estimatedWorkingDays ?? null
+  const currentTaskEstimatedDueDate =
+    currentTaskStartedAt != null &&
+    currentTaskWorkingDays != null &&
+    currentTaskWorkingDays > 0
+      ? addDays(currentTaskStartedAt, currentTaskWorkingDays)
+      : null
+  const currentTaskDueDistance =
+    currentTaskEstimatedDueDate != null
+      ? formatDistanceToNow(currentTaskEstimatedDueDate, {
+          addSuffix: true,
+          locale: localeDate,
+        })
+      : null
+  const currentTaskIsOverdue =
+    currentTaskEstimatedDueDate != null &&
+    currentTaskEstimatedDueDate < new Date() &&
+    !currentTask?.doneAt
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -91,24 +127,27 @@ function ProjectCard({ project }: { project: TransformedProject }) {
               </div>
               <div className="flex flex-1 flex-col justify-between">
                 {/* Status Badges - Top Left */}
-                <div className="flex  items-center lg:justify-end gap-2 mb-2">
+                <div className="mb-2 flex items-center gap-2 lg:justify-end">
                   <Badge
                     variant="outline"
-                    className="rounded-sm  lg:px-5 py-3 text-xs font-medium text-gray-700"
+                    className="rounded-sm py-3 text-xs font-medium text-gray-700 lg:px-5"
                   >
                     <Clock className="size-3" />
-                    {t("daysRemaining", { count: 20 })}
+                    {t("projects.daysRemaining", { count: remainingDays })}
                   </Badge>
                   <Badge
                     variant="outline"
-                    className="rounded-sm lg:px-5 py-3 text-xs font-medium text-gray-700"
+                    className="rounded-sm py-3 text-xs font-medium text-gray-700 lg:px-5"
                   >
-                    <Clock className="size-3" />
-                    {t("stage", { current: 5, total: 10 })}
+                    <CheckSquare className="size-3" />
+                    {t("projects.stage", {
+                      current: doneTaskCount,
+                      total: taskCount,
+                    })}
                   </Badge>
                   <Badge
                     className={cn(
-                      "inline-b rounded-sm p-3 lg:px-5 text-xs font-medium",
+                      "inline-b rounded-sm p-3 text-xs font-medium lg:px-5",
                       statusBadge.className
                     )}
                   >
@@ -121,7 +160,9 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                   <h3 className="text-foreground text-lg font-bold">
                     {project.name} .
                     <span className="text-muted-foreground text-sm font-normal">
-                      {project.area ? `${project.area} ${t("areaUnit")}` : ""}
+                      {project.area
+                        ? `${project.area} ${t("projects.areaUnit")}`
+                        : ""}
                     </span>
                   </h3>
 
@@ -149,7 +190,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                             className="text-muted-foreground flex items-center gap-1 hover:underline"
                           >
                             <ExternalLink className="size-3" />
-                            {t("visitSite")}
+                            {t("projects.visitSite")}
                           </Link>
                         )}
                       </div>
@@ -163,24 +204,56 @@ function ProjectCard({ project }: { project: TransformedProject }) {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-                  <div className="flex items-center gap-8 rounded-lg  bg-[#F7F7F7] max-md:w-full justify-between px-3 py-2">
-                    <div className="flex items-center gap-1">
-                      <p>عنوان المهمة الحالية</p>
+                  {currentTask ? (
+                    <div className="flex items-center justify-between gap-8 rounded-lg bg-[#F7F7F7] px-3 py-2 max-md:w-full">
+                      <div className="flex items-center gap-1">
+                        <p>{currentTask?.title}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="text-muted-foreground size-4" />
+                        <span
+                          className={cn(
+                            currentTaskDueDistance != null &&
+                              (currentTaskIsOverdue
+                                ? "text-destructive font-medium"
+                                : "text-muted-foreground")
+                          )}
+                        >
+                          {currentTaskDueDistance != null
+                            ? currentTaskIsOverdue
+                              ? t("tasks.overdue", {
+                                  distance: currentTaskDueDistance,
+                                })
+                              : t("tasks.dueIn", {
+                                  distance: currentTaskDueDistance,
+                                })
+                            : currentTask?.estimatedWorkingDays != null &&
+                                currentTask.estimatedWorkingDays > 0
+                              ? t("projects.daysRemaining", {
+                                  count: currentTask.estimatedWorkingDays,
+                                })
+                              : t("tasks.notStarted")}
+                        </span>
+                        <div
+                          style={{
+                            background: currentTask?.status.color,
+                            ["--tw-ring-color" as string]: currentTask?.status.color,
+                          }}
+                          className="ms-2 h-2 w-2 animate-pulse rounded-full ring-1 ring-offset-1"
+                        ></div>
+                        <Link href={`/tasks/${currentTask?.id}`}>
+                          <Play className="text-muted-foreground size-4 rtl:rotate-180" />
+                        </Link>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="text-muted-foreground size-4" />
-                      <span className="text-muted-foreground">
-                        {t("daysRemaining", { count: 4 })}
-                      </span>
-                      <div className="ms-2 h-2 w-2 animate-pulse rounded-full bg-green-500 ring-1 ring-green-500 ring-offset-1"></div>
-                      <Play className="text-muted-foreground size-4 rtl:rotate-180" />
-                    </div>
-                  </div>
+                  ) : (
+                    <div className="h-10">{t("projects.noCurrentTask")}</div>
+                  )}
                   <div className="flex items-center gap-2 max-md:mt-2 max-md:w-full max-md:flex-col">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="max-md:w-full text-base max-md:h-10 "
+                      className="text-sm max-md:h-10 max-md:w-full"
                       nativeButton={false}
                       render={
                         <Link
@@ -188,7 +261,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                           className="flex items-center"
                         >
                           <Eye className="size-4" />
-                          {t("viewProject")}
+                          {t("projects.viewProject")}
                         </Link>
                       }
                     />
@@ -196,7 +269,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                       render={
                         <Button
                           variant="outline"
-                          className="text-primary border-primary hover:text-primary bg-white  max-md:h-10 max-md:w-full"
+                          className="text-primary border-primary hover:text-primary bg-white max-md:h-10 max-md:w-full"
                           size={"sm"}
                         >
                           {isOpen ? (
@@ -204,7 +277,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                           ) : (
                             <ChevronDown className="size-4" />
                           )}
-                          {t("quickAccess")}
+                          {t("projects.quickAccess")}
                         </Button>
                       }
                     ></CollapsibleTrigger>
@@ -223,7 +296,9 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <CheckSquare className="text-primary size-5" />
-                    <h4 className="font-semibold">{t("sidebar.tasks")}</h4>
+                    <h4 className="font-semibold">
+                      {t("projects.sidebar.tasks")}
+                    </h4>
                   </div>
                   <div className="space-y-2">
                     {tasks.length > 0 ? (
@@ -242,7 +317,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                       ))
                     ) : (
                       <p className="text-muted-foreground py-4 text-center text-sm">
-                        {t("noTasks")}
+                        {t("projects.noTasks")}
                       </p>
                     )}
                   </div>
@@ -252,7 +327,9 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <FileText className="text-primary size-5" />
-                    <h4 className="font-semibold">{t("sidebar.files")}</h4>
+                    <h4 className="font-semibold">
+                      {t("projects.sidebar.files")}
+                    </h4>
                   </div>
                   <div className="flex flex-col gap-2">
                     {attachments.length > 0 ? (
@@ -264,7 +341,8 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                       ))
                     ) : (
                       <p className="text-muted-foreground py-4 text-center text-sm">
-                        {t("form.attachments.noFiles") || "No files attached"}
+                        {t("projects.form.attachments.noFiles") ||
+                          "No files attached"}
                       </p>
                     )}
                   </div>

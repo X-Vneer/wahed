@@ -792,7 +792,8 @@
       "files": "Project attachments",
       "tasks": "Project tasks"
     },
-    "noTasks": "There is no tasks"
+    "noTasks": "There is no tasks",
+    "noCurrentTask": "There is no tasks"
   },
   "tasks": {
     "errors": {

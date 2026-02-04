@@ -1,7 +1,6 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
 import { TaskPriority } from "@/lib/generated/prisma/enums"
-import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { updateTaskSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
 import {
@@ -41,8 +40,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       )
     }
 
-    const responseLocale = getLocaleFromRequest(request)
-    return NextResponse.json(transformTaskDetail(task, responseLocale))
+    return NextResponse.json(transformTaskDetail(task, locale))
   } catch (error) {
     console.error("Error fetching task:", error)
     const locale = await getReqLocale(request)
@@ -178,8 +176,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       include: taskDetailInclude,
     })
 
-    const responseLocale = getLocaleFromRequest(request)
-    return NextResponse.json(transformTask(task, responseLocale))
+    return NextResponse.json(transformTask(task, locale))
   } catch (error) {
     console.error("Error updating task:", error)
     const locale = await getReqLocale(request)
