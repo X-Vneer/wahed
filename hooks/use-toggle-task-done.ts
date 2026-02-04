@@ -30,6 +30,8 @@ export function useToggleTaskDone() {
       const previous = queryClient.getQueriesData<ProjectTasksResponse>({
         queryKey: ["project-tasks"],
       })
+
+      // Optimistically update project tasks list
       queryClient.setQueriesData<ProjectTasksResponse>(
         { queryKey: ["project-tasks"] },
         (old) => {
@@ -44,20 +46,38 @@ export function useToggleTaskDone() {
           }
         }
       )
-      return { previous }
+
+      // Optimistically update single task detail view
+      const taskQueryKey = ["task", taskId]
+      const previousTask = queryClient.getQueryData<Task>(taskQueryKey)
+
+      if (previousTask) {
+        queryClient.setQueryData<Task>(taskQueryKey, {
+          ...previousTask,
+          doneAt: done ? new Date() : null,
+        })
+      }
+
+      return { previous, previousTask }
     },
-    onError: (error: { response?: { data?: { error?: string } } }, _, context) => {
+    onError: (error: { response?: { data?: { error?: string } } }, _variables, context) => {
       if (context?.previous) {
         context.previous.forEach(([queryKey, data]) => {
           queryClient.setQueryData(queryKey as QueryKey, data)
         })
       }
+
+      if (context?.previousTask && _variables) {
+        const taskQueryKey = ["task", _variables.taskId]
+        queryClient.setQueryData<Task | undefined>(taskQueryKey, context.previousTask)
+      }
       toast.error(
         error.response?.data?.error ?? t("errors.internal_server_error")
       )
     },
-    onSuccess: (_, { done }) => {
+    onSuccess: (_, { taskId, done }) => {
       queryClient.invalidateQueries({ queryKey: ["project-tasks"] })
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] })
       toast.success(
         done ? t("tasks.taskDoneUpdated") : t("tasks.taskUndoneUpdated")
       )

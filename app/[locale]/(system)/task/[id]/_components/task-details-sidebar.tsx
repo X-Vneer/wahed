@@ -50,8 +50,11 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
           {t("taskDetails")}
         </h3>
         <dl className="flex flex-col gap-3 text-sm">
-          <div>
-            <dt className="text-muted-foreground mb-0.5">{t("priorities")}</dt>
+          <div className="flex items-center gap-2">
+            <dt className="text-muted-foreground min-w-30">
+              {t("priorities")}
+            </dt>{" "}
+            :{" "}
             <dd>
               <Badge
                 variant="secondary"
@@ -68,8 +71,8 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
             </dd>
           </div>
           {task.category.length > 0 && (
-            <div>
-              <dt className="text-muted-foreground mb-0.5">{t("tags")}</dt>
+            <div className="flex items-center gap-2">
+              <dt className="text-muted-foreground min-w-30">{t("tags")}</dt> :{" "}
               <dd className="flex flex-wrap gap-1">
                 {task.category.map((cat) => (
                   <Badge
@@ -83,8 +86,8 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
               </dd>
             </div>
           )}
-          <div>
-            <dt className="text-muted-foreground mb-0.5">{t("status")}</dt>
+          <div className="flex items-center gap-2">
+            <dt className="text-muted-foreground min-w-30">{t("status")}</dt> :{" "}
             <dd>
               <Badge
                 variant="secondary"
@@ -101,10 +104,11 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
             </dd>
           </div>
           {estimatedWorkingDays != null && (
-            <div>
-              <dt className="text-muted-foreground mb-0.5">
+            <div className="flex items-center gap-2">
+              <dt className="text-muted-foreground min-w-30">
                 {tTasks("form.estimatedWorkingDays")}
               </dt>
+              :{" "}
               <dd className="text-foreground">
                 {t("estimatedWorkingDaysShort", {
                   count: estimatedWorkingDays,
@@ -113,20 +117,24 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
             </div>
           )}
           {startStr && (
-            <div>
-              <dt className="text-muted-foreground mb-0.5">{t("startDate")}</dt>
-              <dd className="text-foreground">{startStr}</dd>
+            <div className="flex items-center gap-2">
+              <dt className="text-muted-foreground min-w-30">
+                {t("startDate")}
+              </dt>
+              : <dd className="text-foreground">{startStr}</dd>
             </div>
           )}
           {endStr && (
-            <div>
-              <dt className="text-muted-foreground mb-0.5">{t("endDate")}</dt>
-              <dd className="text-foreground">{endStr}</dd>
+            <div className="flex items-center gap-2">
+              <dt className="text-muted-foreground min-w-30">{t("endDate")}</dt>
+              : <dd className="text-foreground">{endStr}</dd>
             </div>
           )}
           {createdByName && (
             <dd>
-              <dt className="text-muted-foreground mb-0.5">{t("createdBy")}</dt>
+              <dt className="text-muted-foreground min-w-30">
+                {t("createdBy")}
+              </dt>
               <UserAvatar
                 name={createdByName}
                 email={task.createdBy?.email ?? ""}

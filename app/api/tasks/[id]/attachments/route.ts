@@ -119,21 +119,17 @@ export async function POST(request: NextRequest, context: RouteContext) {
       where: { taskId },
     })
 
-    // Determine final file (if any)
+    // Determine final file (if any).
+    // We now allow multiple attachments to be flagged as "final" in the payload.
+    // For backward compatibility, we still keep a single `finalFileId` on the task
+    // and use the *first* valid final candidate (if any) as the canonical final file.
     const finalCandidates = attachments.filter(
       (attachment) => attachment.isFinal === true
     )
 
-    if (finalCandidates.length > 1) {
-      return NextResponse.json(
-        { error: t("tasks.errors.invalid_final_file") },
-        { status: 400 }
-      )
-    }
-
     let finalFileId: string | null | undefined = undefined
 
-    if (finalCandidates.length === 1) {
+    if (finalCandidates.length >= 1) {
       const candidate = finalCandidates[0]
 
       if (candidate.id) {

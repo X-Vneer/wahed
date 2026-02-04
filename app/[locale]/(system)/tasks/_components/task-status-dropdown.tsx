@@ -12,11 +12,12 @@ import { cn } from "@/lib/utils"
 import { Check, ChevronDown, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import type { TaskCardData } from "./task-card"
+import type { TaskDetail } from "@/prisma/tasks"
 import type { TaskStatus } from "@/prisma/task-statuses"
 import { Button } from "@/components/ui/button"
 
 type TaskStatusDropdownProps = {
-  task: TaskCardData
+  task: TaskCardData | TaskDetail
 }
 
 export function TaskStatusDropdown({ task }: TaskStatusDropdownProps) {

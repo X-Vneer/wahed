@@ -223,6 +223,11 @@ export function TaskCard({ task, className }: TaskCardProps) {
           <Progress
             value={Math.min(100, Math.max(0, progressPercent))}
             className="flex min-w-0 flex-1 flex-nowrap items-center gap-2 **:data-[slot=progress-track]:h-2.5"
+            style={
+              task.status.color
+                ? { ["--progress-indicator-color" as string]: task.status.color }
+                : undefined
+            }
           >
             <ProgressValue className="order-1 shrink-0" />
           </Progress>

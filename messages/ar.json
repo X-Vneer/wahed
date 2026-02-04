@@ -943,7 +943,10 @@
     "deleteCommentConfirmDescription": "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
     "attachmentUploadError": "فشل في رفع المرفق",
     "attachmentSyncError": "فشل في حفظ المرفقات",
-    "noDocumentsAttached": "لا مرفقات"
+    "noDocumentsAttached": "لا مرفقات",
+    "finalFiles": "الملفات النهائية",
+    "addFinalFiles": "إضافة ملفات نهائية",
+    "noFinalFilesAttached": "لا توجد ملفات نهائية"
   },
   "calendar": {
     "today": "اليوم",
