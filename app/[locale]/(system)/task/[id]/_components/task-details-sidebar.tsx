@@ -8,6 +8,7 @@ import { ar, enUS } from "date-fns/locale"
 import { useLocale } from "next-intl"
 import { addDays } from "date-fns"
 import type { TaskDetail } from "@/prisma/tasks"
+import UserAvatar from "@/components/user-avatar"
 
 type TaskDetailsSidebarProps = {
   task: TaskDetail
@@ -39,11 +40,13 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
   const endStr = endDate
     ? format(endDate, dateFormat, { locale: localeDate })
     : null
+  const estimatedWorkingDays = task.estimatedWorkingDays
+  const createdByName = task.createdBy?.name ?? null
 
   return (
     <Card>
       <CardContent>
-        <h3 className="text-foreground mb-4 text-lg font-semibold">
+        <h3 className="text-foreground mb-4 text-sm font-semibold">
           {t("taskDetails")}
         </h3>
         <dl className="flex flex-col gap-3 text-sm">
@@ -97,6 +100,18 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
               </Badge>
             </dd>
           </div>
+          {estimatedWorkingDays != null && (
+            <div>
+              <dt className="text-muted-foreground mb-0.5">
+                {tTasks("form.estimatedWorkingDays")}
+              </dt>
+              <dd className="text-foreground">
+                {t("estimatedWorkingDaysShort", {
+                  count: estimatedWorkingDays,
+                })}
+              </dd>
+            </div>
+          )}
           {startStr && (
             <div>
               <dt className="text-muted-foreground mb-0.5">{t("startDate")}</dt>
@@ -108,6 +123,16 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
               <dt className="text-muted-foreground mb-0.5">{t("endDate")}</dt>
               <dd className="text-foreground">{endStr}</dd>
             </div>
+          )}
+          {createdByName && (
+            <dd>
+              <dt className="text-muted-foreground mb-0.5">{t("createdBy")}</dt>
+              <UserAvatar
+                name={createdByName}
+                email={task.createdBy?.email ?? ""}
+                image={task.createdBy?.image ?? undefined}
+              />
+            </dd>
           )}
         </dl>
       </CardContent>

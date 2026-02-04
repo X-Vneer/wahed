@@ -810,7 +810,9 @@
       "create_failed": "فشل إنشاء المهمة",
       "not_found": "المهمة غير موجودة",
       "subtask_not_found": "المهمة الفرعية غير موجودة",
-      "comment_not_found": "التعليق غير موجود"
+      "comment_not_found": "التعليق غير موجود",
+      "invalid_attachments": "تنسيق المرفقات غير صحيح. يجب أن تكون المرفقات مصفوفة.",
+      "invalid_final_file": "اختيار الملف النهائي غير صالح."
     },
     "urgent": "مستعجل",
     "priority": {
@@ -883,7 +885,8 @@
     "success": {
       "created": "تم إنشاء المهمة بنجاح",
       "updated": "تم تحديث المهمة بنجاح",
-      "importedFromTemplates": "تم استيراد المهام من القوالب بنجاح"
+      "importedFromTemplates": "تم استيراد المهام من القوالب بنجاح",
+      "attachments_updated": "تم تحديث المرفقات بنجاح"
     },
     "viewMode": "وضع العرض",
     "editMode": "وضع التحرير",
@@ -898,7 +901,8 @@
     "filterWorkingDaysAll": "الكل",
     "filterWorkingDaysHas": "لها تقدير",
     "filterWorkingDaysNone": "بدون تقدير",
-    "filterQueryPlaceholder": "بحث..."
+    "filterQueryPlaceholder": "بحث...",
+    "noDocumentsAttached": "لا توجد وثائق"
   },
   "taskPage": {
     "subTasks": "المهام الفرعية",
@@ -925,6 +929,8 @@
     "status": "حالة",
     "startDate": "تاريخ البداية",
     "endDate": "تاريخ النهاية",
+    "estimatedWorkingDaysShort": "{count} أيام عمل",
+    "createdBy": "منشئ المهمة",
     "assignees": "مكلفين",
     "normal": "عادي",
     "noComments": "لا توجد تعليقات بعد",
@@ -934,7 +940,9 @@
     "commentDeleted": "تم حذف التعليق",
     "commentDeleteError": "فشل في حذف التعليق",
     "deleteCommentConfirmTitle": "حذف التعليق",
-    "deleteCommentConfirmDescription": "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء."
+    "deleteCommentConfirmDescription": "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
+    "attachmentUploadError": "فشل في رفع المرفق",
+    "attachmentSyncError": "فشل في حفظ المرفقات"
   },
   "calendar": {
     "today": "اليوم",

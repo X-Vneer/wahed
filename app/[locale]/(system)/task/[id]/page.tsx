@@ -91,7 +91,7 @@ export default function TaskDetailPage({ params }: PageProps) {
         </div>
 
         {/* Sidebar */}
-        <div className="flex w-full flex-col gap-6 lg:w-90 lg:shrink-0">
+        <div className="flex w-full flex-col gap-6 lg:w-md lg:shrink-0">
           <TaskSupportingDocuments
             taskId={task.id}
             attachments={task.taskAttachments}

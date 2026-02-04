@@ -77,7 +77,7 @@ export function TaskComments({ taskId }: TaskCommentsProps) {
         </h3>
         {isLoading ? (
           <p className="text-muted-foreground py-4 text-center text-sm">
-            {t("loading")}
+            {t("common.loading")}
           </p>
         ) : isError || !comments ? (
           <p className="text-destructive py-4 text-center text-sm">
@@ -166,9 +166,7 @@ export function TaskComments({ taskId }: TaskCommentsProps) {
               </AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive hover:bg-destructive/90 text-white"
-                onClick={() =>
-                  commentToDelete && handleDelete(commentToDelete)
-                }
+                onClick={() => commentToDelete && handleDelete(commentToDelete)}
                 disabled={deleteCommentMutation.isPending}
               >
                 {t("common.delete")}

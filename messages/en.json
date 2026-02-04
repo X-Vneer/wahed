@@ -810,7 +810,9 @@
       "create_failed": "Failed to create task",
       "not_found": "Task not found",
       "subtask_not_found": "Sub-task not found",
-      "comment_not_found": "Comment not found"
+      "comment_not_found": "Comment not found",
+      "invalid_attachments": "Invalid attachments format. Attachments must be an array.",
+      "invalid_final_file": "Invalid final file selection."
     },
     "urgent": "Urgent",
     "priority": {
@@ -883,7 +885,8 @@
     "success": {
       "created": "Task created successfully",
       "updated": "Task updated successfully",
-      "importedFromTemplates": "Tasks imported from templates successfully"
+      "importedFromTemplates": "Tasks imported from templates successfully",
+      "attachments_updated": "Attachments updated successfully"
     },
     "viewMode": "View mode",
     "editMode": "Edit mode",
@@ -898,7 +901,8 @@
     "filterWorkingDaysAll": "All",
     "filterWorkingDaysHas": "Has estimate",
     "filterWorkingDaysNone": "No estimate",
-    "filterQueryPlaceholder": "Search..."
+    "filterQueryPlaceholder": "Search...",
+    "noDocumentsAttached": "No documents"
   },
   "taskPage": {
     "subTasks": "Sub-tasks",
@@ -925,6 +929,8 @@
     "status": "Status",
     "startDate": "Start date",
     "endDate": "End date",
+    "estimatedWorkingDaysShort": "{count} working days",
+    "createdBy": "Created by",
     "assignees": "Assignees",
     "normal": "Normal",
     "noComments": "No comments yet",
@@ -934,7 +940,9 @@
     "commentDeleted": "Comment deleted",
     "commentDeleteError": "Failed to delete comment",
     "deleteCommentConfirmTitle": "Delete comment",
-    "deleteCommentConfirmDescription": "Are you sure you want to delete this comment? This action cannot be undone."
+    "deleteCommentConfirmDescription": "Are you sure you want to delete this comment? This action cannot be undone.",
+    "attachmentUploadError": "Failed to upload attachment",
+    "attachmentSyncError": "Failed to save attachments"
   },
   "calendar": {
     "today": "Today",

@@ -85,7 +85,7 @@ export function AttachmentPreview({
   return (
     <HoverCard>
       <HoverCardTrigger aria-label={t("attachmentPreview.viewFileDetails")}>
-        <Card className="bg-muted py-2 ring-1">
+        <Card className="bg-[#f7f7f7] py-2 ring-1">
           <CardContent>
             <div className="flex gap-2">
               {/* File Icon */}

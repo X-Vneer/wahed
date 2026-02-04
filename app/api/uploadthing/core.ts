@@ -136,6 +136,32 @@ export const ourFileRouter = {
         },
       }
     }),
+  taskAttachmentsUploader: f({
+    pdf: { maxFileSize: "64MB", maxFileCount: 10 },
+    image: { maxFileSize: "8MB", maxFileCount: 10 },
+    video: { maxFileSize: "256MB", maxFileCount: 10 },
+    audio: { maxFileSize: "8MB", maxFileCount: 10 },
+    text: { maxFileSize: "32MB", maxFileCount: 10 },
+    blob: { maxFileSize: "8MB", maxFileCount: 10 },
+  })
+    .middleware(async () => {
+      const user = await auth()
+      if (!user) throw new UploadThingError("Unauthorized")
+      return { user }
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      return {
+        uploadedBy: metadata.user.userId,
+        url: file.ufsUrl,
+        file: {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified,
+          customId: file.customId,
+        },
+      }
+    }),
 } satisfies FileRouter
 
 export type OurFileRouter = typeof ourFileRouter
