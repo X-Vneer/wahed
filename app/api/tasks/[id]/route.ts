@@ -4,7 +4,11 @@ import { TaskPriority } from "@/lib/generated/prisma/enums"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { updateTaskSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
-import { taskInclude, transformTask } from "@/prisma/tasks"
+import {
+  taskDetailInclude,
+  transformTask,
+  transformTaskDetail,
+} from "@/prisma/tasks"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
 import { getTranslations } from "next-intl/server"
@@ -12,6 +16,42 @@ import { type NextRequest, NextResponse } from "next/server"
 
 type RouteContext = {
   params: Promise<{ id: string }>
+}
+
+export async function GET(request: NextRequest, context: RouteContext) {
+  try {
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
+    const { id } = await context.params
+
+    const task = await db.task.findUnique({
+      where: { id },
+      include: taskDetailInclude,
+    })
+
+    if (!task) {
+      return NextResponse.json(
+        { error: t("tasks.errors.not_found") },
+        { status: 404 }
+      )
+    }
+
+    const responseLocale = getLocaleFromRequest(request)
+    return NextResponse.json(transformTaskDetail(task, responseLocale))
+  } catch (error) {
+    console.error("Error fetching task:", error)
+    const locale = await getReqLocale(request)
+    const t = await getTranslations({ locale })
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
 }
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
@@ -135,7 +175,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const task = await db.task.update({
       where: { id },
       data: updateData,
-      include: taskInclude,
+      include: taskDetailInclude,
     })
 
     const responseLocale = getLocaleFromRequest(request)

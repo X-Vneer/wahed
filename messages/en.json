@@ -11,7 +11,8 @@
     "moreUsers": "{count, plural, one {# more user} other {# more users}}",
     "loading": "Loading...",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "delete": "Delete"
   },
   "auth": {
     "login": {
@@ -797,6 +798,7 @@
     "errors": {
       "title_required": "Title is required",
       "subtask_title_required": "Sub-task title is required",
+      "comment_required": "Comment is required",
       "project_required": "Project is required",
       "status_required": "Status is required",
       "templates_required": "Select at least one template",
@@ -807,7 +809,8 @@
       "templates_missing_status": "Some templates have no default status. Select a status for all tasks.",
       "create_failed": "Failed to create task",
       "not_found": "Task not found",
-      "subtask_not_found": "Sub-task not found"
+      "subtask_not_found": "Sub-task not found",
+      "comment_not_found": "Comment not found"
     },
     "urgent": "Urgent",
     "priority": {
@@ -896,6 +899,42 @@
     "filterWorkingDaysHas": "Has estimate",
     "filterWorkingDaysNone": "No estimate",
     "filterQueryPlaceholder": "Search..."
+  },
+  "taskPage": {
+    "subTasks": "Sub-tasks",
+    "completedSubTasks": "Completed {done}/{total}",
+    "addSubTask": "Add sub-task",
+    "addSubTaskDialogTitle": "Add sub-task",
+    "editSubTaskDialogTitle": "Edit sub-task",
+    "editSubTask": "Edit",
+    "subTaskOptions": "Sub-task options",
+    "subTaskTitlePlaceholder": "Sub-task title",
+    "subTaskDescriptionLabel": "Description",
+    "subTaskDescriptionPlaceholder": "Enter sub-task description",
+    "deleteSubTaskConfirmTitle": "Delete sub-task",
+    "deleteSubTaskConfirmDescription": "Are you sure you want to delete this sub-task? This action cannot be undone.",
+    "projectComments": "Project comments",
+    "writeComment": "Write comment",
+    "commentPlaceholder": "Type your comment...",
+    "send": "Send",
+    "supportingDocuments": "Attach supporting documents",
+    "addDocuments": "Add documents",
+    "taskDetails": "Task details",
+    "priorities": "Priorities",
+    "tags": "Tags",
+    "status": "Status",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "assignees": "Assignees",
+    "normal": "Normal",
+    "noComments": "No comments yet",
+    "delete": "Delete",
+    "commentAdded": "Comment added",
+    "commentAddError": "Failed to add comment",
+    "commentDeleted": "Comment deleted",
+    "commentDeleteError": "Failed to delete comment",
+    "deleteCommentConfirmTitle": "Delete comment",
+    "deleteCommentConfirmDescription": "Are you sure you want to delete this comment? This action cannot be undone."
   },
   "calendar": {
     "today": "Today",
@@ -1193,5 +1232,8 @@
       "cancel": "Cancel"
     }
   },
-  "something wrong happened": "Something wrong happened"
+  "something wrong happened": "Something wrong happened",
+  "task": {
+    "title": "Task"
+  }
 }

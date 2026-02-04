@@ -1,6 +1,7 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
-import { updateSubTaskSchema } from "@/lib/schemas/task"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
+import { createTaskCommentSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
@@ -8,10 +9,10 @@ import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 type RouteContext = {
-  params: Promise<{ id: string; subtaskId: string }>
+  params: Promise<{ id: string }>
 }
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function POST(request: NextRequest, context: RouteContext) {
   try {
     const locale = await getReqLocale(request)
     const t = await getTranslations({ locale })
@@ -20,9 +21,17 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       return permissionCheck.error!
     }
 
-    const { id: taskId, subtaskId } = await context.params
+    const payload = await getAccessTokenPayload()
+    if (!payload || !payload.userId) {
+      return NextResponse.json(
+        { error: t("errors.unauthorized") },
+        { status: 401 }
+      )
+    }
+
+    const { id: taskId } = await context.params
     const body = await request.json()
-    const validationResult = updateSubTaskSchema.safeParse(body)
+    const validationResult = createTaskCommentSchema.safeParse(body)
 
     if (!validationResult.success) {
       return NextResponse.json(
@@ -36,35 +45,32 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     const data = validationResult.data
 
-    const existing = await db.subTasks.findFirst({
-      where: { id: subtaskId, taskId },
+    const task = await db.task.findUnique({
+      where: { id: taskId },
       select: { id: true },
     })
 
-    if (!existing) {
+    if (!task) {
       return NextResponse.json(
-        { error: t("tasks.errors.subtask_not_found") },
+        { error: t("tasks.errors.not_found") },
         { status: 404 }
       )
     }
 
-    const updateData: Parameters<typeof db.subTasks.update>[0]["data"] = {}
-    if (data.title !== undefined) updateData.title = data.title
-    if (data.description !== undefined)
-      updateData.description = data.description
-    if (data.done !== undefined) {
-      updateData.done = data.done
-      updateData.doneAt = data.done ? new Date() : null
-    }
-
-    const subtask = await db.subTasks.update({
-      where: { id: subtaskId },
-      data: updateData,
+    const comment = await db.taskComment.create({
+      data: {
+        content: data.content,
+        taskId,
+        createdById: payload.userId,
+      },
+      include: {
+        createdBy: { select: { id: true, name: true, image: true } },
+      },
     })
 
-    return NextResponse.json(subtask)
+    return NextResponse.json(comment, { status: 201 })
   } catch (error) {
-    console.error("Error updating subtask:", error)
+    console.error("Error creating task comment:", error)
     const locale = await getReqLocale(request)
     const t = await getTranslations({ locale })
     return NextResponse.json(
@@ -74,36 +80,40 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
+export async function GET(request: NextRequest, context: RouteContext) {
   try {
     const locale = await getReqLocale(request)
     const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }
 
-    const { id: taskId, subtaskId } = await context.params
+    const { id: taskId } = await context.params
 
-    const existing = await db.subTasks.findFirst({
-      where: { id: subtaskId, taskId },
+    const task = await db.task.findUnique({
+      where: { id: taskId },
       select: { id: true },
     })
 
-    if (!existing) {
+    if (!task) {
       return NextResponse.json(
-        { error: t("tasks.errors.subtask_not_found") },
+        { error: t("tasks.errors.not_found") },
         { status: 404 }
       )
     }
 
-    await db.subTasks.delete({
-      where: { id: subtaskId },
+    const comments = await db.taskComment.findMany({
+      where: { taskId },
+      include: {
+        createdBy: { select: { id: true, name: true, image: true } },
+      },
+      orderBy: { createdAt: "asc" },
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json(comments)
   } catch (error) {
-    console.error("Error deleting subtask:", error)
+    console.error("Error fetching task comments:", error)
     const locale = await getReqLocale(request)
     const t = await getTranslations({ locale })
     return NextResponse.json(
@@ -112,3 +122,5 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     )
   }
 }
+
+

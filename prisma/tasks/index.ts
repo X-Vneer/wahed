@@ -15,6 +15,20 @@ export type TaskInclude = Prisma.TaskGetPayload<{
   include: typeof taskInclude
 }>
 
+/** Include for task detail page: comments with createdBy */
+export const taskDetailInclude = {
+  ...taskInclude,
+  comments: {
+    include: {
+      createdBy: { select: { id: true, name: true, image: true } },
+    },
+  },
+} satisfies Prisma.TaskInclude
+
+export type TaskDetailInclude = Prisma.TaskGetPayload<{
+  include: typeof taskDetailInclude
+}>
+
 export const transformTask = (task: TaskInclude, locale: string) => {
   return {
     id: task.id,
@@ -23,6 +37,7 @@ export const transformTask = (task: TaskInclude, locale: string) => {
     estimatedWorkingDays: task.estimatedWorkingDays,
     startedAt: task.startedAt,
     doneAt: task.doneAt,
+    order: task.order,
     priority: task.priority,
     createdAt: task.createdAt,
     updatedAt: task.updatedAt,
@@ -51,3 +66,20 @@ export const transformTask = (task: TaskInclude, locale: string) => {
 }
 
 export type Task = ReturnType<typeof transformTask>
+
+export function transformTaskDetail(task: TaskDetailInclude, locale: string) {
+  const base = transformTask(task as unknown as TaskInclude, locale)
+  return {
+    ...base,
+    comments: task.comments.map((c) => ({
+      id: c.id,
+      content: c.content,
+      taskId: c.taskId,
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt,
+      createdBy: c.createdBy,
+    })),
+  }
+}
+
+export type TaskDetail = ReturnType<typeof transformTaskDetail>

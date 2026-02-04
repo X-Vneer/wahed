@@ -11,7 +11,8 @@
     "moreUsers": "{count, plural, one {مستخدم واحد إضافي} other {# مستخدمين إضافيين}}",
     "loading": "جاري التحميل...",
     "previous": "السابق",
-    "next": "التالي"
+    "next": "التالي",
+    "delete": "حذف"
   },
   "auth": {
     "login": {
@@ -797,6 +798,7 @@
     "errors": {
       "title_required": "العنوان مطلوب",
       "subtask_title_required": "عنوان المهمة الفرعية مطلوب",
+      "comment_required": "التعليق مطلوب",
       "project_required": "المشروع مطلوب",
       "status_required": "الحالة مطلوبة",
       "templates_required": "اختر قالباً واحداً على الأقل",
@@ -807,7 +809,8 @@
       "templates_missing_status": "بعض القوالب لا تحتوي على حالة افتراضية. حدد حالة لجميع المهام.",
       "create_failed": "فشل إنشاء المهمة",
       "not_found": "المهمة غير موجودة",
-      "subtask_not_found": "المهمة الفرعية غير موجودة"
+      "subtask_not_found": "المهمة الفرعية غير موجودة",
+      "comment_not_found": "التعليق غير موجود"
     },
     "urgent": "مستعجل",
     "priority": {
@@ -896,6 +899,42 @@
     "filterWorkingDaysHas": "لها تقدير",
     "filterWorkingDaysNone": "بدون تقدير",
     "filterQueryPlaceholder": "بحث..."
+  },
+  "taskPage": {
+    "subTasks": "المهام الفرعية",
+    "completedSubTasks": "منتهي {done}/{total}",
+    "addSubTask": "إضافة مهام فرعية",
+    "addSubTaskDialogTitle": "إضافة مهمة فرعية",
+    "editSubTaskDialogTitle": "تعديل المهمة الفرعية",
+    "editSubTask": "تعديل",
+    "subTaskOptions": "خيارات المهمة الفرعية",
+    "subTaskTitlePlaceholder": "عنوان المهمة الفرعية",
+    "subTaskDescriptionLabel": "الوصف",
+    "subTaskDescriptionPlaceholder": "أدخل وصف المهمة الفرعية",
+    "deleteSubTaskConfirmTitle": "حذف المهمة الفرعية",
+    "deleteSubTaskConfirmDescription": "هل أنت متأكد من حذف هذه المهمة الفرعية؟ لا يمكن التراجع عن هذا الإجراء.",
+    "projectComments": "تعليقات المشروع",
+    "writeComment": "كتابة تعليق",
+    "commentPlaceholder": "اكتب تعليقك...",
+    "send": "إرسال",
+    "supportingDocuments": "ارفق المستندات الداعمة",
+    "addDocuments": "إضافة المستندات",
+    "taskDetails": "تفاصيل مهمة",
+    "priorities": "أولويات",
+    "tags": "ملصق",
+    "status": "حالة",
+    "startDate": "تاريخ البداية",
+    "endDate": "تاريخ النهاية",
+    "assignees": "مكلفين",
+    "normal": "عادي",
+    "noComments": "لا توجد تعليقات بعد",
+    "delete": "حذف",
+    "commentAdded": "تم إضافة التعليق",
+    "commentAddError": "فشل في إضافة التعليق",
+    "commentDeleted": "تم حذف التعليق",
+    "commentDeleteError": "فشل في حذف التعليق",
+    "deleteCommentConfirmTitle": "حذف التعليق",
+    "deleteCommentConfirmDescription": "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء."
   },
   "calendar": {
     "today": "اليوم",
@@ -1193,5 +1232,8 @@
       "cancel": "إلغاء"
     }
   },
-  "something wrong happened": "حصل مشكلة ما"
+  "something wrong happened": "حصل مشكلة ما",
+  "task": {
+    "title": "مهمة"
+  }
 }

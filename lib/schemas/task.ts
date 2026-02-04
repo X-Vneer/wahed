@@ -2,6 +2,15 @@ import * as z from "zod/v4"
 
 const TaskPriorityEnum = z.enum(["LOW", "MEDIUM", "HIGH"])
 
+export const createTaskCommentSchema = z.object({
+  content: z
+    .string()
+    .trim()
+    .min(1, { message: "tasks.errors.comment_required" }),
+})
+
+export type CreateTaskCommentInput = z.infer<typeof createTaskCommentSchema>
+
 export const createSubTaskSchema = z.object({
   title: z.string().min(1, { message: "tasks.errors.subtask_title_required" }),
   description: z.string().optional(),
@@ -15,6 +24,7 @@ export const updateSubTaskSchema = z.object({
     .min(1, { message: "tasks.errors.subtask_title_required" })
     .optional(),
   description: z.string().optional().nullable(),
+  done: z.boolean().optional(),
 })
 
 export type UpdateSubTaskInput = z.infer<typeof updateSubTaskSchema>
