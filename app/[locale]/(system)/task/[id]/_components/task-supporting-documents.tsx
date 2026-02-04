@@ -6,7 +6,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { UploadButton } from "@/lib/uploadthing"
 import type { TaskDetail } from "@/prisma/tasks"
 import apiClient from "@/services"
-import { useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
@@ -33,10 +33,49 @@ export function TaskSupportingDocuments({
   taskId,
   attachments,
 }: TaskSupportingDocumentsProps) {
-  const t = useTranslations("taskPage")
-  const tTasks = useTranslations("tasks")
+  const t = useTranslations()
   const queryClient = useQueryClient()
   const [isSaving, setIsSaving] = useState(false)
+
+  const deleteAttachmentMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.delete(`/api/tasks/${taskId}/attachments/${id}`)
+    },
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: ["task", taskId] })
+
+      const previousTask = queryClient.getQueryData<TaskDetail>([
+        "task",
+        taskId,
+      ])
+
+      if (previousTask) {
+        queryClient.setQueryData<TaskDetail>(["task", taskId], {
+          ...previousTask,
+          taskAttachments: previousTask.taskAttachments.filter(
+            (attachment) => attachment.id !== id
+          ),
+        })
+      }
+
+      return { previousTask }
+    },
+    onError: (_error, _id, context) => {
+      if (context?.previousTask) {
+        queryClient.setQueryData<TaskDetail>(
+          ["task", taskId],
+          context.previousTask
+        )
+      }
+      toast.error(t("errors.internal_server_error"))
+    },
+    onSuccess: () => {
+      toast.success(t("tasks.success.attachments_updated"))
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] })
+    },
+  })
 
   const syncAttachments = async (
     payload: Array<{
@@ -53,10 +92,10 @@ export function TaskSupportingDocuments({
         attachments: payload,
       })
       await queryClient.invalidateQueries({ queryKey: ["task", taskId] })
-      toast.success(tTasks("success.attachments_updated"))
+      toast.success(t("tasks.success.attachments_updated"))
     } catch (err) {
       console.error("Error syncing task attachments:", err)
-      toast.error(t("attachmentSyncError") || tTasks("errors.not_found"))
+      toast.error(t("errors.internal_server_error"))
     } finally {
       setIsSaving(false)
     }
@@ -77,10 +116,7 @@ export function TaskSupportingDocuments({
   }
 
   const handleRemove = (id: string) => {
-    const remaining = attachments
-      .filter((a) => a.id !== id)
-      .map(toApiAttachment)
-    syncAttachments(remaining)
+    deleteAttachmentMutation.mutate(id)
   }
 
   return (
@@ -88,7 +124,7 @@ export function TaskSupportingDocuments({
       <CardContent>
         <div className="mb-4 flex items-center justify-between gap-2">
           <h3 className="text-foreground font-semibold">
-            {t("supportingDocuments")}
+            {t("taskPage.supportingDocuments")}
           </h3>
           <div className="flex shrink-0 items-center gap-2">
             {isSaving && <Spinner className="size-4" />}
@@ -107,7 +143,7 @@ export function TaskSupportingDocuments({
                 }
               }}
               onUploadError={(error: Error) => {
-                toast.error(error.message || t("attachmentUploadError"))
+                toast.error(error.message || t("errors.internal_server_error"))
               }}
               appearance={{
                 button:
@@ -119,7 +155,7 @@ export function TaskSupportingDocuments({
                 button: (
                   <span className="flex items-center gap-2">
                     <Plus className="size-4" />
-                    {t("addDocuments")}
+                    {t("taskPage.addDocuments")}
                   </span>
                 ),
                 allowedContent: <span />,
@@ -131,7 +167,7 @@ export function TaskSupportingDocuments({
         <ul className="flex flex-col gap-2">
           {attachments.length === 0 ? (
             <p className="text-muted-foreground py-2 text-sm">
-              {t("noDocumentsAttached")}
+              {t("taskPage.noDocumentsAttached")}
             </p>
           ) : (
             attachments.map((att) => (

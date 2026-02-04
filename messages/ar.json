@@ -942,7 +942,8 @@
     "deleteCommentConfirmTitle": "حذف التعليق",
     "deleteCommentConfirmDescription": "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
     "attachmentUploadError": "فشل في رفع المرفق",
-    "attachmentSyncError": "فشل في حفظ المرفقات"
+    "attachmentSyncError": "فشل في حفظ المرفقات",
+    "noDocumentsAttached": "لا مرفقات"
   },
   "calendar": {
     "today": "اليوم",
