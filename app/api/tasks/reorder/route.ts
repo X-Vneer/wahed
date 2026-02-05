@@ -1,4 +1,5 @@
 import db from "@/lib/db"
+import { Prisma } from "@/lib/generated/prisma/client"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
@@ -48,13 +49,21 @@ export async function PATCH(request: NextRequest) {
       )
     }
 
-    await db.$transaction(
-      taskIds.map((taskId, index) =>
-        db.task.update({
-          where: { id: taskId, projectId },
-          data: { order: index },
-        })
-      )
+    // Single SQL round-trip: update all task orders in one query
+    if (taskIds.length === 0) {
+      return NextResponse.json({ success: true })
+    }
+    const values = Prisma.join(
+      taskIds.map((taskId, index) => Prisma.sql`(${taskId}, ${index})`),
+      ", "
+    )
+    await db.$executeRaw(
+      Prisma.sql`
+        UPDATE "Task" AS t
+        SET "order" = v.ord::int
+        FROM (VALUES ${values}) AS v(id, ord)
+        WHERE t.id = v.id AND t."projectId" = ${projectId}
+      `
     )
 
     return NextResponse.json({ success: true })
