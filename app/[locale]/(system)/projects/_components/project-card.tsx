@@ -15,9 +15,6 @@ import { TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { type TransformedProject } from "@/prisma/projects"
-import { addDays } from "date-fns"
-import { formatDistanceToNow } from "date-fns"
-import { ar, enUS } from "date-fns/locale"
 import {
   Building2,
   CheckSquare,
@@ -28,17 +25,14 @@ import {
   Eye,
   FileText,
   MapPin,
-  Play,
 } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import MiniTaskCard from "./mini-task-card"
+import { useTranslations } from "next-intl"
 import { useState } from "react"
-
-const dateFnsLocale = (locale: string) => (locale === "ar" ? ar : enUS)
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 function ProjectCard({ project }: { project: TransformedProject }) {
   const t = useTranslations()
-  const locale = useLocale()
-  const localeDate = dateFnsLocale(locale)
   const [isOpen, setIsOpen] = useState(false)
 
   // Get status badge text and color
@@ -88,29 +82,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
     project.tasks?.find(
       (task) => task.status.id === TASK_STATUS_ID_IN_PROGRESS
     ) ?? project.tasks?.find((task) => task.doneAt == null)
-  const tasks: Array<{ id: string; title: string; status?: string }> = []
-
-  const currentTaskStartedAt = currentTask?.startedAt
-    ? new Date(currentTask.startedAt)
-    : null
-  const currentTaskWorkingDays = currentTask?.estimatedWorkingDays ?? null
-  const currentTaskEstimatedDueDate =
-    currentTaskStartedAt != null &&
-    currentTaskWorkingDays != null &&
-    currentTaskWorkingDays > 0
-      ? addDays(currentTaskStartedAt, currentTaskWorkingDays)
-      : null
-  const currentTaskDueDistance =
-    currentTaskEstimatedDueDate != null
-      ? formatDistanceToNow(currentTaskEstimatedDueDate, {
-          addSuffix: true,
-          locale: localeDate,
-        })
-      : null
-  const currentTaskIsOverdue =
-    currentTaskEstimatedDueDate != null &&
-    currentTaskEstimatedDueDate < new Date() &&
-    !currentTask?.doneAt
+  const tasks = project.tasks
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -204,51 +176,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-                  {currentTask ? (
-                    <div className="flex items-center justify-between gap-8 rounded-lg bg-[#F7F7F7] px-3 py-2 max-md:w-full">
-                      <div className="flex items-center gap-1">
-                        <p>{currentTask?.title}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="text-muted-foreground size-4" />
-                        <span
-                          className={cn(
-                            currentTaskDueDistance != null &&
-                              (currentTaskIsOverdue
-                                ? "text-destructive font-medium"
-                                : "text-muted-foreground")
-                          )}
-                        >
-                          {currentTaskDueDistance != null
-                            ? currentTaskIsOverdue
-                              ? t("tasks.overdue", {
-                                  distance: currentTaskDueDistance,
-                                })
-                              : t("tasks.dueIn", {
-                                  distance: currentTaskDueDistance,
-                                })
-                            : currentTask?.estimatedWorkingDays != null &&
-                                currentTask.estimatedWorkingDays > 0
-                              ? t("projects.daysRemaining", {
-                                  count: currentTask.estimatedWorkingDays,
-                                })
-                              : t("tasks.notStarted")}
-                        </span>
-                        <div
-                          style={{
-                            background: currentTask?.status.color,
-                            ["--tw-ring-color" as string]: currentTask?.status.color,
-                          }}
-                          className="ms-2 h-2 w-2 animate-pulse rounded-full ring-1 ring-offset-1"
-                        ></div>
-                        <Link href={`/tasks/${currentTask?.id}`}>
-                          <Play className="text-muted-foreground size-4 rtl:rotate-180" />
-                        </Link>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="h-10">{t("projects.noCurrentTask")}</div>
-                  )}
+                  <MiniTaskCard task={currentTask ?? null} />
                   <div className="flex items-center gap-2 max-md:mt-2 max-md:w-full max-md:flex-col">
                     <Button
                       variant="outline"
@@ -300,27 +228,19 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                       {t("projects.sidebar.tasks")}
                     </h4>
                   </div>
-                  <div className="space-y-2">
-                    {tasks.length > 0 ? (
-                      tasks.map((task) => (
-                        <div
-                          key={task.id}
-                          className="rounded-lg border bg-gray-50 p-3"
-                        >
-                          <p className="text-sm font-medium">{task.title}</p>
-                          {task.status && (
-                            <p className="text-muted-foreground mt-1 text-xs">
-                              {task.status}
-                            </p>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-muted-foreground py-4 text-center text-sm">
-                        {t("projects.noTasks")}
-                      </p>
-                    )}
-                  </div>
+                  <ScrollArea className="h-[300px]">
+                    <div className="space-y-2">
+                      {tasks.length > 0 ? (
+                        tasks.map((task) => (
+                          <MiniTaskCard key={task.id} task={task} />
+                        ))
+                      ) : (
+                        <p className="text-muted-foreground py-4 text-center text-sm">
+                          {t("projects.noTasks")}
+                        </p>
+                      )}
+                    </div>{" "}
+                  </ScrollArea>
                 </div>
 
                 {/* Files Column - Right */}

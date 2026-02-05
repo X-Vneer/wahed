@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status")
     const isActive = searchParams.get("archived")
 
-    const [total, archived] = await Promise.all([
+    const [total, archived, totalTasks] = await Promise.all([
       db.project.count({
         where: {
           archivedAt: null,
@@ -122,6 +122,7 @@ export async function GET(request: NextRequest) {
           ...(status ? { status: status as ProjectStatus } : {}),
         },
       }),
+      db.task.count(),
     ])
 
     const projects = await db.project.findMany({
@@ -140,7 +141,7 @@ export async function GET(request: NextRequest) {
       projects: transformedProjects,
       total,
       archived,
-      totalTasks: 100,
+      totalTasks,
     })
   } catch (error) {
     console.error("Error fetching projects:", error)
