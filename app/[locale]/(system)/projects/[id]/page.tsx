@@ -60,6 +60,25 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
   // Transform project for display
   const transformedProject = transformProject(project, locale)
 
+  // Map project status enum to translated label
+  const getProjectStatusLabel = (status: string | null) => {
+    if (!status) return null
+
+    const statusMap: Record<string, string> = {
+      COMPLETED: t("projects.status.completed"),
+      IN_PROGRESS: t("projects.status.inProgress"),
+      PLANNING: t("projects.status.planning"),
+      ON_HOLD: t("projects.status.onHold"),
+      CANCELLED: t("projects.status.cancelled"),
+    }
+
+    return statusMap[status] ?? status
+  }
+
+  const projectStatusLabel = getProjectStatusLabel(
+    (transformedProject.status as string | null) ?? null
+  )
+
   return (
     <div className="flex h-full flex-col gap-6">
       <div className="flex flex-wrap justify-between gap-4">
@@ -267,6 +286,73 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
           />
         </div>
         <div className="flex flex-col gap-3 lg:w-sm">
+          {/* Project Summary / Status */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                {t("projects.quickAccess")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              {/* Status */}
+              {projectStatusLabel && (
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">
+                    {t("common.status")}
+                  </span>
+                  <span className="font-medium">{projectStatusLabel}</span>
+                </div>
+              )}
+
+              {/* Tasks summary */}
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t("projects.statusCards.allTasks")}
+                </span>
+                <span className="font-medium">
+                  {transformedProject.doneTaskCount}/
+                  {transformedProject.taskCount}
+                </span>
+              </div>
+
+              {/* Remaining days */}
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t("projects.daysRemaining", {
+                    count: transformedProject.remainingDays,
+                  })}
+                </span>
+              </div>
+
+              {/* Created / Updated */}
+              {transformedProject.createdAt && (
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">
+                    {t("common.createdAt")}
+                  </span>
+                  <span className="font-medium">
+                    {new Date(transformedProject.createdAt).toLocaleDateString(
+                      locale
+                    )}
+                  </span>
+                </div>
+              )}
+              {transformedProject.updatedAt && (
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">
+                    {t("common.updatedAt")}
+                  </span>
+                  <span className="font-medium">
+                    {new Date(transformedProject.updatedAt).toLocaleDateString(
+                      locale
+                    )}
+                  </span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Tasks list */}
           <Card>
             <CardHeader>
               <CardTitle className="text-lg font-semibold">

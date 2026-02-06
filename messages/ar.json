@@ -12,7 +12,11 @@
     "loading": "جاري التحميل...",
     "previous": "السابق",
     "next": "التالي",
-    "delete": "حذف"
+    "delete": "حذف",
+    "status": "الحالة",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "تاريخ التحديث",
+    "inactive": "غير نشط"
   },
   "auth": {
     "login": {
@@ -850,6 +854,7 @@
     "noAssignee": "لم يتم تعيينه لأحد",
     "assignees": "معين إلى",
     "notStarted": "لم تبدأ بعد",
+    "completed": "مكتملة",
     "taskDoneUpdated": "تم وضع علامة على المهمة كمكتملة",
     "taskUndoneUpdated": "تم وضع علامة على المهمة بأنها غير مكتملة",
     "statusUpdated": "تم تحديث حالة المهمة",

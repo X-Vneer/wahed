@@ -1,5 +1,6 @@
 "use client"
 
+import { TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { type TransformedProject } from "@/prisma/projects"
@@ -39,11 +40,17 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
     taskEstimatedDueDate != null &&
     taskEstimatedDueDate < new Date() &&
     !task.doneAt
+  const taskIsInProgress = task.status.id === TASK_STATUS_ID_IN_PROGRESS
 
   return (
     <div className="flex items-center justify-between gap-4 rounded-lg bg-[#F7F7F7] px-3 py-2 max-md:w-full lg:gap-8">
       <div className="flex items-center gap-1">
-        <p className="line-clamp-1 max-w-30 truncate max-md:text-sm">
+        <p
+          className={cn(
+            "line-clamp-1 max-w-30 truncate max-md:text-sm",
+            task.doneAt != null ? "line-through" : ""
+          )}
+        >
           {task.title}
         </p>
       </div>
@@ -58,18 +65,22 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
                 : "text-muted-foreground")
           )}
         >
-          {taskDueDistance != null
-            ? taskIsOverdue
-              ? t("tasks.overdue", {
-                  distance: taskDueDistance,
-                })
-              : t("tasks.dueIn", {
-                  distance: taskDueDistance,
-                })
-            : task.estimatedWorkingDays != null && task.estimatedWorkingDays > 0
-              ? t("projects.daysRemaining", {
-                  count: task.estimatedWorkingDays,
-                })
+          {task.doneAt != null
+            ? t("tasks.completed")
+            : taskIsInProgress
+              ? taskDueDistance != null
+                ? taskIsOverdue
+                  ? t("tasks.overdue", {
+                      distance: taskDueDistance,
+                    })
+                  : t("tasks.dueIn", {
+                      distance: taskDueDistance,
+                    })
+                : task.estimatedWorkingDays != null && task.estimatedWorkingDays > 0
+                  ? t("projects.daysRemaining", {
+                      count: task.estimatedWorkingDays,
+                    })
+                  : t("tasks.notStarted")
               : t("tasks.notStarted")}
         </span>
         <div

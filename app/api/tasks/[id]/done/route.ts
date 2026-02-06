@@ -1,4 +1,4 @@
-import { PERMISSIONS_GROUPED } from "@/config"
+import { PERMISSIONS_GROUPED, TASK_STATUS_ID_COMPLETED } from "@/config"
 import db from "@/lib/db"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { taskInclude, transformTask } from "@/prisma/tasks"
@@ -50,7 +50,10 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     const task = await db.task.update({
       where: { id },
-      data: { doneAt: done ? new Date() : null },
+      data: {
+        doneAt: done ? new Date() : null,
+        ...(done && { statusId: TASK_STATUS_ID_COMPLETED }),
+      },
       include: taskInclude,
     })
 

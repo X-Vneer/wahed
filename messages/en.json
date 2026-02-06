@@ -12,7 +12,11 @@
     "loading": "Loading...",
     "previous": "Previous",
     "next": "Next",
-    "delete": "Delete"
+    "delete": "Delete",
+    "status": "Status",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "inactive": "Inactive"
   },
   "auth": {
     "login": {
@@ -853,6 +857,7 @@
     "noAssignee": "Not assigned to anyone",
     "assignees": "Assigned to",
     "notStarted": "Not started yet",
+    "completed": "Completed",
     "addFromSystem": "Add tasks from system",
     "addNew": "Add new task",
     "importFromTemplatesDescription": "Select one or more templates to create tasks in this project.",
