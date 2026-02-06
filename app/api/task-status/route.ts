@@ -6,7 +6,7 @@ import { transformZodError } from "@/lib/transform-errors"
 import { transformTaskStatus } from "@/prisma/task-statuses"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {

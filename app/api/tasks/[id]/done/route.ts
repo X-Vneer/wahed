@@ -1,6 +1,5 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_COMPLETED } from "@/config"
 import db from "@/lib/db"
-import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
@@ -57,8 +56,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       include: taskInclude,
     })
 
-    const responseLocale = getLocaleFromRequest(request)
-    return NextResponse.json(transformTask(task, responseLocale))
+    return NextResponse.json(transformTask(task, locale))
   } catch (error) {
     console.error("Error setting task done:", error)
     const locale = await getReqLocale(request)
