@@ -193,9 +193,6 @@ async function main() {
     { key: PermissionKey.TASK_DELETE, name: "Delete Task" },
     { key: PermissionKey.TASK_ASSIGN, name: "Assign Task" },
     { key: PermissionKey.TASK_VIEW, name: "View Task" },
-    { key: PermissionKey.TASK_ARCHIVE, name: "Archive Task" },
-    { key: PermissionKey.TASK_UNARCHIVE, name: "Unarchive Task" },
-    { key: PermissionKey.TASK_COMPLETE, name: "Complete Task" },
     { key: PermissionKey.FILE_UPLOAD, name: "Upload File" },
     { key: PermissionKey.FILE_DELETE, name: "Delete File" },
     { key: PermissionKey.STAFF_MANAGEMENT, name: "Staff Management" },
@@ -345,7 +342,6 @@ async function main() {
     PermissionKey.TASK_VIEW,
     PermissionKey.TASK_CREATE,
     PermissionKey.TASK_UPDATE,
-    PermissionKey.TASK_COMPLETE,
     PermissionKey.FILE_UPLOAD,
   ]
   for (const permKey of staff2Permissions) {
@@ -742,9 +738,21 @@ async function main() {
       categoryIds: ["task-category-development"],
       isActive: true,
       subItems: [
-        { title: "Prepare survey checklist", description: "Review scope and prepare checklist", order: 0 },
-        { title: "Visit site", description: "Conduct on-site visit and take photos", order: 1 },
-        { title: "Document findings", description: "Compile report with findings and recommendations", order: 2 },
+        {
+          title: "Prepare survey checklist",
+          description: "Review scope and prepare checklist",
+          order: 0,
+        },
+        {
+          title: "Visit site",
+          description: "Conduct on-site visit and take photos",
+          order: 1,
+        },
+        {
+          title: "Document findings",
+          description: "Compile report with findings and recommendations",
+          order: 2,
+        },
       ],
     },
     {
@@ -757,9 +765,21 @@ async function main() {
       categoryIds: ["task-category-design"],
       isActive: true,
       subItems: [
-        { title: "Review drawings", description: "Check drawings against specifications", order: 0 },
-        { title: "Check compliance", description: "Verify compliance with codes and standards", order: 1 },
-        { title: "Sign off", description: "Approve or request revisions", order: 2 },
+        {
+          title: "Review drawings",
+          description: "Check drawings against specifications",
+          order: 0,
+        },
+        {
+          title: "Check compliance",
+          description: "Verify compliance with codes and standards",
+          order: 1,
+        },
+        {
+          title: "Sign off",
+          description: "Approve or request revisions",
+          order: 2,
+        },
       ],
     },
     {
@@ -772,9 +792,21 @@ async function main() {
       categoryIds: ["task-category-testing"],
       isActive: true,
       subItems: [
-        { title: "Pre-inspection preparation", description: "Gather specs and checklists", order: 0 },
-        { title: "Conduct inspection", description: "Inspect work against quality criteria", order: 1 },
-        { title: "Inspection report", description: "Document results and non-conformances", order: 2 },
+        {
+          title: "Pre-inspection preparation",
+          description: "Gather specs and checklists",
+          order: 0,
+        },
+        {
+          title: "Conduct inspection",
+          description: "Inspect work against quality criteria",
+          order: 1,
+        },
+        {
+          title: "Inspection report",
+          description: "Document results and non-conformances",
+          order: 2,
+        },
       ],
     },
     {
@@ -787,9 +819,21 @@ async function main() {
       categoryIds: ["task-category-documentation"],
       isActive: true,
       subItems: [
-        { title: "Gather documents", description: "Collect all required documents", order: 0 },
-        { title: "Compile package", description: "Organize and index documentation", order: 1 },
-        { title: "Submit for review", description: "Submit to authority or client", order: 2 },
+        {
+          title: "Gather documents",
+          description: "Collect all required documents",
+          order: 0,
+        },
+        {
+          title: "Compile package",
+          description: "Organize and index documentation",
+          order: 1,
+        },
+        {
+          title: "Submit for review",
+          description: "Submit to authority or client",
+          order: 2,
+        },
       ],
     },
     {
@@ -802,9 +846,21 @@ async function main() {
       categoryIds: ["task-category-development", "task-category-documentation"],
       isActive: true,
       subItems: [
-        { title: "Verify completion", description: "Confirm all work is complete", order: 0 },
-        { title: "Collect signatures", description: "Obtain handover signatures", order: 1 },
-        { title: "Archive records", description: "Archive project files and as-builts", order: 2 },
+        {
+          title: "Verify completion",
+          description: "Confirm all work is complete",
+          order: 0,
+        },
+        {
+          title: "Collect signatures",
+          description: "Obtain handover signatures",
+          order: 1,
+        },
+        {
+          title: "Archive records",
+          description: "Archive project files and as-builts",
+          order: 2,
+        },
       ],
     },
   ]
@@ -998,7 +1054,10 @@ async function main() {
     // Seed 3 tasks per project
     const taskTitles = [
       { titleEn: "Initial site assessment", titleAr: "التقييم المبدئي للموقع" },
-      { titleEn: "Design review and approval", titleAr: "مراجعة التصميم والموافقة" },
+      {
+        titleEn: "Design review and approval",
+        titleAr: "مراجعة التصميم والموافقة",
+      },
       { titleEn: "Progress documentation", titleAr: "توثيق التقدم" },
     ]
     const defaultStatusId = "task-status-pending"

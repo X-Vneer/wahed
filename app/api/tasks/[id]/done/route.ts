@@ -14,9 +14,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
     const locale = await getReqLocale(request)
     const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.TASK.COMPLETE
-    )
+    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }

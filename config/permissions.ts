@@ -34,9 +34,6 @@ export const PERMISSIONS_GROUPED = {
     DELETE: PrismaPermissionKey.TASK_DELETE,
     ASSIGN: PrismaPermissionKey.TASK_ASSIGN,
     VIEW: PrismaPermissionKey.TASK_VIEW,
-    ARCHIVE: PrismaPermissionKey.TASK_ARCHIVE,
-    UNARCHIVE: PrismaPermissionKey.TASK_UNARCHIVE,
-    COMPLETE: PrismaPermissionKey.TASK_COMPLETE,
   },
   FILE: {
     UPLOAD: PrismaPermissionKey.FILE_UPLOAD,
