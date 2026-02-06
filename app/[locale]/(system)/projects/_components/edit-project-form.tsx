@@ -74,7 +74,7 @@ function ProjectFormContent({ projectId }: { projectId: string }) {
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <FieldGroup>
         <div className="flex flex-col gap-4 lg:flex-row">
-          <div className="flex grow flex-col gap-4">
+          <div className="flex w-full grow flex-col gap-4">
             <Card className="ring-none w-full shadow-none ring-0">
               <CardContent>
                 <div className="flex flex-col gap-4">
@@ -98,7 +98,7 @@ function ProjectFormContent({ projectId }: { projectId: string }) {
         </div>
 
         <div className="flex flex-col gap-4 lg:flex-row">
-          <div className="grow">
+          <div className="w-full grow">
             <SubmitButton />
           </div>
           <div className="lg:w-sm"></div>

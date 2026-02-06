@@ -128,7 +128,7 @@ export function ProjectDetailsSection() {
           <Input
             id="area"
             type="number"
-            step="1"
+            step="0.01"
             min={0}
             key={form.key("area")}
             {...form.getInputProps("area")}

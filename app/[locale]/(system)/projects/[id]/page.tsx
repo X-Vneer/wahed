@@ -8,7 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { Link } from "@/lib/i18n/navigation"
@@ -25,6 +25,7 @@ import {
 import { getTranslations } from "next-intl/server"
 import { notFound } from "next/navigation"
 import { EditProjectLink } from "../_components/edit-project-link"
+import MiniTaskCard from "../_components/mini-task-card"
 import { ArchiveButton } from "./_components/archive-button"
 import { DeleteButton } from "./_components/delete-button"
 import { ProjectAttachments } from "./_components/project-attachments"
@@ -203,13 +204,91 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
             </CardContent>
           </Card>
 
+          {/* Additional Fields Section */}
+          {transformedProject.additionalData &&
+            transformedProject.additionalData.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold">
+                    {t("projects.form.additionalFields.title")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <dl className="space-y-3">
+                    {transformedProject.additionalData.map((field) => {
+                      const value = field.value as unknown
+
+                      if (
+                        value === null ||
+                        value === undefined ||
+                        (typeof value === "string" && value.trim() === "") ||
+                        (Array.isArray(value) && value.length === 0)
+                      ) {
+                        return null
+                      }
+
+                      let displayValue: string
+
+                      if (Array.isArray(value)) {
+                        displayValue = value.join(", ")
+                      } else if (typeof value === "object") {
+                        displayValue =
+                          // Try to stringify objects safely
+                          (value as { toString?: () => string }).toString?.() ??
+                          JSON.stringify(value)
+                      } else {
+                        displayValue = String(value)
+                      }
+
+                      return (
+                        <div
+                          key={field.id ?? field.name}
+                          className="flex flex-col items-start gap-4"
+                        >
+                          <dt className="text-muted-foreground text-sm font-medium">
+                            {field.name}
+                            {field.required && (
+                              <span className="text-destructive ml-1">*</span>
+                            )}
+                          </dt>
+                          <dd className="text-right text-sm">{displayValue}</dd>
+                        </div>
+                      )
+                    })}
+                  </dl>
+                </CardContent>
+              </Card>
+            )}
+
           {/* Attachments Section */}
           <ProjectAttachments
             projectId={id}
             initialAttachments={transformedProject.attachments || []}
           />
         </div>
-        <div className="lg:w-sm"></div>
+        <div className="flex flex-col gap-3 lg:w-sm">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                {t("sidebar.tasks")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-2">
+                {transformedProject.tasks &&
+                transformedProject.tasks.length > 0 ? (
+                  transformedProject.tasks.map((task) => (
+                    <MiniTaskCard key={task.id} task={task} />
+                  ))
+                ) : (
+                  <p className="text-muted-foreground text-sm">
+                    {t("projects.noCurrentTask")}
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )
