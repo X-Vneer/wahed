@@ -25,9 +25,7 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
   const taskStartedAt = task.startedAt ? new Date(task.startedAt) : null
   const taskWorkingDays = task.estimatedWorkingDays ?? null
   const taskEstimatedDueDate =
-    taskStartedAt != null &&
-    taskWorkingDays != null &&
-    taskWorkingDays > 0
+    taskStartedAt != null && taskWorkingDays != null && taskWorkingDays > 0
       ? addDays(taskStartedAt, taskWorkingDays)
       : null
   const taskDueDistance =
@@ -43,14 +41,17 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
     !task.doneAt
 
   return (
-    <div className="flex items-center justify-between gap-8 rounded-lg bg-[#F7F7F7] px-3 py-2 max-md:w-full">
+    <div className="flex items-center justify-between gap-4 rounded-lg bg-[#F7F7F7] px-3 py-2 max-md:w-full lg:gap-8">
       <div className="flex items-center gap-1">
-        <p>{task.title}</p>
+        <p className="line-clamp-1 max-w-30 truncate max-md:text-sm">
+          {task.title}
+        </p>
       </div>
       <div className="flex items-center gap-2">
         <Clock className="text-muted-foreground size-4" />
         <span
           className={cn(
+            "text-xs",
             taskDueDistance != null &&
               (taskIsOverdue
                 ? "text-destructive font-medium"
@@ -65,8 +66,7 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
               : t("tasks.dueIn", {
                   distance: taskDueDistance,
                 })
-            : task.estimatedWorkingDays != null &&
-                task.estimatedWorkingDays > 0
+            : task.estimatedWorkingDays != null && task.estimatedWorkingDays > 0
               ? t("projects.daysRemaining", {
                   count: task.estimatedWorkingDays,
                 })
@@ -79,7 +79,7 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
           }}
           className="ms-2 h-2 w-2 animate-pulse rounded-full ring-1 ring-offset-1"
         />
-        <Link href={`/tasks/${task.id}`}>
+        <Link href={`/task/${task.id}`}>
           <Play className="text-muted-foreground size-4 rtl:rotate-180" />
         </Link>
       </div>

@@ -45,7 +45,7 @@ export function TaskFilters() {
   }
 
   return (
-    <div className="bg-muted/50 flex w-full items-center justify-between gap-3 rounded-lg py-3">
+    <div className="bg-muted/50 flex w-full items-center justify-between gap-3 rounded-lg py-3 max-md:flex-col">
       <Input
         className="max-w-sm bg-white"
         value={queryValue}
@@ -53,7 +53,7 @@ export function TaskFilters() {
         placeholder={t("tasks.filterQueryPlaceholder")}
       />
       <div className="flex items-center gap-3">
-        <span className="text-muted-foreground text-sm font-medium">
+        <span className="text-muted-foreground hidden text-sm font-medium md:block">
           {t("tasks.filters")}:
         </span>
         <Select

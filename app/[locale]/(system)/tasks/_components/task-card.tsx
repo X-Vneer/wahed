@@ -89,51 +89,51 @@ export function TaskCard({ task, className }: TaskCardProps) {
       <CardContent className="flex flex-1 flex-col gap-2 px-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           {/* Title block: urgent + title + circle — appears on right in RTL */}
-          <div className="flex min-w-0 flex-1 flex-col items-end gap-1 text-end sm:flex-row sm:items-start sm:justify-between sm:gap-2 sm:text-start">
-            <div className="flex min-w-0 items-center gap-2">
-              <button
-                type="button"
-                onClick={handleToggleDone}
-                disabled={toggleDoneMutation.isPending}
-                className="text-muted-foreground hover:text-foreground focus-visible:ring-ring shrink-0 cursor-pointer rounded-full p-0.5 transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-                aria-label={task.doneAt ? "Mark incomplete" : "Mark complete"}
+          {/* <div className="flex min-w-0 flex-1 flex-col gap-1 text-start sm:flex-row sm:items-start sm:justify-between sm:gap-2"> */}
+          <div className="flex min-w-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={handleToggleDone}
+              disabled={toggleDoneMutation.isPending}
+              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring shrink-0 cursor-pointer rounded-full p-0.5 transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+              aria-label={task.doneAt ? "Mark incomplete" : "Mark complete"}
+            >
+              {task.doneAt ? (
+                <CircleCheckBig className="text-primary size-5" />
+              ) : (
+                <Circle className="size-5" />
+              )}
+            </button>
+            <h3 className="text-foreground truncate text-base font-semibold">
+              {task.title}
+            </h3>
+            {priority === "HIGH" && (
+              <Badge
+                variant="destructive"
+                className="shrink-0 rounded-sm border-0 bg-red-600 py-2 text-xs text-white"
               >
-                {task.doneAt ? (
-                  <CircleCheckBig className="text-primary size-5" />
-                ) : (
-                  <Circle className="size-5" />
-                )}
-              </button>
-              <h3 className="text-foreground truncate text-base font-semibold">
-                {task.title}
-              </h3>
-              {priority === "HIGH" && (
-                <Badge
-                  variant="destructive"
-                  className="shrink-0 rounded-sm border-0 bg-red-600 py-2 text-xs text-white"
-                >
-                  <AlertCircle className="size-3.5" />
-                  {t("priority.high")}
-                </Badge>
-              )}
-              {priority === "MEDIUM" && (
-                <Badge
-                  variant="secondary"
-                  className="shrink-0 rounded-sm border-0 bg-amber-100 py-2 text-xs text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
-                >
-                  {t("priority.medium")}
-                </Badge>
-              )}
-              {priority === "LOW" && (
-                <Badge
-                  variant="secondary"
-                  className="bg-muted text-muted-foreground shrink-0 rounded-sm border-0 py-2 text-xs"
-                >
-                  {t("priority.low")}
-                </Badge>
-              )}
-            </div>
+                <AlertCircle className="size-3.5" />
+                {t("priority.high")}
+              </Badge>
+            )}
+            {priority === "MEDIUM" && (
+              <Badge
+                variant="secondary"
+                className="shrink-0 rounded-sm border-0 bg-amber-100 py-2 text-xs text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
+              >
+                {t("priority.medium")}
+              </Badge>
+            )}
+            {priority === "LOW" && (
+              <Badge
+                variant="secondary"
+                className="bg-muted text-muted-foreground shrink-0 rounded-sm border-0 py-2 text-xs"
+              >
+                {t("priority.low")}
+              </Badge>
+            )}
           </div>
+          {/* </div> */}
 
           {/* Metadata: comments, remaining, status, chevron — appears on left in RTL */}
           <div className="flex flex-wrap items-center gap-2">
@@ -225,7 +225,9 @@ export function TaskCard({ task, className }: TaskCardProps) {
             className="flex min-w-0 flex-1 flex-nowrap items-center gap-2 **:data-[slot=progress-track]:h-2.5"
             style={
               task.status.color
-                ? { ["--progress-indicator-color" as string]: task.status.color }
+                ? {
+                    ["--progress-indicator-color" as string]: task.status.color,
+                  }
                 : undefined
             }
           >

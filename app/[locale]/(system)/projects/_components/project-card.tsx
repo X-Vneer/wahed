@@ -229,7 +229,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                     </h4>
                   </div>
                   <ScrollArea className="h-[300px]">
-                    <div className="space-y-2">
+                    <div className="space-y-2 p-3">
                       {tasks.length > 0 ? (
                         tasks.map((task) => (
                           <MiniTaskCard key={task.id} task={task} />
