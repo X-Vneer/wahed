@@ -59,7 +59,11 @@ export function TaskCard({ task, className }: TaskCardProps) {
   const totalSubTasks = task.subTasks?.length ?? 0
   const doneSubTasks = task.subTasks?.filter((s) => s.done).length ?? 0
   const progressPercent =
-    totalSubTasks > 0 ? (doneSubTasks / totalSubTasks) * 100 : 0
+    totalSubTasks > 0
+      ? (doneSubTasks / totalSubTasks) * 100
+      : task.doneAt
+        ? 100
+        : 0
   const priority = task.priority ?? "MEDIUM"
 
   const startStr = task.startedAt

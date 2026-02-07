@@ -64,7 +64,7 @@ export function TaskFilters() {
           value={status}
           onValueChange={(v) => set({ status: v ?? "all" })}
         >
-          <SelectTrigger className="h-10 min-w-[140px] bg-white">
+          <SelectTrigger className="h-10 min-w-[100px] bg-white lg:min-w-[140px]">
             <SelectValue placeholder={t("tasks.filterStatus")}>
               {status === "all"
                 ? t("tasks.filterStatusAll")
@@ -85,7 +85,7 @@ export function TaskFilters() {
           value={done}
           onValueChange={(v) => set({ done: v as DoneFilter })}
         >
-          <SelectTrigger className="h-10 min-w-[120px] bg-white">
+          <SelectTrigger className="h-10 min-w-[90px] bg-white lg:min-w-[120px]">
             <SelectValue placeholder={t("tasks.filterDone")}>
               {done === "all"
                 ? t("tasks.filterDoneAll")
