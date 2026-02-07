@@ -15,6 +15,8 @@ import { useTaskStatuses } from "@/hooks/use-task-status"
 import { Input } from "@/components/ui/input"
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback"
 import { useState } from "react"
+import { usePermission } from "@/hooks/use-permission"
+import { PERMISSIONS_GROUPED } from "@/config/permissions"
 
 export const DONE_VALUES = ["all", "done", "not_done"] as const
 export type DoneFilter = (typeof DONE_VALUES)[number]
@@ -44,6 +46,8 @@ export function TaskFilters() {
     setQueryValue(e.target.value ?? "")
   }
 
+  const { checkPermission } = usePermission()
+  const canEdit = checkPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
   return (
     <div className="bg-muted/50 flex w-full items-center justify-between gap-3 rounded-lg py-3 max-md:flex-col">
       <Input
@@ -98,17 +102,19 @@ export function TaskFilters() {
             </SelectItem>
           </SelectContent>
         </Select>
-        <Button
-          type="button"
-          variant={editMode ? "default" : "secondary"}
-          size="lg"
-          className={"h-10"}
-          onClick={() => set({ editMode: !editMode })}
-          aria-pressed={editMode}
-        >
-          {editMode ? <Pen className="size-4" /> : <Eye className="size-4" />}
-          {editMode ? t("tasks.editMode") : t("tasks.viewMode")}
-        </Button>
+        {canEdit ? (
+          <Button
+            type="button"
+            variant={editMode ? "default" : "secondary"}
+            size="lg"
+            className={"h-10"}
+            onClick={() => set({ editMode: !editMode })}
+            aria-pressed={editMode}
+          >
+            {editMode ? <Pen className="size-4" /> : <Eye className="size-4" />}
+            {editMode ? t("tasks.editMode") : t("tasks.viewMode")}
+          </Button>
+        ) : null}
       </div>
     </div>
   )

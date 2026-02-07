@@ -20,6 +20,8 @@ import { parseAsBoolean, useQueryState } from "nuqs"
 import { useMemo, useRef, useState } from "react"
 import { TaskCard } from "./task-card"
 import { TaskDialog } from "./task-dialog"
+import { usePermission } from "@/hooks/use-permission"
+import { PERMISSIONS_GROUPED } from "@/config/permissions"
 
 type TaskListWithReorderProps = {
   tasks: Task[]
@@ -51,6 +53,10 @@ function ReorderTaskItem({
     controls.start(event)
   }
 
+  const { checkPermission } = usePermission()
+  const canEdit = checkPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+  const canDelete = checkPermission(PERMISSIONS_GROUPED.TASK.DELETE)
+
   return (
     <Reorder.Item
       value={task.id}
@@ -70,28 +76,32 @@ function ReorderTaskItem({
           >
             <GripVertical className="size-5" />
           </button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => onEditClick(task)}
-            aria-label={t("edit")}
-          >
-            <Edit className="size-4" />
-            <span className="sr-only">Edit</span>
-          </Button>
+          {canEdit ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => onEditClick(task)}
+              aria-label={t("edit")}
+            >
+              <Edit className="size-4" />
+              <span className="sr-only">Edit</span>
+            </Button>
+          ) : null}
 
-          <Button
-            type="button"
-            variant="ghost"
-            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-            size="icon"
-            onClick={() => onDeleteClick(task)}
-            aria-label={t("deleteConfirm.delete")}
-          >
-            <Trash2 className="size-4" />
-            <span className="sr-only">Delete</span>
-          </Button>
+          {canDelete ? (
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              size="icon"
+              onClick={() => onDeleteClick(task)}
+              aria-label={t("deleteConfirm.delete")}
+            >
+              <Trash2 className="size-4" />
+              <span className="sr-only">Delete</span>
+            </Button>
+          ) : null}
         </div>
       )}
       <div className="min-w-0 flex-1">
