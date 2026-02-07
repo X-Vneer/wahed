@@ -17,7 +17,7 @@ import { useLocale, useTranslations } from "next-intl"
 
 function WebsiteCard({ website }: { website: WebsiteWithLocale }) {
   return (
-    <Card className="group h-full w-40 bg-transparent p-2 shadow-none lg:w-50">
+    <Card className="group h-full w-35 bg-transparent p-2 shadow-none lg:w-45">
       <CardContent className="flex items-center justify-center p-0">
         <a
           href={website.url}
@@ -45,7 +45,7 @@ function WebsiteCard({ website }: { website: WebsiteWithLocale }) {
 }
 
 function WebsiteCardSkeleton() {
-  return <Skeleton className="size-32 rounded-full bg-white lg:size-40" />
+  return <Skeleton className="size-28 rounded-full bg-white lg:size-40" />
 }
 
 export function UsefulWebsitesSlider() {
