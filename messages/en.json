@@ -16,7 +16,9 @@
     "status": "Status",
     "createdAt": "Created At",
     "updatedAt": "Updated At",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "saved": "Saved",
+    "remove": "Remove"
   },
   "auth": {
     "login": {
@@ -940,6 +942,15 @@
     "estimatedWorkingDaysShort": "{count} working days",
     "createdBy": "Created by",
     "assignees": "Assignees",
+    "addAssignee": "Add assignee",
+    "addAssignees": "Edit assignees",
+    "addAssigneesDialogTitle": "Edit assignees",
+    "addAssigneesLabel": "Select users to add",
+    "removeAssignees": "Remove assignees",
+    "removeAssigneesDialogTitle": "Remove assignees",
+    "removeAssigneesLabel": "Select assignees to remove",
+    "selectAtLeastOne": "Select at least one",
+    "allMembersAssigned": "All team members are already assigned.",
     "normal": "Normal",
     "noComments": "No comments yet",
     "delete": "Delete",

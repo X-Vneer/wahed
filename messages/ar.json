@@ -16,7 +16,9 @@
     "status": "الحالة",
     "createdAt": "تاريخ الإنشاء",
     "updatedAt": "تاريخ التحديث",
-    "inactive": "غير نشط"
+    "inactive": "غير نشط",
+    "saved": "تم الحفظ",
+    "remove": "إزالة"
   },
   "auth": {
     "login": {
@@ -940,6 +942,15 @@
     "estimatedWorkingDaysShort": "{count} أيام عمل",
     "createdBy": "منشئ المهمة",
     "assignees": "مكلفين",
+    "addAssignee": "اضافة مكلف",
+    "addAssignees": "تعديل مكلفين",
+    "addAssigneesDialogTitle": "تعديل مكلفين",
+    "addAssigneesLabel": "اختر المستخدمين للإضافة",
+    "removeAssignees": "إزالة مكلفين",
+    "removeAssigneesDialogTitle": "إزالة مكلفين",
+    "removeAssigneesLabel": "اختر المكلفين للإزالة",
+    "selectAtLeastOne": "اختر واحداً على الأقل",
+    "allMembersAssigned": "جميع أعضاء الفريق مكلفون بالفعل.",
     "normal": "عادي",
     "noComments": "لا توجد تعليقات بعد",
     "delete": "حذف",

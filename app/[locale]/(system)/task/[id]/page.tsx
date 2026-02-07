@@ -95,7 +95,7 @@ export default function TaskDetailPage({ params }: PageProps) {
             attachments={task.taskAttachments}
           />
           <TaskDetailsSidebar task={task} />
-          <TaskAssignees assignees={task.assignedTo} />
+          <TaskAssignees taskId={task.id} assignees={task.assignedTo} />
         </div>
       </div>
     </div>
