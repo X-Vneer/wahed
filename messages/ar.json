@@ -263,6 +263,8 @@
       "manageWebsite": "إدارة الموقع",
       "manageStaff": "إدارة الموظفين",
       "manageReports": "إدارة التقارير",
+      "staff_page": "صفحة الموظفين",
+      "STAFF_PAGE_MANAGEMENT": "إدارة صفحة الموظفين",
       "PROJECT_CREATE": "إنشاء مشروع",
       "PROJECT_UPDATE": "تحديث مشروع",
       "PROJECT_DELETE": "حذف مشروع",

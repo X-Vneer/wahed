@@ -36,6 +36,7 @@ export function PermissionsSelector({
         TASK: "manageTasks",
         FILE: "fileManagement", // Using manageWebsite as closest match
         STAFF: "manageStaff",
+        STAFF_PAGE: "staff_page",
         LIST: "manageLists",
         WEBSITE: "manageWebsite",
         REPORT: "manageReports",
@@ -169,6 +170,32 @@ export function PermissionsSelector({
             const selectedInGroup = groupPermissionKeys.filter((key) =>
               permissions.includes(key)
             ).length
+            const isSingleItem = group.permissions.length === 1
+
+            // Single item: show inline checkbox, no dropdown
+            if (isSingleItem) {
+              const permission = group.permissions[0]
+              const permissionKey = String(permission.key)
+              const isSelected = permissions.includes(permissionKey)
+              return (
+                <Button
+                  variant="outline"
+                  className="w-fit justify-between"
+                  key={group.id}
+                >
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id={`group-${group.id}`}
+                      checked={isSelected}
+                      onCheckedChange={(checked) =>
+                        handlePermissionToggle(permissionKey, checked)
+                      }
+                    />
+                    <label htmlFor={`group-${group.id}`}>{group.name}</label>
+                  </div>
+                </Button>
+              )
+            }
 
             return (
               <Popover key={group.id}>

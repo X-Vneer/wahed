@@ -262,6 +262,8 @@
       "manageWebsite": "Manage Website",
       "manageStaff": "Manage Staff",
       "manageReports": "Manage Reports",
+      "staff_page": "Staff Page",
+      "STAFF_PAGE_MANAGEMENT": "Staff Page Management",
       "PROJECT_CREATE": "Create Project",
       "PROJECT_UPDATE": "Update Project",
       "PROJECT_DELETE": "Delete Project",

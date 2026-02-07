@@ -28,11 +28,14 @@ import { TaskDialog } from "../_components/task-dialog"
 import { TaskFilters } from "../_components/task-filters"
 import { TaskListWithReorder } from "../_components/task-list-with-reorder"
 import { TaskTemplateImportDialog } from "../_components/task-template-import-dialog"
+import { PERMISSIONS_GROUPED } from "@/config/permissions"
+import { usePermission } from "@/hooks/use-permission"
 
 const TasksProjectPage = () => {
   const t = useTranslations()
   const params = useParams()
   const projectId = (params?.["project-id"] as string) ?? null
+  const { checkPermission } = usePermission()
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false)
   const [isTemplateImportDialogOpen, setIsTemplateImportDialogOpen] =
     useState(false)
@@ -94,34 +97,36 @@ const TasksProjectPage = () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <div className="flex grow justify-end gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button className="gap-2">
-                  <Plus className="size-4" />
-                  <span>{t("sidebar.tasksAdd")}</span>
-                  <ChevronDown className="size-4" />
-                </Button>
-              }
-            />
-            <DropdownMenuContent align="end" sideOffset={4}>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => setIsTaskDialogOpen(true)}
-              >
-                {t("tasks.addNew")}
-              </DropdownMenuItem>
+        {checkPermission(PERMISSIONS_GROUPED.TASK.CREATE) ? (
+          <div className="flex grow justify-end gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button className="gap-2">
+                    <Plus className="size-4" />
+                    <span>{t("sidebar.tasksAdd")}</span>
+                    <ChevronDown className="size-4" />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end" sideOffset={4}>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => setIsTaskDialogOpen(true)}
+                >
+                  {t("tasks.addNew")}
+                </DropdownMenuItem>
 
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => setIsTemplateImportDialogOpen(true)}
-              >
-                {t("tasks.addFromSystem")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => setIsTemplateImportDialogOpen(true)}
+                >
+                  {t("tasks.addFromSystem")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : null}
       </div>
 
       {isLoading && (

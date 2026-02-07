@@ -66,9 +66,13 @@ apiClient.interceptors.response.use(
   async (error) => {
     if (error?.response?.status === 401) {
       if (typeof window !== "undefined") {
-        const locale = getLocaleFromPath()
-        // Redirect to localized login page on unauthorized
-        window.location.href = `/${locale}/auth/logout`
+        const pathname = window.location.pathname
+        const isAlreadyOnLogin = pathname.includes("/auth/login")
+        // Don't redirect when already on login (logout never returns 401)
+        if (!isAlreadyOnLogin) {
+          const locale = getLocaleFromPath()
+          window.location.href = `/${locale}/auth/logout`
+        }
       }
     }
 

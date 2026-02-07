@@ -96,8 +96,9 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  // If user is authenticated and on login page, redirect to home
-  if (isPublicPage && token) {
+  // If user is authenticated and on login page (not logout), redirect to home
+  const isLoginPage = pathname.includes("/auth/login")
+  if (isLoginPage && token) {
     const isValid = await verifyToken(token)
     if (isValid) {
       const locale = pathname.split("/")[1] || routing.defaultLocale
