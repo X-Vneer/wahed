@@ -5,9 +5,11 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { Link, useRouter } from "@/lib/i18n/navigation"
 import {
   Building,
+  Calculator,
   Calendar as CalendarIcon,
   ChevronRight,
   Folder,
+  LogInIcon,
   LucideIcon,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
@@ -39,7 +41,7 @@ function QuickAccessCard({
         onClick={() => router.push(href)}
         className="flex h-full flex-col items-center justify-center space-y-2 py-6 lg:py-10"
       >
-        <Icon className="text-foreground size-6 stroke-1 md:size-10" />
+        <Icon className="text-foreground size-6 stroke-1 md:size-9" />
         <div className="text-center">
           <CardTitle className="text-xs font-medium md:text-base">
             {title}
@@ -68,23 +70,35 @@ export function QuickAccessCards() {
   const t = useTranslations("welcome.staff.home")
 
   const cards: QuickAccessCardData[] = [
-    {
-      icon: Building,
-      titleKey: "quickAccess.projects",
-      href: "/projects",
-      linkTextKey: "quickAccess.viewProjects",
-    },
-    {
-      icon: CalendarIcon,
-      titleKey: "quickAccess.calendar",
-      href: "/calendar",
-      linkTextKey: "quickAccess.goToCalendar",
-    },
+    // {
+    //   icon: Building,
+    //   titleKey: "quickAccess.projects",
+    //   href: "/projects",
+    //   linkTextKey: "quickAccess.viewProjects",
+    // },
+    // {
+    //   icon: CalendarIcon,
+    //   titleKey: "quickAccess.calendar",
+    //   href: "/calendar",
+    //   linkTextKey: "quickAccess.goToCalendar",
+    // },
     {
       icon: Folder,
       titleKey: "quickAccess.fileManager",
       href: "/files",
       linkTextKey: "quickAccess.goToFiles",
+    },
+    {
+      icon: LogInIcon,
+      titleKey: "quickAccess.attendance",
+      href: "/attendance",
+      linkTextKey: "quickAccess.goToAttendance",
+    },
+    {
+      icon: Calculator,
+      titleKey: "quickAccess.accounting",
+      href: "/accounting",
+      linkTextKey: "quickAccess.goToAccounting",
     },
   ]
 

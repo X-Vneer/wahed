@@ -158,10 +158,13 @@
           "fileManager": "مدير الملفات",
           "goToFiles": "دخول الى مدير الملفات",
           "calendar": "التقويم",
+          "goToCalendar": "انتقل إلى التقويم",
+          "attendance": "الحضور والانصراف",
           "goToAttendance": "دخول الى الحضور والانصراف",
+          "accounting": "المحاسبة",
+          "goToAccounting": "انتقل إلى المحاسبة",
           "projects": "المشاريع",
-          "viewProjects": "مشاهدة المشاريعي",
-          "goToCalendar": "انتقل إلى التقويم"
+          "viewProjects": "مشاهدة المشاريعي"
         },
         "weeklySchedule": "الجدول الأسبوعي"
       },

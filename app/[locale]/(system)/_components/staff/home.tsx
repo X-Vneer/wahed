@@ -2,7 +2,6 @@
 
 import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent } from "@/components/ui/card"
-import { WeatherStatus } from "@/components/weather-status"
 import { BannersSlider } from "./banners"
 import { QuickAccessCards } from "./quick-access-cards"
 import { UsefulWebsitesSlider } from "./useful-websites"

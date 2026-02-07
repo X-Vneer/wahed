@@ -47,7 +47,7 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
       <div className="flex items-center gap-1">
         <p
           className={cn(
-            "line-clamp-1 max-w-30 truncate max-md:text-sm",
+            "line-clamp-1 max-w-40 truncate max-md:text-sm",
             task.doneAt != null ? "line-through" : ""
           )}
         >
@@ -76,7 +76,8 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
                   : t("tasks.dueIn", {
                       distance: taskDueDistance,
                     })
-                : task.estimatedWorkingDays != null && task.estimatedWorkingDays > 0
+                : task.estimatedWorkingDays != null &&
+                    task.estimatedWorkingDays > 0
                   ? t("projects.daysRemaining", {
                       count: task.estimatedWorkingDays,
                     })

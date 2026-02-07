@@ -158,10 +158,13 @@
           "fileManager": "File Manager",
           "goToFiles": "Go to File Manager",
           "calendar": "Calendar",
+          "goToCalendar": "Go to Calendar",
+          "attendance": "Attendance",
           "goToAttendance": "Go to attendance and departure",
+          "accounting": "Accounting",
+          "goToAccounting": "Go to Accounting",
           "projects": "Projects",
-          "viewProjects": "View my projects",
-          "goToCalendar": "Go to Calendar"
+          "viewProjects": "View my projects"
         },
         "weeklySchedule": "Weekly Schedule"
       },
