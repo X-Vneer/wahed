@@ -77,8 +77,8 @@ export function UsefulWebsitesSlider() {
           direction: locale === "ar" ? "rtl" : "ltr",
         }}
       >
-        <CarouselPrevious className="top-[unset] -bottom-10 left-[calc(50%-30px)] z-10 bg-white" />
-        <CarouselNext className="top-[unset] right-[calc(50%-30px)] -bottom-10 z-10 bg-white" />
+        <CarouselPrevious className="start-[unset] end-[unset] top-[unset] -bottom-10 left-[calc(50%-30px)] z-10 bg-white" />
+        <CarouselNext className="start-[unset] end-[unset] top-[unset] right-[calc(50%-30px)] -bottom-10 z-10 bg-white" />
         <CarouselContent>
           {status === "success"
             ? data &&
