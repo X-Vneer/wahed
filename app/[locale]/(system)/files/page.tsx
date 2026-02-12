@@ -8,16 +8,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Spinner } from "@/components/ui/spinner"
 import { useFiles, type FilesFolder } from "@/hooks/use-files"
 import { useUserData } from "@/hooks/use-user-data"
+import { Link } from "@/lib/i18n/navigation"
+import { cn } from "@/lib/utils"
+import { Folder } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useMemo } from "react"
-import { Folder, MoreVertical } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Link } from "@/lib/i18n/navigation"
 
 const FilesPage = () => {
   const t = useTranslations()

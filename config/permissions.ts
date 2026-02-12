@@ -35,10 +35,7 @@ export const PERMISSIONS_GROUPED = {
     ASSIGN: PrismaPermissionKey.TASK_ASSIGN,
     VIEW: PrismaPermissionKey.TASK_VIEW,
   },
-  FILE: {
-    UPLOAD: PrismaPermissionKey.FILE_UPLOAD,
-    DELETE: PrismaPermissionKey.FILE_DELETE,
-  },
+
   STAFF: {
     MANAGEMENT: PrismaPermissionKey.STAFF_MANAGEMENT,
   },
@@ -49,11 +46,6 @@ export const PERMISSIONS_GROUPED = {
     CREATE: PrismaPermissionKey.LIST_CREATE,
     UPDATE: PrismaPermissionKey.LIST_UPDATE,
     DELETE: PrismaPermissionKey.LIST_DELETE,
-  },
-
-  REPORT: {
-    VIEW: PrismaPermissionKey.REPORT_VIEW,
-    EXPORT: PrismaPermissionKey.REPORT_EXPORT,
   },
 } as const
 

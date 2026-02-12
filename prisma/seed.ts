@@ -193,16 +193,12 @@ async function main() {
     { key: PermissionKey.TASK_DELETE, name: "Delete Task" },
     { key: PermissionKey.TASK_ASSIGN, name: "Assign Task" },
     { key: PermissionKey.TASK_VIEW, name: "View Task" },
-    { key: PermissionKey.FILE_UPLOAD, name: "Upload File" },
-    { key: PermissionKey.FILE_DELETE, name: "Delete File" },
+
     { key: PermissionKey.STAFF_MANAGEMENT, name: "Staff Management" },
     { key: PermissionKey.STAFF_PAGE_MANAGEMENT, name: "Staff Page Management" },
     { key: PermissionKey.LIST_CREATE, name: "Create List" },
     { key: PermissionKey.LIST_UPDATE, name: "Update List" },
     { key: PermissionKey.LIST_DELETE, name: "Delete List" },
-
-    { key: PermissionKey.REPORT_VIEW, name: "View Report" },
-    { key: PermissionKey.REPORT_EXPORT, name: "Export Report" },
   ]
 
   for (const perm of permissions) {
@@ -293,8 +289,6 @@ async function main() {
     PermissionKey.TASK_CREATE,
     PermissionKey.TASK_UPDATE,
     PermissionKey.TASK_ASSIGN,
-    PermissionKey.FILE_UPLOAD,
-    PermissionKey.REPORT_VIEW,
   ]
   for (const permKey of staff1Permissions) {
     const permission = await db.permission.findUnique({
@@ -342,7 +336,6 @@ async function main() {
     PermissionKey.TASK_VIEW,
     PermissionKey.TASK_CREATE,
     PermissionKey.TASK_UPDATE,
-    PermissionKey.FILE_UPLOAD,
   ]
   for (const permKey of staff2Permissions) {
     const permission = await db.permission.findUnique({
@@ -390,7 +383,6 @@ async function main() {
     PermissionKey.TASK_VIEW,
     PermissionKey.TASK_CREATE,
     PermissionKey.TASK_UPDATE,
-    PermissionKey.FILE_UPLOAD,
   ]
   for (const permKey of staff3Permissions) {
     const permission = await db.permission.findUnique({
@@ -436,7 +428,6 @@ async function main() {
   const staff4Permissions = [
     PermissionKey.PROJECT_VIEW,
     PermissionKey.TASK_VIEW,
-    PermissionKey.FILE_UPLOAD,
   ]
   for (const permKey of staff4Permissions) {
     const permission = await db.permission.findUnique({
@@ -482,8 +473,6 @@ async function main() {
   const staff5Permissions = [
     PermissionKey.PROJECT_VIEW,
     PermissionKey.TASK_VIEW,
-    PermissionKey.REPORT_VIEW,
-    PermissionKey.REPORT_EXPORT,
   ]
   for (const permKey of staff5Permissions) {
     const permission = await db.permission.findUnique({

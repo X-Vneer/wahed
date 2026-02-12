@@ -21,28 +21,28 @@ export async function GET(request: NextRequest) {
 
     const [projects, systemFiles] = await Promise.all([
       db.project.findMany({
-      include: {
-        attachments: true,
-        tasks: {
-          select: {
-            id: true,
-            title: true,
-            taskAttachments: true,
+        include: {
+          attachments: true,
+          tasks: {
+            select: {
+              id: true,
+              title: true,
+              taskAttachments: true,
+            },
           },
         },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+        orderBy: {
+          createdAt: "desc",
+        },
       }),
-      (db as any).systemFile.findMany({
+      db.systemFile.findMany({
         orderBy: {
           createdAt: "desc",
         },
       }),
     ])
 
-    const projectFolders: FilesFolder[] = projects.map((project: any) => {
+    const projectFolders: FilesFolder[] = projects.map((project) => {
       const projectName =
         locale === "ar"
           ? (project.nameAr ?? project.nameEn)
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Public folder for any files not related to projects.
-    const publicFiles: FileItem[] = systemFiles.map((file: any) => ({
+    const publicFiles: FileItem[] = systemFiles.map((file) => ({
       id: file.id,
       fileUrl: file.fileUrl,
       fileName: file.fileName,
