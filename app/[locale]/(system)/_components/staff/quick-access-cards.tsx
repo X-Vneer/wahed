@@ -70,18 +70,6 @@ export function QuickAccessCards() {
   const t = useTranslations("welcome.staff.home")
 
   const cards: QuickAccessCardData[] = [
-    // {
-    //   icon: Building,
-    //   titleKey: "quickAccess.projects",
-    //   href: "/projects",
-    //   linkTextKey: "quickAccess.viewProjects",
-    // },
-    // {
-    //   icon: CalendarIcon,
-    //   titleKey: "quickAccess.calendar",
-    //   href: "/calendar",
-    //   linkTextKey: "quickAccess.goToCalendar",
-    // },
     {
       icon: Folder,
       titleKey: "quickAccess.fileManager",
