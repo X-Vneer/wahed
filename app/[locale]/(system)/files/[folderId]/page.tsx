@@ -13,13 +13,16 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Spinner } from "@/components/ui/spinner"
 import { useFiles } from "@/hooks/use-files"
-import type { FileItem, FilesFolder } from "@/@types/files"
+import type { FileItem, FilesFolder, FileSource } from "@/@types/files"
+import { UploadButton } from "@/lib/uploadthing"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { Download, File as FileIcon, Image as ImageIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
 import { useMemo, useState } from "react"
+import { toast } from "sonner"
 
 type ViewMode = "list" | "grid"
 
@@ -28,6 +31,7 @@ const FolderFilesPage = () => {
   const params = useParams<{ folderId: string }>()
   const { data, isLoading, error } = useFiles()
   const [viewMode, setViewMode] = useState<ViewMode>("list")
+  const queryClient = useQueryClient()
 
   const folders: FilesFolder[] = useMemo(() => data?.folders ?? [], [data])
 
@@ -44,7 +48,7 @@ const FolderFilesPage = () => {
     window.open(url, "_blank")
   }
 
-  const getSourceLabel = (source: "PROJECT" | "TASK") => {
+  const getSourceLabel = (source: FileSource) => {
     if (source === "PROJECT") {
       return t("projects.sidebar.files")
     }
@@ -121,53 +125,85 @@ const FolderFilesPage = () => {
               </p>
               <h2 className="text-lg font-semibold">{selectedFolder.name}</h2>
             </div>
-            <div className="inline-flex rounded-lg border bg-white p-1">
-              <Button
-                type="button"
-                variant={viewMode === "list" ? "default" : "ghost"}
-                size="icon"
-                className={cn(
-                  "size-8",
-                  viewMode === "list" && "bg-primary text-primary-foreground"
-                )}
-                onClick={() => setViewMode("list")}
-                aria-label="List view"
-              >
-                {/* simple list icon using three lines */}
-                <span className="flex flex-col gap-0.5">
-                  <span className="h-0.5 w-3 rounded bg-current" />
-                  <span className="h-0.5 w-3 rounded bg-current" />
-                  <span className="h-0.5 w-3 rounded bg-current" />
-                </span>
-              </Button>
-              <Button
-                type="button"
-                variant={viewMode === "grid" ? "default" : "ghost"}
-                size="icon"
-                className={cn(
-                  "size-8",
-                  viewMode === "grid" && "bg-primary text-primary-foreground"
-                )}
-                onClick={() => setViewMode("grid")}
-                aria-label="Grid view"
-              >
-                <span className="grid grid-cols-2 gap-0.5">
-                  <span className="h-1.5 w-1.5 rounded bg-current" />
-                  <span className="h-1.5 w-1.5 rounded bg-current" />
-                  <span className="h-1.5 w-1.5 rounded bg-current" />
-                  <span className="h-1.5 w-1.5 rounded bg-current" />
-                </span>
-              </Button>
+            <div className="flex items-start gap-2">
+              {selectedFolder.type === "PUBLIC" && (
+                <UploadButton
+                  endpoint="publicFilesUploader"
+                  onClientUploadComplete={(res) => {
+                    if (res && res.length > 0) {
+                      // Files are already saved in DB in onUploadComplete; just refetch
+                      queryClient.invalidateQueries({ queryKey: ["files"] })
+                      toast.success(t("projects.form.attachments.uploaded"))
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    toast.error(
+                      error.message ||
+                        t("projects.form.attachments.uploadError")
+                    )
+                  }}
+                  appearance={{
+                    button:
+                      "border-primary text-primary hover:bg-primary bg-white hover:text-white ut-ready:bg-primary ut-ready:text-white ut-uploading:bg-primary ut-uploading:text-white",
+                  }}
+                  content={{
+                    button: (
+                      <span className="flex items-center gap-2">
+                        {t("projects.form.attachments.addDocuments")}
+                      </span>
+                    ),
+                    allowedContent: <span></span>,
+                  }}
+                />
+              )}
+              <div className="inline-flex rounded-lg border bg-white p-1">
+                <Button
+                  type="button"
+                  variant={viewMode === "list" ? "default" : "ghost"}
+                  size="icon"
+                  className={cn(
+                    "size-8",
+                    viewMode === "list" && "bg-primary text-primary-foreground"
+                  )}
+                  onClick={() => setViewMode("list")}
+                  aria-label="List view"
+                >
+                  {/* simple list icon using three lines */}
+                  <span className="flex flex-col gap-0.5">
+                    <span className="h-0.5 w-3 rounded bg-current" />
+                    <span className="h-0.5 w-3 rounded bg-current" />
+                    <span className="h-0.5 w-3 rounded bg-current" />
+                  </span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={viewMode === "grid" ? "default" : "ghost"}
+                  size="icon"
+                  className={cn(
+                    "size-8",
+                    viewMode === "grid" && "bg-primary text-primary-foreground"
+                  )}
+                  onClick={() => setViewMode("grid")}
+                  aria-label="Grid view"
+                >
+                  <span className="grid grid-cols-2 gap-0.5">
+                    <span className="h-1.5 w-1.5 rounded bg-current" />
+                    <span className="h-1.5 w-1.5 rounded bg-current" />
+                    <span className="h-1.5 w-1.5 rounded bg-current" />
+                    <span className="h-1.5 w-1.5 rounded bg-current" />
+                  </span>
+                </Button>
+              </div>
             </div>
           </div>
-
-          {selectedFolder.files.length === 0 ? (
+          {selectedFolder.files.length === 0 && (
             <div className="flex flex-1 items-center justify-center py-12">
               <p className="text-muted-foreground text-sm">
                 {t("projects.form.attachments.noFiles") || "No files"}
               </p>
             </div>
-          ) : viewMode === "list" ? (
+          )}
+          {selectedFolder.files.length > 0 && viewMode === "list" && (
             <div className="flex flex-col gap-2">
               {selectedFolder.files.map((file: FileItem) => {
                 const Icon = getFileTypeIcon(file.fileType)
@@ -206,7 +242,8 @@ const FolderFilesPage = () => {
                 )
               })}
             </div>
-          ) : (
+          )}
+          {selectedFolder.files.length > 0 && viewMode === "grid" && (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {selectedFolder.files.map((file: FileItem) => {
                 const Icon = getFileTypeIcon(file.fileType)

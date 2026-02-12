@@ -1,4 +1,4 @@
-export type FileSource = "PROJECT" | "TASK"
+export type FileSource = "PROJECT" | "TASK" | "PUBLIC"
 
 export interface FileItem {
   id: string

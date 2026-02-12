@@ -19,7 +19,8 @@ export async function GET(request: NextRequest) {
 
     const locale = getLocaleFromRequest(request)
 
-    const projects = await db.project.findMany({
+    const [projects, systemFiles] = await Promise.all([
+      db.project.findMany({
       include: {
         attachments: true,
         tasks: {
@@ -33,9 +34,15 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: "desc",
       },
-    })
+      }),
+      (db as any).systemFile.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+    ])
 
-    const projectFolders: FilesFolder[] = projects.map((project) => {
+    const projectFolders: FilesFolder[] = projects.map((project: any) => {
       const projectName =
         locale === "ar"
           ? (project.nameAr ?? project.nameEn)
@@ -98,13 +105,26 @@ export async function GET(request: NextRequest) {
     })
 
     // Public folder for any files not related to projects.
-    // Currently there are no standalone file models, but the folder is prepared
-    // for future use.
+    const publicFiles: FileItem[] = systemFiles.map((file: any) => ({
+      id: file.id,
+      fileUrl: file.fileUrl,
+      fileName: file.fileName,
+      fileType: file.fileType,
+      fileSize: file.fileSize,
+      createdAt: file.createdAt.toISOString(),
+      source: "PUBLIC",
+      projectId: null,
+      projectName: null,
+      taskId: null,
+      taskTitle: null,
+      isFinalFromTask: false,
+    }))
+
     const publicFolder: FilesFolder = {
       id: "public",
       name: locale === "ar" ? "الملفات العامة" : "Public files",
       type: "PUBLIC",
-      files: [],
+      files: publicFiles,
     }
 
     const response: FilesResponse = {

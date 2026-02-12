@@ -3,6 +3,7 @@
 import {
   Calendar,
   CheckSquare,
+  Folder,
   Globe,
   Home,
   List,
@@ -132,6 +133,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
         ],
         isActive: false,
+      },
+      {
+        title: t("files"),
+        url: "/files",
+        icon: Folder,
+        isActive: pathname === "/files",
       },
       {
         title: t("website"),

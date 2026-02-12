@@ -49,7 +49,7 @@ const FilesPage = () => {
 
       {/* Folders row (archive overview) */}
       {!isLoading && !error && folders.length > 0 && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {folders.map((folder: FilesFolder) => (
             <Link key={folder.id} href={`/files/${folder.id}`}>
               <Card
@@ -57,18 +57,10 @@ const FilesPage = () => {
                   "hover:border-primary hover:bg-primary/5 cursor-pointer border border-transparent bg-[#f7f7f7] transition-colors"
                 )}
               >
-                <CardContent className="flex items-center justify-between gap-3 py-4">
+                <CardContent className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="text-muted-foreground hover:text-primary size-8"
-                    >
-                      <MoreVertical className="size-4" />
-                    </Button>
                     <div className="flex flex-col">
-                      <span className="text-sm font-semibold">
+                      <span className="line-clamp-1 text-sm font-semibold">
                         {folder.name}
                       </span>
                       <span className="text-muted-foreground text-xs">

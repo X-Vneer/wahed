@@ -408,3 +408,16 @@ model TaskTemplateSubItem {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
+
+// Global/system files not related to a specific project or task
+model SystemFile {
+  id             String  @id @default(cuid())
+  fileUrl        String
+  fileName       String?
+  fileType       String?
+  fileSize       Int?   // in bytes
+  additionalInfo Json?  // extra metadata if needed
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

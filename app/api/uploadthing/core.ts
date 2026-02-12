@@ -1,6 +1,7 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next"
 import { UploadThingError } from "uploadthing/server"
 import { SESSION_COOKIE_NAME } from "@/config"
+import db from "@/lib/db"
 import { verifyToken } from "@/lib/jwt"
 import { cookies } from "next/headers"
 
@@ -124,6 +125,43 @@ export const ourFileRouter = {
       return { user }
     })
     .onUploadComplete(async ({ metadata, file }) => {
+      return {
+        uploadedBy: metadata.user.userId,
+        url: file.ufsUrl,
+        file: {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified,
+          customId: file.customId,
+        },
+      }
+    }),
+  publicFilesUploader: f({
+    pdf: { maxFileSize: "64MB", maxFileCount: 10 },
+    image: { maxFileSize: "8MB", maxFileCount: 10 },
+    video: { maxFileSize: "256MB", maxFileCount: 10 },
+    audio: { maxFileSize: "8MB", maxFileCount: 10 },
+    text: { maxFileSize: "32MB", maxFileCount: 10 },
+    blob: { maxFileSize: "8MB", maxFileCount: 10 },
+  })
+    .middleware(async () => {
+      const user = await auth()
+      if (!user) throw new UploadThingError("Unauthorized")
+      return { user }
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      // Persist in SystemFile; ignore type check until Prisma is regenerated
+      await db.systemFile.create({
+        data: {
+          fileUrl: file.ufsUrl,
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          additionalInfo: undefined,
+        },
+      })
+
       return {
         uploadedBy: metadata.user.userId,
         url: file.ufsUrl,
