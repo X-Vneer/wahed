@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { Link, useRouter } from "@/lib/i18n/navigation"
 import {
-  Building,
   Calculator,
-  Calendar as CalendarIcon,
   ChevronRight,
   Folder,
   LogInIcon,

@@ -155,6 +155,11 @@
         "daysRemaining": "أيام متبقية",
         "comments": "لديك {count} تعليقات",
         "current": "الحالية",
+        "currentTaskSection": {
+          "loading": "جاري تحميل مهمتك الحالية...",
+          "loadError": "فشل في تحميل المهمة الحالية",
+          "none": "لا توجد مهمة قيد التنفيذ حالياً."
+        },
         "quickAccess": {
           "fileManager": "مدير الملفات",
           "goToFiles": "دخول الى مدير الملفات",

@@ -1,11 +1,56 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
+import { useTranslations } from "next-intl"
+
 import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent } from "@/components/ui/card"
+import apiClient from "@/services"
+import type { Task } from "@/prisma/tasks"
+import { TaskCard } from "@/app/[locale]/(system)/tasks/_components/task-card"
 import { BannersSlider } from "./banners"
 import { QuickAccessCards } from "./quick-access-cards"
 import { UsefulWebsitesSlider } from "./useful-websites"
 import WeeklySchedule from "./weekly-schedule"
+
+function useCurrentTask() {
+  return useQuery<Task | null, Error>({
+    queryKey: ["current-task"],
+    queryFn: async () => {
+      const { data } = await apiClient.get<Task | null>("/api/tasks/me/current")
+
+      return data
+    },
+    staleTime: 1000 * 30,
+  })
+}
+
+function CurrentTaskSection() {
+  const t = useTranslations("welcome.staff.home.currentTaskSection")
+  const { data: task, isLoading, isError, error } = useCurrentTask()
+
+  return (
+    <>
+      {isLoading && (
+        <p className="text-muted-foreground text-sm">{t("loading")}</p>
+      )}
+
+      {!isLoading && isError && (
+        <p className="text-destructive text-sm">
+          {error?.message ?? t("loadError")}
+        </p>
+      )}
+
+      {!isLoading && !isError && !task && (
+        <p className="text-muted-foreground text-sm">{t("none")}</p>
+      )}
+
+      {!isLoading && !isError && task && (
+        <TaskCard task={task} className="border-border border" />
+      )}
+    </>
+  )
+}
 
 export default function StaffPage() {
   return (
@@ -31,6 +76,8 @@ export default function StaffPage() {
         </div>
         <div className="space-y-4 lg:max-w-[calc(100%-340px)]">
           <QuickAccessCards />
+          {/* Current task */}
+          <CurrentTaskSection />
           <BannersSlider />
           <UsefulWebsitesSlider />
         </div>

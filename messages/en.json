@@ -155,6 +155,11 @@
         "daysRemaining": "days remaining",
         "comments": "You have {count} comments",
         "current": "Current",
+        "currentTaskSection": {
+          "loading": "Loading your current task...",
+          "loadError": "Failed to load current task",
+          "none": "You don't have any task in progress."
+        },
         "quickAccess": {
           "fileManager": "File Manager",
           "goToFiles": "Go to File Manager",
