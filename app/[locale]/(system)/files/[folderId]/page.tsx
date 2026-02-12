@@ -156,6 +156,82 @@ const FolderFilesPage = () => {
                   }}
                 />
               )}
+
+              {selectedFolder.type === "PROJECT" && (
+                <UploadButton
+                  endpoint="projectAttachmentsUploader"
+                  onClientUploadComplete={async (res: Array<{ url: string; file?: { name?: string; type?: string; size?: number } }>) => {
+                    if (!res || res.length === 0) return
+
+                    try {
+                      // Keep existing project attachments and append the newly uploaded ones
+                      const existingProjectAttachments = selectedFolder.files
+                        .filter((file) => file.source === "PROJECT")
+                        .map((file) => ({
+                          id: file.id,
+                          fileUrl: file.fileUrl,
+                          fileName: file.fileName ?? undefined,
+                          fileType: file.fileType ?? undefined,
+                          fileSize: file.fileSize ?? undefined,
+                        }))
+
+                      const newAttachments = res.map((item) => ({
+                        fileUrl: item.url,
+                        fileName: item.file?.name as string | undefined,
+                        fileType: item.file?.type as string | undefined,
+                        fileSize: item.file?.size as number | undefined,
+                      }))
+
+                      const response = await fetch(
+                        `/api/projects/${selectedFolder.id}/attachments`,
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            attachments: [
+                              ...existingProjectAttachments,
+                              ...newAttachments,
+                            ],
+                          }),
+                        }
+                      )
+
+                      if (!response.ok) {
+                        throw new Error("Failed to save project attachments")
+                      }
+
+                      queryClient.invalidateQueries({ queryKey: ["files"] })
+                      toast.success(t("projects.form.attachments.uploaded"))
+                    } catch (error) {
+                      console.error("Error saving project attachments", error)
+                      toast.error(
+                        t("projects.form.attachments.uploadError") ||
+                          "Failed to save attachments"
+                      )
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    toast.error(
+                      error.message ||
+                        t("projects.form.attachments.uploadError")
+                    )
+                  }}
+                  appearance={{
+                    button:
+                      "border-primary text-primary hover:bg-primary bg-white hover:text-white ut-ready:bg-primary ut-ready:text-white ut-uploading:bg-primary ut-uploading:text-white",
+                  }}
+                  content={{
+                    button: (
+                      <span className="flex items-center gap-2">
+                        {t("projects.form.attachments.addDocuments")}
+                      </span>
+                    ),
+                    allowedContent: <span></span>,
+                  }}
+                />
+              )}
               <div className="inline-flex rounded-lg border bg-white p-1">
                 <Button
                   type="button"
