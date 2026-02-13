@@ -45,6 +45,7 @@ export default async function middleware(request: NextRequest) {
 
   // Get the access token from cookies
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value
+  console.log("🚀 ~ middleware ~ token:", token)
 
   // Handle API routes
   if (isApiRoute) {
