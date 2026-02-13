@@ -49,6 +49,9 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/lib/generated/prisma ./lib/generated/prisma
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
+# Copy node_modules so prisma migrate deploy can load prisma.config.ts (needs prisma + dotenv)
+COPY --from=builder /app/node_modules ./node_modules
 
 # Set correct permissions
 RUN chown -R nextjs:nodejs /app
@@ -60,5 +63,6 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# Run migrations then start the app (DATABASE_URL must be set at runtime, e.g. from Neon)
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
 
