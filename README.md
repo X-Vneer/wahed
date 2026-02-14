@@ -29,6 +29,20 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Deploy with Hostinger Docker Manager
+
+The app is built as a Docker image by GitHub Actions and pushed to [GitHub Container Registry](https://ghcr.io) (GHCR).
+
+1. **After each push to `main`**, the workflow [`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml) builds and pushes `ghcr.io/x-vneer/internal-system:latest`.
+
+2. **On your Hostinger server (Docker Manager):**
+   - Add this repo (or upload `docker-compose.yml` and `.env`).
+   - If the image is **private**: connect the registry (GHCR) and log in with a GitHub Personal Access Token (scopes: `read:packages`).
+   - Run **Pull** (or `docker compose pull`) then **Start** (or `docker compose up -d`).
+   - Set `DATABASE_URL` and `JWT_SECRET` in your environment (e.g. in Docker Manager or `.env`).
+
+3. **Optional:** Use `workflow_dispatch` in the Actions tab to trigger a build without pushing to `main`.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

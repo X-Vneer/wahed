@@ -2,9 +2,8 @@ version: "3.8"
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # Image built by GitHub Actions → GHCR. Use this in Hostinger Docker Manager.
+    image: ghcr.io/x-vneer/internal-system:latest
     container_name: internal-system-app
     restart: unless-stopped
     ports:
