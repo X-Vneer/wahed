@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -16,17 +16,21 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
     labels:
       - traefik.enable=true
-      # Route by host (set TRAEFIK_HOST in .env, e.g. internal-system.example.com)
-      - traefik.http.routers.internal-system.rule=Host(`${TRAEFIK_HOST:-internal-system.example.com}`)
-      - traefik.http.routers.internal-system.entrypoints=websecure
-      - traefik.http.routers.internal-system.tls.certresolver=letsencrypt
-      # Service: route to this container on port 3000
-      - traefik.http.services.internal-system.loadbalancer.server.port=3000
+      - traefik.http.routers.wahdomrania.rule=Host(`wahdomrania.com`) || Host(`www.wahdomrania.com`)
+      - traefik.http.routers.wahdomrania.entrypoints=websecure
+      - traefik.http.routers.wahdomrania.tls.certresolver=letsencrypt
+      - traefik.http.services.wahdomrania.loadbalancer.server.port=3000
     networks:
       - internal-system-network
       - traefik-proxy
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -37,4 +41,3 @@ networks:
     driver: bridge
   traefik-proxy:
     external: true
-
