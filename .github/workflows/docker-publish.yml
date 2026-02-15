@@ -1,5 +1,15 @@
 # Build Docker image and push to GitHub Container Registry (GHCR).
 # Use the image in Hostinger Docker Manager: ghcr.io/x-vneer/internal-system:latest
+#
+# --- Env and secrets (nothing to set for this workflow) ---
+# - env.REGISTRY / env.IMAGE_NAME: plain variables defined below; edit in this file if you change repo/org.
+# - secrets.GITHUB_TOKEN: provided by GitHub automatically; used to push to GHCR. No setup needed.
+# - DATABASE_URL, JWT_SECRET: runtime only. Set them on the server (Hostinger Docker Manager / .env), not here.
+#
+# To add your own secrets or variables later:
+#   1. Repo → Settings → Secrets and variables → Actions
+#   2. "Variables" tab: add repo variables (e.g. REGISTRY). Use in workflow: ${{ vars.MY_VAR }}
+#   3. "Secrets" tab: add secrets (e.g. a PAT). Use in workflow: ${{ secrets.MY_SECRET }}
 
 name: Build and push Docker image
 

@@ -12,6 +12,8 @@ services:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - UPLOADTHING_TOKEN=${UPLOADTHING_TOKEN}
+      - OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY}
       - NEXT_TELEMETRY_DISABLED=1
     labels:
       - traefik.enable=true

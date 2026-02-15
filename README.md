@@ -43,6 +43,8 @@ The app is built as a Docker image by GitHub Actions and pushed to [GitHub Conta
 
 3. **Optional:** Use `workflow_dispatch` in the Actions tab to trigger a build without pushing to `main`.
 
+**GitHub Actions env and secrets:** This workflow does not require any secrets or variables in the repo. It uses the automatic `GITHUB_TOKEN` to push to GHCR. `REGISTRY` and `IMAGE_NAME` are set in the workflow file. Do not put `DATABASE_URL` or `JWT_SECRET` in GitHub—set those only on the server (Hostinger). To add repo-wide variables or secrets later: **Settings → Secrets and variables → Actions** (Variables: `${{ vars.NAME }}`, Secrets: `${{ secrets.NAME }}`).
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
