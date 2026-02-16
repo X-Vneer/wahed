@@ -15,7 +15,8 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:test": "tsx scripts/test-database.ts",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "db:seed:production": "tsx scripts/production-seed.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
