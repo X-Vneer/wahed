@@ -7,7 +7,9 @@ import {
 import { AppSidebar } from "./_components/app-sidebar"
 import { LangSwitcher } from "./_components/lang-switcher"
 import { LogoutButton } from "./_components/logout-button"
+import { LayoutViewSwitcher } from "./_components/layout-view-switcher"
 
+import { SYSTEM_LAYOUT_COOKIE_NAME } from "@/config"
 import { QueryClient } from "@tanstack/react-query"
 import { getUserDataServerSide } from "@/lib/get-user-data-server-side"
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
@@ -16,6 +18,7 @@ import { redirect } from "@/lib/i18n/navigation"
 import { getLocale } from "next-intl/server"
 import { UserRole } from "@/lib/generated/prisma/enums"
 import { logo } from "@/assets"
+import { cookies } from "next/headers"
 import StaffHeroSection from "./_components/staff/hero-section"
 
 export default async function SystemLayout({
@@ -48,9 +51,13 @@ export default async function SystemLayout({
     })
   }
 
-  const isStaff = user.role === UserRole.STAFF
+  const isStaffRole = user.role === UserRole.STAFF
+  const isAdmin = user.role === UserRole.ADMIN
+  const layoutCookie = (await cookies()).get(SYSTEM_LAYOUT_COOKIE_NAME)?.value
+  const useAdminLayout = isAdmin && layoutCookie === "admin"
+  const showStaffLayout = isStaffRole || !useAdminLayout
 
-  if (isStaff) {
+  if (showStaffLayout) {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
         <SidebarProvider>
@@ -64,6 +71,7 @@ export default async function SystemLayout({
                 />
               </div>
               <div className="flex items-center gap-2">
+                {isAdmin && <LayoutViewSwitcher variant="staff" />}
                 <LogoutButton />
                 <LangSwitcher />
               </div>
@@ -86,7 +94,10 @@ export default async function SystemLayout({
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ms-1" />
             </div>
-            <LangSwitcher />
+            <div className="flex items-center gap-2">
+              <LayoutViewSwitcher variant="admin" />
+              <LangSwitcher />
+            </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
         </SidebarInset>

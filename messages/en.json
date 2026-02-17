@@ -81,7 +81,9 @@
     "staff-page": "Staff page",
     "staff-banners": "Banners",
     "staff-websites": "Useful websites",
-    "files": "Files system"
+    "files": "Files system",
+    "adminView": "Admin view",
+    "staffView": "Staff view"
   },
   "lists": {
     "projectCategories": {

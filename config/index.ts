@@ -1,6 +1,9 @@
 export const LOCALES = ["ar", "en"]
 export const SESSION_COOKIE_NAME = "access_token"
 
+/** Cookie to persist admin's layout choice: "staff" (default) | "admin" */
+export const SYSTEM_LAYOUT_COOKIE_NAME = "system_layout"
+
 /** Fixed system task status ID for "In Progress" – setting a task to this status sets startedAt. */
 export const TASK_STATUS_ID_IN_PROGRESS = "task-status-in-progress"
 export const TASK_STATUS_ID_COMPLETED = "task-status-completed"

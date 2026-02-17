@@ -81,7 +81,9 @@
     "staff-page": "بوابة الموظفين",
     "staff-banners": "البنرات",
     "staff-websites": "مواقع مفيدة",
-    "files": "نظام الملفات"
+    "files": "نظام الملفات",
+    "adminView": "واجهة الإدارة",
+    "staffView": "واجهة الموظفين"
   },
   "lists": {
     "projectCategories": {
