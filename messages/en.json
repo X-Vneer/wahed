@@ -179,7 +179,8 @@
       "goodMorning": "Good morning ",
       "goodAfternoon": "Good afternoon",
       "goodEvening": "Good evening",
-      "goodNight": "Good night"
+      "goodNight": "Good night",
+      "member": "Staff Member"
     }
   },
   "employees": {
