@@ -1093,6 +1093,13 @@
     }
   },
   "location": "Location",
+  "locationPrompt": {
+    "title": "Use your location?",
+    "description": "Allow location access for accurate weather and prayer times in your area.",
+    "allow": "Allow",
+    "decline": "Not now",
+    "doNotShowAgain": "Do not show again"
+  },
   "prayer": {
     "remaining": "After",
     "fajr": "Fajr",

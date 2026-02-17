@@ -109,5 +109,18 @@ export const updateUserSettingsSchema = z.object({
   image: z.string().optional().nullable(),
 })
 
+export const updateUserLocationSchema = z.object({
+  latitude: z
+    .number()
+    .min(-90, { message: "Invalid latitude" })
+    .max(90, { message: "Invalid latitude" }),
+  longitude: z
+    .number()
+    .min(-180, { message: "Invalid longitude" })
+    .max(180, { message: "Invalid longitude" }),
+})
+
+export type UpdateUserLocationInput = z.infer<typeof updateUserLocationSchema>
+
 export type CreateUserInput = z.infer<typeof createUserSchema>
 export type UpdateUserSettingsInput = z.infer<typeof updateUserSettingsSchema>

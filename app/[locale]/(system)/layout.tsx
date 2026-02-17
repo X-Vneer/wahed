@@ -20,6 +20,7 @@ import { UserRole } from "@/lib/generated/prisma/enums"
 import { logo } from "@/assets"
 import { cookies } from "next/headers"
 import StaffHeroSection from "./_components/staff/hero-section"
+import { UserLocationProvider } from "@/contexts/user-location-context"
 
 export default async function SystemLayout({
   children,
@@ -60,48 +61,52 @@ export default async function SystemLayout({
   if (showStaffLayout) {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <SidebarProvider>
-          <SidebarInset className="">
-            <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-              <div>
-                <img
-                  src={logo.src}
-                  alt={"logo"}
-                  className="h-10 rounded-full"
-                />
+        <UserLocationProvider>
+          <SidebarProvider>
+            <SidebarInset className="">
+              <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                <div>
+                  <img
+                    src={logo.src}
+                    alt={"logo"}
+                    className="h-10 rounded-full"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  {isAdmin && <LayoutViewSwitcher variant="staff" />}
+                  <LogoutButton />
+                  <LangSwitcher />
+                </div>
+              </header>
+              <div className="flex flex-1 flex-col gap-4 p-4">
+                <StaffHeroSection />
+                <div className="container mx-auto">{children}</div>
               </div>
-              <div className="flex items-center gap-2">
-                {isAdmin && <LayoutViewSwitcher variant="staff" />}
-                <LogoutButton />
-                <LangSwitcher />
-              </div>
-            </header>
-            <div className="flex flex-1 flex-col gap-4 p-4">
-              <StaffHeroSection />
-              <div className="container mx-auto">{children}</div>
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
+            </SidebarInset>
+          </SidebarProvider>
+        </UserLocationProvider>
       </HydrationBoundary>
     )
   }
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset className="">
-          <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-            <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ms-1" />
-            </div>
-            <div className="flex items-center gap-2">
-              <LayoutViewSwitcher variant="admin" />
-              <LangSwitcher />
-            </div>
-          </header>
-          <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
-        </SidebarInset>
-      </SidebarProvider>
+      <UserLocationProvider>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset className="">
+            <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+              <div className="flex items-center gap-2 px-4">
+                <SidebarTrigger className="-ms-1" />
+              </div>
+              <div className="flex items-center gap-2">
+                <LayoutViewSwitcher variant="admin" />
+                <LangSwitcher />
+              </div>
+            </header>
+            <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+          </SidebarInset>
+        </SidebarProvider>
+      </UserLocationProvider>
     </HydrationBoundary>
   )
 }

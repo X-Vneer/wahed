@@ -15,6 +15,8 @@ export const userSelect = {
   address: true,
   city: true,
   country: true,
+  latitude: true,
+  longitude: true,
   permissions: {
     select: {
       permission: {
@@ -58,6 +60,8 @@ export const transformUser = (user: UserSelect) => {
     address: user.address,
     city: user.city,
     country: user.country,
+    latitude: user.latitude,
+    longitude: user.longitude,
   }
 }
 

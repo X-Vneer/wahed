@@ -4,8 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { useWeather } from "@/hooks/use-weather"
 import { useTranslations } from "next-intl"
-
-const OPEN_WEATHER_ICON_BASE = "https://openweathermap.org/img/wn"
+import { OPEN_WEATHER_ICON_BASE } from "@/config"
 
 export function WeatherStatus({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("weather")

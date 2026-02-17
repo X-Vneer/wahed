@@ -82,6 +82,8 @@ model User {
   city        String?
   country     String?
   image       String?
+  latitude    Float?
+  longitude   Float?
 
   isActive Boolean @default(true)
 

@@ -1,6 +1,14 @@
 export const LOCALES = ["ar", "en"]
 export const SESSION_COOKIE_NAME = "access_token"
 
+export const OPEN_WEATHER_ICON_BASE = "https://openweathermap.org/img/wn"
+
+export const DEFAULT_LATITUDE = 24.774265
+export const DEFAULT_LONGITUDE = 46.738586
+
+/** localStorage key: when set, do not show the location permission dialog again */
+export const LOCATION_PROMPT_DO_NOT_SHOW_KEY = "location_prompt_do_not_show"
+
 /** Cookie to persist admin's layout choice: "staff" (default) | "admin" */
 export const SYSTEM_LAYOUT_COOKIE_NAME = "system_layout"
 
