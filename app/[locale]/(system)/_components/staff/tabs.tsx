@@ -3,17 +3,15 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { usePathname, useRouter } from "@/lib/i18n/navigation"
 import { useTranslations } from "next-intl"
-import { usePermission } from "@/hooks/use-permission"
-import { PERMISSIONS_GROUPED } from "@/config"
 
 export default function StaffTabs() {
   const pathname = usePathname()
   const router = useRouter()
   const t = useTranslations("sidebar")
-  const { checkPermission } = usePermission()
-  const canManageStaffPage = checkPermission(
-    PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
-  )
+  // const { checkPermission } = usePermission()
+  // const canManageStaffPage = checkPermission(
+  //   PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
+  // )
 
   return (
     <Tabs
@@ -40,11 +38,11 @@ export default function StaffTabs() {
         <TabsTrigger className={"px-3"} value="/settings">
           {t("settings")}
         </TabsTrigger>
-        {canManageStaffPage && (
+        {/* {canManageStaffPage && (
           <TabsTrigger className={"px-3"} value="/staff/settings">
             {t("staffPageSettings")}
           </TabsTrigger>
-        )}
+        )} */}
       </TabsList>
     </Tabs>
   )
