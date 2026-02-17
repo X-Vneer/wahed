@@ -6,7 +6,6 @@ import { Field, FieldLabel } from "@/components/ui/field"
 import { UploadButton } from "@/lib/uploadthing"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useEffect } from "react"
 import { toast } from "sonner"
 import { useProjectFormContext } from "./project-form-context"
 
@@ -16,47 +15,47 @@ export function AttachmentsUploadField() {
   const attachments = form.values.attachments || []
 
   // Clean up body overflow style after upload completes
-  useEffect(() => {
-    const checkAndCleanup = () => {
-      // Use a small delay to ensure the modal has closed
-      setTimeout(() => {
-        if (document.body.style.overflow === "hidden") {
-          document.body.style.overflow = ""
-        }
-      }, 100)
-    }
+  // useEffect(() => {
+  //   const checkAndCleanup = () => {
+  //     // Use a small delay to ensure the modal has closed
+  //     setTimeout(() => {
+  //       if (document.body.style.overflow === "hidden") {
+  //         document.body.style.overflow = ""
+  //       }
+  //     }, 100)
+  //   }
 
-    // Set up a MutationObserver to watch for body style changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "style" &&
-          document.body.style.overflow === "hidden"
-        ) {
-          // Check again after a delay to see if it should be cleaned up
-          checkAndCleanup()
-        }
-      })
-    })
+  //   // Set up a MutationObserver to watch for body style changes
+  //   const observer = new MutationObserver((mutations) => {
+  //     mutations.forEach((mutation) => {
+  //       if (
+  //         mutation.type === "attributes" &&
+  //         mutation.attributeName === "style" &&
+  //         document.body.style.overflow === "hidden"
+  //       ) {
+  //         // Check again after a delay to see if it should be cleaned up
+  //         checkAndCleanup()
+  //       }
+  //     })
+  //   })
 
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["style"],
-    })
+  //   observer.observe(document.body, {
+  //     attributes: true,
+  //     attributeFilter: ["style"],
+  //   })
 
-    // Also check periodically as a fallback
-    const interval = setInterval(checkAndCleanup, 500)
+  //   // Also check periodically as a fallback
+  //   const interval = setInterval(checkAndCleanup, 500)
 
-    return () => {
-      observer.disconnect()
-      clearInterval(interval)
-      // Clean up on unmount
-      if (document.body.style.overflow === "hidden") {
-        document.body.style.overflow = ""
-      }
-    }
-  }, [])
+  //   return () => {
+  //     observer.disconnect()
+  //     clearInterval(interval)
+  //     // Clean up on unmount
+  //     if (document.body.style.overflow === "hidden") {
+  //       document.body.style.overflow = ""
+  //     }
+  //   }
+  // }, [])
 
   const handleFileUpload = (
     files: Array<{ ufsUrl: string; name: string; size: number; type: string }>
