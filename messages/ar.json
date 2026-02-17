@@ -660,6 +660,8 @@
       "projectClassificationPlaceholder": "اختر تصنيف المشروع",
       "workDuration": "مدة العمل",
       "workDurationPlaceholder": "أدخل مدة العمل بالايام",
+      "status": "الحالة",
+      "statusPlaceholder": "اختر الحالة",
       "googleMapsAddress": "العنوان على قوقل ماب",
       "googleMapsAddressPlaceholder": "أدخل رابط العنوان من خرائط جوجل",
       "internallyRegistered": "المشروع مسجل داخليا للعمل",

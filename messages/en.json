@@ -659,6 +659,8 @@
       "projectClassificationPlaceholder": "Select project classification",
       "workDuration": "Work Duration",
       "workDurationPlaceholder": "Enter work duration",
+      "status": "Status",
+      "statusPlaceholder": "Select status",
       "googleMapsAddress": "Address on Google Map",
       "googleMapsAddressPlaceholder": "Enter Google Maps address",
       "internallyRegistered": "Project internally registered for work",
