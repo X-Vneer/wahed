@@ -11,6 +11,7 @@ import {
   LucideIcon,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useStaffPageSettings } from "@/hooks/use-staff-page-settings"
 
 interface QuickAccessCardData {
   icon: LucideIcon
@@ -66,6 +67,7 @@ function QuickAccessCard({
 
 export function QuickAccessCards() {
   const t = useTranslations("welcome.staff.home")
+  const { data: staffSettings } = useStaffPageSettings()
 
   const cards: QuickAccessCardData[] = [
     {
@@ -77,13 +79,13 @@ export function QuickAccessCards() {
     {
       icon: LogInIcon,
       titleKey: "quickAccess.attendance",
-      href: "/attendance",
+      href: staffSettings?.attendanceLink ?? "/attendance",
       linkTextKey: "quickAccess.goToAttendance",
     },
     {
       icon: Calculator,
       titleKey: "quickAccess.accounting",
-      href: "/accounting",
+      href: staffSettings?.accountingLink ?? "/accounting",
       linkTextKey: "quickAccess.goToAccounting",
     },
   ]

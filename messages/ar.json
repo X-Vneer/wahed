@@ -83,7 +83,9 @@
     "staff-websites": "مواقع مفيدة",
     "files": "نظام الملفات",
     "adminView": "واجهة الإدارة",
-    "staffView": "واجهة الموظفين"
+    "staffView": "واجهة الموظفين",
+    "staffPageSettings": "إعدادات صفحة الموظفين",
+    "staff-settings": "إعدادات"
   },
   "lists": {
     "projectCategories": {
@@ -1128,6 +1130,20 @@
     "update": "تحديث",
     "success": {
       "profile_updated": "تم تحديث الملف الشخصي بنجاح"
+    }
+  },
+  "staffPageSettings": {
+    "title": "إعدادات صفحة الموظفين",
+    "heroBackground": "صورة خلفية قسم الترحيب",
+    "heroBackgroundDescription": "الصورة المعروضة خلف قسم الترحيب في الصفحة الرئيسية للموظفين.",
+    "attendanceLink": "رابط الحضور",
+    "attendanceLinkPlaceholder": "/attendance",
+    "accountingLink": "رابط المحاسبة",
+    "accountingLinkPlaceholder": "/accounting",
+    "clearImage": "استخدام الصورة الافتراضية",
+    "save": "حفظ",
+    "success": {
+      "updated": "تم حفظ إعدادات صفحة الموظفين بنجاح"
     }
   },
   "banners": {

@@ -419,3 +419,13 @@ model SystemFile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Singleton: one row for staff page customization (hero background, quick-access links)
+model StaffPageSettings {
+  id                     String   @id @default(cuid())
+  heroBackgroundImageUrl String?
+  attendanceLink         String   @default("/attendance")
+  accountingLink         String   @default("/accounting")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}

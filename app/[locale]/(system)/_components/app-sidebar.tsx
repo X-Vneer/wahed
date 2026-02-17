@@ -124,6 +124,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: Users2,
         items: [
           {
+            title: t("staff-settings"),
+            url: "/staff/settings",
+          },
+          {
             title: t("staff-banners"),
             url: "/staff/banners",
           },

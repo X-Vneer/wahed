@@ -14,13 +14,15 @@ import { QueryClient } from "@tanstack/react-query"
 import { getUserDataServerSide } from "@/lib/get-user-data-server-side"
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
-import { redirect } from "@/lib/i18n/navigation"
+import { Link, redirect } from "@/lib/i18n/navigation"
 import { getLocale } from "next-intl/server"
 import { UserRole } from "@/lib/generated/prisma/enums"
 import { logo } from "@/assets"
 import { cookies } from "next/headers"
 import StaffHeroSection from "./_components/staff/hero-section"
 import { UserLocationProvider } from "@/contexts/user-location-context"
+import { StaffPageSettingsProvider } from "@/contexts/staff-page-settings-context"
+import { getStaffPageSettings } from "@/lib/get-staff-page-settings"
 
 export default async function SystemLayout({
   children,
@@ -58,32 +60,46 @@ export default async function SystemLayout({
   const useAdminLayout = isAdmin && layoutCookie === "admin"
   const showStaffLayout = isStaffRole || !useAdminLayout
 
+  let staffPageSettings
+  try {
+    staffPageSettings = await getStaffPageSettings()
+  } catch (error) {
+    console.error("Failed to fetch staff page settings:", error)
+    staffPageSettings = {
+      heroBackgroundImageUrl: null,
+      attendanceLink: "/attendance",
+      accountingLink: "/accounting",
+    }
+  }
+
   if (showStaffLayout) {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
         <UserLocationProvider>
-          <SidebarProvider>
-            <SidebarInset className="">
-              <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-                <div>
-                  <img
-                    src={logo.src}
-                    alt={"logo"}
-                    className="h-10 rounded-full"
-                  />
+          <StaffPageSettingsProvider initialSettings={staffPageSettings}>
+            <SidebarProvider>
+              <SidebarInset className="">
+                <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                  <Link href="/">
+                    <img
+                      src={logo.src}
+                      alt={"logo"}
+                      className="h-10 rounded-full"
+                    />
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    {isAdmin && <LayoutViewSwitcher variant="staff" />}
+                    <LogoutButton />
+                    <LangSwitcher />
+                  </div>
+                </header>
+                <div className="flex flex-1 flex-col gap-4 p-4">
+                  <StaffHeroSection />
+                  <div className="container mx-auto">{children}</div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {isAdmin && <LayoutViewSwitcher variant="staff" />}
-                  <LogoutButton />
-                  <LangSwitcher />
-                </div>
-              </header>
-              <div className="flex flex-1 flex-col gap-4 p-4">
-                <StaffHeroSection />
-                <div className="container mx-auto">{children}</div>
-              </div>
-            </SidebarInset>
-          </SidebarProvider>
+              </SidebarInset>
+            </SidebarProvider>
+          </StaffPageSettingsProvider>
         </UserLocationProvider>
       </HydrationBoundary>
     )
@@ -91,21 +107,23 @@ export default async function SystemLayout({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <UserLocationProvider>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset className="">
-            <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-              <div className="flex items-center gap-2 px-4">
-                <SidebarTrigger className="-ms-1" />
-              </div>
-              <div className="flex items-center gap-2">
-                <LayoutViewSwitcher variant="admin" />
-                <LangSwitcher />
-              </div>
-            </header>
-            <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
-          </SidebarInset>
-        </SidebarProvider>
+        <StaffPageSettingsProvider initialSettings={staffPageSettings}>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="">
+              <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                <div className="flex items-center gap-2 px-4">
+                  <SidebarTrigger className="-ms-1" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <LayoutViewSwitcher variant="admin" />
+                  <LangSwitcher />
+                </div>
+              </header>
+              <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+            </SidebarInset>
+          </SidebarProvider>
+        </StaffPageSettingsProvider>
       </UserLocationProvider>
     </HydrationBoundary>
   )

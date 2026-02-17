@@ -83,7 +83,9 @@
     "staff-websites": "Useful websites",
     "files": "Files system",
     "adminView": "Admin view",
-    "staffView": "Staff view"
+    "staffView": "Staff view",
+    "staffPageSettings": "Staff page settings",
+    "staff-settings": "Settings"
   },
   "lists": {
     "projectCategories": {
@@ -1128,6 +1130,20 @@
     "update": "Update",
     "success": {
       "profile_updated": "Profile updated successfully "
+    }
+  },
+  "staffPageSettings": {
+    "title": "Staff page settings",
+    "heroBackground": "Hero section background image",
+    "heroBackgroundDescription": "Image shown behind the welcome section on the staff home.",
+    "attendanceLink": "Attendance link",
+    "attendanceLinkPlaceholder": "/attendance",
+    "accountingLink": "Accounting link",
+    "accountingLinkPlaceholder": "/accounting",
+    "clearImage": "Use default image",
+    "save": "Save",
+    "success": {
+      "updated": "Staff page settings saved successfully"
     }
   },
   "banners": {
