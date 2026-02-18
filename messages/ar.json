@@ -615,6 +615,29 @@
   "upload": {
     "label": "قم بالسحب والإفلات لتحميل الملفات"
   },
+  "formFileUpload": {
+    "addFiles": "إضافة ملفات",
+    "addFile": "إضافة ملف",
+    "selectFiles": "اختيار ملفات",
+    "selectFile": "اختيار ملف",
+    "noFilesSelected": "لم يتم اختيار ملفات. انقر على الزر أعلاه لاختيار الملفات.",
+    "dialogTitle": "رفع الملفات",
+    "dialogTitleUploading": "جاري الرفع…",
+    "dialogTitleSuccess": "اكتمل الرفع",
+    "dialogTitleError": "فشل الرفع",
+    "dialogDescUploading": "يرجى الانتظار أثناء رفع الملفات.",
+    "dialogDescSuccess": "تم رفع الملفات بنجاح.",
+    "dialogDescError": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    "dialogDescIdle": "اختر الملفات، عدّل أسماءها إن رغبت، ثم انقر حفظ للرفع وإضافتها للنموذج.",
+    "uploadingProgress": "جاري الرفع… {progress}%",
+    "successMessage": "تم رفع جميع الملفات بنجاح.",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "done": "تم",
+    "removeFile": "إزالة الملف",
+    "maxFilesReached": "الحد الأقصى ملف واحد",
+    "maxFilesReached_other": "الحد الأقصى {max} ملفات"
+  },
   "attachmentPreview": {
     "file": "ملف",
     "unknownType": "نوع غير معروف",

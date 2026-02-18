@@ -1,6 +1,9 @@
 "use client"
 
-import { AttachmentPreview } from "@/components/attachment-preview"
+import {
+  FormFileUpload,
+  type UploadedFileAttachment,
+} from "@/components/form-file-upload"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Spinner } from "@/components/ui/spinner"
@@ -9,14 +12,13 @@ import {
   type Attachment,
   projectAttachmentsSchema,
 } from "@/lib/schemas/attachment"
-import { UploadButton } from "@/lib/uploadthing"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"
-import { Plus } from "lucide-react"
+import { useQueryClient } from "@tanstack/react-query"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
-import { useEffect, useCallback } from "react"
+import { useEffect } from "react"
 import { toast } from "sonner"
 
 // Extended attachment type that includes optional id for form state
@@ -63,44 +65,31 @@ export function ProjectAttachments({
       }))
     form.setFieldValue("attachments", attachments)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialAttachments])
+  }, [JSON.stringify(initialAttachments)])
 
-  const handleFileUpload = async (
-    files: Array<{ ufsUrl: string; name: string; size: number; type: string }>
-  ) => {
-    try {
-      const newAttachments: Attachment[] = files.map((file) => ({
-        fileUrl: file.ufsUrl,
-        fileName: file.name,
-        fileType: file.type,
-        fileSize: file.size,
-      }))
+  const attachmentsValue: UploadedFileAttachment[] =
+    form.values.attachments.map((att) => ({
+      fileUrl: att.fileUrl,
+      fileName: att.fileName ?? "",
+      fileType: att.fileType,
+      fileSize: att.fileSize,
+    }))
 
-      // Combine existing attachments (with IDs) and new attachments (without IDs)
-      const allAttachments: AttachmentWithId[] = [
-        ...form.values.attachments,
-        ...newAttachments,
-      ]
-
-      // Update form with new attachments (sync will happen on submit)
-      form.setFieldValue("attachments", allAttachments)
-    } catch (error) {
-      console.error("Error adding attachments:", error)
-      toast.error(t("projects.form.attachments.uploadError"))
-    }
+  const handleAttachmentsChange = (files: UploadedFileAttachment[]) => {
+    const merged: AttachmentWithId[] = files.map((f) => {
+      const existing = form.values.attachments.find(
+        (a) => a.fileUrl === f.fileUrl && a.fileName === f.fileName
+      )
+      return {
+        ...f,
+        id: existing?.id,
+        additionalInfo: existing?.additionalInfo,
+      }
+    })
+    form.setFieldValue("attachments", merged)
   }
 
-  const handleFileRemove = useCallback(
-    (id: string | undefined) => {
-      if (!id) return
-      const updatedAttachments = form.values.attachments.filter(
-        (att) => att.id !== id
-      )
-      form.setFieldValue("attachments", updatedAttachments)
-    },
-    [form]
-  )
-
+  const queryClient = useQueryClient()
   const handleSubmit = async (values: ProjectAttachmentsFormValues) => {
     try {
       // Send all attachments to the API
@@ -119,6 +108,9 @@ export function ProjectAttachments({
 
       // Refresh the page to get updated attachments
       router.refresh()
+
+      queryClient.invalidateQueries({ queryKey: ["projects"] })
+
       toast.success(t("projects.success.attachments_added"))
     } catch (error) {
       console.error("Error saving attachments:", error)
@@ -126,75 +118,25 @@ export function ProjectAttachments({
     }
   }
 
-  const attachments = form.values.attachments
-
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <div className="flex flex-col gap-4">
         <Card>
           <CardContent>
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4">
               <h3 className="text-lg font-bold">
                 {t("projects.form.attachments.title")}
               </h3>
-              <UploadButton
-                endpoint="projectAttachmentsUploader"
-                onClientUploadComplete={(res) => {
-                  if (res && res.length > 0) {
-                    handleFileUpload(
-                      res.map((file) => ({
-                        ufsUrl: file.ufsUrl,
-                        name: file.name,
-                        size: file.size,
-                        type: file.type,
-                      }))
-                    )
-                  }
-                }}
-                onUploadError={(error: Error) => {
-                  toast.error(
-                    error.message || t("projects.form.attachments.uploadError")
-                  )
-                }}
-                appearance={{
-                  button:
-                    "border-orange-500 text-orange-500 hover:bg-orange-500 bg-white hover:text-white ut-ready:bg-orange-500 ut-ready:text-white ut-uploading:bg-orange-500 ut-uploading:text-white rounded-lg px-4 py-2",
-                  container: "w-[unset]",
-                  allowedContent: "h-0!",
-                }}
-                content={{
-                  button: (
-                    <span className="flex items-center gap-2">
-                      <span className="shrink-0">
-                        {t("projects.form.attachments.addDocuments")}
-                      </span>
-                      <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-orange-500 bg-white">
-                        <Plus className="h-3 w-3 text-orange-500" />
-                      </div>
-                    </span>
-                  ),
-                  allowedContent: <span></span>,
-                }}
-                disabled={form.submitting}
-              />
             </div>
 
-            <div className="flex flex-col gap-2">
-              {attachments.length > 0 ? (
-                attachments.map((attachment) => (
-                  <AttachmentPreview
-                    key={attachment.id ?? attachment.fileUrl}
-                    attachment={attachment as Partial<ProjectAttachment>}
-                    onDelete={() => handleFileRemove(attachment.id)}
-                  />
-                ))
-              ) : (
-                <p className="text-muted-foreground py-4 text-center text-sm">
-                  {t("projects.form.attachments.noFiles") ||
-                    "No files attached"}
-                </p>
-              )}
-            </div>
+            <FormFileUpload
+              endpoint="projectAttachmentsUploader"
+              value={attachmentsValue}
+              onChange={handleAttachmentsChange}
+              triggerLabel={t("projects.form.attachments.addDocuments")}
+              multiple
+              disabled={form.submitting}
+            />
           </CardContent>
         </Card>
 

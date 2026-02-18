@@ -614,6 +614,29 @@
   "upload": {
     "label": "Drag and drop to upload files"
   },
+  "formFileUpload": {
+    "addFiles": "Add files",
+    "addFile": "Add file",
+    "selectFiles": "Select files",
+    "selectFile": "Select file",
+    "noFilesSelected": "No files selected. Click the button above to choose files.",
+    "dialogTitle": "Upload files",
+    "dialogTitleUploading": "Uploading…",
+    "dialogTitleSuccess": "Upload complete",
+    "dialogTitleError": "Upload failed",
+    "dialogDescUploading": "Please wait while your files are uploaded.",
+    "dialogDescSuccess": "Your files have been uploaded successfully.",
+    "dialogDescError": "Something went wrong. Please try again.",
+    "dialogDescIdle": "Select files, edit their names if needed, then click Save to upload and add them to the form.",
+    "uploadingProgress": "Uploading… {progress}%",
+    "successMessage": "All files uploaded successfully.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "done": "Done",
+    "removeFile": "Remove file",
+    "maxFilesReached": "Maximum {max} file reached",
+    "maxFilesReached_other": "Maximum {max} files reached"
+  },
   "attachmentPreview": {
     "file": "File",
     "unknownType": "Unknown type",
