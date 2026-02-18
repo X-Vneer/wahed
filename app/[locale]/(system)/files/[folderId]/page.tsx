@@ -1,6 +1,16 @@
 "use client"
 
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -14,10 +24,18 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Spinner } from "@/components/ui/spinner"
 import { useFiles } from "@/hooks/use-files"
 import type { FileItem, FilesFolder, FileSource } from "@/@types/files"
-import { UploadButton } from "@/lib/uploadthing"
+import {
+  FormFileUpload,
+  type UploadedFileAttachment,
+} from "@/components/form-file-upload"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
-import { Download, File as FileIcon, Image as ImageIcon } from "lucide-react"
+import {
+  Download,
+  File as FileIcon,
+  Image as ImageIcon,
+  Trash2,
+} from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "next/navigation"
@@ -62,8 +80,110 @@ const FolderFilesPage = () => {
     return FileIcon
   }
 
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [fileToDelete, setFileToDelete] = useState<FileItem | null>(null)
+
+  const performDelete = async (file: FileItem) => {
+    if (!selectedFolder) return
+    setDeletingId(file.id)
+    try {
+      if (file.source === "PUBLIC") {
+        const res = await fetch(`/api/files/${file.id}`, { method: "DELETE" })
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error(data?.error ?? "Failed to delete file")
+        }
+      } else if (file.source === "PROJECT" && selectedFolder.type === "PROJECT") {
+        const projectAttachments = selectedFolder.files
+          .filter((f) => f.source === "PROJECT" && f.id !== file.id)
+          .map((f) => ({
+            id: f.id,
+            fileUrl: f.fileUrl,
+            fileName: f.fileName ?? undefined,
+            fileType: f.fileType ?? undefined,
+            fileSize: f.fileSize ?? undefined,
+          }))
+        const res = await fetch(
+          `/api/projects/${selectedFolder.id}/attachments`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ attachments: projectAttachments }),
+          }
+        )
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error(data?.error ?? "Failed to delete file")
+        }
+      } else if (file.source === "TASK" && file.taskId) {
+        const res = await fetch(
+          `/api/tasks/${file.taskId}/attachments/${file.id}`,
+          { method: "DELETE" }
+        )
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error(data?.error ?? "Failed to delete file")
+        }
+      } else {
+        setDeletingId(null)
+        return
+      }
+      queryClient.invalidateQueries({ queryKey: ["files"] })
+      toast.success(t("projects.form.attachments.fileRemoved"))
+      setFileToDelete(null)
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : t("projects.form.attachments.uploadError")
+      )
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  const handleDeleteClick = (file: FileItem) => {
+    if (!selectedFolder) return
+    setFileToDelete(file)
+  }
+
   return (
     <div className="flex h-full flex-col gap-6">
+      <AlertDialog
+        open={fileToDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) setFileToDelete(null)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("projects.form.attachments.removeFileTitle")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("projects.form.attachments.confirmRemoveFile")}
+              {fileToDelete && (
+                <span className="mt-1 block font-medium text-foreground">
+                  {fileToDelete.fileName || t("attachmentPreview.file")}
+                </span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingId !== null}>
+              {t("projects.form.attachments.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => fileToDelete && performDelete(fileToDelete)}
+              disabled={deletingId !== null}
+              className="bg-destructive text-white hover:bg-destructive/90"
+            >
+              {deletingId !== null
+                ? t("projects.form.attachments.removing")
+                : t("projects.form.attachments.remove")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold">
           {selectedFolder?.name || t("projects.sidebar.files")}
@@ -127,44 +247,27 @@ const FolderFilesPage = () => {
             </div>
             <div className="flex items-start gap-2">
               {selectedFolder.type === "PUBLIC" && (
-                <UploadButton
+                <FormFileUpload
                   endpoint="publicFilesUploader"
-                  onClientUploadComplete={(res) => {
-                    if (res && res.length > 0) {
-                      // Files are already saved in DB in onUploadComplete; just refetch
+                  value={[]}
+                  onChange={(files: UploadedFileAttachment[]) => {
+                    if (files.length > 0) {
                       queryClient.invalidateQueries({ queryKey: ["files"] })
                       toast.success(t("projects.form.attachments.uploaded"))
                     }
                   }}
-                  onUploadError={(error: Error) => {
-                    toast.error(
-                      error.message ||
-                        t("projects.form.attachments.uploadError")
-                    )
-                  }}
-                  appearance={{
-                    button:
-                      "border-primary text-primary hover:bg-primary bg-white hover:text-white ut-ready:bg-primary ut-ready:text-white ut-uploading:bg-primary ut-uploading:text-white",
-                  }}
-                  content={{
-                    button: (
-                      <span className="flex items-center gap-2">
-                        {t("projects.form.attachments.addDocuments")}
-                      </span>
-                    ),
-                    allowedContent: <span></span>,
-                  }}
+                  triggerLabel={t("projects.form.attachments.addDocuments")}
                 />
               )}
 
               {selectedFolder.type === "PROJECT" && (
-                <UploadButton
+                <FormFileUpload
                   endpoint="projectAttachmentsUploader"
-                  onClientUploadComplete={async (res: Array<{ url: string; file?: { name?: string; type?: string; size?: number } }>) => {
-                    if (!res || res.length === 0) return
+                  value={[]}
+                  onChange={async (files: UploadedFileAttachment[]) => {
+                    if (files.length === 0) return
 
                     try {
-                      // Keep existing project attachments and append the newly uploaded ones
                       const existingProjectAttachments = selectedFolder.files
                         .filter((file) => file.source === "PROJECT")
                         .map((file) => ({
@@ -175,11 +278,11 @@ const FolderFilesPage = () => {
                           fileSize: file.fileSize ?? undefined,
                         }))
 
-                      const newAttachments = res.map((item) => ({
-                        fileUrl: item.url,
-                        fileName: item.file?.name as string | undefined,
-                        fileType: item.file?.type as string | undefined,
-                        fileSize: item.file?.size as number | undefined,
+                      const newAttachments = files.map((f) => ({
+                        fileUrl: f.fileUrl,
+                        fileName: f.fileName,
+                        fileType: f.fileType,
+                        fileSize: f.fileSize,
                       }))
 
                       const response = await fetch(
@@ -212,24 +315,7 @@ const FolderFilesPage = () => {
                       )
                     }
                   }}
-                  onUploadError={(error: Error) => {
-                    toast.error(
-                      error.message ||
-                        t("projects.form.attachments.uploadError")
-                    )
-                  }}
-                  appearance={{
-                    button:
-                      "border-primary text-primary hover:bg-primary bg-white hover:text-white ut-ready:bg-primary ut-ready:text-white ut-uploading:bg-primary ut-uploading:text-white",
-                  }}
-                  content={{
-                    button: (
-                      <span className="flex items-center gap-2">
-                        {t("projects.form.attachments.addDocuments")}
-                      </span>
-                    ),
-                    allowedContent: <span></span>,
-                  }}
+                  triggerLabel={t("projects.form.attachments.addDocuments")}
                 />
               )}
               <div className="inline-flex rounded-lg border bg-white p-1">
@@ -312,6 +398,17 @@ const FolderFilesPage = () => {
                         <Badge variant="outline" className="shrink-0">
                           {getSourceLabel(file.source)}
                         </Badge>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="text-destructive hover:bg-destructive/10 size-9"
+                          onClick={() => handleDeleteClick(file)}
+                          disabled={deletingId === file.id}
+                          aria-label={t("projects.form.attachments.remove")}
+                        >
+                          <Trash2 className="size-5" />
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -359,16 +456,29 @@ const FolderFilesPage = () => {
                         <Badge variant="outline">
                           {getSourceLabel(file.source)}
                         </Badge>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="hover:text-primary size-8"
-                          onClick={() => handleDownload(file.fileUrl)}
-                          aria-label={t("attachmentPreview.downloadFile")}
-                        >
-                          <Download className="size-4" />
-                        </Button>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="hover:text-primary size-8"
+                            onClick={() => handleDownload(file.fileUrl)}
+                            aria-label={t("attachmentPreview.downloadFile")}
+                          >
+                            <Download className="size-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="text-destructive hover:bg-destructive/10 size-8"
+                            onClick={() => handleDeleteClick(file)}
+                            disabled={deletingId === file.id}
+                            aria-label={t("projects.form.attachments.remove")}
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

@@ -113,6 +113,7 @@
     "user_not_found": "User not found",
     "account_inactive": "Account is inactive",
     "internal_server_error": "Internal server error",
+    "file_not_found": "File not found",
     "failed_to_fetch_user_data": "Failed to fetch user data",
     "upload_failed": "Failed to upload image",
     "failed_to_load": "Failed to load user data",
@@ -697,7 +698,11 @@
         "download": "Download",
         "remove": "Remove",
         "cancel": "Cancel",
-        "noFiles": "No files attached"
+        "noFiles": "No files attached",
+        "confirmRemoveFile": "This cannot be undone.",
+        "removeFileTitle": "Remove file?",
+        "fileRemoved": "File removed",
+        "removing": "Removing…"
       },
       "submit": "Add Project",
       "submitting": "Adding project...",

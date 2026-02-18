@@ -1,5 +1,6 @@
 "use client"
 
+import PageLoader from "@/components/page-loader"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,7 +9,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Spinner } from "@/components/ui/spinner"
 import type { TaskDetail } from "@/prisma/tasks"
 import apiClient from "@/services"
 import { useQuery } from "@tanstack/react-query"
@@ -19,7 +19,6 @@ import { TaskComments } from "./_components/task-comments"
 import { TaskDetailsSidebar } from "./_components/task-details-sidebar"
 import { TaskHeaderDescription } from "./_components/task-header-description"
 import { TaskSupportingDocuments } from "./_components/task-supporting-documents"
-import PageLoader from "@/components/page-loader"
 
 type PageProps = {
   params: Promise<{ id: string; locale: string }>
