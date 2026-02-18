@@ -12,10 +12,9 @@ import {
   Plus,
   X,
   Pencil,
-  Check,
-  Loader2,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { toast } from "sonner"
 import { useUploadThing } from "@/lib/uploadthing"
 import type { OurFileRouter } from "@/app/api/uploadthing/core"
 import { Button } from "@/components/ui/button"
@@ -28,11 +27,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import {
-  Progress,
-  ProgressIndicator,
-  ProgressTrack,
-} from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 
 export type UploadedFileAttachment = {
@@ -90,12 +84,9 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
   const t = useTranslations("formFileUpload")
   const [dialogOpen, setDialogOpen] = React.useState(false)
   const [pendingFiles, setPendingFiles] = React.useState<PendingFile[]>([])
-  const [uploadProgress, setUploadProgress] = React.useState(0)
-  const [uploadStatus, setUploadStatus] = React.useState<
-    "idle" | "uploading" | "success" | "error"
-  >("idle")
   const displayNamesRef = React.useRef<Record<string, string>>({})
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const uploadToastIdRef = React.useRef<string | null>(null)
 
   const handleUploadComplete = React.useCallback(
     (
@@ -108,15 +99,19 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
         fileSize: file.size,
       }))
       onChange([...value, ...newAttachments])
-      setUploadStatus("success")
       setPendingFiles([])
       displayNamesRef.current = {}
     },
     [value, onChange]
   )
 
-  const { startUpload, isUploading, routeConfig } = useUploadThing(endpoint, {
+  const { startUpload, routeConfig } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
+      const id = uploadToastIdRef.current
+      if (id) {
+        toast.success(t("successMessage"), { id })
+        uploadToastIdRef.current = null
+      }
       if (res?.length) {
         handleUploadComplete(
           res.map((f) => ({
@@ -132,10 +127,19 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
       }
     },
     onUploadError: () => {
-      setUploadStatus("error")
+      const id = uploadToastIdRef.current
+      if (id) {
+        toast.error(t("dialogDescError"), { id })
+        uploadToastIdRef.current = null
+      }
     },
     onUploadProgress: (p) => {
-      setUploadProgress(p)
+      const id = uploadToastIdRef.current
+      if (id) {
+        toast.loading(t("uploadingProgress", { progress: Math.round(p) }), {
+          id,
+        })
+      }
     },
     uploadProgressGranularity: "fine",
   })
@@ -196,16 +200,12 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
 
   const openDialog = () => {
     setPendingFiles([])
-    setUploadStatus("idle")
-    setUploadProgress(0)
     displayNamesRef.current = {}
     setDialogOpen(true)
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (pendingFiles.length === 0) return
-    setUploadStatus("uploading")
-    setUploadProgress(0)
     const files = pendingFiles.map((p) => p.file)
     const displayNames = pendingFiles.map(
       (p) => displayNamesRef.current[p.id] ?? p.displayName
@@ -214,23 +214,27 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
       const name = displayNames[i]?.trim() || f.name
       return new globalThis.File([f], name, { type: f.type })
     })
+    const toastId = `upload-${Date.now()}`
+    uploadToastIdRef.current = toastId
+    toast.loading(t("uploadingProgress", { progress: 0 }), { id: toastId })
     // @ts-expect-error -- useUploadThing generic union makes (files, input?) strict for multi-endpoint
-    await startUpload(renamedFiles)
+    startUpload(renamedFiles)
+    setDialogOpen(false)
+    setPendingFiles([])
+    displayNamesRef.current = {}
   }
 
   const closeDialog = () => {
-    if (!isUploading) {
-      setDialogOpen(false)
-      setPendingFiles([])
-      setUploadStatus("idle")
-    }
+    setDialogOpen(false)
+    setPendingFiles([])
+    displayNamesRef.current = {}
   }
 
   const handleDialogOpenChange = (open: boolean) => {
     setDialogOpen(open)
-    if (!open && !isUploading) {
+    if (!open) {
       setPendingFiles([])
-      setUploadStatus("idle")
+      displayNamesRef.current = {}
     }
   }
 
@@ -268,125 +272,74 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
         {triggerLabelResolved}
       </Button>
 
-      {/* Dialog: select files, rename, save */}
+      {/* Dialog: select files, rename, then Save uploads in background and closes */}
       <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
         <DialogContent className="bg-white sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>
-              {uploadStatus === "uploading"
-                ? t("dialogTitleUploading")
-                : uploadStatus === "success"
-                  ? t("dialogTitleSuccess")
-                  : uploadStatus === "error"
-                    ? t("dialogTitleError")
-                    : t("dialogTitle")}
-            </DialogTitle>
-            <DialogDescription>
-              {uploadStatus === "uploading" && t("dialogDescUploading")}
-              {uploadStatus === "success" && t("dialogDescSuccess")}
-              {uploadStatus === "error" && t("dialogDescError")}
-              {uploadStatus === "idle" && t("dialogDescIdle")}
-            </DialogDescription>
+            <DialogTitle>{t("dialogTitle")}</DialogTitle>
+            <DialogDescription>{t("dialogDescIdle")}</DialogDescription>
           </DialogHeader>
 
-          {uploadStatus === "uploading" && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <Loader2 className="size-4 animate-spin" />
-                <span>
-                  {t("uploadingProgress", {
-                    progress: Math.round(uploadProgress),
-                  })}
-                </span>
-              </div>
-              <Progress value={uploadProgress} />
-            </div>
-          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="sr-only"
+            multiple={multiple}
+            accept={acceptString}
+            onChange={(e) => {
+              addFiles(e.target.files)
+              e.target.value = ""
+            }}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full gap-2"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={
+              maxFiles != null &&
+              pendingFiles.length >= maxFiles - value.length
+            }
+          >
+            <Upload className="size-4" />
+            {multiple ? t("selectFiles") : t("selectFile")}
+          </Button>
 
-          {uploadStatus === "success" && (
-            <div className="flex flex-col items-center gap-3 py-4">
-              <div className="bg-primary/10 text-primary flex size-14 items-center justify-center rounded-full">
-                <Check className="size-7" />
-              </div>
-              <p className="text-center text-sm font-medium">
-                {t("successMessage")}
-              </p>
-            </div>
-          )}
-
-          {uploadStatus === "idle" && (
-            <>
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="sr-only"
-                multiple={multiple}
-                accept={acceptString}
-                onChange={(e) => {
-                  addFiles(e.target.files)
-                  e.target.value = ""
-                }}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full gap-2"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={
-                  maxFiles != null &&
-                  pendingFiles.length >= maxFiles - value.length
-                }
-              >
-                <Upload className="size-4" />
-                {multiple ? t("selectFiles") : t("selectFile")}
-              </Button>
-
-              {pendingFiles.length === 0 ? (
-                <p className="text-muted-foreground py-4 text-center text-sm">
-                  {t("noFilesSelected")}
-                </p>
-              ) : (
-                <ul className="max-h-[240px] space-y-2 overflow-y-auto">
-                  {pendingFiles.map((item) => (
-                    <PendingFileRow
-                      key={item.id}
-                      item={item}
-                      onNameChange={(name) => updateDisplayName(item.id, name)}
-                      onRemove={() => removePending(item.id)}
-                      removeLabel={t("removeFile")}
-                    />
-                  ))}
-                </ul>
-              )}
-            </>
+          {pendingFiles.length === 0 ? (
+            <p className="text-muted-foreground py-4 text-center text-sm">
+              {t("noFilesSelected")}
+            </p>
+          ) : (
+            <ul className="max-h-[240px] space-y-2 overflow-y-auto">
+              {pendingFiles.map((item) => (
+                <PendingFileRow
+                  key={item.id}
+                  item={item}
+                  onNameChange={(name) => updateDisplayName(item.id, name)}
+                  onRemove={() => removePending(item.id)}
+                  removeLabel={t("removeFile")}
+                />
+              ))}
+            </ul>
           )}
 
           <DialogFooter>
-            {uploadStatus === "idle" && (
-              <>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className={"px-10"}
-                  onClick={closeDialog}
-                >
-                  {t("cancel")}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleSave}
-                  className={"px-10"}
-                  disabled={pendingFiles.length === 0}
-                >
-                  {t("save")}
-                </Button>
-              </>
-            )}
-            {(uploadStatus === "success" || uploadStatus === "error") && (
-              <Button type="button" className={"px-10"} onClick={closeDialog}>
-                {t("done")}
-              </Button>
-            )}
+            <Button
+              type="button"
+              variant="outline"
+              className="px-10"
+              onClick={closeDialog}
+            >
+              {t("cancel")}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleSave}
+              className="px-10"
+              disabled={pendingFiles.length === 0}
+            >
+              {t("save")}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

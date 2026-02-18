@@ -19,6 +19,7 @@ import { TaskComments } from "./_components/task-comments"
 import { TaskDetailsSidebar } from "./_components/task-details-sidebar"
 import { TaskHeaderDescription } from "./_components/task-header-description"
 import { TaskSupportingDocuments } from "./_components/task-supporting-documents"
+import PageLoader from "@/components/page-loader"
 
 type PageProps = {
   params: Promise<{ id: string; locale: string }>
@@ -41,11 +42,7 @@ export default function TaskDetailPage({ params }: PageProps) {
   })
 
   if (isLoading) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <Spinner className="size-6" />
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (isError || !task) {
