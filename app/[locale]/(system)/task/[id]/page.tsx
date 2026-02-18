@@ -1,5 +1,6 @@
 "use client"
 
+import PageLoader from "@/components/page-loader"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,7 +9,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Spinner } from "@/components/ui/spinner"
 import type { TaskDetail } from "@/prisma/tasks"
 import apiClient from "@/services"
 import { useQuery } from "@tanstack/react-query"
@@ -41,11 +41,7 @@ export default function TaskDetailPage({ params }: PageProps) {
   })
 
   if (isLoading) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <Spinner className="size-6" />
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (isError || !task) {

@@ -81,7 +81,11 @@
     "staff-page": "Staff page",
     "staff-banners": "Banners",
     "staff-websites": "Useful websites",
-    "files": "Files system"
+    "files": "Files system",
+    "adminView": "Admin view",
+    "staffView": "Staff view",
+    "staffPageSettings": "Staff page settings",
+    "staff-settings": "Settings"
   },
   "lists": {
     "projectCategories": {
@@ -109,6 +113,7 @@
     "user_not_found": "User not found",
     "account_inactive": "Account is inactive",
     "internal_server_error": "Internal server error",
+    "file_not_found": "File not found",
     "failed_to_fetch_user_data": "Failed to fetch user data",
     "upload_failed": "Failed to upload image",
     "failed_to_load": "Failed to load user data",
@@ -177,7 +182,8 @@
       "goodMorning": "Good morning ",
       "goodAfternoon": "Good afternoon",
       "goodEvening": "Good evening",
-      "goodNight": "Good night"
+      "goodNight": "Good night",
+      "member": "Staff Member"
     }
   },
   "employees": {
@@ -609,6 +615,31 @@
   "upload": {
     "label": "Drag and drop to upload files"
   },
+  "formFileUpload": {
+    "addFiles": "Add files",
+    "addFile": "Add file",
+    "selectFiles": "Select files",
+    "selectFile": "Select file",
+    "noFilesSelected": "No files selected. Click the button above to choose files.",
+    "dialogTitle": "Upload files",
+    "dialogTitleUploading": "Uploading…",
+    "dialogTitleSuccess": "Upload complete",
+    "dialogTitleError": "Upload failed",
+    "dialogDescUploading": "Please wait while your files are uploaded.",
+    "dialogDescSuccess": "Your files have been uploaded successfully.",
+    "dialogDescError": "Something went wrong. Please try again.",
+    "dialogDescIdle": "Select files, edit their names if needed, then click Save to upload and add them to the form.",
+    "renameHint": "Click a file name to rename it before uploading.",
+    "clickToRename": "Click to rename",
+    "uploadingProgress": "Uploading… {progress}%",
+    "successMessage": "All files uploaded successfully.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "done": "Done",
+    "removeFile": "Remove file",
+    "maxFilesReached": "Maximum {max} file reached",
+    "maxFilesReached_other": "Maximum {max} files reached"
+  },
   "attachmentPreview": {
     "file": "File",
     "unknownType": "Unknown type",
@@ -654,6 +685,8 @@
       "projectClassificationPlaceholder": "Select project classification",
       "workDuration": "Work Duration",
       "workDurationPlaceholder": "Enter work duration",
+      "status": "Status",
+      "statusPlaceholder": "Select status",
       "googleMapsAddress": "Address on Google Map",
       "googleMapsAddressPlaceholder": "Enter Google Maps address",
       "internallyRegistered": "Project internally registered for work",
@@ -665,7 +698,11 @@
         "download": "Download",
         "remove": "Remove",
         "cancel": "Cancel",
-        "noFiles": "No files attached"
+        "noFiles": "No files attached",
+        "confirmRemoveFile": "This cannot be undone.",
+        "removeFileTitle": "Remove file?",
+        "fileRemoved": "File removed",
+        "removing": "Removing…"
       },
       "submit": "Add Project",
       "submitting": "Adding project...",
@@ -1091,6 +1128,13 @@
     }
   },
   "location": "Location",
+  "locationPrompt": {
+    "title": "Use your location?",
+    "description": "Allow location access for accurate weather and prayer times in your area.",
+    "allow": "Allow",
+    "decline": "Not now",
+    "doNotShowAgain": "Do not show again"
+  },
   "prayer": {
     "remaining": "After",
     "fajr": "Fajr",
@@ -1118,6 +1162,20 @@
     "update": "Update",
     "success": {
       "profile_updated": "Profile updated successfully "
+    }
+  },
+  "staffPageSettings": {
+    "title": "Staff page settings",
+    "heroBackground": "Hero section background image",
+    "heroBackgroundDescription": "Image shown behind the welcome section on the staff home.",
+    "attendanceLink": "Attendance link",
+    "attendanceLinkPlaceholder": "/attendance",
+    "accountingLink": "Accounting link",
+    "accountingLinkPlaceholder": "/accounting",
+    "clearImage": "Use default image",
+    "save": "Save",
+    "success": {
+      "updated": "Staff page settings saved successfully"
     }
   },
   "banners": {

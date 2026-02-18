@@ -81,7 +81,11 @@
     "staff-page": "بوابة الموظفين",
     "staff-banners": "البنرات",
     "staff-websites": "مواقع مفيدة",
-    "files": "نظام الملفات"
+    "files": "نظام الملفات",
+    "adminView": "واجهة الإدارة",
+    "staffView": "واجهة الموظفين",
+    "staffPageSettings": "إعدادات صفحة الموظفين",
+    "staff-settings": "إعدادات"
   },
   "lists": {
     "projectCategories": {
@@ -109,6 +113,7 @@
     "user_not_found": "المستخدم غير موجود",
     "account_inactive": "الحساب غير نشط",
     "internal_server_error": "خطأ في الخادم الداخلي",
+    "file_not_found": "الملف غير موجود",
     "failed_to_fetch_user_data": "فشل في جلب بيانات المستخدم",
     "upload_failed": "فشل تحميل الصورة",
     "failed_to_load": "فشل تحميل بيانات المستخدم",
@@ -177,7 +182,8 @@
       "goodMorning": "صباح الخير",
       "goodAfternoon": "مساء الخير",
       "goodEvening": "مساء الخير",
-      "goodNight": "طاب مساؤك"
+      "goodNight": "طاب مساؤك",
+      "member": "موظف"
     }
   },
   "employees": {
@@ -610,6 +616,31 @@
   "upload": {
     "label": "قم بالسحب والإفلات لتحميل الملفات"
   },
+  "formFileUpload": {
+    "addFiles": "إضافة ملفات",
+    "addFile": "إضافة ملف",
+    "selectFiles": "اختيار ملفات",
+    "selectFile": "اختيار ملف",
+    "noFilesSelected": "لم يتم اختيار ملفات. انقر على الزر أعلاه لاختيار الملفات.",
+    "dialogTitle": "رفع الملفات",
+    "dialogTitleUploading": "جاري الرفع…",
+    "dialogTitleSuccess": "اكتمل الرفع",
+    "dialogTitleError": "فشل الرفع",
+    "dialogDescUploading": "يرجى الانتظار أثناء رفع الملفات.",
+    "dialogDescSuccess": "تم رفع الملفات بنجاح.",
+    "dialogDescError": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    "dialogDescIdle": "اختر الملفات، عدّل أسماءها إن رغبت، ثم انقر حفظ للرفع وإضافتها للنموذج.",
+    "renameHint": "انقر على اسم الملف لإعادة تسميته قبل الرفع.",
+    "clickToRename": "انقر لإعادة التسمية",
+    "uploadingProgress": "جاري الرفع… {progress}%",
+    "successMessage": "تم رفع جميع الملفات بنجاح.",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "done": "تم",
+    "removeFile": "إزالة الملف",
+    "maxFilesReached": "الحد الأقصى ملف واحد",
+    "maxFilesReached_other": "الحد الأقصى {max} ملفات"
+  },
   "attachmentPreview": {
     "file": "ملف",
     "unknownType": "نوع غير معروف",
@@ -655,6 +686,8 @@
       "projectClassificationPlaceholder": "اختر تصنيف المشروع",
       "workDuration": "مدة العمل",
       "workDurationPlaceholder": "أدخل مدة العمل بالايام",
+      "status": "الحالة",
+      "statusPlaceholder": "اختر الحالة",
       "googleMapsAddress": "العنوان على قوقل ماب",
       "googleMapsAddressPlaceholder": "أدخل رابط العنوان من خرائط جوجل",
       "internallyRegistered": "المشروع مسجل داخليا للعمل",
@@ -666,7 +699,11 @@
         "download": "تحميل",
         "remove": "إزالة",
         "cancel": "إلغاء",
-        "noFiles": "لا توجد ملفات مرفقة"
+        "noFiles": "لا توجد ملفات مرفقة",
+        "confirmRemoveFile": "لا يمكن التراجع عن ذلك.",
+        "removeFileTitle": "إزالة الملف؟",
+        "fileRemoved": "تمت إزالة الملف",
+        "removing": "جاري الإزالة…"
       },
       "submit": "إضافة المشروع",
       "submitting": "جاري الإضافة...",
@@ -1091,6 +1128,13 @@
     }
   },
   "location": "الموقع",
+  "locationPrompt": {
+    "title": "استخدام موقعك؟",
+    "description": "السماح بالوصول إلى الموقع للحصول على الطقس وأوقات الصلاة بدقة في منطقتك.",
+    "allow": "السماح",
+    "decline": "ليس الآن",
+    "doNotShowAgain": "عدم العرض مرة أخرى"
+  },
   "prayer": {
     "remaining": "بعد",
     "fajr": "الفجر",
@@ -1118,6 +1162,20 @@
     "update": "تحديث",
     "success": {
       "profile_updated": "تم تحديث الملف الشخصي بنجاح"
+    }
+  },
+  "staffPageSettings": {
+    "title": "إعدادات صفحة الموظفين",
+    "heroBackground": "صورة خلفية قسم الترحيب",
+    "heroBackgroundDescription": "الصورة المعروضة خلف قسم الترحيب في الصفحة الرئيسية للموظفين.",
+    "attendanceLink": "رابط الحضور",
+    "attendanceLinkPlaceholder": "/attendance",
+    "accountingLink": "رابط المحاسبة",
+    "accountingLinkPlaceholder": "/accounting",
+    "clearImage": "استخدام الصورة الافتراضية",
+    "save": "حفظ",
+    "success": {
+      "updated": "تم حفظ إعدادات صفحة الموظفين بنجاح"
     }
   },
   "banners": {

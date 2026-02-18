@@ -15,6 +15,25 @@ import { useRegions } from "@/hooks/use-regions"
 import { useTranslations } from "next-intl"
 import { useProjectFormContext } from "./project-form-context"
 
+const PROJECT_STATUSES = [
+  "PLANNING",
+  "IN_PROGRESS",
+  "ON_HOLD",
+  "COMPLETED",
+  "CANCELLED",
+] as const
+
+const PROJECT_STATUS_LABEL_KEYS: Record<
+  (typeof PROJECT_STATUSES)[number],
+  "projects.status.planning" | "projects.status.inProgress" | "projects.status.onHold" | "projects.status.completed" | "projects.status.cancelled"
+> = {
+  PLANNING: "projects.status.planning",
+  IN_PROGRESS: "projects.status.inProgress",
+  ON_HOLD: "projects.status.onHold",
+  COMPLETED: "projects.status.completed",
+  CANCELLED: "projects.status.cancelled",
+}
+
 export function ProjectDetailsSection() {
   const t = useTranslations()
   const form = useProjectFormContext()
@@ -250,6 +269,47 @@ export function ProjectDetailsSection() {
             <FieldError
               errors={[{ message: String(form.errors.workDuration) }]}
             />
+          )}
+        </Field>
+
+        {/* status */}
+        <Field data-invalid={!!form.errors.status}>
+          <FieldLabel htmlFor="status">
+            {t("projects.form.status")}
+          </FieldLabel>
+          <Select
+            value={form.values.status || ""}
+            onValueChange={(value) => {
+              form.setFieldValue(
+                "status",
+                value ? (value as (typeof form.values)["status"]) : undefined
+              )
+            }}
+          >
+            <SelectTrigger
+              id="status"
+              className="w-full"
+              aria-invalid={!!form.errors.status}
+            >
+              <SelectValue>
+                {form.values.status
+                  ? t(PROJECT_STATUS_LABEL_KEYS[form.values.status])
+                  : t("projects.form.statusPlaceholder")}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">
+                {t("projects.form.statusPlaceholder")}
+              </SelectItem>
+              {PROJECT_STATUSES.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {t(PROJECT_STATUS_LABEL_KEYS[status])}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {form.errors.status && (
+            <FieldError errors={[{ message: String(form.errors.status) }]} />
           )}
         </Field>
       </div>

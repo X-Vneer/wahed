@@ -3,37 +3,31 @@
 import { loginBg, noise, gridBg } from "@/assets"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { useUserData } from "@/hooks/use-user-data"
+import { useLogout } from "@/hooks/use-logout"
+import { useStaffPageSettings } from "@/hooks/use-staff-page-settings"
 import { Spinner } from "@/components/ui/spinner"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 import StaffTabs from "./tabs"
-import { usePathname, useRouter } from "@/lib/i18n/navigation"
+import { usePathname } from "@/lib/i18n/navigation"
 import { LogOut } from "lucide-react"
-import apiClient from "@/services"
-import { useState } from "react"
 import { PrayerTimer } from "@/components/prayer-timer"
 import { WeatherStatus } from "@/components/weather-status"
 
 export default function StaffPage() {
   const t = useTranslations("welcome.staff")
   const { data: user, isLoading } = useUserData()
-  const router = useRouter()
-  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const { data: staffSettings } = useStaffPageSettings()
+  const logoutMutation = useLogout()
+  const heroBg =
+    staffSettings?.heroBackgroundImageUrl ?? (loginBg as { src: string })
 
   const pathname = usePathname()
   const length = pathname.split("/")
   const hideHeroSection = length.length > 2
 
-  const handleLogout = async () => {
-    try {
-      setIsLoggingOut(true)
-      await apiClient.post("/api/auth/logout")
-      router.refresh()
-      router.push("/auth/login")
-    } catch (error) {
-      console.error("Logout error:", error)
-      setIsLoggingOut(false)
-    }
+  const handleLogout = () => {
+    logoutMutation.mutate()
   }
 
   if (isLoading) {
@@ -75,12 +69,21 @@ export default function StaffPage() {
     <div>
       <div className="relative -mx-4 -mt-4 flex items-center justify-center overflow-hidden">
         {/* Background Images */}
-        <Image
-          src={loginBg}
-          className="absolute h-full w-full object-cover"
-          alt="bg"
-          priority
-        />
+        {typeof heroBg === "string" ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={heroBg}
+            alt=""
+            className="absolute h-full w-full object-cover"
+          />
+        ) : (
+          <Image
+            src={loginBg}
+            className="absolute h-full w-full object-cover"
+            alt="bg"
+            priority
+          />
+        )}
         <Image
           src={noise}
           className="absolute h-full w-full object-cover opacity-10"
@@ -129,7 +132,7 @@ export default function StaffPage() {
               {/* Logout Icon Overlay - appears on hover */}
               <button
                 onClick={handleLogout}
-                disabled={isLoggingOut}
+                disabled={logoutMutation.isPending}
                 className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100 hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Logout"
               >
@@ -144,7 +147,7 @@ export default function StaffPage() {
               </h2>
               {/* User Name - Small (duplicate) */}
               <p className="text-white/70 md:text-lg">
-                {user?.name || t("title")}
+                {user?.roleName || t("member")}
               </p>
             </div>
           </div>
