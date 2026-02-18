@@ -629,6 +629,8 @@
     "dialogDescSuccess": "تم رفع الملفات بنجاح.",
     "dialogDescError": "حدث خطأ. يرجى المحاولة مرة أخرى.",
     "dialogDescIdle": "اختر الملفات، عدّل أسماءها إن رغبت، ثم انقر حفظ للرفع وإضافتها للنموذج.",
+    "renameHint": "انقر على اسم الملف لإعادة تسميته قبل الرفع.",
+    "clickToRename": "انقر لإعادة التسمية",
     "uploadingProgress": "جاري الرفع… {progress}%",
     "successMessage": "تم رفع جميع الملفات بنجاح.",
     "cancel": "إلغاء",

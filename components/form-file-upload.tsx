@@ -57,6 +57,13 @@ const formatFileSize = (bytes: number): string => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
+/** Get extension from filename, e.g. "report.pdf" -> ".pdf". Returns "" if none. */
+const getFileExtension = (fileName: string): string => {
+  const lastDot = fileName.lastIndexOf(".")
+  if (lastDot <= 0) return ""
+  return fileName.slice(lastDot)
+}
+
 type FormFileUploadProps<E extends keyof OurFileRouter> = {
   endpoint: E
   value: UploadedFileAttachment[]
@@ -310,17 +317,23 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
               {t("noFilesSelected")}
             </p>
           ) : (
-            <ul className="max-h-[240px] space-y-2 overflow-y-auto">
-              {pendingFiles.map((item) => (
-                <PendingFileRow
-                  key={item.id}
-                  item={item}
-                  onNameChange={(name) => updateDisplayName(item.id, name)}
-                  onRemove={() => removePending(item.id)}
-                  removeLabel={t("removeFile")}
-                />
-              ))}
-            </ul>
+            <div className="space-y-2">
+              <p className="text-muted-foreground text-xs">
+                {t("renameHint")}
+              </p>
+              <ul className="max-h-[240px] space-y-2 overflow-y-auto">
+                {pendingFiles.map((item) => (
+                  <PendingFileRow
+                    key={item.id}
+                    item={item}
+                    onNameChange={(name) => updateDisplayName(item.id, name)}
+                    onRemove={() => removePending(item.id)}
+                    removeLabel={t("removeFile")}
+                    renameTitle={t("clickToRename")}
+                  />
+                ))}
+              </ul>
+            </div>
           )}
 
           <DialogFooter>
@@ -352,11 +365,13 @@ function PendingFileRow({
   onNameChange,
   onRemove,
   removeLabel,
+  renameTitle,
 }: {
   item: PendingFile
   onNameChange: (name: string) => void
   onRemove: () => void
   removeLabel: string
+  renameTitle: string
 }) {
   const [editing, setEditing] = React.useState(false)
   const [name, setName] = React.useState(item.displayName)
@@ -367,8 +382,13 @@ function PendingFileRow({
 
   const handleBlur = () => {
     setEditing(false)
-    const trimmed = name.trim()
-    onNameChange(trimmed || item.file.name)
+    const trimmed = name.trim() || item.file.name
+    const ext = getFileExtension(item.file.name)
+    const finalName =
+      ext && !trimmed.toLowerCase().endsWith(ext.toLowerCase())
+        ? `${trimmed}${ext}`
+        : trimmed
+    onNameChange(finalName)
   }
 
   const iconComponent = getFileIcon(item.file)
@@ -395,11 +415,12 @@ function PendingFileRow({
             type="button"
             onClick={() => setEditing(true)}
             className="flex min-w-0 items-center gap-1.5 text-left text-sm"
+            title={renameTitle}
           >
             <span className="line-clamp-1">
               {item.displayName || item.file.name}
             </span>
-            <Pencil className="text-muted-foreground size-3.5 shrink-0" />
+            <Pencil className="text-muted-foreground size-3.5 shrink-0" aria-hidden />
           </button>
         )}
       </div>

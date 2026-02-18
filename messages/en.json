@@ -628,6 +628,8 @@
     "dialogDescSuccess": "Your files have been uploaded successfully.",
     "dialogDescError": "Something went wrong. Please try again.",
     "dialogDescIdle": "Select files, edit their names if needed, then click Save to upload and add them to the form.",
+    "renameHint": "Click a file name to rename it before uploading.",
+    "clickToRename": "Click to rename",
     "uploadingProgress": "Uploading… {progress}%",
     "successMessage": "All files uploaded successfully.",
     "cancel": "Cancel",
