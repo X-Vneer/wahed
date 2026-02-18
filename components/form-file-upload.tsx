@@ -299,11 +299,7 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
                   })}
                 </span>
               </div>
-              <Progress value={uploadProgress}>
-                <ProgressTrack>
-                  <ProgressIndicator />
-                </ProgressTrack>
-              </Progress>
+              <Progress value={uploadProgress} />
             </div>
           )}
 
