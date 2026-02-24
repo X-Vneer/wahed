@@ -30,6 +30,18 @@ export type TaskDetailInclude = Prisma.TaskGetPayload<{
 }>
 
 export const transformTask = (task: TaskInclude, locale: string) => {
+  const project =
+    task.project != null
+      ? {
+          name:
+            locale === "ar" ? task.project.nameAr : task.project.nameEn,
+          description:
+            locale === "ar"
+              ? task.project.descriptionAr
+              : task.project.descriptionEn,
+        }
+      : null
+
   return {
     id: task.id,
     title: task.title,
@@ -54,13 +66,7 @@ export const transformTask = (task: TaskInclude, locale: string) => {
       name: locale === "ar" ? task.status.nameAr : task.status.nameEn,
       color: task.status.color,
     },
-    project: {
-      name: locale === "ar" ? task.project.nameAr : task.project.nameEn,
-      description:
-        locale === "ar"
-          ? task.project.descriptionAr
-          : task.project.descriptionEn,
-    },
+    project,
     assignedTo: task.assignedTo,
   }
 }

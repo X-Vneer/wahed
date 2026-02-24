@@ -43,10 +43,12 @@ export async function POST(request: NextRequest) {
     const data = validationResult.data
 
     const [project, status, categories, users, maxOrder] = await Promise.all([
-      db.project.findUnique({
-        where: { id: data.projectId },
-        select: { id: true },
-      }),
+      data.projectId
+        ? db.project.findUnique({
+            where: { id: data.projectId },
+            select: { id: true },
+          })
+        : Promise.resolve(null),
       db.taskStatus.findUnique({
         where: { id: data.statusId },
         select: { id: true },
@@ -64,12 +66,12 @@ export async function POST(request: NextRequest) {
           })
         : Promise.resolve([]),
       db.task.aggregate({
-        where: { projectId: data.projectId },
+        where: { projectId: data.projectId ?? null },
         _max: { order: true },
       }),
     ])
 
-    if (!project) {
+    if (data.projectId && !project) {
       return NextResponse.json(
         { error: t("projects.errors.not_found") },
         { status: 404 }
@@ -109,7 +111,7 @@ export async function POST(request: NextRequest) {
       data: {
         title: data.title,
         description: data.description ?? null,
-        projectId: data.projectId,
+        projectId: data.projectId ?? null,
         statusId: data.statusId,
         ...(data.statusId === TASK_STATUS_ID_IN_PROGRESS && {
           startedAt: new Date(),

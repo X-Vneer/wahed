@@ -51,7 +51,7 @@ import { toast } from "sonner"
 type TaskDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  projectId: string
+  projectId: string | null
   task?: Task | null
 }
 
@@ -61,7 +61,7 @@ type SubTaskFormValue = {
 }
 
 type TaskFormValues = Omit<CreateTaskInput, "subTasks" | "projectId"> & {
-  projectId: string
+  projectId: string | null
   subTasks: SubTaskFormValue[]
 }
 
@@ -95,7 +95,7 @@ export function TaskDialog({
     initialValues: {
       title: "",
       description: "",
-      projectId: projectId,
+      projectId: projectId ?? null,
       statusId: "",
       categoryIds: [],
       estimatedWorkingDays: undefined,
@@ -118,7 +118,7 @@ export function TaskDialog({
       form.setValues({
         title: taskToEdit.title,
         description: taskToEdit.description ?? "",
-        projectId,
+        projectId: projectId ?? null,
         statusId: taskToEdit.status.id,
         categoryIds: taskToEdit.category.map((c) => c.id),
         estimatedWorkingDays: taskToEdit.estimatedWorkingDays ?? undefined,
@@ -135,7 +135,7 @@ export function TaskDialog({
       form.setValues({
         title: "",
         description: "",
-        projectId,
+        projectId: projectId ?? null,
         statusId: "",
         categoryIds: [],
         estimatedWorkingDays: undefined,
@@ -166,9 +166,15 @@ export function TaskDialog({
 
         await apiClient.patch(`/api/tasks/${taskToEdit.id}`, payload)
 
-        queryClient.invalidateQueries({
-          queryKey: ["project-tasks", values.projectId],
-        })
+        if (values.projectId) {
+          queryClient.invalidateQueries({
+            queryKey: ["project-tasks", values.projectId],
+          })
+        } else {
+          queryClient.invalidateQueries({
+            queryKey: ["general-tasks"],
+          })
+        }
 
         toast.success(
           t("tasks.success.updated", {
@@ -182,7 +188,7 @@ export function TaskDialog({
       const payload: CreateTaskInput = {
         title: values.title,
         description: values.description || undefined,
-        projectId: values.projectId,
+        projectId: values.projectId ?? null,
         statusId: values.statusId,
         categoryIds: values.categoryIds ?? [],
         estimatedWorkingDays:
@@ -205,9 +211,15 @@ export function TaskDialog({
 
       await apiClient.post("/api/tasks", payload)
 
-      queryClient.invalidateQueries({
-        queryKey: ["project-tasks", values.projectId],
-      })
+      if (values.projectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["project-tasks", values.projectId],
+        })
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: ["general-tasks"],
+        })
+      }
 
       toast.success(
         t("tasks.success.created", {

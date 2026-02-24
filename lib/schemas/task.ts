@@ -32,7 +32,11 @@ export type UpdateSubTaskInput = z.infer<typeof updateSubTaskSchema>
 export const createTaskSchema = z.object({
   title: z.string().min(1, { message: "tasks.errors.title_required" }),
   description: z.string().optional(),
-  projectId: z.string().min(1, { message: "tasks.errors.project_required" }),
+  projectId: z
+    .string()
+    .min(1, { message: "tasks.errors.project_required" })
+    .optional()
+    .nullable(),
   statusId: z.string().min(1, { message: "tasks.errors.status_required" }),
   categoryIds: z.array(z.string().min(1)).optional().default([]),
   estimatedWorkingDays: z.coerce.number().int().nonnegative().optional(),
@@ -77,7 +81,11 @@ export type UpdateTaskAssigneesInput = z.infer<
 >
 
 export const importTasksFromTemplatesSchema = z.object({
-  projectId: z.string().min(1, { message: "tasks.errors.project_required" }),
+  projectId: z
+    .string()
+    .min(1, { message: "tasks.errors.project_required" })
+    .optional()
+    .nullable(),
   templateIds: z
     .array(z.string().min(1))
     .min(1, { message: "tasks.errors.templates_required" }),
