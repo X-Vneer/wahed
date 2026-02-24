@@ -958,7 +958,12 @@
     "filterWorkingDaysHas": "لها تقدير",
     "filterWorkingDaysNone": "بدون تقدير",
     "filterQueryPlaceholder": "بحث...",
-    "noDocumentsAttached": "لا توجد وثائق"
+    "noDocumentsAttached": "لا توجد وثائق",
+    "generalCard": {
+      "title": "مهام عامة",
+      "description": "مهام غير مرتبطة بأي مشروع.",
+      "viewTasks": "عرض المهام"
+    }
   },
   "taskPage": {
     "subTasks": "المهام الفرعية",

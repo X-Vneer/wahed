@@ -185,8 +185,8 @@ export function TaskCard({ task, className }: TaskCardProps) {
           </div>
         </div>
 
-        {/* Project name */}
-        {task.project.name && (
+        {/* Project name (may be absent for general/non-project tasks) */}
+        {task.project?.name && (
           <p className="text-muted-foreground text-sm">{task.project.name}</p>
         )}
 

@@ -958,7 +958,12 @@
     "filterWorkingDaysHas": "Has estimate",
     "filterWorkingDaysNone": "No estimate",
     "filterQueryPlaceholder": "Search...",
-    "noDocumentsAttached": "No documents"
+    "noDocumentsAttached": "No documents",
+    "generalCard": {
+      "title": "General tasks",
+      "description": "Tasks that are not linked to any project.",
+      "viewTasks": "View tasks"
+    }
   },
   "taskPage": {
     "subTasks": "Sub-tasks",

@@ -37,7 +37,7 @@ import { toast } from "sonner"
 type TaskTemplateImportDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  projectId: string
+  projectId: string | null
 }
 
 export function TaskTemplateImportDialog({
@@ -104,12 +104,6 @@ export function TaskTemplateImportDialog({
       setSubmitting(true)
       setRootError(null)
 
-      if (!projectId) {
-        setRootError(t("tasks.errors.project_required"))
-        setSubmitting(false)
-        return
-      }
-
       if (selectedTemplateIds.length === 0) {
         setRootError(t("tasks.errors.templates_required", { default: "" }))
         setSubmitting(false)
@@ -117,16 +111,22 @@ export function TaskTemplateImportDialog({
       }
 
       const payload = {
-        projectId,
+        projectId: projectId ?? null,
         templateIds: selectedTemplateIds,
         statusId: statusId || undefined,
       }
 
       await apiClient.post("/api/tasks/import-from-templates", payload)
 
-      await queryClient.invalidateQueries({
-        queryKey: ["project-tasks", projectId],
-      })
+      if (projectId) {
+        await queryClient.invalidateQueries({
+          queryKey: ["project-tasks", projectId],
+        })
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ["general-tasks"],
+        })
+      }
 
       toast.success(
         t("tasks.success.importedFromTemplates", {

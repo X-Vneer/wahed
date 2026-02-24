@@ -13,6 +13,7 @@ import { useProjects } from "@/hooks/use-projects"
 import { useUserData } from "@/hooks/use-user-data"
 import { UserRole } from "@/lib/generated/prisma/enums"
 import { useTranslations } from "next-intl"
+import { GeneralTasksCard } from "./_components/general-tasks-card"
 import { TaskProjectCard } from "./_components/task-project-card"
 
 const TasksPage = () => {
@@ -58,21 +59,12 @@ const TasksPage = () => {
       )}
 
       {!isLoading && !error && (
-        <>
-          {projects.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project) => (
-                <TaskProjectCard key={project.id} project={project} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex items-center justify-center py-12">
-              <p className="text-muted-foreground text-sm">
-                {tProjects("noProjects")}
-              </p>
-            </div>
-          )}
-        </>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
+            <TaskProjectCard key={project.id} project={project} />
+          ))}
+          <GeneralTasksCard />
+        </div>
       )}
     </div>
   )
