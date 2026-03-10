@@ -6,32 +6,31 @@ import { useTranslations, useLocale } from "next-intl"
 import { format } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import apiClient from "@/services"
-
-type UpdateUserPayload = {
-  id: string
-  data: Partial<User>
-}
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ActivitySwitch } from "./activity-switch"
 
 export const useEmployeesColumns = () => {
   const t = useTranslations()
   const locale = useLocale()
-  const queryClient = useQueryClient()
-
-  const updateUserMutation = useMutation({
-    mutationFn: async ({ id, data }: UpdateUserPayload) => {
-      const response = await apiClient.put(`/api/users/${id}`, data)
-      return response.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] })
-      queryClient.invalidateQueries({ queryKey: ["employees"] })
-    },
-  })
 
   const columns: ColumnDef<User>[] = [
+    {
+      id: "avatar",
+      header: "",
+      cell: ({ row }) => {
+        const user = row.original
+        const nameInitial = user.name?.charAt(0).toUpperCase() ?? "?"
+
+        return (
+          <Avatar size="sm">
+            {user.image ? (
+              <AvatarImage src={user.image} alt={user.name ?? ""} />
+            ) : null}
+            <AvatarFallback>{nameInitial}</AvatarFallback>
+          </Avatar>
+        )
+      },
+    },
     {
       accessorKey: "name",
       header: t("employees.table.name"),
@@ -69,20 +68,7 @@ export const useEmployeesColumns = () => {
       header: t("employees.table.activity"),
       cell: ({ row }) => {
         const user = row.original
-
-        return (
-          <Switch
-            checked={!!user.isActive}
-            disabled={updateUserMutation.isPending}
-            onCheckedChange={(checked) => {
-              updateUserMutation.mutate({
-                id: user.id,
-                data: { isActive: checked },
-              })
-            }}
-            aria-label={t("employees.table.activity")}
-          />
-        )
+        return <ActivitySwitch userId={user.id} isActive={user.isActive} />
       },
     },
     {
@@ -103,4 +89,3 @@ export const useEmployeesColumns = () => {
 
   return columns
 }
-

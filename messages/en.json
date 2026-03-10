@@ -264,6 +264,11 @@
       "user_created": "User created successfully",
       "user_updated": "User updated successfully"
     },
+    "changePassword": {
+      "title": "Change Password",
+      "newPassword": "New Password",
+      "save": "Save"
+    },
     "table": {
       "name": "Name",
       "email": "Email",

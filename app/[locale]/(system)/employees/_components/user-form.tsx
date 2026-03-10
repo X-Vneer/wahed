@@ -277,45 +277,47 @@ export function UserForm({ selectedUser, onSuccess }: UserFormProps) {
           </Field>
         </div>
 
-        <div className="grid-cols-2 gap-4 md:grid">
-          {/* Password */}
-          <Field data-invalid={!!form.errors.password}>
-            <FieldLabel htmlFor="password">
-              {t("employees.form.password")}
-            </FieldLabel>
-            <Input
-              type="password"
-              id="password"
-              {...form.getInputProps("password")}
-              placeholder="••••••••"
-              aria-invalid={!!form.errors.password}
-            />
-            {form.errors.password && (
-              <FieldError
-                errors={[{ message: String(form.errors.password) }]}
+        {!selectedUser && (
+          <div className="grid-cols-2 gap-4 md:grid">
+            {/* Password */}
+            <Field data-invalid={!!form.errors.password}>
+              <FieldLabel htmlFor="password">
+                {t("employees.form.password")}
+              </FieldLabel>
+              <Input
+                type="password"
+                id="password"
+                {...form.getInputProps("password")}
+                placeholder="••••••••"
+                aria-invalid={!!form.errors.password}
               />
-            )}
-          </Field>
+              {form.errors.password && (
+                <FieldError
+                  errors={[{ message: String(form.errors.password) }]}
+                />
+              )}
+            </Field>
 
-          {/* Confirm Password */}
-          <Field data-invalid={!!form.errors.confirmPassword}>
-            <FieldLabel htmlFor="confirmPassword">
-              {t("employees.form.confirmPassword")}
-            </FieldLabel>
-            <Input
-              type="password"
-              id="confirmPassword"
-              {...form.getInputProps("confirmPassword")}
-              placeholder="••••••••"
-              aria-invalid={!!form.errors.confirmPassword}
-            />
-            {form.errors.confirmPassword && (
-              <FieldError
-                errors={[{ message: String(form.errors.confirmPassword) }]}
+            {/* Confirm Password */}
+            <Field data-invalid={!!form.errors.confirmPassword}>
+              <FieldLabel htmlFor="confirmPassword">
+                {t("employees.form.confirmPassword")}
+              </FieldLabel>
+              <Input
+                type="password"
+                id="confirmPassword"
+                {...form.getInputProps("confirmPassword")}
+                placeholder="••••••••"
+                aria-invalid={!!form.errors.confirmPassword}
               />
-            )}
-          </Field>
-        </div>
+              {form.errors.confirmPassword && (
+                <FieldError
+                  errors={[{ message: String(form.errors.confirmPassword) }]}
+                />
+              )}
+            </Field>
+          </div>
+        )}
 
         <div className="grid-cols-2 gap-4 md:grid">
           {/* Date of Birth */}

@@ -178,6 +178,69 @@ export async function PUT(
   }
 }
 
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations({ locale })
+
+  try {
+    const permissionCheck = await hasPermission(
+      PERMISSIONS_GROUPED.STAFF.MANAGEMENT
+    )
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
+    const { id } = await params
+    const body = await request.json()
+    const { password } = body as { password?: string }
+
+    if (!password || typeof password !== "string" || password.trim().length < 8) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.password.minLength"),
+        },
+        { status: 400 }
+      )
+    }
+
+    const existingUser = await db.user.findUnique({
+      where: { id },
+    })
+
+    if (!existingUser) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.user_not_found"),
+        },
+        { status: 404 }
+      )
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await db.user.update({
+      where: { id },
+      data: {
+        password: hashedPassword,
+      },
+    })
+
+    return NextResponse.json(
+      { message: t("employees.success.user_updated") },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error("Error updating user password:", error)
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

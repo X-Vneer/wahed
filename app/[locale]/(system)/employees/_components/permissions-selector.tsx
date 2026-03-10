@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { PERMISSIONS_GROUPED, type Permission } from "@/config"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -71,6 +72,14 @@ export function PermissionsSelector({
   const allPermissionKeys = permissionGroups.flatMap((group) =>
     group.permissions.map((p) => String(p.key))
   )
+
+  // Ensure "Allow All" is selected when all permissions are selected (e.g. on edit)
+  useEffect(() => {
+    const shouldAllowAll = permissions.length === allPermissionKeys.length
+    if (shouldAllowAll !== allowAllPermissions) {
+      onAllowAllChange(shouldAllowAll)
+    }
+  }, [permissions, allPermissionKeys.length, allowAllPermissions, onAllowAllChange])
 
   const handleAllowAllPermissionsChange = (checked: boolean) => {
     onAllowAllChange(checked)
