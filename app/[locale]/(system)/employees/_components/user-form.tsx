@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import Uploader from "@/components/uploader"
-import { Gender } from "@/lib/generated/prisma/enums"
+import { Gender, UserRole } from "@/lib/generated/prisma/enums"
 import { handleFormErrors } from "@/lib/handle-form-errors"
 import { createUserSchema, updateUserSchema } from "@/lib/schemas/user"
 import type { User } from "@/prisma/users/select"
@@ -44,6 +44,7 @@ import { useEffect, useMemo, useState } from "react"
 import type { Value as PhoneValue } from "react-phone-number-input"
 import { toast } from "sonner"
 import { PermissionsSelector } from "./permissions-selector"
+import { useUserData } from "@/hooks/use-user-data"
 
 type UserFormProps = {
   selectedUser: User | null
@@ -54,6 +55,7 @@ export function UserForm({ selectedUser, onSuccess }: UserFormProps) {
   const t = useTranslations()
   const locale = useLocale()
   const [datePickerOpen, setDatePickerOpen] = useState(false)
+  const { data: currentUser } = useUserData()
 
   //   selected user
   const [, setSelectedUserId] = useQueryState(
@@ -73,6 +75,7 @@ export function UserForm({ selectedUser, onSuccess }: UserFormProps) {
       name: "",
       phone: "",
       roleName: "",
+      role: UserRole.STAFF as UserRole,
       email: "",
       password: "",
       confirmPassword: "",
@@ -98,9 +101,11 @@ export function UserForm({ selectedUser, onSuccess }: UserFormProps) {
         email: selectedUser.email,
         phone: selectedUser.phone || "",
         roleName: selectedUser.roleName || "",
+        role: selectedUser.role,
         password: "",
         confirmPassword: "",
-        permissions: selectedUser.permissions,
+        permissions:
+          selectedUser.role === UserRole.ADMIN ? [] : selectedUser.permissions,
         allowAllPermissions: false,
         dateOfBirth: selectedUser.dateOfBirth
           ? new Date(selectedUser.dateOfBirth)
@@ -265,6 +270,7 @@ export function UserForm({ selectedUser, onSuccess }: UserFormProps) {
             </FieldLabel>
             <Input
               id="roleName"
+              key={form.key("roleName")}
               {...form.getInputProps("roleName")}
               placeholder={t("employees.form.jobTitlePlaceholder")}
               aria-invalid={!!form.errors.roleName}
@@ -276,6 +282,38 @@ export function UserForm({ selectedUser, onSuccess }: UserFormProps) {
             )}
           </Field>
         </div>
+
+        {/* Role (staff/admin) - only visible to admins */}
+        {currentUser?.role === UserRole.ADMIN && (
+          <div className="grid-cols-2 gap-4 md:grid">
+            <Field data-invalid={!!form.errors.role}>
+              <FieldLabel htmlFor="role">{t("employees.form.role")}</FieldLabel>
+              <Select
+                value={form.values.role}
+                onValueChange={(value) => {
+                  const roleValue = value as UserRole
+                  form.setFieldValue("role", roleValue)
+
+                  if (roleValue === UserRole.ADMIN) {
+                    form.setFieldValue("permissions", [])
+                    form.setFieldValue("allowAllPermissions", false)
+                  }
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={UserRole.STAFF}>STAFF</SelectItem>
+                  <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+                </SelectContent>
+              </Select>
+              {form.errors.role && (
+                <FieldError errors={[{ message: String(form.errors.role) }]} />
+              )}
+            </Field>
+          </div>
+        )}
 
         {!selectedUser && (
           <div className="grid-cols-2 gap-4 md:grid">
@@ -484,17 +522,19 @@ export function UserForm({ selectedUser, onSuccess }: UserFormProps) {
           </div>
         </Field>
 
-        {/* Permissions Section */}
-        <PermissionsSelector
-          permissions={form.values.permissions}
-          allowAllPermissions={form.values.allowAllPermissions}
-          onPermissionsChange={(newPermissions) => {
-            form.setFieldValue("permissions", newPermissions)
-          }}
-          onAllowAllChange={(checked) => {
-            form.setFieldValue("allowAllPermissions", checked)
-          }}
-        />
+        {/* Permissions Section - hidden for admin role */}
+        {form.values.role !== UserRole.ADMIN && (
+          <PermissionsSelector
+            permissions={form.values.permissions}
+            allowAllPermissions={form.values.allowAllPermissions}
+            onPermissionsChange={(newPermissions) => {
+              form.setFieldValue("permissions", newPermissions)
+            }}
+            onAllowAllChange={(checked) => {
+              form.setFieldValue("allowAllPermissions", checked)
+            }}
+          />
+        )}
       </FieldGroup>
 
       {/* Server Error Message */}

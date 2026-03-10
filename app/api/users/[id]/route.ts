@@ -63,6 +63,18 @@ export async function PUT(
       )
     }
 
+    const payload = await getAccessTokenPayload()
+    const currentRole = payload?.role
+
+    if (existingUser.role === UserRole.ADMIN && currentRole !== UserRole.ADMIN) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.cannot_edit_admin"),
+        },
+        { status: 403 }
+      )
+    }
+
     // Check if email is being changed and if the new email already exists
     if (data.email !== existingUser.email) {
       const emailExists = await db.user.findUnique({
@@ -83,11 +95,48 @@ export async function PUT(
     }
 
     // Prepare update data
+    const targetRole = data.role ?? existingUser.role
+
+    if (
+      existingUser.role === UserRole.ADMIN &&
+      targetRole !== existingUser.role
+    ) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.cannot_change_admin_role"),
+        },
+        { status: 403 }
+      )
+    }
+
+    if (
+      existingUser.role !== UserRole.ADMIN &&
+      targetRole === UserRole.ADMIN &&
+      currentRole !== UserRole.ADMIN
+    ) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.cannot_create_admin"),
+        },
+        { status: 403 }
+      )
+    }
+
+    if (payload?.userId === id && data.isActive === false) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.cannot_deactivate_self"),
+        },
+        { status: 403 }
+      )
+    }
+
     const updateData: {
       name: string
       email: string
       phone: string | null
       roleName: string | null
+      role: UserRole
       dateOfBirth: Date | null
       gender?: Gender
       nationality: string | null
@@ -102,6 +151,7 @@ export async function PUT(
       email: data.email,
       phone: data.phone || null,
       roleName: data.roleName || null,
+      role: targetRole,
       dateOfBirth: data.dateOfBirth || null,
       nationality: data.nationality || null,
       address: data.address || null,
@@ -273,18 +323,9 @@ export async function DELETE(
       )
     }
 
-    // Prevent deleting admin users
-    if (existingUser.role === UserRole.ADMIN) {
-      return NextResponse.json(
-        {
-          error: t("employees.errors.cannot_delete_admin"),
-        },
-        { status: 403 }
-      )
-    }
+    const payload = await getAccessTokenPayload()
 
     // Prevent users from deleting themselves
-    const payload = await getAccessTokenPayload()
     if (payload && payload.userId === id) {
       return NextResponse.json(
         {
@@ -292,6 +333,32 @@ export async function DELETE(
         },
         { status: 403 }
       )
+    }
+
+    if (existingUser.role === UserRole.ADMIN) {
+      if (payload?.role !== UserRole.ADMIN) {
+        return NextResponse.json(
+          {
+            error: t("employees.errors.cannot_delete_admin"),
+          },
+          { status: 403 }
+        )
+      }
+
+      const firstAdmin = await db.user.findFirst({
+        where: { role: UserRole.ADMIN },
+        orderBy: { createdAt: "asc" },
+        select: { id: true },
+      })
+
+      if (firstAdmin && firstAdmin.id === existingUser.id) {
+        return NextResponse.json(
+          {
+            error: t("employees.errors.cannot_delete_first_admin"),
+          },
+          { status: 403 }
+        )
+      }
     }
 
     // Delete user (cascade will handle related permissions)

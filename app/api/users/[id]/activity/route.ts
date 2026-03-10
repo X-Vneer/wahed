@@ -5,6 +5,7 @@ import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { transformUser, userSelect } from "@/prisma/users/select"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 
 export async function PATCH(
   request: NextRequest,
@@ -34,6 +35,17 @@ export async function PATCH(
           },
         },
         { status: 400 }
+      )
+    }
+
+    const payload = await getAccessTokenPayload()
+
+    if (payload?.userId === id && isActive === false) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.cannot_deactivate_self"),
+        },
+        { status: 403 }
       )
     }
 

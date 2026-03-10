@@ -28,6 +28,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "sonner"
+import { useUserData } from "@/hooks/use-user-data"
 
 interface EmployeesActionsColumnProps {
   onEdit: (user: User) => void
@@ -44,6 +45,8 @@ function ActionsCell({ user, onEdit }: ActionsCellProps) {
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
   const [newPassword, setNewPassword] = useState("")
   const queryClient = useQueryClient()
+  const { data: currentUser } = useUserData()
+  const isSelf = currentUser?.id === user.id
 
   const deleteMutation = useMutation({
     mutationFn: async (userId: string) => {
@@ -73,7 +76,7 @@ function ActionsCell({ user, onEdit }: ActionsCellProps) {
       setNewPassword("")
       toast.success(t("employees.success.user_updated"))
     },
-    onError: (error: any) => {
+    onError: (error) => {
       const message =
         error?.response?.data?.error ?? t("errors.internal_server_error")
       toast.error(message)
@@ -108,15 +111,17 @@ function ActionsCell({ user, onEdit }: ActionsCellProps) {
         >
           <KeyRound className="size-4" />
         </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => setDeleteDialogOpen(true)}
-          aria-label="Delete"
-          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-        >
-          <Trash2 className="size-4" />
-        </Button>
+        {!isSelf && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => setDeleteDialogOpen(true)}
+            aria-label="Delete"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="size-4" />
+          </Button>
+        )}
       </div>
 
       <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
@@ -214,4 +219,3 @@ export function useEmployeesActionsColumn({
     },
   }
 }
-

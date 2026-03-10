@@ -9,6 +9,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { getReqLocale } from "@/utils/get-req-locale"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 
 export async function GET(request: NextRequest) {
   const locale = await getReqLocale(request)
@@ -34,15 +35,8 @@ export async function GET(request: NextRequest) {
               { name: { contains: search, mode: "insensitive" } },
               { email: { contains: search, mode: "insensitive" } },
             ],
-            role: {
-              not: UserRole.ADMIN,
-            },
           }
-        : {
-            role: {
-              not: UserRole.ADMIN,
-            },
-          },
+        : {},
       select: userSelect,
       orderBy: {
         createdAt: "desc",
@@ -94,6 +88,20 @@ export async function POST(request: NextRequest) {
 
     const data = validationResult.data
 
+    const payload = await getAccessTokenPayload()
+    const currentRole = payload?.role
+
+    const targetRole = data.role ?? UserRole.STAFF
+
+    if (targetRole === UserRole.ADMIN && currentRole !== UserRole.ADMIN) {
+      return NextResponse.json(
+        {
+          error: t("employees.errors.cannot_create_admin"),
+        },
+        { status: 403 }
+      )
+    }
+
     // Check if user already exists
     const existingUser = await db.user.findUnique({
       where: { email: data.email },
@@ -129,6 +137,7 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         phone: data.phone || null,
         roleName: data.roleName || null,
+        role: targetRole,
         dateOfBirth: data.dateOfBirth || null,
         gender: data.gender,
         nationality: data.nationality || null,

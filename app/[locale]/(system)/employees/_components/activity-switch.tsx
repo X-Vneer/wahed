@@ -5,6 +5,7 @@ import apiClient from "@/services"
 import { toast } from "sonner"
 import type { User } from "@/prisma/users/select"
 import type { TableQueryResponse } from "@/components/table/table"
+import { useUserData } from "@/hooks/use-user-data"
 
 type ToggleActivityPayload = {
   id: string
@@ -19,6 +20,8 @@ type ActivitySwitchProps = {
 export const ActivitySwitch = ({ userId, isActive }: ActivitySwitchProps) => {
   const t = useTranslations()
   const queryClient = useQueryClient()
+  const { data: currentUser } = useUserData()
+  const isSelf = currentUser?.id === userId
 
   const updateUserMutation = useMutation({
     mutationFn: async ({ id, isActive }: ToggleActivityPayload) => {
@@ -30,10 +33,11 @@ export const ActivitySwitch = ({ userId, isActive }: ActivitySwitchProps) => {
     onMutate: async ({ id, isActive }: ToggleActivityPayload) => {
       await queryClient.cancelQueries({ queryKey: ["employees"] })
 
-      const previousEmployees =
-        queryClient.getQueriesData<TableQueryResponse<User>>({
-          queryKey: ["employees"],
-        })
+      const previousEmployees = queryClient.getQueriesData<
+        TableQueryResponse<User>
+      >({
+        queryKey: ["employees"],
+      })
 
       queryClient.setQueriesData<TableQueryResponse<User>>(
         { queryKey: ["employees"] },
@@ -75,6 +79,10 @@ export const ActivitySwitch = ({ userId, isActive }: ActivitySwitchProps) => {
       queryClient.invalidateQueries({ queryKey: ["employees"] })
     },
   })
+
+  if (isSelf) {
+    return null
+  }
 
   return (
     <Switch
