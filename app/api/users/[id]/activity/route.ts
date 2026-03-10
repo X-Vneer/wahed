@@ -6,6 +6,7 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
+import { UserRole } from "@/lib/generated/prisma/enums"
 
 export async function PATCH(
   request: NextRequest,
@@ -60,6 +61,24 @@ export async function PATCH(
         },
         { status: 404 }
       )
+    }
+
+    // Prevent deactivating the first admin user
+    if (existingUser.role === UserRole.ADMIN && isActive === false) {
+      const firstAdmin = await db.user.findFirst({
+        where: { role: UserRole.ADMIN },
+        orderBy: { createdAt: "asc" },
+        select: { id: true },
+      })
+
+      if (firstAdmin && firstAdmin.id === existingUser.id) {
+        return NextResponse.json(
+          {
+            error: t("employees.errors.cannot_deactivate_first_admin"),
+          },
+          { status: 403 }
+        )
+      }
     }
 
     const user = await db.user.update({

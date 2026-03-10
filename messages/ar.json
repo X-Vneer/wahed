@@ -262,6 +262,7 @@
       "cannot_edit_admin": "فقط المدير يمكنه تعديل بيانات المديرين",
       "cannot_change_admin_role": "لا يمكن تغيير دور المدير",
       "cannot_delete_first_admin": "لا يمكن حذف أول مستخدم مدير في النظام",
+      "cannot_deactivate_first_admin": "لا يمكن إلغاء تفعيل أول مستخدم مدير في النظام",
       "internal_server_error": "خطأ في الخادم الداخلي"
     },
     "success": {

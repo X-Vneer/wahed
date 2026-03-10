@@ -262,6 +262,7 @@
       "cannot_edit_admin": "Only admins can edit admin users",
       "cannot_change_admin_role": "Admin role cannot be changed",
       "cannot_delete_first_admin": "The first admin user cannot be deleted",
+      "cannot_deactivate_first_admin": "The first admin user cannot be deactivated",
       "internal_server_error": "Internal server error"
     },
     "success": {

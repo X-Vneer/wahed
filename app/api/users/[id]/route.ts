@@ -131,6 +131,27 @@ export async function PUT(
       )
     }
 
+    // Prevent deactivating the first admin user
+    if (
+      existingUser.role === UserRole.ADMIN &&
+      data.isActive === false
+    ) {
+      const firstAdmin = await db.user.findFirst({
+        where: { role: UserRole.ADMIN },
+        orderBy: { createdAt: "asc" },
+        select: { id: true },
+      })
+
+      if (firstAdmin && firstAdmin.id === existingUser.id) {
+        return NextResponse.json(
+          {
+            error: t("employees.errors.cannot_deactivate_first_admin"),
+          },
+          { status: 403 }
+        )
+      }
+    }
+
     const updateData: {
       name: string
       email: string
