@@ -1,6 +1,6 @@
 import * as z from "zod/v4"
 import { isValidPhoneNumber } from "libphonenumber-js"
-import { Gender } from "@/lib/generated/prisma/enums"
+import { Gender, UserRole } from "@/lib/generated/prisma/enums"
 
 // User form schema - matches the frontend form validation
 // Error messages are translation keys that should be translated when displaying errors
@@ -35,6 +35,7 @@ export const createUserSchema = z
     country: z.string().optional().nullable(),
     image: z.string().optional().nullable(),
     isActive: z.boolean().optional(),
+    role: z.enum(UserRole).optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     error: "employees.errors.confirmPassword.mismatch",
@@ -74,6 +75,7 @@ export const updateUserSchema = z
     country: z.string().optional().nullable(),
     image: z.string().optional().nullable(),
     isActive: z.boolean().optional(),
+    role: z.enum(UserRole).optional(),
   })
   .refine(
     (data) => {

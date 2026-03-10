@@ -257,6 +257,12 @@
       "fetch_permissions_failed": "Failed to fetch permissions",
       "cannot_delete_admin": "Cannot delete admin user",
       "cannot_delete_self": "You cannot delete your own account",
+      "cannot_deactivate_self": "You cannot deactivate your own account",
+      "cannot_create_admin": "Only admins can create or promote admin users",
+      "cannot_edit_admin": "Only admins can edit admin users",
+      "cannot_change_admin_role": "Admin role cannot be changed",
+      "cannot_delete_first_admin": "The first admin user cannot be deleted",
+      "cannot_deactivate_first_admin": "The first admin user cannot be deactivated",
       "internal_server_error": "Internal server error"
     },
     "success": {
@@ -264,6 +270,28 @@
       "user_created": "User created successfully",
       "user_updated": "User updated successfully"
     },
+    "changePassword": {
+      "title": "Change Password",
+      "newPassword": "New Password",
+      "save": "Save"
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "roleName": "Job Title",
+      "createdAt": "Created At",
+      "activity": "Activity",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "createTitle": "Create User",
+    "editTitle": "Edit User",
+    "no_employees_found": "No employees found",
     "deleteConfirm": {
       "title": "Delete Staff Member",
       "description": "Are you sure you want to delete {name}? This action cannot be undone.",

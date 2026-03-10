@@ -257,6 +257,12 @@
       "fetch_permissions_failed": "فشل في جلب الصلاحيات",
       "cannot_delete_admin": "لا يمكن حذف مستخدم المسؤول",
       "cannot_delete_self": "لا يمكنك حذف حسابك الخاص",
+      "cannot_deactivate_self": "لا يمكنك إلغاء تفعيل حسابك الخاص",
+      "cannot_create_admin": "فقط المدير يمكنه إنشاء أو ترقية مستخدم إلى مدير",
+      "cannot_edit_admin": "فقط المدير يمكنه تعديل بيانات المديرين",
+      "cannot_change_admin_role": "لا يمكن تغيير دور المدير",
+      "cannot_delete_first_admin": "لا يمكن حذف أول مستخدم مدير في النظام",
+      "cannot_deactivate_first_admin": "لا يمكن إلغاء تفعيل أول مستخدم مدير في النظام",
       "internal_server_error": "خطأ في الخادم الداخلي"
     },
     "success": {
@@ -264,6 +270,28 @@
       "user_created": "تم إنشاء المستخدم بنجاح",
       "user_updated": "تم تحديث المستخدم بنجاح"
     },
+    "changePassword": {
+      "title": "تغيير كلمة المرور",
+      "newPassword": "كلمة المرور الجديدة",
+      "save": "حفظ"
+    },
+    "table": {
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "roleName": "المسمى الوظيفي",
+      "createdAt": "تاريخ الإنشاء",
+      "activity": "النشاط",
+      "status": "الحالة",
+      "actions": "إجراءات"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "createTitle": "إنشاء مستخدم",
+    "editTitle": "تعديل مستخدم",
+    "no_employees_found": "لم يتم العثور على مستخدمين",
     "deleteConfirm": {
       "title": "حذف عضو الموظفين",
       "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
