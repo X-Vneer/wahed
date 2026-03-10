@@ -264,6 +264,23 @@
       "user_created": "تم إنشاء المستخدم بنجاح",
       "user_updated": "تم تحديث المستخدم بنجاح"
     },
+    "table": {
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "roleName": "المسمى الوظيفي",
+      "createdAt": "تاريخ الإنشاء",
+      "activity": "النشاط",
+      "status": "الحالة",
+      "actions": "إجراءات"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "createTitle": "إنشاء مستخدم",
+    "editTitle": "تعديل مستخدم",
+    "no_employees_found": "لم يتم العثور على مستخدمين",
     "deleteConfirm": {
       "title": "حذف عضو الموظفين",
       "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",

@@ -264,6 +264,23 @@
       "user_created": "User created successfully",
       "user_updated": "User updated successfully"
     },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "roleName": "Job Title",
+      "createdAt": "Created At",
+      "activity": "Activity",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "createTitle": "Create User",
+    "editTitle": "Edit User",
+    "no_employees_found": "No employees found",
     "deleteConfirm": {
       "title": "Delete Staff Member",
       "description": "Are you sure you want to delete {name}? This action cannot be undone.",
