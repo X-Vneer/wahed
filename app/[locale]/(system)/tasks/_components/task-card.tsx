@@ -5,11 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress, ProgressValue } from "@/components/ui/progress"
-import {
-  PERMISSIONS_GROUPED,
-  TASK_STATUS_ID_IN_PROGRESS,
-  TASK_STATUS_ID_PENDING,
-} from "@/config"
+import { TASK_STATUS_ID_IN_PROGRESS, TASK_STATUS_ID_PENDING } from "@/config"
 import { useToggleTaskDone } from "@/hooks/use-toggle-task-done"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
@@ -26,7 +22,6 @@ import {
 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { TaskStatusDropdown } from "./task-status-dropdown"
-import { usePermission } from "@/hooks/use-permission"
 
 export type TaskCardData = Task
 type TaskCardProps = {
@@ -176,6 +171,7 @@ export function TaskCard({ task, className }: TaskCardProps) {
             ) : null}
             <TaskStatusDropdown task={task} />
             <Button
+              nativeButton={false}
               variant="ghost"
               size="icon"
               render={<Link href={`/task/${task.id}`} />}

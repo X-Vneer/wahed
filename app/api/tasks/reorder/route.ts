@@ -14,9 +14,7 @@ const reorderSchema = z.object({
 
 export async function PATCH(request: NextRequest) {
   try {
-    const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.TASK.UPDATE
-    )
+    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
     if (!permissionCheck.hasPermission) {
       return permissionCheck.error!
     }

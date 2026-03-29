@@ -21,9 +21,9 @@ import { Spinner } from "@/components/ui/spinner"
 import { useGeneralTasks } from "@/hooks/use-general-tasks"
 import type { Task } from "@/prisma/tasks"
 import { useTranslations } from "next-intl"
-import { parseAsBoolean, parseAsString, useQueryStates } from "nuqs"
-import { TaskCard } from "../_components/task-card"
+import { parseAsString, useQueryStates } from "nuqs"
 import { TaskFilters } from "../_components/task-filters"
+import { TaskListWithReorder } from "../_components/task-list-with-reorder"
 import { TaskDialog } from "../_components/task-dialog"
 import { TaskTemplateImportDialog } from "../_components/task-template-import-dialog"
 import { ChevronDown, Plus } from "lucide-react"
@@ -38,7 +38,6 @@ const GeneralTasksPage = () => {
     query: parseAsString.withDefault(""),
     status: parseAsString.withDefault("all"),
     done: parseAsString.withDefault("all"),
-    editMode: parseAsBoolean.withDefault(false),
   })
 
   const { data, isLoading, error } = useGeneralTasks()
@@ -75,7 +74,7 @@ const GeneralTasksPage = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>General tasks</BreadcrumbPage>
+                <BreadcrumbPage>{t("tasks.general-tasks")}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -125,19 +124,15 @@ const GeneralTasksPage = () => {
       {!isLoading && !error && (
         <>
           {allTasks.length > 0 && <TaskFilters />}
-          <div className="flex flex-col gap-3">
-            {filteredTasks.length === 0 ? (
-              <div className="flex justify-center py-12">
-                <p className="text-muted-foreground text-sm">
-                  No general tasks found.
-                </p>
-              </div>
-            ) : (
-              filteredTasks.map((task) => (
-                <TaskCard key={task.id} task={task} />
-              ))
-            )}
-          </div>
+          {filteredTasks.length === 0 ? (
+            <div className="flex justify-center py-12">
+              <p className="text-muted-foreground text-sm">
+                {t("tasks.noGeneralTasksFound")}
+              </p>
+            </div>
+          ) : (
+            <TaskListWithReorder tasks={filteredTasks} projectId={null} />
+          )}
         </>
       )}
 

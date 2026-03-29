@@ -7,6 +7,7 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query"
 import apiClient from "@/services"
+import type { GeneralTasksResponse } from "@/hooks/use-general-tasks"
 import type { Task } from "@/prisma/tasks"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
@@ -75,31 +76,51 @@ export const useDeleteTask = (projectId: string | null) => {
       return response.data
     },
     onMutate: async (taskId) => {
-      if (!projectId) return undefined
-      const queryKey = ["project-tasks", projectId]
+      if (projectId) {
+        const queryKey = ["project-tasks", projectId]
+        await queryClient.cancelQueries({ queryKey })
+        const previous =
+          queryClient.getQueryData<ProjectTasksResponse>(queryKey)
+        queryClient.setQueryData<ProjectTasksResponse>(queryKey, (old) => {
+          if (!old) return old
+          return {
+            ...old,
+            tasks: old.tasks.filter((task) => task.id !== taskId),
+          }
+        })
+        return { previous, scope: "project" as const }
+      }
+
+      const queryKey = ["general-tasks"] as const
       await queryClient.cancelQueries({ queryKey })
-      const previous = queryClient.getQueryData<ProjectTasksResponse>(queryKey)
-      queryClient.setQueryData<ProjectTasksResponse>(queryKey, (old) => {
+      const previous = queryClient.getQueryData<GeneralTasksResponse>(queryKey)
+      queryClient.setQueryData<GeneralTasksResponse>(queryKey, (old) => {
         if (!old) return old
         return {
           ...old,
           tasks: old.tasks.filter((task) => task.id !== taskId),
         }
       })
-      return { previous }
+      return { previous, scope: "general" as const }
     },
     onError: (_err, _taskId, context) => {
-      if (context?.previous && projectId) {
+      if (!context) return
+      if (context.scope === "project" && context.previous && projectId) {
         queryClient.setQueryData(
           ["project-tasks", projectId],
           context.previous
         )
+      }
+      if (context.scope === "general" && context.previous) {
+        queryClient.setQueryData(["general-tasks"], context.previous)
       }
       toast.error(t("deleteError") ?? "Failed to delete task")
     },
     onSuccess: () => {
       if (projectId) {
         queryClient.invalidateQueries({ queryKey: ["project-tasks", projectId] })
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["general-tasks"] })
       }
       toast.success(t("deleteSuccess") ?? "Task deleted")
     },
