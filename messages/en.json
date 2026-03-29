@@ -991,7 +991,9 @@
       "title": "General tasks",
       "description": "Tasks that are not linked to any project.",
       "viewTasks": "View tasks"
-    }
+    },
+    "general-tasks": "General tasks",
+    "noGeneralTasksFound": "No General tasks is found"
   },
   "taskPage": {
     "subTasks": "Sub-tasks",

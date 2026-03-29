@@ -991,7 +991,9 @@
       "title": "مهام عامة",
       "description": "مهام غير مرتبطة بأي مشروع.",
       "viewTasks": "عرض المهام"
-    }
+    },
+    "general-tasks": "المهام العامة",
+    "noGeneralTasksFound": "لم يتم العثور على مهام عامة"
   },
   "taskPage": {
     "subTasks": "المهام الفرعية",

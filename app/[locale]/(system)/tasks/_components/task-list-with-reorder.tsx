@@ -25,7 +25,8 @@ import { PERMISSIONS_GROUPED } from "@/config/permissions"
 
 type TaskListWithReorderProps = {
   tasks: Task[]
-  projectId: string
+  /** When null, edit/delete work; drag-reorder is only available for project tasks. */
+  projectId: string | null
 }
 
 type ReorderTaskItemProps = {
@@ -68,14 +69,16 @@ function ReorderTaskItem({
     >
       {isEditMode && (
         <div className="flex flex-col items-center gap-1">
-          <button
-            type="button"
-            className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex cursor-grab touch-none items-center rounded p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none active:cursor-grabbing"
-            aria-label="Drag to reorder"
-            onPointerDown={handlePointerDown}
-          >
-            <GripVertical className="size-5" />
-          </button>
+          {dragEnabled ? (
+            <button
+              type="button"
+              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex cursor-grab touch-none items-center rounded p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none active:cursor-grabbing"
+              aria-label="Drag to reorder"
+              onPointerDown={handlePointerDown}
+            >
+              <GripVertical className="size-5" />
+            </button>
+          ) : null}
           {canEdit ? (
             <Button
               type="button"
@@ -168,7 +171,9 @@ export function TaskListWithReorder({
   if (tasks.length === 0) {
     return (
       <div className="flex justify-center py-12">
-        <p className="text-muted-foreground text-sm">{t("noTasksInProject")}</p>
+        <p className="text-muted-foreground text-sm">
+          {projectId ? t("noTasksInProject") : t("noGeneralTasksFound")}
+        </p>
       </div>
     )
   }
@@ -189,7 +194,7 @@ export function TaskListWithReorder({
           <ReorderTaskItem
             key={task.id}
             task={task}
-            dragEnabled={isEditMode}
+            dragEnabled={isEditMode && !!projectId}
             onDragEnd={handleDragEnd}
             isEditMode={isEditMode}
             onEditClick={handleEditClick}
