@@ -94,13 +94,85 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<WebsitePageSlug, LocalizedContent>
     },
     about: {
       ar: {
-        heading: "من نحن",
-        summary: "شركة متخصصة في إدارة وتنفيذ المشاريع الإنشائية.",
+        heroSection: {
+          backgroundImage:
+            "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1400&q=80",
+          eyebrowTitle: "قصة ثقة ورؤية",
+          title: "استثمار ناجح يبدأ برؤية واضحة ويكتمل بقيمة مستدامة",
+          description: "",
+        },
+        storySection: {
+          eyebrowTitle: "صياغة الأثر",
+          title: "قصتنا",
+          content:
+            "انطلقت شركة وهد برؤية استثمارية طموحة لتطوير مشاريع عقارية نوعية، واليوم تمثل كياناً متكاملاً يقود إنشاء المشاريع الاستثمارية وبناء المجمعات السكنية وفق أعلى معايير الجودة والاستدامة لتصنع قيمة عقارية راسخة تدوم للأجيال.",
+        },
+        visionMissionSection: {
+          image:
+            "https://images.unsplash.com/photo-1581092919535-7146ff1a5902?auto=format&fit=crop&w=1200&q=80",
+          visionTitle: "رؤيتنا",
+          visionContent:
+            "أن نكون رواداً في قطاع البناء والتطوير العقاري عبر تقديم مشاريع مبتكرة ومستدامة تساهم في تحسين بيئة العمل والمعيشة، مع التميز في تقديم منتجات ترتكز على الجودة والنزاهة والالتزام تجاه عملائنا والمجتمع.",
+          missionTitle: "رسالتنا",
+          missionContent:
+            "نسعى في شركة وهد لتحويل المشاريع العمرانية إلى تجارب متكاملة تجمع بين الإبداع والجودة والاستدامة، ونلتزم بتقديم مشاريع ترتقي لأعلى المعايير وتصنع قيمة دائمة لعملائنا والمجتمع.",
+        },
+        valuesSection: {
+          eyebrowTitle: "أواصر البقاء",
+          title: "قيمنا",
+          firstTitle: "الجودة",
+          firstContent: "الالتزام بأعلى معايير الجودة والدقة في كل مشروع.",
+          secondTitle: "الابتكار",
+          secondContent: "حلول تصميمية مبتكرة تجمع بين الإبداع والكفاءة.",
+          thirdTitle: "الإستدامة",
+          thirdContent: "حلول مستدامة متوازنة تجمع بين البيئة والتنمية.",
+        },
+        boardSection: {
+          eyebrowTitle: "خلف القصة قيادة",
+          title: "مجلس الإدارة",
+          members: [],
+        },
       },
       en: {
-        heading: "Who We Are",
-        summary:
-          "A company specialized in construction project management and delivery.",
+        heroSection: {
+          backgroundImage:
+            "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1400&q=80",
+          eyebrowTitle: "A Story of Trust and Vision",
+          title:
+            "Successful investment starts with clear vision and grows through lasting value",
+          description: "",
+        },
+        storySection: {
+          eyebrowTitle: "Shaping Impact",
+          title: "Our Story",
+          content:
+            "Wahed started with an ambitious investment vision to develop high-quality real estate projects. Today, it stands as an integrated entity leading investment developments and residential communities with top standards of quality and sustainability, creating lasting real estate value for generations.",
+        },
+        visionMissionSection: {
+          image:
+            "https://images.unsplash.com/photo-1581092919535-7146ff1a5902?auto=format&fit=crop&w=1200&q=80",
+          visionTitle: "Our Vision",
+          visionContent:
+            "To lead the construction and real estate development sector by delivering innovative, sustainable projects that improve living and working environments, while upholding quality, integrity, and commitment toward our clients and community.",
+          missionTitle: "Our Mission",
+          missionContent:
+            "At Wahed, we transform urban projects into integrated experiences that combine creativity, quality, and sustainability, while delivering projects that meet the highest standards and create enduring value for our clients and society.",
+        },
+        valuesSection: {
+          eyebrowTitle: "Bonds of Continuity",
+          title: "Our Values",
+          firstTitle: "Quality",
+          firstContent: "Commitment to the highest standards of quality and precision in every project.",
+          secondTitle: "Innovation",
+          secondContent: "Innovative design solutions that balance creativity and efficiency.",
+          thirdTitle: "Sustainability",
+          thirdContent: "Sustainable and balanced solutions that connect environment and development.",
+        },
+        boardSection: {
+          eyebrowTitle: "Leadership Behind the Story",
+          title: "Board of Directors",
+          members: [],
+        },
       },
     },
     contact: {

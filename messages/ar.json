@@ -1586,16 +1586,189 @@
     },
     "about": {
       "title": "صفحة من نحن",
-      "description": "تعديل قصة الشركة ورسالتها وتفاصيل الفريق.",
-      "card": {
-        "title": "قصة الشركة",
-        "description": "المحتوى الظاهر في قسم من نحن"
+      "description": "إدارة أقسام صفحة من نحن ومحتواها الثنائي.",
+      "heroSection": {
+        "title": "قسم الواجهة",
+        "description": "إدارة بانر الواجهة الخاص بصفحة من نحن.",
+        "fields": {
+          "backgroundImage": "صورة الخلفية",
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "descriptionAr": "الوصف (عربي)",
+          "descriptionEn": "الوصف (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "قصة ثقة ورؤية",
+          "eyebrowTitleEn": "A Story of Trust and Vision",
+          "titleAr": "اكتب عنوان القسم باللغة العربية",
+          "titleEn": "Write section title in English",
+          "descriptionAr": "اكتب وصف القسم باللغة العربية",
+          "descriptionEn": "Write section description in English"
+        },
+        "ui": {
+          "backgroundImageHint": "ارفع صورة عريضة لبانر قسم الواجهة.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لضمان عرض القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الواجهة لصفحة من نحن بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الواجهة لصفحة من نحن"
+        },
+        "save": "حفظ قسم الواجهة"
       },
-      "fields": {
-        "heading": "العنوان",
-        "summary": "الملخص"
+      "storySection": {
+        "title": "قسم القصة",
+        "description": "إدارة عنوان ومحتوى فقرة القصة.",
+        "fields": {
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "صياغة الأثر",
+          "eyebrowTitleEn": "Shaping Impact",
+          "titleAr": "قصتنا",
+          "titleEn": "Our Story",
+          "contentAr": "اكتب محتوى القسم باللغة العربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية للحفاظ على المحتوى باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم القصة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم القصة"
+        },
+        "save": "حفظ قسم القصة"
       },
-      "save": "حفظ محتوى من نحن"
+      "visionMissionSection": {
+        "title": "قسم الرؤية والرسالة",
+        "description": "إدارة كتل الرؤية والرسالة مع الصورة الوسطية.",
+        "fields": {
+          "image": "الصورة الوسطية",
+          "visionTitleAr": "عنوان الرؤية (عربي)",
+          "visionTitleEn": "عنوان الرؤية (إنجليزي)",
+          "visionContentAr": "محتوى الرؤية (عربي)",
+          "visionContentEn": "محتوى الرؤية (إنجليزي)",
+          "missionTitleAr": "عنوان الرسالة (عربي)",
+          "missionTitleEn": "عنوان الرسالة (إنجليزي)",
+          "missionContentAr": "محتوى الرسالة (عربي)",
+          "missionContentEn": "محتوى الرسالة (إنجليزي)"
+        },
+        "placeholders": {
+          "visionTitleAr": "رؤيتنا",
+          "visionTitleEn": "Our Vision",
+          "visionContentAr": "اكتب محتوى الرؤية باللغة العربية",
+          "visionContentEn": "Write vision content in English",
+          "missionTitleAr": "رسالتنا",
+          "missionTitleEn": "Our Mission",
+          "missionContentAr": "اكتب محتوى الرسالة باللغة العربية",
+          "missionContentEn": "Write mission content in English"
+        },
+        "ui": {
+          "imageHint": "ارفع الصورة التي تظهر في المنتصف بين الرؤية والرسالة.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة جميع الحقول العربية والإنجليزية لضمان العرض الكامل باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الرؤية والرسالة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الرؤية والرسالة"
+        },
+        "save": "حفظ قسم الرؤية والرسالة"
+      },
+      "valuesSection": {
+        "title": "قسم القيم",
+        "description": "إدارة عنوان القسم وبطاقات القيم الثلاث.",
+        "fields": {
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "عنوان القسم (عربي)",
+          "titleEn": "عنوان القسم (إنجليزي)",
+          "firstTitleAr": "عنوان البطاقة الأولى (عربي)",
+          "firstTitleEn": "عنوان البطاقة الأولى (إنجليزي)",
+          "firstContentAr": "محتوى البطاقة الأولى (عربي)",
+          "firstContentEn": "محتوى البطاقة الأولى (إنجليزي)",
+          "secondTitleAr": "عنوان البطاقة الثانية (عربي)",
+          "secondTitleEn": "عنوان البطاقة الثانية (إنجليزي)",
+          "secondContentAr": "محتوى البطاقة الثانية (عربي)",
+          "secondContentEn": "محتوى البطاقة الثانية (إنجليزي)",
+          "thirdTitleAr": "عنوان البطاقة الثالثة (عربي)",
+          "thirdTitleEn": "عنوان البطاقة الثالثة (إنجليزي)",
+          "thirdContentAr": "محتوى البطاقة الثالثة (عربي)",
+          "thirdContentEn": "محتوى البطاقة الثالثة (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "أواصر البقاء",
+          "eyebrowTitleEn": "Bonds of Continuity",
+          "titleAr": "قيمنا",
+          "titleEn": "Our Values",
+          "firstTitleAr": "الجودة",
+          "firstTitleEn": "Quality",
+          "firstContentAr": "اكتب وصف البطاقة الأولى باللغة العربية",
+          "firstContentEn": "Write first card description in English",
+          "secondTitleAr": "الابتكار",
+          "secondTitleEn": "Innovation",
+          "secondContentAr": "اكتب وصف البطاقة الثانية باللغة العربية",
+          "secondContentEn": "Write second card description in English",
+          "thirdTitleAr": "الإستدامة",
+          "thirdTitleEn": "Sustainability",
+          "thirdContentAr": "اكتب وصف البطاقة الثالثة باللغة العربية",
+          "thirdContentEn": "Write third card description in English"
+        },
+        "ui": {
+          "bilingualHint": "قم بتعبئة جميع الحقول العربية والإنجليزية لضمان عرض القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم القيم بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم القيم"
+        },
+        "save": "حفظ قسم القيم"
+      },
+      "boardSection": {
+        "title": "قسم مجلس الإدارة",
+        "description": "إدارة عنوان قسم مجلس الإدارة وصور الأعضاء.",
+        "fields": {
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "عنوان القسم (عربي)",
+          "titleEn": "عنوان القسم (إنجليزي)",
+          "members": "صور أعضاء مجلس الإدارة"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "خلف القصة قيادة",
+          "eyebrowTitleEn": "Leadership Behind the Story",
+          "titleAr": "مجلس الإدارة",
+          "titleEn": "Board of Directors"
+        },
+        "ui": {
+          "membersHint": "ارفع صور أعضاء مجلس الإدارة. كرر الرفع لإضافة المزيد.",
+          "removeMember": "إزالة العضو",
+          "noMembers": "لا توجد صور أعضاء مرفوعة حتى الآن.",
+          "bilingualHint": "قم بتعبئة عناوين العربية والإنجليزية لضمان ظهور القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم مجلس الإدارة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم مجلس الإدارة"
+        },
+        "save": "حفظ قسم مجلس الإدارة"
+      }
     },
     "contact": {
       "title": "صفحة اتصل بنا",

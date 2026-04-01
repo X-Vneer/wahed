@@ -1586,16 +1586,189 @@
     },
     "about": {
       "title": "About Page",
-      "description": "Edit your company story, mission, and team details.",
-      "card": {
-        "title": "Company Story",
-        "description": "Content shown in the about section"
+      "description": "Manage the About page sections and bilingual content.",
+      "heroSection": {
+        "title": "Hero Section",
+        "description": "Manage the hero banner for the About page.",
+        "fields": {
+          "backgroundImage": "Background image",
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "descriptionAr": "Description (Arabic)",
+          "descriptionEn": "Description (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "قصة ثقة ورؤية",
+          "eyebrowTitleEn": "A Story of Trust and Vision",
+          "titleAr": "اكتب عنوان القسم بالعربية",
+          "titleEn": "Write section title in English",
+          "descriptionAr": "اكتب وصف القسم بالعربية",
+          "descriptionEn": "Write section description in English"
+        },
+        "ui": {
+          "backgroundImageHint": "Upload a wide hero image for the About banner.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill Arabic and English fields so this section appears in both languages."
+        },
+        "success": {
+          "saved": "About hero section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save about hero section"
+        },
+        "save": "Save Hero Section"
       },
-      "fields": {
-        "heading": "Heading",
-        "summary": "Summary"
+      "storySection": {
+        "title": "Story Section",
+        "description": "Manage the story headline and paragraph.",
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "صياغة الأثر",
+          "eyebrowTitleEn": "Shaping Impact",
+          "titleAr": "قصتنا",
+          "titleEn": "Our Story",
+          "contentAr": "اكتب محتوى القسم بالعربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "bilingualHint": "Fill Arabic and English fields to keep content synchronized in both locales."
+        },
+        "success": {
+          "saved": "Story section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save story section"
+        },
+        "save": "Save Story Section"
       },
-      "save": "Save About Content"
+      "visionMissionSection": {
+        "title": "Vision & Mission Section",
+        "description": "Manage vision and mission blocks with center image.",
+        "fields": {
+          "image": "Center image",
+          "visionTitleAr": "Vision title (Arabic)",
+          "visionTitleEn": "Vision title (English)",
+          "visionContentAr": "Vision content (Arabic)",
+          "visionContentEn": "Vision content (English)",
+          "missionTitleAr": "Mission title (Arabic)",
+          "missionTitleEn": "Mission title (English)",
+          "missionContentAr": "Mission content (Arabic)",
+          "missionContentEn": "Mission content (English)"
+        },
+        "placeholders": {
+          "visionTitleAr": "رؤيتنا",
+          "visionTitleEn": "Our Vision",
+          "visionContentAr": "اكتب محتوى الرؤية بالعربية",
+          "visionContentEn": "Write vision content in English",
+          "missionTitleAr": "رسالتنا",
+          "missionTitleEn": "Our Mission",
+          "missionContentAr": "اكتب محتوى الرسالة بالعربية",
+          "missionContentEn": "Write mission content in English"
+        },
+        "ui": {
+          "imageHint": "Upload the center image shown between vision and mission blocks.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill all Arabic and English fields for full bilingual rendering."
+        },
+        "success": {
+          "saved": "Vision and mission section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save vision and mission section"
+        },
+        "save": "Save Vision & Mission Section"
+      },
+      "valuesSection": {
+        "title": "Values Section",
+        "description": "Manage section heading and the three values cards.",
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Section title (Arabic)",
+          "titleEn": "Section title (English)",
+          "firstTitleAr": "First card title (Arabic)",
+          "firstTitleEn": "First card title (English)",
+          "firstContentAr": "First card content (Arabic)",
+          "firstContentEn": "First card content (English)",
+          "secondTitleAr": "Second card title (Arabic)",
+          "secondTitleEn": "Second card title (English)",
+          "secondContentAr": "Second card content (Arabic)",
+          "secondContentEn": "Second card content (English)",
+          "thirdTitleAr": "Third card title (Arabic)",
+          "thirdTitleEn": "Third card title (English)",
+          "thirdContentAr": "Third card content (Arabic)",
+          "thirdContentEn": "Third card content (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "أواصر البقاء",
+          "eyebrowTitleEn": "Bonds of Continuity",
+          "titleAr": "قيمنا",
+          "titleEn": "Our Values",
+          "firstTitleAr": "الجودة",
+          "firstTitleEn": "Quality",
+          "firstContentAr": "اكتب وصف البطاقة الأولى بالعربية",
+          "firstContentEn": "Write first card description in English",
+          "secondTitleAr": "الابتكار",
+          "secondTitleEn": "Innovation",
+          "secondContentAr": "اكتب وصف البطاقة الثانية بالعربية",
+          "secondContentEn": "Write second card description in English",
+          "thirdTitleAr": "الإستدامة",
+          "thirdTitleEn": "Sustainability",
+          "thirdContentAr": "اكتب وصف البطاقة الثالثة بالعربية",
+          "thirdContentEn": "Write third card description in English"
+        },
+        "ui": {
+          "bilingualHint": "Fill all Arabic and English fields for complete bilingual rendering."
+        },
+        "success": {
+          "saved": "Values section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save values section"
+        },
+        "save": "Save Values Section"
+      },
+      "boardSection": {
+        "title": "Board Section",
+        "description": "Manage board heading and members images.",
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Section title (Arabic)",
+          "titleEn": "Section title (English)",
+          "members": "Board members images"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "خلف القصة قيادة",
+          "eyebrowTitleEn": "Leadership Behind the Story",
+          "titleAr": "مجلس الإدارة",
+          "titleEn": "Board of Directors"
+        },
+        "ui": {
+          "membersHint": "Upload board members images. Repeat upload to add more.",
+          "removeMember": "Remove member",
+          "noMembers": "No board images uploaded yet.",
+          "bilingualHint": "Fill Arabic and English headings so the section appears in both languages."
+        },
+        "success": {
+          "saved": "Board section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save board section"
+        },
+        "save": "Save Board Section"
+      }
     },
     "contact": {
       "title": "Contact Page",
