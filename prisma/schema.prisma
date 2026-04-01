@@ -310,6 +310,19 @@ model Website {
   updatedAt DateTime @updatedAt
 }
 
+model WebsitePageContent {
+  id      String @id @default(cuid())
+  slug    String
+  locale  String
+  content Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([slug, locale])
+  @@index([slug])
+}
+
 // tasks
 model Task {
   id                   String           @id @default(cuid())

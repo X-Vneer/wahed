@@ -117,7 +117,8 @@
     "failed_to_fetch_user_data": "Failed to fetch user data",
     "upload_failed": "Failed to upload image",
     "failed_to_load": "Failed to load user data",
-    "validation_failed": "Validation failed"
+    "validation_failed": "Validation failed",
+    "invalid_request": "Invlaid request"
   },
   "welcome": {
     "title": "Welcome back",
@@ -1363,6 +1364,155 @@
       "delete": "Delete",
       "deleting": "Deleting...",
       "cancel": "Cancel"
+    }
+  },
+  "websiteCms": {
+    "layout": {
+      "title": "Website CMS",
+      "description": "Manage public website content"
+    },
+    "nav": {
+      "home": "Home",
+      "projects": "Projects",
+      "about": "About",
+      "contact": "Contact",
+      "settings": "General Settings",
+      "theme": "Theme"
+    },
+    "home": {
+      "title": "Home Page",
+      "description": "Manage the homepage hero, highlights, and featured sections.",
+      "stats": {
+        "heroTitleLabel": "Hero title",
+        "heroTitleValue": "Welcome to Our Website",
+        "featuredProjectsLabel": "Featured projects",
+        "featuredProjectsValue": "3 published",
+        "liveBadge": "Live",
+        "lastUpdatedLabel": "Last updated",
+        "lastUpdatedValue": "Today"
+      },
+      "heroSection": {
+        "title": "Hero Section",
+        "description": "Update your main landing message and call-to-action",
+        "fields": {
+          "backgroundImage": "Background image URL",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "descriptionAr": "Description (Arabic)",
+          "descriptionEn": "Description (English)",
+          "ctaLabelAr": "CTA button label (Arabic)",
+          "ctaLabelEn": "CTA button label (English)",
+          "ctaLink": "CTA button link"
+        },
+        "placeholders": {
+          "backgroundImage": "https://images.unsplash.com/...",
+          "titleAr": "اكتب عنوان الواجهة بالعربية",
+          "titleEn": "Write the hero title in English",
+          "descriptionAr": "اكتب وصف القسم بالعربية",
+          "descriptionEn": "Write a short section description in English",
+          "ctaLabelAr": "ابدأ الآن",
+          "ctaLabelEn": "Get Started",
+          "ctaLink": "https://yourwebsite.com/contact"
+        },
+        "ui": {
+          "backgroundImageHint": "Upload a wide image for best hero appearance.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill in both Arabic and English fields so content is available in both languages."
+        },
+        "success": {
+          "saved": "Hero section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save hero section"
+        },
+        "previewBadge": "Hero Preview",
+        "save": "Save Home Content"
+      }
+    },
+    "projects": {
+      "title": "Projects Page",
+      "description": "Add and organize project cards that appear on your public website.",
+      "cards": {
+        "first": {
+          "title": "E-commerce Redesign",
+          "status": "Published",
+          "description": "Case study and screenshots are visible"
+        },
+        "second": {
+          "title": "Booking Platform",
+          "status": "Draft",
+          "description": "Pending final copy review"
+        }
+      },
+      "actions": {
+        "title": "Projects Actions",
+        "description": "Quick actions for project content",
+        "add": "Add New Project",
+        "reorder": "Reorder Projects"
+      }
+    },
+    "about": {
+      "title": "About Page",
+      "description": "Edit your company story, mission, and team details.",
+      "card": {
+        "title": "Company Story",
+        "description": "Content shown in the about section"
+      },
+      "fields": {
+        "heading": "Heading",
+        "summary": "Summary"
+      },
+      "save": "Save About Content"
+    },
+    "contact": {
+      "title": "Contact Page",
+      "description": "Manage contact details and social links shown to visitors.",
+      "card": {
+        "title": "Contact Information",
+        "description": "How visitors can reach your team"
+      },
+      "fields": {
+        "email": "Email",
+        "phone": "Phone",
+        "linkedin": "LinkedIn URL",
+        "instagram": "Instagram URL"
+      },
+      "save": "Save Contact Details"
+    },
+    "settings": {
+      "title": "General Settings",
+      "description": "Configure your website name, tagline, and default metadata.",
+      "card": {
+        "title": "Website Details",
+        "description": "Core settings used across all pages"
+      },
+      "fields": {
+        "siteName": "Website name",
+        "tagline": "Tagline",
+        "metaTitle": "Default meta title"
+      },
+      "save": "Save General Settings"
+    },
+    "theme": {
+      "title": "Theme",
+      "description": "Customize colors, typography, and visual style for the public site.",
+      "card": {
+        "title": "Theme Customization",
+        "description": "Brand colors and typography settings"
+      },
+      "fields": {
+        "primaryColor": "Primary color",
+        "accentColor": "Accent color",
+        "fontStyle": "Font style",
+        "fontPlaceholder": "Select a font style"
+      },
+      "fontOptions": {
+        "sans": "Sans-serif",
+        "serif": "Serif",
+        "mono": "Monospace"
+      },
+      "save": "Save Theme Settings"
     }
   },
   "something wrong happened": "Something wrong happened",

@@ -1,0 +1,18 @@
+---
+description: Website CMS API content contract
+globs: app/api/website/**/*.ts
+alwaysApply: false
+---
+
+# Website Content API Rules
+
+- Keep slug + locale JSON content contract stable for `/api/website/content/:slug`.
+- Validate incoming payloads with zod before DB writes.
+- Enforce `WEBSITE_MANAGEMENT` permission for write operations.
+- Return localized API errors through existing translation/error patterns.
+- Use JSON content in DB for all editable website sections; avoid translation-file-backed defaults in API writes.
+
+# Scope Modes
+
+- Default mode: single locale payload `{ locale, content }`.
+- Bilingual mode (`scope=bilingual`): payload `{ ar, en }` for pages that edit both locales together.

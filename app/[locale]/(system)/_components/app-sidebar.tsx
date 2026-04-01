@@ -146,10 +146,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: t("website"),
-        url: "#",
+        url: "/website",
         icon: Globe,
         items: [],
-        isActive: false,
+        isActive: pathname === "/website",
       },
     ],
   }

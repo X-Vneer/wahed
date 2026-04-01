@@ -1,0 +1,18 @@
+---
+description: Website CMS page content conventions
+globs: app/[locale]/(system)/website/**/*.tsx
+alwaysApply: false
+---
+
+# Website Content Source Of Truth
+
+- Treat DB content as the source of truth for page content and image URLs.
+- Use `next-intl` only for dashboard UI labels, form labels, button text, and error/success messages.
+- For editable page content, read/write via `/api/website/content/:slug`.
+- Keep page content locale-aware and pass locale when saving non-bilingual payloads.
+- Use fallback-safe rendering: handle missing content gracefully and avoid hardcoded content strings.
+
+# Home Page Convention
+
+- `home` uses bilingual payload saves (`scope=bilingual`) with `ar` and `en` blocks.
+- Store hero image URL under `heroSection.backgroundImage`.

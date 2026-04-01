@@ -117,7 +117,8 @@
     "failed_to_fetch_user_data": "فشل في جلب بيانات المستخدم",
     "upload_failed": "فشل تحميل الصورة",
     "failed_to_load": "فشل تحميل بيانات المستخدم",
-    "validation_failed": "فشل التحقق"
+    "validation_failed": "فشل التحقق",
+    "invalid_request": "طلب غير صالح"
   },
   "welcome": {
     "title": "مرحباً بعودتك",
@@ -1363,6 +1364,155 @@
       "delete": "حذف",
       "deleting": "جاري الحذف...",
       "cancel": "إلغاء"
+    }
+  },
+  "websiteCms": {
+    "layout": {
+      "title": "إدارة محتوى الموقع",
+      "description": "إدارة محتوى الموقع العام"
+    },
+    "nav": {
+      "home": "الرئيسية",
+      "projects": "المشاريع",
+      "about": "من نحن",
+      "contact": "اتصل بنا",
+      "settings": "الإعدادات العامة",
+      "theme": "المظهر"
+    },
+    "home": {
+      "title": "صفحة الرئيسية",
+      "description": "إدارة واجهة الصفحة الرئيسية والأقسام البارزة.",
+      "stats": {
+        "heroTitleLabel": "عنوان الواجهة",
+        "heroTitleValue": "مرحباً بكم في موقعنا",
+        "featuredProjectsLabel": "المشاريع المميزة",
+        "featuredProjectsValue": "3 منشورة",
+        "liveBadge": "مباشر",
+        "lastUpdatedLabel": "آخر تحديث",
+        "lastUpdatedValue": "اليوم"
+      },
+      "heroSection": {
+        "title": "قسم الواجهة",
+        "description": "تحديث الرسالة الرئيسية وزر الدعوة لاتخاذ إجراء",
+        "fields": {
+          "backgroundImage": "رابط صورة الخلفية",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "descriptionAr": "الوصف (عربي)",
+          "descriptionEn": "الوصف (إنجليزي)",
+          "ctaLabelAr": "نص زر الدعوة (عربي)",
+          "ctaLabelEn": "نص زر الدعوة (إنجليزي)",
+          "ctaLink": "رابط زر الدعوة"
+        },
+        "placeholders": {
+          "backgroundImage": "https://images.unsplash.com/...",
+          "titleAr": "اكتب عنواناً واضحاً ومختصراً للواجهة",
+          "titleEn": "Write a clear and short hero title",
+          "descriptionAr": "اكتب وصفاً مختصراً يوضح قيمة هذا القسم",
+          "descriptionEn": "Write a concise description for this section",
+          "ctaLabelAr": "ابدأ الآن",
+          "ctaLabelEn": "Get Started",
+          "ctaLink": "https://yourwebsite.com/contact"
+        },
+        "ui": {
+          "backgroundImageHint": "ارفع صورة عريضة لتحسين مظهر الواجهة.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لعرض المحتوى باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الواجهة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الواجهة"
+        },
+        "previewBadge": "معاينة الواجهة",
+        "save": "حفظ محتوى الصفحة الرئيسية"
+      }
+    },
+    "projects": {
+      "title": "صفحة المشاريع",
+      "description": "إضافة وتنظيم بطاقات المشاريع الظاهرة في الموقع العام.",
+      "cards": {
+        "first": {
+          "title": "إعادة تصميم متجر إلكتروني",
+          "status": "منشور",
+          "description": "دراسة الحالة والصور متاحة"
+        },
+        "second": {
+          "title": "منصة حجوزات",
+          "status": "مسودة",
+          "description": "بانتظار مراجعة النص النهائي"
+        }
+      },
+      "actions": {
+        "title": "إجراءات المشاريع",
+        "description": "إجراءات سريعة لإدارة محتوى المشاريع",
+        "add": "إضافة مشروع جديد",
+        "reorder": "إعادة ترتيب المشاريع"
+      }
+    },
+    "about": {
+      "title": "صفحة من نحن",
+      "description": "تعديل قصة الشركة ورسالتها وتفاصيل الفريق.",
+      "card": {
+        "title": "قصة الشركة",
+        "description": "المحتوى الظاهر في قسم من نحن"
+      },
+      "fields": {
+        "heading": "العنوان",
+        "summary": "الملخص"
+      },
+      "save": "حفظ محتوى من نحن"
+    },
+    "contact": {
+      "title": "صفحة اتصل بنا",
+      "description": "إدارة بيانات التواصل وروابط المنصات الاجتماعية.",
+      "card": {
+        "title": "بيانات التواصل",
+        "description": "طرق تواصل الزوار مع فريقك"
+      },
+      "fields": {
+        "email": "البريد الإلكتروني",
+        "phone": "الهاتف",
+        "linkedin": "رابط لينكدإن",
+        "instagram": "رابط إنستغرام"
+      },
+      "save": "حفظ بيانات التواصل"
+    },
+    "settings": {
+      "title": "الإعدادات العامة",
+      "description": "ضبط اسم الموقع والشعار وبيانات الميتا الافتراضية.",
+      "card": {
+        "title": "تفاصيل الموقع",
+        "description": "إعدادات أساسية مستخدمة في جميع الصفحات"
+      },
+      "fields": {
+        "siteName": "اسم الموقع",
+        "tagline": "الشعار",
+        "metaTitle": "عنوان الميتا الافتراضي"
+      },
+      "save": "حفظ الإعدادات العامة"
+    },
+    "theme": {
+      "title": "المظهر",
+      "description": "تخصيص الألوان والخطوط والمظهر العام للموقع.",
+      "card": {
+        "title": "تخصيص المظهر",
+        "description": "إعدادات الهوية البصرية والخطوط"
+      },
+      "fields": {
+        "primaryColor": "اللون الأساسي",
+        "accentColor": "لون التمييز",
+        "fontStyle": "نمط الخط",
+        "fontPlaceholder": "اختر نمط خط"
+      },
+      "fontOptions": {
+        "sans": "بدون زوائد",
+        "serif": "بزوائد",
+        "mono": "أحادي المسافة"
+      },
+      "save": "حفظ إعدادات المظهر"
     }
   },
   "something wrong happened": "حصل مشكلة ما",

@@ -1,0 +1,17 @@
+---
+description: Website content schema and migration guidance
+globs: prisma/schema.prisma
+alwaysApply: false
+---
+
+# Prisma Rules For Website Content
+
+- Store editable website content in JSON with slug + locale uniqueness.
+- Keep image URLs inside JSON content objects (for example: `heroSection.backgroundImage`).
+- Keep schema changes backward-compatible and migration-safe.
+- Prefer additive schema changes and unique constraints that match API query keys.
+
+# Data Model Expectations
+
+- `WebsitePageContent` includes `slug`, `locale`, and `content` (`Json`).
+- Add timestamps and indexes to support audit and page-based lookups.
