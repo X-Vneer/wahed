@@ -22,6 +22,12 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<WebsitePageSlug, LocalizedContent>
           backgroundImage:
             "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1400&q=80",
         },
+        briefSection: {
+          content:
+            "نسعى كشركة واعد العقارية الاستثمارية إلى تقديم فرص استثمارية نوعية ترتكز على الجودة والتخطيط الذكي بما يضمن قيمة مستدامة وثقة طويلة الأمد. نطور مشاريع عقارية بمعايير احترافية تلبي تطلعات عملائنا وتواكب تطور السوق.",
+          image:
+            "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80",
+        },
       },
       en: {
         heroSection: {
@@ -31,6 +37,12 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<WebsitePageSlug, LocalizedContent>
           ctaLabel: "Start Your Project",
           backgroundImage:
             "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1400&q=80",
+        },
+        briefSection: {
+          content:
+            "At Waed Real Estate Investment, we provide high-quality opportunities built on smart planning, long-term trust, and sustainable value. We develop real estate projects with professional standards aligned with client expectations and market evolution.",
+          image:
+            "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80",
         },
       },
     },

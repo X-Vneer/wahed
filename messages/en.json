@@ -1428,6 +1428,32 @@
         },
         "previewBadge": "Hero Preview",
         "save": "Save Home Content"
+      },
+      "briefSection": {
+        "title": "Brief Section",
+        "description": "Control this homepage section text and image",
+        "fields": {
+          "image": "Section image",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)"
+        },
+        "placeholders": {
+          "contentAr": "اكتب محتوى القسم بالعربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "imageHint": "Upload the logo or image shown next to the text.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill in Arabic and English content for bilingual display."
+        },
+        "success": {
+          "saved": "Brief section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save brief section"
+        },
+        "save": "Save Brief Section"
       }
     },
     "projects": {
