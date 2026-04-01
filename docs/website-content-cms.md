@@ -1,5 +1,7 @@
 # Website Content CMS (JSON-first)
 
+For **next-intl usage**, dashboard vs content boundaries, and how to add new CMS pages, see the developer README at `app/[locale]/(system)/website/README.md`.
+
 ## Scope
 
 This project stores editable website page content in DB JSON by `slug` and `locale`.

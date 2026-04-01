@@ -43,13 +43,18 @@ export default async function middleware(request: NextRequest) {
     pathname.includes(route)
   )
 
+  /** Public CMS reads for the marketing site; writes stay protected in the route handler. */
+  const isPublicWebsiteContentGet =
+    request.method === "GET" &&
+    pathname.startsWith("/api/website/content/")
+
   // Get the access token from cookies
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value
 
   // Handle API routes
   if (isApiRoute) {
     // Allow public API routes to pass through
-    if (isPublicApiRoute) {
+    if (isPublicApiRoute || isPublicWebsiteContentGet) {
       return NextResponse.next()
     }
 

@@ -34,6 +34,7 @@ export async function GET(
 
   try {
     const { slug } = await params
+    console.log("🚀 ~ GET ~ slug:", slug)
     if (!isWebsitePageSlug(slug)) {
       return NextResponse.json(
         { error: t("errors.invalid_request") },
