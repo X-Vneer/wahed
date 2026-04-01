@@ -1772,18 +1772,59 @@
     },
     "contact": {
       "title": "Contact Page",
-      "description": "Manage contact details and social links shown to visitors.",
-      "card": {
-        "title": "Contact Information",
-        "description": "How visitors can reach your team"
-      },
-      "fields": {
-        "email": "Email",
-        "phone": "Phone",
-        "linkedin": "LinkedIn URL",
-        "instagram": "Instagram URL"
-      },
-      "save": "Save Contact Details"
+      "description": "Manage the contact page hero text, sidebar copy, and shared contact channels.",
+      "heroInfoSection": {
+        "title": "Hero & contact sidebar",
+        "description": "Top hero lines (no background image), sidebar intro, channels heading, phone, email, and social links.",
+        "groups": {
+          "hero": "Hero",
+          "sidebar": "Sidebar",
+          "channels": "Contact details"
+        },
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow label (Arabic)",
+          "eyebrowTitleEn": "Eyebrow label (English)",
+          "heroTitleAr": "Hero headline (Arabic)",
+          "heroTitleEn": "Hero headline (English)",
+          "infoTitleAr": "Sidebar title (Arabic)",
+          "infoTitleEn": "Sidebar title (English)",
+          "infoContentAr": "Sidebar paragraph (Arabic)",
+          "infoContentEn": "Sidebar paragraph (English)",
+          "channelsTitleAr": "Channels heading (Arabic)",
+          "channelsTitleEn": "Channels heading (English)",
+          "phone": "Phone number",
+          "email": "Email",
+          "linkedin": "LinkedIn URL",
+          "instagram": "Instagram URL"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "خطوة الأولى",
+          "eyebrowTitleEn": "The first step",
+          "heroTitleAr": "تواصل معنا",
+          "heroTitleEn": "Contact us",
+          "infoTitleAr": "لنبداً الحديث",
+          "infoTitleEn": "Let's start the conversation",
+          "infoContentAr": "Short paragraph for visitors",
+          "infoContentEn": "Short paragraph for visitors",
+          "channelsTitleAr": "وسائل التواصل",
+          "channelsTitleEn": "Contact channels",
+          "phone": "+966500000000",
+          "email": "info@example.com",
+          "linkedin": "https://www.linkedin.com/company/...",
+          "instagram": "https://www.instagram.com/..."
+        },
+        "ui": {
+          "sharedContactHint": "Phone, email, and social URLs are stored once and shown for both languages.",
+          "bilingualHint": "Hero and sidebar text can differ per language; contact details are shared."
+        },
+        "success": {
+          "saved": "Contact content saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save contact content"
+        },
+        "save": "Save contact content"
+      }
     },
     "settings": {
       "title": "General Settings",

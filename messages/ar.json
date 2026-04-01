@@ -1772,18 +1772,59 @@
     },
     "contact": {
       "title": "صفحة اتصل بنا",
-      "description": "إدارة بيانات التواصل وروابط المنصات الاجتماعية.",
-      "card": {
-        "title": "بيانات التواصل",
-        "description": "طرق تواصل الزوار مع فريقك"
-      },
-      "fields": {
-        "email": "البريد الإلكتروني",
-        "phone": "الهاتف",
-        "linkedin": "رابط لينكدإن",
-        "instagram": "رابط إنستغرام"
-      },
-      "save": "حفظ بيانات التواصل"
+      "description": "إدارة نص الترويسة، عمود التواصل، وقنوات الاتصال المشتركة.",
+      "heroInfoSection": {
+        "title": "الترويسة وعمود التواصل",
+        "description": "نصوص أعلى الصفحة (بدون صورة خلفية)، مقدمة العمود، عنوان القنوات، الهاتف، البريد، وروابط التواصل.",
+        "groups": {
+          "hero": "الترويسة",
+          "sidebar": "العمود الجانبي",
+          "channels": "بيانات التواصل"
+        },
+        "fields": {
+          "eyebrowTitleAr": "عنوان علوي (عربي)",
+          "eyebrowTitleEn": "عنوان علوي (إنجليزي)",
+          "heroTitleAr": "عنوان رئيسي (عربي)",
+          "heroTitleEn": "عنوان رئيسي (إنجليزي)",
+          "infoTitleAr": "عنوان العمود (عربي)",
+          "infoTitleEn": "عنوان العمود (إنجليزي)",
+          "infoContentAr": "فقرة العمود (عربي)",
+          "infoContentEn": "فقرة العمود (إنجليزي)",
+          "channelsTitleAr": "عنوان قنوات التواصل (عربي)",
+          "channelsTitleEn": "عنوان قنوات التواصل (إنجليزي)",
+          "phone": "رقم الهاتف",
+          "email": "البريد الإلكتروني",
+          "linkedin": "رابط لينكدإن",
+          "instagram": "رابط إنستغرام"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "خطوة الأولى",
+          "eyebrowTitleEn": "The first step",
+          "heroTitleAr": "تواصل معنا",
+          "heroTitleEn": "Contact us",
+          "infoTitleAr": "لنبداً الحديث",
+          "infoTitleEn": "Let's start the conversation",
+          "infoContentAr": "نص قصير للزوار",
+          "infoContentEn": "نص قصير للزوار",
+          "channelsTitleAr": "وسائل التواصل",
+          "channelsTitleEn": "Contact channels",
+          "phone": "+966500000000",
+          "email": "info@example.com",
+          "linkedin": "https://www.linkedin.com/company/...",
+          "instagram": "https://www.instagram.com/..."
+        },
+        "ui": {
+          "sharedContactHint": "الهاتف والبريد والروابط تُحفظ مرة واحدة وتُعرض للغتين.",
+          "bilingualHint": "نصوص الترويسة والعمود تختلف حسب اللغة؛ بيانات التواصل موحدة."
+        },
+        "success": {
+          "saved": "تم حفظ محتوى صفحة التواصل بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ محتوى صفحة التواصل"
+        },
+        "save": "حفظ محتوى التواصل"
+      }
     },
     "settings": {
       "title": "الإعدادات العامة",

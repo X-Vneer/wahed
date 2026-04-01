@@ -177,16 +177,36 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<WebsitePageSlug, LocalizedContent>
     },
     contact: {
       ar: {
-        email: "info@example.com",
-        phone: "+966500000000",
-        linkedin: "https://www.linkedin.com/company/example",
-        instagram: "https://www.instagram.com/example",
+        heroSection: {
+          eyebrowTitle: "خطوة الأولى",
+          title: "تواصل معنا ودعنا نشكل ملامح مشروعك",
+        },
+        infoSection: {
+          title: "لنبداً الحديث",
+          content:
+            "فريقنا جاهز لتقديم الإرشاد والدعم المهني والإجابة على استفساراتكم بكل شفافية.",
+          channelsTitle: "وسائل التواصل",
+          phone: "+96658241563",
+          email: "info@wahdeinvestment.sa",
+          linkedin: "https://www.linkedin.com/company/example",
+          instagram: "https://www.instagram.com/example",
+        },
       },
       en: {
-        email: "info@example.com",
-        phone: "+966500000000",
-        linkedin: "https://www.linkedin.com/company/example",
-        instagram: "https://www.instagram.com/example",
+        heroSection: {
+          eyebrowTitle: "The first step",
+          title: "Contact us and let us shape your project",
+        },
+        infoSection: {
+          title: "Let's start the conversation",
+          content:
+            "Our team is ready to provide guidance, professional support, and clear answers to your questions.",
+          channelsTitle: "Contact channels",
+          phone: "+96658241563",
+          email: "info@wahdeinvestment.sa",
+          linkedin: "https://www.linkedin.com/company/example",
+          instagram: "https://www.instagram.com/example",
+        },
       },
     },
     settings: {
