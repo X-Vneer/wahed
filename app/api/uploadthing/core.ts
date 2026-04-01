@@ -161,6 +161,30 @@ export const ourFileRouter = {
         },
       }
     }),
+  websiteMultiImageUploader: f({
+    image: {
+      maxFileSize: "8MB",
+      maxFileCount: 20,
+    },
+  })
+    .middleware(async () => {
+      const user = await auth()
+      if (!user) throw new UploadThingError("Unauthorized")
+      return { user }
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      return {
+        uploadedBy: metadata.user.userId,
+        url: file.ufsUrl,
+        file: {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified,
+          customId: file.customId,
+        },
+      }
+    }),
   staffHeroImageUploader: f({
     image: {
       maxFileSize: "4MB",

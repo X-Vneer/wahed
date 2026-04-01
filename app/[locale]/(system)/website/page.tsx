@@ -9,49 +9,108 @@ import {
 import PageLoader from "@/components/page-loader"
 import { HeroSectionValues } from "./_components/hero-section-form"
 import { BriefSectionValues } from "./_components/brief-section-form"
+import { AboutSectionValues } from "./_components/about-section-form"
+import {
+  ContactSectionForm,
+  ContactSectionValues,
+} from "./_components/contact-section-form"
+import {
+  PartnersSectionForm,
+  PartnersSectionValues,
+} from "./_components/partners-section-form"
 import apiClient from "@/services"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { HeroSectionForm } from "./_components/hero-section-form"
 import { BriefSectionForm } from "./_components/brief-section-form"
+import { AboutSectionForm } from "./_components/about-section-form"
 
 type BilingualHomeContent = {
   ar?: {
-    heroSection?: Record<string, string>
-    briefSection?: Record<string, string>
-    aboutSection?: Record<string, string>
+    heroSection?: Record<string, unknown>
+    briefSection?: Record<string, unknown>
+    aboutSection?: Record<string, unknown>
+    partnersSection?: Record<string, unknown>
+    contactSection?: Record<string, unknown>
+    ctaSection?: Record<string, unknown>
   }
   en?: {
-    heroSection?: Record<string, string>
-    briefSection?: Record<string, string>
-    aboutSection?: Record<string, string>
+    heroSection?: Record<string, unknown>
+    briefSection?: Record<string, unknown>
+    aboutSection?: Record<string, unknown>
+    partnersSection?: Record<string, unknown>
+    contactSection?: Record<string, unknown>
+    ctaSection?: Record<string, unknown>
   }
 }
 
 type HomeEditorData = {
   heroSection: HeroSectionValues
   briefSection: BriefSectionValues
+  aboutSection: AboutSectionValues
+  partnersSection: PartnersSectionValues
+  contactSection: ContactSectionValues
   rawContent: BilingualHomeContent
 }
 
 function extractHomeEditorData(content: BilingualHomeContent): HomeEditorData {
+  const getString = (value: unknown) => (typeof value === "string" ? value : "")
+  const getStringArray = (value: unknown) =>
+    Array.isArray(value)
+      ? value.filter((item): item is string => typeof item === "string")
+      : []
+
   const arBrief = content.ar?.briefSection ?? content.ar?.aboutSection
   const enBrief = content.en?.briefSection ?? content.en?.aboutSection
+  const arPartners = content.ar?.partnersSection
+  const enPartners = content.en?.partnersSection
+  const arContact = content.ar?.contactSection ?? content.ar?.ctaSection
+  const enContact = content.en?.contactSection ?? content.en?.ctaSection
 
   return {
     heroSection: {
-      backgroundImage: content.ar?.heroSection?.backgroundImage ?? "",
-      titleAr: content.ar?.heroSection?.title ?? "",
-      titleEn: content.en?.heroSection?.title ?? "",
-      descriptionAr: content.ar?.heroSection?.description ?? "",
-      descriptionEn: content.en?.heroSection?.description ?? "",
-      ctaLabelAr: content.ar?.heroSection?.ctaLabel ?? "",
-      ctaLabelEn: content.en?.heroSection?.ctaLabel ?? "",
+      backgroundImage: getString(content.ar?.heroSection?.backgroundImage),
+      titleAr: getString(content.ar?.heroSection?.title),
+      titleEn: getString(content.en?.heroSection?.title),
+      descriptionAr: getString(content.ar?.heroSection?.description),
+      descriptionEn: getString(content.en?.heroSection?.description),
+      ctaLabelAr: getString(content.ar?.heroSection?.ctaLabel),
+      ctaLabelEn: getString(content.en?.heroSection?.ctaLabel),
     },
     briefSection: {
-      image: arBrief?.image ?? "",
-      contentAr: arBrief?.content ?? "",
-      contentEn: enBrief?.content ?? "",
+      image: getString(arBrief?.image),
+      contentAr: getString(arBrief?.content),
+      contentEn: getString(enBrief?.content),
+    },
+    aboutSection: {
+      image: getString(content.ar?.aboutSection?.image),
+      titlePartOneAr: getString(content.ar?.aboutSection?.titlePartOne),
+      titlePartOneEn: getString(content.en?.aboutSection?.titlePartOne),
+      titlePartTwoAr: getString(content.ar?.aboutSection?.titlePartTwo),
+      titlePartTwoEn: getString(content.en?.aboutSection?.titlePartTwo),
+      descriptionAr: getString(content.ar?.aboutSection?.description),
+      descriptionEn: getString(content.en?.aboutSection?.description),
+      ctaLabelAr: getString(content.ar?.aboutSection?.ctaLabel),
+      ctaLabelEn: getString(content.en?.aboutSection?.ctaLabel),
+    },
+    partnersSection: {
+      logos: getStringArray(arPartners?.logos),
+      eyebrowTitleAr: getString(arPartners?.eyebrowTitle),
+      eyebrowTitleEn: getString(enPartners?.eyebrowTitle),
+      titleAr: getString(arPartners?.title),
+      titleEn: getString(enPartners?.title),
+      contentAr: getString(arPartners?.content ?? arPartners?.description),
+      contentEn: getString(enPartners?.content ?? enPartners?.description),
+    },
+    contactSection: {
+      eyebrowTitleAr: getString(arContact?.eyebrowTitle),
+      eyebrowTitleEn: getString(enContact?.eyebrowTitle),
+      titleAr: getString(arContact?.title),
+      titleEn: getString(enContact?.title),
+      contentAr: getString(arContact?.content ?? arContact?.description),
+      contentEn: getString(enContact?.content ?? enContact?.description),
+      ctaLabelAr: getString(arContact?.ctaLabel),
+      ctaLabelEn: getString(enContact?.ctaLabel),
     },
     rawContent: content,
   }
@@ -72,9 +131,14 @@ export default function WebsiteHomePage() {
   })
 
   const saveSection = async (section: {
-    ar: Record<string, string>
-    en: Record<string, string>
-    key: "heroSection" | "briefSection"
+    ar: Record<string, unknown>
+    en: Record<string, unknown>
+    key:
+      | "heroSection"
+      | "briefSection"
+      | "aboutSection"
+      | "partnersSection"
+      | "contactSection"
   }) => {
     const currentAr = data?.rawContent?.ar ?? {}
     const currentEn = data?.rawContent?.en ?? {}
@@ -131,6 +195,78 @@ export default function WebsiteHomePage() {
     })
   }
 
+  const handleAboutSectionSubmit = async ({
+    values,
+  }: {
+    values: AboutSectionValues
+  }) => {
+    await saveSection({
+      key: "aboutSection",
+      ar: {
+        image: values.image,
+        titlePartOne: values.titlePartOneAr,
+        titlePartTwo: values.titlePartTwoAr,
+        description: values.descriptionAr,
+        ctaLabel: values.ctaLabelAr,
+      },
+      en: {
+        image: values.image,
+        titlePartOne: values.titlePartOneEn,
+        titlePartTwo: values.titlePartTwoEn,
+        description: values.descriptionEn,
+        ctaLabel: values.ctaLabelEn,
+      },
+    })
+  }
+
+  const handlePartnersSectionSubmit = async ({
+    values,
+  }: {
+    values: PartnersSectionValues
+  }) => {
+    await saveSection({
+      key: "partnersSection",
+      ar: {
+        logos: values.logos,
+        eyebrowTitle: values.eyebrowTitleAr,
+        title: values.titleAr,
+        content: values.contentAr,
+        description: values.contentAr,
+      },
+      en: {
+        logos: values.logos,
+        eyebrowTitle: values.eyebrowTitleEn,
+        title: values.titleEn,
+        content: values.contentEn,
+        description: values.contentEn,
+      },
+    })
+  }
+
+  const handleContactSectionSubmit = async ({
+    values,
+  }: {
+    values: ContactSectionValues
+  }) => {
+    await saveSection({
+      key: "contactSection",
+      ar: {
+        eyebrowTitle: values.eyebrowTitleAr,
+        title: values.titleAr,
+        content: values.contentAr,
+        description: values.contentAr,
+        ctaLabel: values.ctaLabelAr,
+      },
+      en: {
+        eyebrowTitle: values.eyebrowTitleEn,
+        title: values.titleEn,
+        content: values.contentEn,
+        description: values.contentEn,
+        ctaLabel: values.ctaLabelEn,
+      },
+    })
+  }
+
   if (isLoading) {
     return <PageLoader />
   }
@@ -167,6 +303,24 @@ export default function WebsiteHomePage() {
         slug="home"
         initialValues={data?.briefSection}
         onSubmit={handleBriefSectionSubmit}
+      />
+
+      <AboutSectionForm
+        slug="home"
+        initialValues={data?.aboutSection}
+        onSubmit={handleAboutSectionSubmit}
+      />
+
+      <PartnersSectionForm
+        slug="home"
+        initialValues={data?.partnersSection}
+        onSubmit={handlePartnersSectionSubmit}
+      />
+
+      <ContactSectionForm
+        slug="home"
+        initialValues={data?.contactSection}
+        onSubmit={handleContactSectionSubmit}
       />
     </div>
   )

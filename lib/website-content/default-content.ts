@@ -28,6 +28,29 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<WebsitePageSlug, LocalizedContent>
           image:
             "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80",
         },
+        aboutSection: {
+          titlePartOne: "عن",
+          titlePartTwo: "واعد أوربان",
+          description:
+            "نستخدم خبرتنا في إدارة وتطوير العقارات متعددة الفئات لتقديم عوائد موثوقة ومجزية عبر استثمارات عقارية ذكية وآمنة ومستدامة.",
+          ctaLabel: "اعرف المزيد",
+          image:
+            "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80",
+        },
+        partnersSection: {
+          eyebrowTitle: "بوابة التواصل",
+          title: "تحالف الريادة",
+          description:
+            "تحالفاتنا الرائدة هي امتداد لرؤيتنا الطموحة، تجمع بين الخبرات الاستراتيجية والشراكات الموثوقة.",
+          logos: [],
+        },
+        contactSection: {
+          eyebrowTitle: "بوابة التواصل",
+          title: "بداية الحوار",
+          description:
+            "نؤمن بأن التواصل هو بداية الثقة، ونسعد بالإجابة على استفساراتكم وتقديم الدعم اللازم لنكون شركاءكم في تحقيق تطلعاتكم.",
+          ctaLabel: "اضغط هنا",
+        },
       },
       en: {
         heroSection: {
@@ -43,6 +66,29 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<WebsitePageSlug, LocalizedContent>
             "At Waed Real Estate Investment, we provide high-quality opportunities built on smart planning, long-term trust, and sustainable value. We develop real estate projects with professional standards aligned with client expectations and market evolution.",
           image:
             "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80",
+        },
+        aboutSection: {
+          titlePartOne: "About",
+          titlePartTwo: "Wahed Urban",
+          description:
+            "We use our expertise in managing and developing multi-category real estate to deliver reliable, rewarding returns through smart, secure, and sustainable property investments.",
+          ctaLabel: "Learn More",
+          image:
+            "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80",
+        },
+        partnersSection: {
+          eyebrowTitle: "Communication Gateway",
+          title: "Leadership Alliance",
+          description:
+            "Our alliances extend our ambitious vision by combining strategic expertise with trusted partnerships.",
+          logos: [],
+        },
+        contactSection: {
+          eyebrowTitle: "Communication Gateway",
+          title: "Start the Conversation",
+          description:
+            "We believe communication is the start of trust, and we are here to answer your questions and support your next move.",
+          ctaLabel: "Click Here",
         },
       },
     },

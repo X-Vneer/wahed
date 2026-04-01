@@ -10,10 +10,13 @@ type UploaderProps = ComponentProps<typeof UploadDropzone> & {
   variant?: "default" | "circular"
 }
 
-export default function Uploader({ variant = "default", ...props }: UploaderProps) {
+export default function Uploader({
+  variant = "default",
+  ...props
+}: UploaderProps) {
   const t = useTranslations()
   const isCircular = variant === "circular"
-  
+
   return (
     <UploadDropzone
       config={{
@@ -27,12 +30,13 @@ export default function Uploader({ variant = "default", ...props }: UploaderProp
             ? "rounded-full! w-[200px] aspect-square  flex flex-col items-center justify-center p-2!"
             : "rounded-lg py-10"
         ),
-        label: isCircular ? "text-xs text-foreground text-normal " : "text-sm text-foreground text-normal mb-2",
+        label: isCircular
+          ? "text-xs text-foreground text-normal "
+          : "text-sm text-foreground text-normal mb-2",
         uploadIcon: "text-primary",
-
       }}
       content={{
-        label:  t("upload.label"),
+        label: t("upload.label"),
         uploadIcon: <CloudUpload className="text-primary" />,
       }}
       onClientUploadComplete={(res) => {

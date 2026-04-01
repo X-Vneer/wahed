@@ -1454,6 +1454,112 @@
           "saveFailed": "فشل حفظ قسم النبذة"
         },
         "save": "حفظ قسم النبذة"
+      },
+      "aboutSection": {
+        "title": "قسم من نحن",
+        "description": "إدارة قسم من نحن كقسم مستقل داخل الصفحة الرئيسية.",
+        "fields": {
+          "image": "صورة القسم",
+          "titlePartOneAr": "السطر الأول من العنوان (عربي)",
+          "titlePartOneEn": "السطر الأول من العنوان (إنجليزي)",
+          "titlePartTwoAr": "السطر الثاني من العنوان (عربي)",
+          "titlePartTwoEn": "السطر الثاني من العنوان (إنجليزي)",
+          "descriptionAr": "الوصف (عربي)",
+          "descriptionEn": "الوصف (إنجليزي)",
+          "ctaLabelAr": "نص الزر (عربي)",
+          "ctaLabelEn": "نص الزر (إنجليزي)"
+        },
+        "placeholders": {
+          "titlePartOneAr": "عن",
+          "titlePartOneEn": "About",
+          "titlePartTwoAr": "واعد أوربان",
+          "titlePartTwoEn": "Wahed Urban",
+          "descriptionAr": "اكتب وصف القسم بالعربية",
+          "descriptionEn": "Write section description in English",
+          "ctaLabelAr": "اعرف المزيد",
+          "ctaLabelEn": "Learn More"
+        },
+        "ui": {
+          "imageHint": "ارفع الصورة التي تظهر في يمين هذا القسم.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة حقول العربية والإنجليزية لضمان عرض القسم بشكل صحيح بكلتا اللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم من نحن بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم من نحن"
+        },
+        "save": "حفظ قسم من نحن"
+      },
+      "partnersSection": {
+        "title": "قسم الشركاء",
+        "description": "إدارة شعارات الشركاء ومحتوى القسم باللغتين.",
+        "fields": {
+          "logos": "شعارات الشركاء",
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بوابة التواصل",
+          "eyebrowTitleEn": "Communication Gateway",
+          "titleAr": "تحالف الريادة",
+          "titleEn": "Leadership Alliance",
+          "contentAr": "اكتب محتوى قسم الشركاء باللغة العربية",
+          "contentEn": "Write partners section content in English"
+        },
+        "ui": {
+          "logosHint": "ارفع عدة شعارات للشركاء. كرر الرفع لإضافة المزيد.",
+          "removeLogo": "إزالة الشعار",
+          "noLogos": "لا توجد شعارات مرفوعة حتى الآن.",
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لعرض القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الشركاء بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الشركاء"
+        },
+        "save": "حفظ قسم الشركاء"
+      },
+      "contactSection": {
+        "title": "قسم التواصل",
+        "description": "إدارة قسم التواصل بالمحتوى الثنائي ونص الزر.",
+        "fields": {
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)",
+          "ctaLabelAr": "نص الزر (عربي)",
+          "ctaLabelEn": "نص الزر (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بوابة التواصل",
+          "eyebrowTitleEn": "Communication Gateway",
+          "titleAr": "بداية الحوار",
+          "titleEn": "Start the Conversation",
+          "contentAr": "اكتب محتوى قسم الدعوة للتواصل باللغة العربية",
+          "contentEn": "Write contact section content in English",
+          "ctaLabelAr": "اضغط هنا",
+          "ctaLabelEn": "Click Here"
+        },
+        "ui": {
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لضمان ظهور قسم التواصل بشكل صحيح بكلتا اللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم التواصل بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم التواصل"
+        },
+        "save": "حفظ قسم التواصل"
       }
     },
     "projects": {

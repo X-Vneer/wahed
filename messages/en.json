@@ -1454,6 +1454,112 @@
           "saveFailed": "Failed to save brief section"
         },
         "save": "Save Brief Section"
+      },
+      "aboutSection": {
+        "title": "About Section",
+        "description": "Manage the dedicated About block shown on the homepage.",
+        "fields": {
+          "image": "Section image",
+          "titlePartOneAr": "Title line 1 (Arabic)",
+          "titlePartOneEn": "Title line 1 (English)",
+          "titlePartTwoAr": "Title line 2 (Arabic)",
+          "titlePartTwoEn": "Title line 2 (English)",
+          "descriptionAr": "Description (Arabic)",
+          "descriptionEn": "Description (English)",
+          "ctaLabelAr": "Button label (Arabic)",
+          "ctaLabelEn": "Button label (English)"
+        },
+        "placeholders": {
+          "titlePartOneAr": "عن",
+          "titlePartOneEn": "About",
+          "titlePartTwoAr": "واعد أوربان",
+          "titlePartTwoEn": "Wahed Urban",
+          "descriptionAr": "اكتب وصف القسم بالعربية",
+          "descriptionEn": "Write section description in English",
+          "ctaLabelAr": "اعرف المزيد",
+          "ctaLabelEn": "Learn More"
+        },
+        "ui": {
+          "imageHint": "Upload the image displayed on the right side of this section.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill all Arabic and English fields so this section renders correctly in both languages."
+        },
+        "success": {
+          "saved": "About section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save about section"
+        },
+        "save": "Save About Section"
+      },
+      "partnersSection": {
+        "title": "Partners Section",
+        "description": "Manage partner logos and bilingual section content.",
+        "fields": {
+          "logos": "Partner logos",
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بوابة التواصل",
+          "eyebrowTitleEn": "Communication Gateway",
+          "titleAr": "تحالف الريادة",
+          "titleEn": "Leadership Alliance",
+          "contentAr": "اكتب محتوى قسم الشركاء باللغة العربية",
+          "contentEn": "Write partners section content in English"
+        },
+        "ui": {
+          "logosHint": "Upload multiple partner logos. Repeat upload to add more logos.",
+          "removeLogo": "Remove logo",
+          "noLogos": "No logos uploaded yet.",
+          "bilingualHint": "Fill Arabic and English fields so this section appears in both languages."
+        },
+        "success": {
+          "saved": "Partners section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save partners section"
+        },
+        "save": "Save Partners Section"
+      },
+      "contactSection": {
+        "title": "Contact Section",
+        "description": "Manage the contact gateway block with bilingual content and button label.",
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)",
+          "ctaLabelAr": "Button label (Arabic)",
+          "ctaLabelEn": "Button label (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بوابة التواصل",
+          "eyebrowTitleEn": "Communication Gateway",
+          "titleAr": "بداية الحوار",
+          "titleEn": "Start the Conversation",
+          "contentAr": "اكتب محتوى دعوة الإجراء باللغة العربية",
+          "contentEn": "Write contact section content in English",
+          "ctaLabelAr": "اضغط هنا",
+          "ctaLabelEn": "Click Here"
+        },
+        "ui": {
+          "bilingualHint": "Fill Arabic and English fields so this contact section appears correctly in both languages."
+        },
+        "success": {
+          "saved": "Contact section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save contact section"
+        },
+        "save": "Save Contact Section"
       }
     },
     "projects": {
