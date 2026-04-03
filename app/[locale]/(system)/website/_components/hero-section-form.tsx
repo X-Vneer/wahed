@@ -54,24 +54,19 @@ export function HeroSectionForm({
   initialValues,
 }: HeroSectionFormProps) {
   const t = useTranslations("websiteCms")
-  const safeInitialValues: HeroSectionValues = {
-    backgroundImage: initialValues?.backgroundImage ?? "",
-    titleAr: initialValues?.titleAr ?? "",
-    titleEn: initialValues?.titleEn ?? "",
-    descriptionAr: initialValues?.descriptionAr ?? "",
-    descriptionEn: initialValues?.descriptionEn ?? "",
-    ctaLabelAr: initialValues?.ctaLabelAr ?? "",
-    ctaLabelEn: initialValues?.ctaLabelEn ?? "",
-  }
 
   const form = useForm<HeroSectionValues>({
     mode: "controlled",
-    initialValues: safeInitialValues,
+    initialValues: {
+      backgroundImage: initialValues?.backgroundImage ?? "",
+      titleAr: initialValues?.titleAr ?? "",
+      titleEn: initialValues?.titleEn ?? "",
+      descriptionAr: initialValues?.descriptionAr ?? "",
+      descriptionEn: initialValues?.descriptionEn ?? "",
+      ctaLabelAr: initialValues?.ctaLabelAr ?? "",
+      ctaLabelEn: initialValues?.ctaLabelEn ?? "",
+    },
   })
-
-  useEffect(() => {
-    form.setValues(safeInitialValues)
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: HeroSectionValues) => {
     form.clearFieldError("root")

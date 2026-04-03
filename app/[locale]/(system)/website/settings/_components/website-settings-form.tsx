@@ -30,22 +30,10 @@ import {
 import type { WebsiteSiteSettingsAdminDto } from "@/lib/website-site-settings/service"
 import { useForm } from "@mantine/form"
 import axios from "axios"
-import { ImageIcon, Megaphone, Palette, Search, Type, X } from "lucide-react"
+import { ImageIcon, Megaphone, Palette, Search, X } from "lucide-react"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
-
-const FONT_STACKS = [
-  "Inter",
-  "Manrope",
-  "Plus Jakarta Sans",
-  "DM Sans",
-  "Cairo",
-  "Tajawal",
-  "Noto Sans Arabic",
-  "Geist",
-  "system-ui",
-] as const
 
 type FormModel = WebsiteSiteSettingsFormValues & { root?: string }
 
