@@ -16,7 +16,6 @@ import {
   FolderKanban,
   Home,
   Menu,
-  Palette,
   PhoneCall,
   Settings,
 } from "lucide-react"
@@ -29,7 +28,6 @@ const navItems = [
   { href: "/website/about", key: "nav.about", icon: CircleHelp },
   { href: "/website/contact", key: "nav.contact", icon: PhoneCall },
   { href: "/website/settings", key: "nav.settings", icon: Settings },
-  { href: "/website/theme", key: "nav.theme", icon: Palette },
 ]
 
 export function WebsiteDashboardNavbar() {

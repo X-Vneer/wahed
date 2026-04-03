@@ -1,109 +1,48 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { WebsiteSettingsForm } from "@/app/[locale]/(system)/website/settings/_components/website-settings-form"
+import PageLoader from "@/components/page-loader"
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useWebsiteContent } from "@/app/[locale]/(system)/website/_components/use-website-content"
+import { useWebsiteSiteSettings } from "@/hooks/use-website-site-settings"
+import type { WebsiteSiteSettingsFormValues } from "@/lib/schemas/website-site-settings"
 import { useTranslations } from "next-intl"
-import { useEffect, useState } from "react"
-import { toast } from "sonner"
 
-type SettingsContent = {
-  siteName: string
-  tagline: string
-  metaTitle: string
-}
-
-export default function WebsiteGeneralSettingsPage() {
+export default function WebsiteSettingsPage() {
   const t = useTranslations("websiteCms.settings")
-  const { content, isLoading, save } =
-    useWebsiteContent<SettingsContent>("settings")
-  const [values, setValues] = useState<SettingsContent>({
-    siteName: "",
-    tagline: "",
-    metaTitle: "",
-  })
+  const { settings, isLoading, updatePartial, isUpdating } =
+    useWebsiteSiteSettings()
 
-  useEffect(() => {
-    if (content) {
-      setValues({
-        siteName: content.siteName ?? "",
-        tagline: content.tagline ?? "",
-        metaTitle: content.metaTitle ?? "",
-      })
-    }
-  }, [content])
+  const save = async (values: WebsiteSiteSettingsFormValues): Promise<void> => {
+    await updatePartial(values)
+  }
 
-  const handleSave = async () => {
-    await save(values)
-    toast.success(t("save"))
+  if (isLoading) {
+    return <PageLoader />
   }
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="text-muted-foreground text-sm">
-          {t("description")}
-        </p>
-      </header>
-
-      <Card>
+    <div className="flex flex-col gap-4">
+      <Card className="flex flex-col gap-1">
         <CardHeader>
-          <CardTitle>{t("card.title")}</CardTitle>
-          <CardDescription>{t("card.description")}</CardDescription>
+          <CardTitle className="text-2xl font-semibold tracking-tight">
+            {t("pageTitle")}
+          </CardTitle>
+          <CardDescription className="text-muted-foreground text-sm">
+            {t("pageDescription")}
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="site-name">{t("fields.siteName")}</Label>
-              <Input
-                id="site-name"
-                value={values.siteName}
-                onChange={(event) =>
-                  setValues((prev) => ({
-                    ...prev,
-                    siteName: event.target.value,
-                  }))
-                }
-                disabled={isLoading}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="site-tagline">{t("fields.tagline")}</Label>
-              <Input
-                id="site-tagline"
-                value={values.tagline}
-                onChange={(event) =>
-                  setValues((prev) => ({ ...prev, tagline: event.target.value }))
-                }
-                disabled={isLoading}
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="site-meta-title">{t("fields.metaTitle")}</Label>
-            <Input
-              id="site-meta-title"
-              value={values.metaTitle}
-              onChange={(event) =>
-                setValues((prev) => ({ ...prev, metaTitle: event.target.value }))
-              }
-              disabled={isLoading}
-            />
-          </div>
-          <Button onClick={handleSave} disabled={isLoading}>
-            {t("save")}
-          </Button>
-        </CardContent>
       </Card>
+
+      <WebsiteSettingsForm
+        settings={settings}
+        isLoading={isLoading || isUpdating}
+        onSave={save}
+      />
     </div>
   )
 }

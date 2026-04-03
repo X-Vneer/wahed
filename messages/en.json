@@ -1376,8 +1376,7 @@
       "projects": "Projects",
       "about": "About",
       "contact": "Contact",
-      "settings": "General Settings",
-      "theme": "Theme"
+      "settings": "Website settings"
     },
     "home": {
       "title": "Home Page",
@@ -1827,38 +1826,74 @@
       }
     },
     "settings": {
-      "title": "General Settings",
-      "description": "Configure your website name, tagline, and default metadata.",
-      "card": {
-        "title": "Website Details",
-        "description": "Core settings used across all pages"
+      "pageTitle": "Website settings",
+      "pageDescription": "Brand colors, typography, logos, SEO defaults, and public contact details for your marketing site. Load them on the live site via the public API.",
+      "saveAll": "Save settings",
+      "tabs": {
+        "general": "General",
+        "theme": "Theme",
+        "fonts": "Fonts",
+        "logos": "Logos",
+        "seo": "SEO",
+        "contact": "Contact & analytics"
       },
-      "fields": {
-        "siteName": "Website name",
-        "tagline": "Tagline",
-        "metaTitle": "Default meta title"
+      "toast": {
+        "saved": "Settings saved",
+        "saveFailed": "Could not save settings"
       },
-      "save": "Save General Settings"
-    },
-    "theme": {
-      "title": "Theme",
-      "description": "Customize colors, typography, and visual style for the public site.",
-      "card": {
-        "title": "Theme Customization",
-        "description": "Brand colors and typography settings"
+      "theme": {
+        "title": "Theme & colors",
+        "description": "Brand palette for the public site (hex values).",
+        "primaryColor": "Primary color (hex)",
+        "accentColor": "Accent color (hex)",
+        "blackColor": "Black / near-black (hex)",
+        "secondaryTextColor": "Secondary text (hex)"
       },
-      "fields": {
-        "primaryColor": "Primary color",
-        "accentColor": "Accent color",
-        "fontStyle": "Font style",
-        "fontPlaceholder": "Select a font style"
+      "fonts": {
+        "title": "Typography",
+        "description": "Font family names per language (match what your public site loads).",
+        "hint": "Common stacks are listed; your frontend should load the matching webfonts.",
+        "fontAr": "Font (Arabic)",
+        "fontEn": "Font (English)"
       },
-      "fontOptions": {
-        "sans": "Sans-serif",
-        "serif": "Serif",
-        "mono": "Monospace"
+      "logos": {
+        "title": "Logos",
+        "description": "Two variants so the mark stays legible on light and dark backgrounds.",
+        "forDarkBg": "Logo for dark backgrounds",
+        "forDarkBgHint": "Usually a light or white version for navbars and footers on dark UI.",
+        "forLightBg": "Logo for light backgrounds",
+        "forLightBgHint": "Usually a dark version for headers on white or light sections.",
+        "remove": "Remove image"
       },
-      "save": "Save Theme Settings"
+      "seo": {
+        "title": "SEO & metadata",
+        "description": "Defaults for meta tags and social sharing. Page-specific content can still override these.",
+        "metaTitleAr": "Default meta title (Arabic)",
+        "metaTitleEn": "Default meta title (English)",
+        "metaDescriptionAr": "Default meta description (Arabic)",
+        "metaDescriptionEn": "Default meta description (English)",
+        "siteUrl": "Public site URL",
+        "siteUrlHint": "Canonical base URL (https) used for Open Graph and links.",
+        "ogImageUrl": "Default Open Graph image URL",
+        "twitterSite": "X (Twitter) handle",
+        "twitterSiteHint": "Site username for Twitter card attribution, e.g. @yourbrand.",
+        "keywordsAr": "Keywords (Arabic)",
+        "keywordsEn": "Keywords (English)",
+        "robotsAllowIndex": "Allow search engines to index the site",
+        "robotsHint": "Turn off only for staging or pre-launch environments."
+      },
+      "contact": {
+        "title": "Contact & analytics",
+        "description": "Public-facing contact details, favicon, and measurement ID for your public frontend.",
+        "email": "Public contact email",
+        "emailHint": "May be shown in the footer or structured data.",
+        "phone": "Public phone number",
+        "gaId": "Google Analytics measurement ID",
+        "gaHint": "Example: G-XXXXXXXXXX. Returned by the public API for your site to initialize analytics.",
+        "favicon": "Favicon URL",
+        "faviconHint": "Square image, ideally .ico or .png.",
+        "removeFavicon": "Remove favicon"
+      }
     }
   },
   "something wrong happened": "Something wrong happened",

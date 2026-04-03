@@ -61,6 +61,12 @@ enum Gender {
   FEMALE
 }
 
+enum WebsiteColorMode {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
 enum TaskPriority {
   LOW
   MEDIUM
@@ -441,4 +447,39 @@ model StaffPageSettings {
   accountingLink         String   @default("/accounting")
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
+}
+
+/// Singleton row: global public website appearance, SEO, and contact/analytics.
+model WebsiteSiteSettings {
+  id String @id @default(cuid())
+
+  primaryColor       String?
+  accentColor        String?
+  blackColor         String?
+  SecondaryTextColor String?
+
+  fontAr String?
+  fontEn String?
+
+  logoForDarkBgUrl  String?
+  logoForLightBgUrl String?
+
+  defaultMetaTitleAr       String?
+  defaultMetaTitleEn       String?
+  defaultMetaDescriptionAr String?
+  defaultMetaDescriptionEn String?
+  ogImageUrl               String?
+  siteUrl                  String?
+  twitterSite              String?
+  robotsAllowIndex         Boolean @default(true)
+  keywordsAr               String?
+  keywordsEn               String?
+
+  publicContactEmail           String?
+  publicPhone                  String?
+  faviconUrl                   String?
+  googleAnalyticsMeasurementId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
