@@ -5,10 +5,8 @@ import { useForm } from "@mantine/form"
 import axios from "axios"
 import { X } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useEffect } from "react"
 import { toast } from "sonner"
 
-import { handleFormErrors } from "@/lib/handle-form-errors"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -28,6 +26,7 @@ import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 import Uploader from "@/components/uploader"
+import { handleFormErrors } from "@/lib/handle-form-errors"
 
 export type HeroSectionValues = {
   backgroundImage: string

@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import apiClient from "@/services"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import {
   AboutHeroSectionForm,
@@ -133,6 +133,7 @@ function extractAboutEditorData(
 export default function WebsiteAboutPage() {
   const tCommon = useTranslations()
   const t = useTranslations("websiteCms.about")
+  const queryClient = useQueryClient()
   const { data, isLoading, isError } = useQuery<AboutEditorData, Error>({
     queryKey: ["website-content", "about", "bilingual"],
     queryFn: async () => {
@@ -166,6 +167,10 @@ export default function WebsiteAboutPage() {
         ...currentEn,
         [section.key]: section.en,
       },
+    })
+
+    await queryClient.invalidateQueries({
+      queryKey: ["website-content", "about", "bilingual"],
     })
   }
 

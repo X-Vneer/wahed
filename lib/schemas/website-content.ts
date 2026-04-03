@@ -10,10 +10,14 @@ export const websiteContentUpsertSchema = z.object({
   content: websiteContentItemSchema,
 })
 
-export const websiteContentBilingualUpsertSchema = z.object({
-  ar: websiteContentItemSchema,
-  en: websiteContentItemSchema,
-})
+export const websiteContentBilingualUpsertSchema = z
+  .object({
+    ar: websiteContentItemSchema.optional(),
+    en: websiteContentItemSchema.optional(),
+  })
+  .refine((body) => body.ar !== undefined || body.en !== undefined, {
+    message: "At least one locale payload is required",
+  })
 
 export type WebsiteContentUpsertInput = z.infer<typeof websiteContentUpsertSchema>
 export type WebsiteContentBilingualUpsertInput = z.infer<

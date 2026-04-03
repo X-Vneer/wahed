@@ -19,7 +19,7 @@ import {
   PartnersSectionValues,
 } from "./_components/partners-section-form"
 import apiClient from "@/services"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { HeroSectionForm } from "./_components/hero-section-form"
 import { BriefSectionForm } from "./_components/brief-section-form"
@@ -119,6 +119,7 @@ function extractHomeEditorData(content: BilingualHomeContent): HomeEditorData {
 export default function WebsiteHomePage() {
   const tCommon = useTranslations()
   const t = useTranslations("websiteCms.home")
+  const queryClient = useQueryClient()
   const { data, isLoading, isError } = useQuery<HomeEditorData, Error>({
     queryKey: ["website-content", "home", "bilingual"],
     queryFn: async () => {
@@ -152,6 +153,10 @@ export default function WebsiteHomePage() {
         ...currentEn,
         [section.key]: section.en,
       },
+    })
+
+    await queryClient.invalidateQueries({
+      queryKey: ["website-content", "home", "bilingual"],
     })
   }
 

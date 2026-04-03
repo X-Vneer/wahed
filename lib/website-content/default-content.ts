@@ -232,34 +232,10 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
   },
   projects: {
     ar: {
-      cards: [
-        {
-          title: "مشروع تطوير المقر الرئيسي",
-          status: "قيد التنفيذ",
-          description: "تحديث شامل للبنية التحتية والتصميم الداخلي.",
-        },
-        {
-          title: "مشروع مجمع المكاتب الذكي",
-          status: "تخطيط",
-          description: "تصميم وتنفيذ مجمع أعمال بمعايير استدامة عالية.",
-        },
-      ],
+      cards: [],
     },
     en: {
-      cards: [
-        {
-          title: "HQ Revamp Project",
-          status: "In Progress",
-          description:
-            "Comprehensive upgrade for infrastructure and interior design.",
-        },
-        {
-          title: "Smart Office Complex",
-          status: "Planning",
-          description:
-            "Design and delivery of a business complex with high sustainability standards.",
-        },
-      ],
+      cards: [],
     },
   },
 }

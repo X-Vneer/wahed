@@ -1562,25 +1562,24 @@
       }
     },
     "projects": {
-      "title": "Projects Page",
-      "description": "Add and organize project cards that appear on your public website.",
-      "cards": {
-        "first": {
-          "title": "E-commerce Redesign",
-          "status": "Published",
-          "description": "Case study and screenshots are visible"
-        },
-        "second": {
-          "title": "Booking Platform",
-          "status": "Draft",
-          "description": "Pending final copy review"
-        }
+      "title": "Website projects",
+      "description": "See what visitors see on the projects page, manage drafts, and publish new entries when ready.",
+      "sections": {
+        "visibleOnSite": "Published on website",
+        "visibleHint": "These entries are shown to visitors on the public projects page.",
+        "drafts": "Drafts",
+        "draftsHint": "Not visible on the site until you publish them."
+      },
+      "empty": {
+        "visible": "No published projects yet. When you publish a project, it will appear here."
+      },
+      "badge": {
+        "onSite": "On site",
+        "draft": "Draft"
       },
       "actions": {
-        "title": "Projects Actions",
-        "description": "Quick actions for project content",
-        "add": "Add New Project",
-        "reorder": "Reorder Projects"
+        "publishProject": "Publish new project",
+        "publishComingSoon": "The publishing flow will be available in a later update."
       }
     },
     "about": {

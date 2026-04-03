@@ -9,6 +9,7 @@ import {
 
 type ContentRecord = Prisma.InputJsonObject
 type LocalizedPayload = Record<WebsiteLocale, ContentRecord>
+export type BilingualContentPatch = Partial<LocalizedPayload>
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
@@ -33,6 +34,17 @@ function deepMerge(
   }
 
   return result
+}
+
+/** Merges a partial JSON patch into existing row content (deep). Omitted keys stay; nested objects merge. */
+function mergeStoredContent(
+  existingContent: unknown,
+  patch: Record<string, unknown>
+): ContentRecord {
+  const stored = isObject(existingContent)
+    ? (existingContent as Record<string, unknown>)
+    : {}
+  return deepMerge(stored, patch) as ContentRecord
 }
 
 export function isWebsitePageSlug(slug: string): slug is WebsitePageSlug {
@@ -83,6 +95,16 @@ export async function upsertPageContent(
   locale: WebsiteLocale,
   content: ContentRecord
 ) {
+  const existing = await db.websitePageContent.findUnique({
+    where: {
+      slug_locale: {
+        slug,
+        locale,
+      },
+    },
+  })
+  const merged = mergeStoredContent(existing?.content, content as Record<string, unknown>)
+
   return db.websitePageContent.upsert({
     where: {
       slug_locale: {
@@ -93,51 +115,52 @@ export async function upsertPageContent(
     create: {
       slug,
       locale,
-      content,
+      content: merged,
     },
     update: {
-      content,
+      content: merged,
     },
   })
 }
 
 export async function upsertBilingualPageContent(
   slug: WebsitePageSlug,
-  contentByLocale: LocalizedPayload
+  contentByLocale: BilingualContentPatch
 ) {
   await db.$transaction(async (tx) => {
-    await tx.websitePageContent.upsert({
-      where: {
-        slug_locale: {
-          slug,
-          locale: "ar",
-        },
-      },
-      create: {
-        slug,
-        locale: "ar",
-        content: contentByLocale.ar,
-      },
-      update: {
-        content: contentByLocale.ar,
-      },
-    })
+    for (const locale of ["ar", "en"] as const) {
+      const patch = contentByLocale[locale]
+      if (patch === undefined) continue
 
-    await tx.websitePageContent.upsert({
-      where: {
-        slug_locale: {
-          slug,
-          locale: "en",
+      const existing = await tx.websitePageContent.findUnique({
+        where: {
+          slug_locale: {
+            slug,
+            locale,
+          },
         },
-      },
-      create: {
-        slug,
-        locale: "en",
-        content: contentByLocale.en,
-      },
-      update: {
-        content: contentByLocale.en,
-      },
-    })
+      })
+      const merged = mergeStoredContent(
+        existing?.content,
+        patch as Record<string, unknown>
+      )
+
+      await tx.websitePageContent.upsert({
+        where: {
+          slug_locale: {
+            slug,
+            locale,
+          },
+        },
+        create: {
+          slug,
+          locale,
+          content: merged,
+        },
+        update: {
+          content: merged,
+        },
+      })
+    }
   })
 }

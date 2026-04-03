@@ -3,6 +3,7 @@ import { PERMISSIONS } from "@/config"
 import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
 import { transformZodError } from "@/lib/transform-errors"
 import {
+  type BilingualContentPatch,
   getBilingualPageContent,
   getPageContent,
   isWebsitePageSlug,
@@ -20,10 +21,14 @@ const singleLocalePayloadSchema = z.object({
   content: z.record(z.string(), z.unknown()),
 })
 
-const bilingualPayloadSchema = z.object({
-  ar: z.record(z.string(), z.unknown()),
-  en: z.record(z.string(), z.unknown()),
-})
+const bilingualPayloadSchema = z
+  .object({
+    ar: z.record(z.string(), z.unknown()).optional(),
+    en: z.record(z.string(), z.unknown()).optional(),
+  })
+  .refine((body) => body.ar !== undefined || body.en !== undefined, {
+    message: "At least one locale payload is required",
+  })
 
 export async function GET(
   request: NextRequest,
@@ -109,10 +114,10 @@ export async function PUT(
         )
       }
 
-      await upsertBilingualPageContent(slug, {
-        ar: validationResult.data.ar as Prisma.InputJsonObject,
-        en: validationResult.data.en as Prisma.InputJsonObject,
-      })
+      await upsertBilingualPageContent(
+        slug,
+        validationResult.data as BilingualContentPatch
+      )
       return NextResponse.json({ message: t("common.saved") })
     }
 
