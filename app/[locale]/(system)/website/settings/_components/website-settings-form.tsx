@@ -18,13 +18,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
@@ -40,7 +33,6 @@ import axios from "axios"
 import { ImageIcon, Megaphone, Palette, Search, Type, X } from "lucide-react"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
-import { useMemo } from "react"
 import { toast } from "sonner"
 
 const FONT_STACKS = [
@@ -67,6 +59,7 @@ function valuesFromSettings(
     secondaryTextColor: s.secondaryTextColor ?? "",
     fontAr: s.fontAr ?? "Inter",
     fontEn: s.fontEn ?? "Inter",
+
     logoForDarkBgUrl: s.logoForDarkBgUrl ?? "",
     logoForLightBgUrl: s.logoForLightBgUrl ?? "",
     defaultMetaTitleAr: s.defaultMetaTitleAr ?? "",
@@ -197,18 +190,6 @@ export function WebsiteSettingsForm({ settings, isLoading, onSave }: Props) {
     initialValues: settings ? valuesFromSettings(settings) : emptyValues,
     validate: zod4Resolver(websiteSiteSettingsFormSchema),
   })
-
-  const fontArChoices = useMemo(() => {
-    const set = new Set<string>(FONT_STACKS)
-    set.add(form.values.fontAr)
-    return [...set]
-  }, [form.values.fontAr])
-
-  const fontEnChoices = useMemo(() => {
-    const set = new Set<string>(FONT_STACKS)
-    set.add(form.values.fontEn)
-    return [...set]
-  }, [form.values.fontEn])
 
   const handleSubmit = async (values: WebsiteSiteSettingsFormValues) => {
     form.clearFieldError("root")
@@ -370,7 +351,7 @@ export function WebsiteSettingsForm({ settings, isLoading, onSave }: Props) {
         </CardContent>
       </Card>
 
-      <Card className="border-border/70 bg-card/80 backdrop-blur">
+      {/* <Card className="border-border/70 bg-card/80 backdrop-blur">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Type className="text-muted-foreground size-5" />
@@ -379,71 +360,69 @@ export function WebsiteSettingsForm({ settings, isLoading, onSave }: Props) {
           <CardDescription>{t("fonts.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <FieldGroup className="flex flex-col gap-5">
-            <FieldDescription>{t("fonts.hint")}</FieldDescription>
-            <div className="grid gap-5 md:grid-cols-2">
-              <Field data-invalid={!!form.errors.fontAr}>
-                <FieldLabel>{t("fonts.fontAr")}</FieldLabel>
-                <FieldContent>
-                  <Select
-                    value={form.values.fontAr}
-                    onValueChange={(v) =>
-                      v != null && form.setFieldValue("fontAr", v)
-                    }
-                    disabled={isLoading}
-                  >
-                    <SelectTrigger
-                      className="w-full"
-                      aria-invalid={!!form.errors.fontAr}
-                    >
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {fontArChoices.map((name) => (
-                        <SelectItem key={name} value={name}>
-                          {name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {form.errors.fontAr ? (
-                    <FieldError>{String(form.errors.fontAr)}</FieldError>
+          <FieldGroup className="grid gap-5 md:grid-cols-2">
+            <Field data-invalid={!!form.errors.fontAr}>
+              <FieldLabel htmlFor="ws-font-ar">{t("fonts.fontAr")}</FieldLabel>
+              <FieldDescription>{t("fonts.hint")}</FieldDescription>
+              <FieldContent>
+                <Input
+                  id="ws-font-ar"
+                  dir="ltr"
+                  list="website-font-ar-presets"
+                  key={form.key("fontAr")}
+                  {...form.getInputProps("fontAr")}
+                  placeholder="Inter"
+                  disabled={isLoading}
+                  aria-invalid={!!form.errors.fontAr}
+                />
+                <datalist id="website-font-ar-presets">
+                  {FONT_STACKS.map((name) => (
+                    <option key={name} value={name} />
+                  ))}
+                  {form.values.fontAr &&
+                  !(FONT_STACKS as readonly string[]).includes(
+                    form.values.fontAr
+                  ) ? (
+                    <option value={form.values.fontAr} />
                   ) : null}
-                </FieldContent>
-              </Field>
-              <Field data-invalid={!!form.errors.fontEn}>
-                <FieldLabel>{t("fonts.fontEn")}</FieldLabel>
-                <FieldContent>
-                  <Select
-                    value={form.values.fontEn}
-                    onValueChange={(v) =>
-                      v != null && form.setFieldValue("fontEn", v)
-                    }
-                    disabled={isLoading}
-                  >
-                    <SelectTrigger
-                      className="w-full"
-                      aria-invalid={!!form.errors.fontEn}
-                    >
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {fontEnChoices.map((name) => (
-                        <SelectItem key={`en-${name}`} value={name}>
-                          {name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {form.errors.fontEn ? (
-                    <FieldError>{String(form.errors.fontEn)}</FieldError>
+                </datalist>
+                {form.errors.fontAr ? (
+                  <FieldError>{String(form.errors.fontAr)}</FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
+            <Field data-invalid={!!form.errors.fontEn}>
+              <FieldLabel htmlFor="ws-font-en">{t("fonts.fontEn")}</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="ws-font-en"
+                  dir="ltr"
+                  list="website-font-en-presets"
+                  key={form.key("fontEn")}
+                  {...form.getInputProps("fontEn")}
+                  placeholder="Inter"
+                  disabled={isLoading}
+                  aria-invalid={!!form.errors.fontEn}
+                />
+                <datalist id="website-font-en-presets">
+                  {FONT_STACKS.map((name) => (
+                    <option key={name} value={name} />
+                  ))}
+                  {form.values.fontEn &&
+                  !(FONT_STACKS as readonly string[]).includes(
+                    form.values.fontEn
+                  ) ? (
+                    <option value={form.values.fontEn} />
                   ) : null}
-                </FieldContent>
-              </Field>
-            </div>
+                </datalist>
+                {form.errors.fontEn ? (
+                  <FieldError>{String(form.errors.fontEn)}</FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
           </FieldGroup>
         </CardContent>
-      </Card>
+      </Card> */}
 
       <Card className="border-border/60 bg-card/80 backdrop-blur">
         <CardHeader className="space-y-1 pb-3">
@@ -607,22 +586,97 @@ export function WebsiteSettingsForm({ settings, isLoading, onSave }: Props) {
                 ) : null}
               </FieldContent>
             </Field>
+            <Field data-invalid={!!form.errors.faviconUrl}>
+              <FieldLabel>{t("seo.favicon")}</FieldLabel>
+              <FieldDescription>{t("seo.faviconHint")}</FieldDescription>
+              {form.errors.faviconUrl ? (
+                <FieldContent>
+                  <FieldError>{String(form.errors.faviconUrl)}</FieldError>
+                </FieldContent>
+              ) : null}
+              {!form.values.faviconUrl ? (
+                <div className="bg-muted/40 mt-3 max-w-xs rounded-xl border border-dashed p-4">
+                  <Uploader
+                    endpoint="websiteImageUploader"
+                    disabled={isLoading}
+                    onClientUploadComplete={(res) => {
+                      if (res?.[0]?.ufsUrl) {
+                        form.setFieldValue("faviconUrl", res[0].ufsUrl)
+                      }
+                    }}
+                    onUploadError={(err) => {
+                      toast.error(err.message)
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="bg-muted/30 mt-3 flex max-w-xs flex-col gap-3 rounded-xl border p-3">
+                  <div className="bg-background relative flex size-20 items-center justify-center overflow-hidden rounded-lg border">
+                    <img
+                      src={form.values.faviconUrl}
+                      alt=""
+                      className="size-12 object-contain"
+                    />
+                    <Button
+                      size="icon"
+                      type="button"
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 size-7"
+                      onClick={() => form.setFieldValue("faviconUrl", "")}
+                      aria-label={t("seo.removeFavicon")}
+                      disabled={isLoading}
+                    >
+                      <X className="size-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </Field>
             <Field data-invalid={!!form.errors.ogImageUrl}>
-              <FieldLabel htmlFor="ws-og">{t("seo.ogImageUrl")}</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="ws-og"
-                  key={form.key("ogImageUrl")}
-                  className="max-w-2xl font-mono text-sm"
-                  {...form.getInputProps("ogImageUrl")}
-                  placeholder="https://"
-                  disabled={isLoading}
-                  aria-invalid={!!form.errors.ogImageUrl}
-                />
-                {form.errors.ogImageUrl ? (
+              <FieldLabel>{t("seo.ogImageUrl")}</FieldLabel>
+              <FieldDescription>{t("seo.ogImageHint")}</FieldDescription>
+              {form.errors.ogImageUrl ? (
+                <FieldContent>
                   <FieldError>{String(form.errors.ogImageUrl)}</FieldError>
-                ) : null}
-              </FieldContent>
+                </FieldContent>
+              ) : null}
+              {!form.values.ogImageUrl ? (
+                <div className="bg-muted/40 mt-3 max-w-md rounded-xl border border-dashed p-4">
+                  <Uploader
+                    endpoint="websiteImageUploader"
+                    disabled={isLoading}
+                    onClientUploadComplete={(res) => {
+                      if (res?.[0]?.ufsUrl) {
+                        form.setFieldValue("ogImageUrl", res[0].ufsUrl)
+                      }
+                    }}
+                    onUploadError={(err) => {
+                      toast.error(err.message)
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="bg-muted/30 mt-3 flex max-w-md flex-col gap-3 rounded-xl border p-3">
+                  <div className="bg-background relative aspect-1200/630 w-full overflow-hidden rounded-lg border">
+                    <img
+                      src={form.values.ogImageUrl}
+                      alt=""
+                      className="size-full object-contain"
+                    />
+                    <Button
+                      size="icon"
+                      type="button"
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 size-7"
+                      onClick={() => form.setFieldValue("ogImageUrl", "")}
+                      aria-label={t("seo.removeOgImage")}
+                      disabled={isLoading}
+                    >
+                      <X className="size-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              )}
             </Field>
             <Field data-invalid={!!form.errors.twitterSite}>
               <FieldLabel htmlFor="ws-tw">{t("seo.twitterSite")}</FieldLabel>
@@ -712,7 +766,6 @@ export function WebsiteSettingsForm({ settings, isLoading, onSave }: Props) {
             <div className="grid gap-5 md:grid-cols-2">
               <Field data-invalid={!!form.errors.publicContactEmail}>
                 <FieldLabel htmlFor="ws-email">{t("contact.email")}</FieldLabel>
-                <FieldDescription>{t("contact.emailHint")}</FieldDescription>
                 <FieldContent>
                   <Input
                     id="ws-email"
@@ -764,58 +817,6 @@ export function WebsiteSettingsForm({ settings, isLoading, onSave }: Props) {
                   </FieldError>
                 ) : null}
               </FieldContent>
-            </Field>
-            <Field data-invalid={!!form.errors.faviconUrl}>
-              <FieldLabel>{t("contact.favicon")}</FieldLabel>
-              <FieldDescription>{t("contact.faviconHint")}</FieldDescription>
-              <FieldContent>
-                <Input
-                  key={form.key("faviconUrl")}
-                  className="max-w-2xl font-mono text-sm"
-                  {...form.getInputProps("faviconUrl")}
-                  placeholder="https://"
-                  disabled={isLoading}
-                  aria-invalid={!!form.errors.faviconUrl}
-                />
-                {form.errors.faviconUrl ? (
-                  <FieldError>{String(form.errors.faviconUrl)}</FieldError>
-                ) : null}
-              </FieldContent>
-              {!form.values.faviconUrl ? (
-                <div className="bg-muted/40 mt-3 max-w-xs rounded-xl border border-dashed p-4">
-                  <Uploader
-                    endpoint="websiteImageUploader"
-                    onClientUploadComplete={(res) => {
-                      if (res?.[0]?.ufsUrl) {
-                        form.setFieldValue("faviconUrl", res[0].ufsUrl)
-                      }
-                    }}
-                    onUploadError={(err) => {
-                      toast.error(err.message)
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="bg-muted/30 mt-3 flex max-w-xs flex-col gap-3 rounded-xl border p-3">
-                  <div className="bg-background relative flex size-20 items-center justify-center overflow-hidden rounded-lg border">
-                    <img
-                      src={form.values.faviconUrl}
-                      alt=""
-                      className="size-12 object-contain"
-                    />
-                    <Button
-                      size="icon"
-                      type="button"
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 size-7"
-                      onClick={() => form.setFieldValue("faviconUrl", "")}
-                      aria-label={t("contact.removeFavicon")}
-                    >
-                      <X className="size-3.5" />
-                    </Button>
-                  </div>
-                </div>
-              )}
             </Field>
           </FieldGroup>
         </CardContent>

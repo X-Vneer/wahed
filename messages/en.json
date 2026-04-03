@@ -1851,10 +1851,10 @@
       },
       "fonts": {
         "title": "Typography",
-        "description": "Font family names per language (match what your public site loads).",
-        "hint": "Common stacks are listed; your frontend should load the matching webfonts.",
-        "fontAr": "Font (Arabic)",
-        "fontEn": "Font (English)"
+        "description": "Font family names for Arabic and English on the public site (Google Fonts names or a full CSS stack with commas).",
+        "hint": "Single names load via Google Fonts (weights 300–700). Use commas for stacks, e.g. system-ui, sans-serif.",
+        "fontAr": "Arabic",
+        "fontEn": "English"
       },
       "logos": {
         "title": "Logos",
@@ -1874,25 +1874,27 @@
         "metaDescriptionEn": "Default meta description (English)",
         "siteUrl": "Public site URL",
         "siteUrlHint": "Canonical base URL (https) used for Open Graph and links.",
-        "ogImageUrl": "Default Open Graph image URL",
+        "ogImageUrl": "Default Open Graph image",
+        "ogImageHint": "Shown when links are shared. Around 1200×630 px works well for most platforms.",
+        "removeOgImage": "Remove Open Graph image",
         "twitterSite": "X (Twitter) handle",
         "twitterSiteHint": "Site username for Twitter card attribution, e.g. @yourbrand.",
         "keywordsAr": "Keywords (Arabic)",
         "keywordsEn": "Keywords (English)",
         "robotsAllowIndex": "Allow search engines to index the site",
-        "robotsHint": "Turn off only for staging or pre-launch environments."
+        "robotsHint": "Turn off only for staging or pre-launch environments.",
+        "favicon": "Favicon",
+        "faviconHint": "Square image, ideally .ico or .png. Shown in browser tabs and bookmarks.",
+        "removeFavicon": "Remove favicon"
       },
       "contact": {
         "title": "Contact & analytics",
-        "description": "Public-facing contact details, favicon, and measurement ID for your public frontend.",
+        "description": "Public-facing contact details and measurement ID for your public frontend.",
         "email": "Public contact email",
         "emailHint": "May be shown in the footer or structured data.",
         "phone": "Public phone number",
         "gaId": "Google Analytics measurement ID",
-        "gaHint": "Example: G-XXXXXXXXXX. Returned by the public API for your site to initialize analytics.",
-        "favicon": "Favicon URL",
-        "faviconHint": "Square image, ideally .ico or .png.",
-        "removeFavicon": "Remove favicon"
+        "gaHint": "Example: G-XXXXXXXXXX. Returned by the public API for your site to initialize analytics."
       }
     }
   },

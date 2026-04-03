@@ -1,26 +1,55 @@
 import db from "@/lib/db"
-import {
-  type Prisma,
-  type WebsiteSiteSettings,
-} from "@/lib/generated/prisma/client"
+import { type Prisma, type WebsiteSiteSettings } from "@/lib/generated/prisma/client"
 import type { UpdateWebsiteSiteSettingsInput } from "@/lib/schemas/website-site-settings"
 
-const DEFAULT_CREATE = {
+const DEFAULT_CREATE: Prisma.WebsiteSiteSettingsCreateInput = {
   primaryColor: "#0f172a" as string | null,
   accentColor: "#2563eb" as string | null,
+
   fontAr: "Inter",
   fontEn: "Inter",
+
   defaultMetaTitleAr: "لوحة تحكم النظام الداخلي",
   defaultMetaTitleEn: "Internal System Dashboard",
-} as const satisfies Prisma.WebsiteSiteSettingsCreateInput
+}
+
+/** CSS `font-family` value: quoted single name or pass-through stack. */
+function cssFontFamily(value: string | null | undefined): string {
+  const v = value?.trim()
+  if (!v) return "sans-serif"
+  if (v.includes(",")) return v
+  return `"${v.replace(/"/g, '\\"')}", sans-serif`
+}
+
+/** Google Fonts CSS2 URL for simple family names (weights 300–700), or null if none. */
+function googleFontsCss2Href(familyNames: string[]): string | null {
+  const unique = [
+    ...new Set(
+      familyNames
+        .map((n) => n.trim())
+        .filter(Boolean)
+        .filter((n) => !n.includes(","))
+    ),
+  ]
+  if (unique.length === 0) return null
+  const q = unique
+    .map((name) => {
+      const enc = encodeURIComponent(name).replace(/%20/g, "+")
+      return `family=${enc}:wght@300;400;500;600;700`
+    })
+    .join("&")
+  return `https://fonts.googleapis.com/css2?${q}&display=swap`
+}
 
 export type WebsiteSiteSettingsAdminDto = {
   primaryColor: string | null
   accentColor: string | null
   blackColor: string | null
   secondaryTextColor: string | null
+
   fontAr: string | null
   fontEn: string | null
+
   logoForDarkBgUrl: string | null
   logoForLightBgUrl: string | null
   defaultMetaTitleAr: string | null
@@ -44,9 +73,10 @@ function rowToAdminDto(row: WebsiteSiteSettings): WebsiteSiteSettingsAdminDto {
     primaryColor: row.primaryColor,
     accentColor: row.accentColor,
     blackColor: row.blackColor,
-    secondaryTextColor: row.SecondaryTextColor,
+    secondaryTextColor: row.secondaryTextColor,
     fontAr: row.fontAr,
     fontEn: row.fontEn,
+
     logoForDarkBgUrl: row.logoForDarkBgUrl,
     logoForLightBgUrl: row.logoForLightBgUrl,
     defaultMetaTitleAr: row.defaultMetaTitleAr,
@@ -96,9 +126,9 @@ export async function patchWebsiteSiteSettings(
     primaryColor: emptyToNull(input.primaryColor),
     accentColor: emptyToNull(input.accentColor),
     blackColor: emptyToNull(input.blackColor),
-    SecondaryTextColor: emptyToNull(input.secondaryTextColor),
-    fontAr: input.fontAr,
-    fontEn: input.fontEn,
+    secondaryTextColor: emptyToNull(input.secondaryTextColor),
+    fontAr: input.fontAr.trim() || null,
+    fontEn: input.fontEn.trim() || null,
     logoForDarkBgUrl: emptyToNull(input.logoForDarkBgUrl),
     logoForLightBgUrl: emptyToNull(input.logoForLightBgUrl),
     defaultMetaTitleAr: emptyToNull(input.defaultMetaTitleAr),
@@ -140,7 +170,14 @@ export function toPublicWebsiteSettings(
       ? row.defaultMetaDescriptionAr
       : row.defaultMetaDescriptionEn
   const keywords = locale === "ar" ? row.keywordsAr : row.keywordsEn
-  const fontFamily = locale === "ar" ? row.fontAr : row.fontEn
+
+  const fontArCss = cssFontFamily(row.fontAr)
+  const fontEnCss = cssFontFamily(row.fontEn)
+  const familyResolved = locale === "ar" ? fontArCss : fontEnCss
+  const googleFontsCssHref = googleFontsCss2Href([
+    row.fontAr ?? "",
+    row.fontEn ?? "",
+  ])
 
   return {
     locale,
@@ -148,13 +185,17 @@ export function toPublicWebsiteSettings(
       primaryColor: row.primaryColor,
       accentColor: row.accentColor,
       blackColor: row.blackColor,
-      secondaryTextColor: row.SecondaryTextColor,
+      secondaryTextColor: row.secondaryTextColor,
     },
     fonts: {
-      fontAr: row.fontAr,
-      fontEn: row.fontEn,
-      /** Resolved font for the requested locale */
-      family: fontFamily,
+      /** CSS `font-family` for Arabic */
+      fontAr: fontArCss,
+      /** CSS `font-family` for English */
+      fontEn: fontEnCss,
+      /** Resolved `font-family` for the requested locale */
+      family: familyResolved,
+      /** When set, add `<link rel="stylesheet" href="…" />` for Google Fonts (weights 300–700). */
+      googleFontsCssHref,
     },
     logos: {
       forDarkBackground: row.logoForDarkBgUrl,

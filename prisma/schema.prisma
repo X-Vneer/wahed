@@ -456,7 +456,7 @@ model WebsiteSiteSettings {
   primaryColor       String?
   accentColor        String?
   blackColor         String?
-  SecondaryTextColor String?
+  secondaryTextColor String? @map("SecondaryTextColor")
 
   fontAr String?
   fontEn String?

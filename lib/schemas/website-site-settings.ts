@@ -15,8 +15,8 @@ export const websiteSiteSettingsFormSchema = z.object({
   blackColor: optionalHex,
   secondaryTextColor: optionalHex,
 
-  fontAr: z.string().min(1).max(120),
-  fontEn: z.string().min(1).max(120),
+  fontAr: z.string().max(120),
+  fontEn: z.string().max(120),
 
   logoForDarkBgUrl: urlOrEmpty,
   logoForLightBgUrl: urlOrEmpty,
