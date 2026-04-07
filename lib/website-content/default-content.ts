@@ -37,7 +37,17 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
         ctaLabel: "تعرف أكثر",
         image: "",
       },
+      statsSection: {
+        isActive: false,
+        firstValue: "20+",
+        firstLabel: "إجمالي مساحة المشاريع",
+        secondValue: "119K+",
+        secondLabel: "متر مربع مبني",
+        thirdValue: "10+",
+        thirdLabel: "عام من الخبرة",
+      },
       partnersSection: {
+        isActive: false,
         eyebrowTitle: "بوابة التواصل",
         title: "تحالف الريادة",
         description:
@@ -74,7 +84,17 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
         ctaLabel: "Learn more",
         image: "",
       },
+      statsSection: {
+        isActive: false,
+        firstValue: "20+",
+        firstLabel: "Total project area",
+        secondValue: "119K+",
+        secondLabel: "Built square meters",
+        thirdValue: "10+",
+        thirdLabel: "Years of experience",
+      },
       partnersSection: {
+        isActive: false,
         eyebrowTitle: "Communication Portal",
         title: "Leadership Alliance",
         description:
@@ -124,6 +144,7 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
         thirdContent: "حلول مستدامة متوازنة تجمع بين البيئة والتنمية.",
       },
       boardSection: {
+        isActive: false,
         eyebrowTitle: "خلف القصة قيادة",
         title: "مجلس الإدارة",
         members: [],
@@ -166,6 +187,7 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
           "Sustainable and balanced solutions that connect environment and development.",
       },
       boardSection: {
+        isActive: false,
         eyebrowTitle: "Leadership Behind the Story",
         title: "Board of Directors",
         members: [],

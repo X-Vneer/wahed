@@ -26,9 +26,11 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
+import { Switch } from "@/components/ui/switch"
 import Uploader from "@/components/uploader"
 
 export type AboutBoardSectionValues = {
+  isActive: boolean
   eyebrowTitleAr: string
   eyebrowTitleEn: string
   titleAr: string
@@ -52,6 +54,7 @@ export function AboutBoardSectionForm({
 }: AboutBoardSectionFormProps) {
   const t = useTranslations("websiteCms")
   const safeInitialValues: AboutBoardSectionValues = {
+    isActive: initialValues?.isActive ?? false,
     eyebrowTitleAr: initialValues?.eyebrowTitleAr ?? "",
     eyebrowTitleEn: initialValues?.eyebrowTitleEn ?? "",
     titleAr: initialValues?.titleAr ?? "",
@@ -66,7 +69,7 @@ export function AboutBoardSectionForm({
 
   useEffect(() => {
     form.setValues(safeInitialValues)
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: AboutBoardSectionValues) => {
     form.clearFieldError("root")
@@ -114,6 +117,27 @@ export function AboutBoardSectionForm({
           className="flex flex-col gap-6"
         >
           <FieldGroup className="flex flex-col gap-6">
+            <Field orientation="horizontal" className="items-center gap-3">
+              <Switch
+                id="about-board-is-active"
+                checked={form.values.isActive}
+                onCheckedChange={(checked) =>
+                  form.setFieldValue("isActive", checked)
+                }
+              />
+              <div className="flex flex-col gap-0.5">
+                <FieldLabel
+                  htmlFor="about-board-is-active"
+                  className="cursor-pointer"
+                >
+                  {t(`${slug}.boardSection.fields.isActive` as never)}
+                </FieldLabel>
+                <FieldDescription>
+                  {t(`${slug}.boardSection.ui.isActiveHint` as never)}
+                </FieldDescription>
+              </div>
+            </Field>
+
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="about-board-eyebrow-ar">
@@ -148,7 +172,9 @@ export function AboutBoardSectionForm({
                 </FieldLabel>
                 <Input
                   id="about-board-title-ar"
-                  placeholder={t(`${slug}.boardSection.placeholders.titleAr` as never)}
+                  placeholder={t(
+                    `${slug}.boardSection.placeholders.titleAr` as never
+                  )}
                   {...form.getInputProps("titleAr")}
                 />
               </Field>
@@ -158,14 +184,18 @@ export function AboutBoardSectionForm({
                 </FieldLabel>
                 <Input
                   id="about-board-title-en"
-                  placeholder={t(`${slug}.boardSection.placeholders.titleEn` as never)}
+                  placeholder={t(
+                    `${slug}.boardSection.placeholders.titleEn` as never
+                  )}
                   {...form.getInputProps("titleEn")}
                 />
               </Field>
             </div>
 
             <Field>
-              <FieldLabel>{t(`${slug}.boardSection.fields.members` as never)}</FieldLabel>
+              <FieldLabel>
+                {t(`${slug}.boardSection.fields.members` as never)}
+              </FieldLabel>
               <FieldDescription>
                 {t(`${slug}.boardSection.ui.membersHint` as never)}
               </FieldDescription>
@@ -207,7 +237,9 @@ export function AboutBoardSectionForm({
                         variant="destructive"
                         type="button"
                         onClick={() => removeMemberByIndex(index)}
-                        aria-label={t(`${slug}.boardSection.ui.removeMember` as never)}
+                        aria-label={t(
+                          `${slug}.boardSection.ui.removeMember` as never
+                        )}
                       >
                         <X />
                       </Button>

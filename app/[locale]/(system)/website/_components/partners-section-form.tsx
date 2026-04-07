@@ -26,10 +26,12 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
+import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import Uploader from "@/components/uploader"
 
 export type PartnersSectionValues = {
+  isActive: boolean
   logos: string[]
   eyebrowTitleAr: string
   eyebrowTitleEn: string
@@ -55,6 +57,7 @@ export function PartnersSectionForm({
 }: PartnersSectionFormProps) {
   const t = useTranslations("websiteCms")
   const safeInitialValues: PartnersSectionValues = {
+    isActive: initialValues?.isActive ?? false,
     logos: initialValues?.logos ?? [],
     eyebrowTitleAr: initialValues?.eyebrowTitleAr ?? "",
     eyebrowTitleEn: initialValues?.eyebrowTitleEn ?? "",
@@ -71,7 +74,7 @@ export function PartnersSectionForm({
 
   useEffect(() => {
     form.setValues(safeInitialValues)
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: PartnersSectionValues) => {
     form.clearFieldError("root")
@@ -119,6 +122,27 @@ export function PartnersSectionForm({
           className="flex flex-col gap-6"
         >
           <FieldGroup className="flex flex-col gap-6">
+            <Field orientation="horizontal" className="items-center gap-3">
+              <Switch
+                id="partners-is-active"
+                checked={form.values.isActive}
+                onCheckedChange={(checked) =>
+                  form.setFieldValue("isActive", checked)
+                }
+              />
+              <div className="flex flex-col gap-0.5">
+                <FieldLabel
+                  htmlFor="partners-is-active"
+                  className="cursor-pointer"
+                >
+                  {t(`${slug}.partnersSection.fields.isActive` as never)}
+                </FieldLabel>
+                <FieldDescription>
+                  {t(`${slug}.partnersSection.ui.isActiveHint` as never)}
+                </FieldDescription>
+              </div>
+            </Field>
+
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="partners-eyebrow-title-ar">

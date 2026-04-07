@@ -75,7 +75,7 @@ export function AboutVisionMissionSectionForm({
 
   useEffect(() => {
     form.setValues(safeInitialValues)
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: AboutVisionMissionSectionValues) => {
     form.clearFieldError("root")
@@ -106,7 +106,9 @@ export function AboutVisionMissionSectionForm({
   return (
     <Card className="border-border/70 bg-card/80 backdrop-blur">
       <CardHeader>
-        <CardTitle>{t(`${slug}.visionMissionSection.title` as never)}</CardTitle>
+        <CardTitle>
+          {t(`${slug}.visionMissionSection.title` as never)}
+        </CardTitle>
         <CardDescription>
           {t(`${slug}.visionMissionSection.description` as never)}
         </CardDescription>
@@ -143,7 +145,9 @@ export function AboutVisionMissionSectionForm({
                   <div className="bg-background relative h-[220px] w-full overflow-hidden rounded-lg border">
                     <img
                       src={form.values.image}
-                      alt={t(`${slug}.visionMissionSection.fields.image` as never)}
+                      alt={t(
+                        `${slug}.visionMissionSection.fields.image` as never
+                      )}
                       className="h-full w-full object-cover"
                     />
                     <Button
@@ -160,7 +164,9 @@ export function AboutVisionMissionSectionForm({
                     </Button>
                   </div>
                   <p className="text-muted-foreground text-sm">
-                    {t(`${slug}.visionMissionSection.ui.imageUploaded` as never)}
+                    {t(
+                      `${slug}.visionMissionSection.ui.imageUploaded` as never
+                    )}
                   </p>
                 </div>
               )}
@@ -169,7 +175,9 @@ export function AboutVisionMissionSectionForm({
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="about-vision-title-ar">
-                  {t(`${slug}.visionMissionSection.fields.visionTitleAr` as never)}
+                  {t(
+                    `${slug}.visionMissionSection.fields.visionTitleAr` as never
+                  )}
                 </FieldLabel>
                 <Input
                   id="about-vision-title-ar"
@@ -181,7 +189,9 @@ export function AboutVisionMissionSectionForm({
               </Field>
               <Field>
                 <FieldLabel htmlFor="about-vision-title-en">
-                  {t(`${slug}.visionMissionSection.fields.visionTitleEn` as never)}
+                  {t(
+                    `${slug}.visionMissionSection.fields.visionTitleEn` as never
+                  )}
                 </FieldLabel>
                 <Input
                   id="about-vision-title-en"
@@ -196,7 +206,9 @@ export function AboutVisionMissionSectionForm({
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="about-vision-content-ar">
-                  {t(`${slug}.visionMissionSection.fields.visionContentAr` as never)}
+                  {t(
+                    `${slug}.visionMissionSection.fields.visionContentAr` as never
+                  )}
                 </FieldLabel>
                 <Textarea
                   id="about-vision-content-ar"
@@ -209,7 +221,9 @@ export function AboutVisionMissionSectionForm({
               </Field>
               <Field>
                 <FieldLabel htmlFor="about-vision-content-en">
-                  {t(`${slug}.visionMissionSection.fields.visionContentEn` as never)}
+                  {t(
+                    `${slug}.visionMissionSection.fields.visionContentEn` as never
+                  )}
                 </FieldLabel>
                 <Textarea
                   id="about-vision-content-en"
@@ -225,7 +239,9 @@ export function AboutVisionMissionSectionForm({
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="about-mission-title-ar">
-                  {t(`${slug}.visionMissionSection.fields.missionTitleAr` as never)}
+                  {t(
+                    `${slug}.visionMissionSection.fields.missionTitleAr` as never
+                  )}
                 </FieldLabel>
                 <Input
                   id="about-mission-title-ar"
@@ -237,7 +253,9 @@ export function AboutVisionMissionSectionForm({
               </Field>
               <Field>
                 <FieldLabel htmlFor="about-mission-title-en">
-                  {t(`${slug}.visionMissionSection.fields.missionTitleEn` as never)}
+                  {t(
+                    `${slug}.visionMissionSection.fields.missionTitleEn` as never
+                  )}
                 </FieldLabel>
                 <Input
                   id="about-mission-title-en"
@@ -252,7 +270,9 @@ export function AboutVisionMissionSectionForm({
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="about-mission-content-ar">
-                  {t(`${slug}.visionMissionSection.fields.missionContentAr` as never)}
+                  {t(
+                    `${slug}.visionMissionSection.fields.missionContentAr` as never
+                  )}
                 </FieldLabel>
                 <Textarea
                   id="about-mission-content-ar"
@@ -265,7 +285,9 @@ export function AboutVisionMissionSectionForm({
               </Field>
               <Field>
                 <FieldLabel htmlFor="about-mission-content-en">
-                  {t(`${slug}.visionMissionSection.fields.missionContentEn` as never)}
+                  {t(
+                    `${slug}.visionMissionSection.fields.missionContentEn` as never
+                  )}
                 </FieldLabel>
                 <Textarea
                   id="about-mission-content-en"

@@ -87,7 +87,7 @@ export function ContactHeroInfoSectionForm({
 
   useEffect(() => {
     form.setValues({ ...emptyValues, ...initialValues })
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: ContactHeroInfoSectionValues) => {
     form.clearFieldError("root")
@@ -100,8 +100,7 @@ export function ContactHeroInfoSectionForm({
       if (axios.isAxiosError(error)) {
         const rootError = handleFormErrors(error, form)
         const message =
-          rootError ||
-          t(`${slug}.heroInfoSection.errors.saveFailed` as never)
+          rootError || t(`${slug}.heroInfoSection.errors.saveFailed` as never)
         form.setFieldError("root", message)
         toast.error(message)
         return
@@ -135,9 +134,7 @@ export function ContactHeroInfoSectionForm({
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="contact-hi-eyebrow-ar">
-                  {t(
-                    `${slug}.heroInfoSection.fields.eyebrowTitleAr` as never
-                  )}
+                  {t(`${slug}.heroInfoSection.fields.eyebrowTitleAr` as never)}
                 </FieldLabel>
                 <Input
                   id="contact-hi-eyebrow-ar"
@@ -149,9 +146,7 @@ export function ContactHeroInfoSectionForm({
               </Field>
               <Field>
                 <FieldLabel htmlFor="contact-hi-eyebrow-en">
-                  {t(
-                    `${slug}.heroInfoSection.fields.eyebrowTitleEn` as never
-                  )}
+                  {t(`${slug}.heroInfoSection.fields.eyebrowTitleEn` as never)}
                 </FieldLabel>
                 <Input
                   id="contact-hi-eyebrow-en"
@@ -249,9 +244,7 @@ export function ContactHeroInfoSectionForm({
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="contact-hi-channels-ar">
-                  {t(
-                    `${slug}.heroInfoSection.fields.channelsTitleAr` as never
-                  )}
+                  {t(`${slug}.heroInfoSection.fields.channelsTitleAr` as never)}
                 </FieldLabel>
                 <Input
                   id="contact-hi-channels-ar"
@@ -263,9 +256,7 @@ export function ContactHeroInfoSectionForm({
               </Field>
               <Field>
                 <FieldLabel htmlFor="contact-hi-channels-en">
-                  {t(
-                    `${slug}.heroInfoSection.fields.channelsTitleEn` as never
-                  )}
+                  {t(`${slug}.heroInfoSection.fields.channelsTitleEn` as never)}
                 </FieldLabel>
                 <Input
                   id="contact-hi-channels-en"

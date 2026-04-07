@@ -66,7 +66,7 @@ export function AboutStorySectionForm({
 
   useEffect(() => {
     form.setValues(safeInitialValues)
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: AboutStorySectionValues) => {
     form.clearFieldError("root")
@@ -141,7 +141,9 @@ export function AboutStorySectionForm({
                 </FieldLabel>
                 <Input
                   id="about-story-title-ar"
-                  placeholder={t(`${slug}.storySection.placeholders.titleAr` as never)}
+                  placeholder={t(
+                    `${slug}.storySection.placeholders.titleAr` as never
+                  )}
                   {...form.getInputProps("titleAr")}
                 />
               </Field>
@@ -151,7 +153,9 @@ export function AboutStorySectionForm({
                 </FieldLabel>
                 <Input
                   id="about-story-title-en"
-                  placeholder={t(`${slug}.storySection.placeholders.titleEn` as never)}
+                  placeholder={t(
+                    `${slug}.storySection.placeholders.titleEn` as never
+                  )}
                   {...form.getInputProps("titleEn")}
                 />
               </Field>

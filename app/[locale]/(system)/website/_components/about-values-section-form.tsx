@@ -86,7 +86,7 @@ export function AboutValuesSectionForm({
 
   useEffect(() => {
     form.setValues(safeInitialValues)
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: AboutValuesSectionValues) => {
     form.clearFieldError("root")
@@ -161,7 +161,9 @@ export function AboutValuesSectionForm({
                 </FieldLabel>
                 <Input
                   id="about-values-title-ar"
-                  placeholder={t(`${slug}.valuesSection.placeholders.titleAr` as never)}
+                  placeholder={t(
+                    `${slug}.valuesSection.placeholders.titleAr` as never
+                  )}
                   {...form.getInputProps("titleAr")}
                 />
               </Field>
@@ -171,7 +173,9 @@ export function AboutValuesSectionForm({
                 </FieldLabel>
                 <Input
                   id="about-values-title-en"
-                  placeholder={t(`${slug}.valuesSection.placeholders.titleEn` as never)}
+                  placeholder={t(
+                    `${slug}.valuesSection.placeholders.titleEn` as never
+                  )}
                   {...form.getInputProps("titleEn")}
                 />
               </Field>

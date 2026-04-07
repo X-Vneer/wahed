@@ -75,7 +75,7 @@ export function AboutSectionForm({
 
   useEffect(() => {
     form.setValues(safeInitialValues)
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: AboutSectionValues) => {
     form.clearFieldError("root")
@@ -117,7 +117,9 @@ export function AboutSectionForm({
         >
           <FieldGroup className="flex flex-col gap-6">
             <Field>
-              <FieldLabel>{t(`${slug}.aboutSection.fields.image` as never)}</FieldLabel>
+              <FieldLabel>
+                {t(`${slug}.aboutSection.fields.image` as never)}
+              </FieldLabel>
               <FieldDescription>
                 {t(`${slug}.aboutSection.ui.imageHint` as never)}
               </FieldDescription>
@@ -149,7 +151,9 @@ export function AboutSectionForm({
                       variant="destructive"
                       type="button"
                       onClick={() => form.setFieldValue("image", "")}
-                      aria-label={t(`${slug}.aboutSection.ui.removeImage` as never)}
+                      aria-label={t(
+                        `${slug}.aboutSection.ui.removeImage` as never
+                      )}
                     >
                       <X />
                     </Button>

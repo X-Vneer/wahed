@@ -61,6 +61,8 @@ function extractAboutEditorData(
   content: BilingualAboutContent
 ): AboutEditorData {
   const getString = (value: unknown) => (typeof value === "string" ? value : "")
+  const getBoolean = (value: unknown, fallback = true) =>
+    typeof value === "boolean" ? value : fallback
   const getStringArray = (value: unknown) =>
     Array.isArray(value)
       ? value.filter((item): item is string => typeof item === "string")
@@ -120,6 +122,7 @@ function extractAboutEditorData(
       thirdContentEn: getString(content.en?.valuesSection?.thirdContent),
     },
     boardSection: {
+      isActive: getBoolean(content.ar?.boardSection?.isActive),
       eyebrowTitleAr: getString(content.ar?.boardSection?.eyebrowTitle),
       eyebrowTitleEn: getString(content.en?.boardSection?.eyebrowTitle),
       titleAr: getString(content.ar?.boardSection?.title),
@@ -276,11 +279,13 @@ export default function WebsiteAboutPage() {
     await saveSection({
       key: "boardSection",
       ar: {
+        isActive: values.isActive,
         eyebrowTitle: values.eyebrowTitleAr,
         title: values.titleAr,
         members: values.members,
       },
       en: {
+        isActive: values.isActive,
         eyebrowTitle: values.eyebrowTitleEn,
         title: values.titleEn,
         members: values.members,

@@ -1492,11 +1492,59 @@
         },
         "save": "Save About Section"
       },
+      "statsSection": {
+        "title": "Statistics Section",
+        "description": "Manage the statistical information displayed on the homepage.",
+        "items": {
+          "first": "Statistic 1",
+          "second": "Statistic 2",
+          "third": "Statistic 3"
+        },
+        "fields": {
+          "isActive": "Section visibility",
+          "valueAr": "Value (Arabic)",
+          "valueEn": "Value (English)",
+          "labelAr": "Label (Arabic)",
+          "labelEn": "Label (English)"
+        },
+        "placeholders": {
+          "first": {
+            "valueAr": "20+",
+            "valueEn": "20+",
+            "labelAr": "إجمالي مساحة المشاريع",
+            "labelEn": "Total project area"
+          },
+          "second": {
+            "valueAr": "119K+",
+            "valueEn": "119K+",
+            "labelAr": "متر مربع مبني",
+            "labelEn": "Built square meters"
+          },
+          "third": {
+            "valueAr": "10+",
+            "valueEn": "10+",
+            "labelAr": "عام من الخبرة",
+            "labelEn": "Years of experience"
+          }
+        },
+        "ui": {
+          "isActiveHint": "Enable to show this section on the homepage. Disable to hide it.",
+          "bilingualHint": "Fill in values and labels in both Arabic and English for bilingual display."
+        },
+        "success": {
+          "saved": "Statistics section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save statistics section"
+        },
+        "save": "Save Statistics Section"
+      },
       "partnersSection": {
         "title": "Partners Section",
         "description": "Manage partner logos and bilingual section content.",
         "fields": {
           "logos": "Partner logos",
+          "isActive": "Section visibility",
           "eyebrowTitleAr": "Eyebrow title (Arabic)",
           "eyebrowTitleEn": "Eyebrow title (English)",
           "titleAr": "Title (Arabic)",
@@ -1513,6 +1561,7 @@
           "contentEn": "Write partners section content in English"
         },
         "ui": {
+          "isActiveHint": "Enable to show this section on the homepage. Disable to hide it.",
           "logosHint": "Upload multiple partner logos. Repeat upload to add more logos.",
           "removeLogo": "Remove logo",
           "noLogos": "No logos uploaded yet.",
@@ -1741,6 +1790,7 @@
         "title": "Board Section",
         "description": "Manage board heading and members images.",
         "fields": {
+          "isActive": "Section visibility",
           "eyebrowTitleAr": "Eyebrow title (Arabic)",
           "eyebrowTitleEn": "Eyebrow title (English)",
           "titleAr": "Section title (Arabic)",
@@ -1754,6 +1804,7 @@
           "titleEn": "Board of Directors"
         },
         "ui": {
+          "isActiveHint": "Enable to show this section on the About page. Disable to hide it.",
           "membersHint": "Upload board members images. Repeat upload to add more.",
           "removeMember": "Remove member",
           "noMembers": "No board images uploaded yet.",

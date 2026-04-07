@@ -1492,11 +1492,59 @@
         },
         "save": "حفظ قسم من نحن"
       },
+      "statsSection": {
+        "title": "قسم الإحصائيات",
+        "description": "إدارة بيانات الإحصائيات المعروضة في الصفحة الرئيسية.",
+        "items": {
+          "first": "الإحصائية الأولى",
+          "second": "الإحصائية الثانية",
+          "third": "الإحصائية الثالثة"
+        },
+        "fields": {
+          "isActive": "ظهور القسم",
+          "valueAr": "القيمة (عربي)",
+          "valueEn": "القيمة (إنجليزي)",
+          "labelAr": "الوصف (عربي)",
+          "labelEn": "الوصف (إنجليزي)"
+        },
+        "placeholders": {
+          "first": {
+            "valueAr": "20+",
+            "valueEn": "20+",
+            "labelAr": "إجمالي مساحة المشاريع",
+            "labelEn": "Total project area"
+          },
+          "second": {
+            "valueAr": "119K+",
+            "valueEn": "119K+",
+            "labelAr": "متر مربع مبني",
+            "labelEn": "Built square meters"
+          },
+          "third": {
+            "valueAr": "10+",
+            "valueEn": "10+",
+            "labelAr": "عام من الخبرة",
+            "labelEn": "Years of experience"
+          }
+        },
+        "ui": {
+          "isActiveHint": "فعّل هذا الخيار لإظهار القسم في الصفحة الرئيسية، أو عطّله لإخفائه.",
+          "bilingualHint": "قم بتعبئة القيم والأوصاف بالعربية والإنجليزية لضمان عرض الإحصائيات بكلتا اللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الإحصائيات بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الإحصائيات"
+        },
+        "save": "حفظ قسم الإحصائيات"
+      },
       "partnersSection": {
         "title": "قسم الشركاء",
         "description": "إدارة شعارات الشركاء ومحتوى القسم باللغتين.",
         "fields": {
           "logos": "شعارات الشركاء",
+          "isActive": "ظهور القسم",
           "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
           "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
           "titleAr": "العنوان (عربي)",
@@ -1513,6 +1561,7 @@
           "contentEn": "Write partners section content in English"
         },
         "ui": {
+          "isActiveHint": "فعّل هذا الخيار لإظهار القسم في الصفحة الرئيسية، أو عطّله لإخفائه.",
           "logosHint": "ارفع عدة شعارات للشركاء. كرر الرفع لإضافة المزيد.",
           "removeLogo": "إزالة الشعار",
           "noLogos": "لا توجد شعارات مرفوعة حتى الآن.",
@@ -1741,6 +1790,7 @@
         "title": "قسم مجلس الإدارة",
         "description": "إدارة عنوان قسم مجلس الإدارة وصور الأعضاء.",
         "fields": {
+          "isActive": "ظهور القسم",
           "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
           "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
           "titleAr": "عنوان القسم (عربي)",
@@ -1754,6 +1804,7 @@
           "titleEn": "Board of Directors"
         },
         "ui": {
+          "isActiveHint": "فعّل هذا الخيار لإظهار القسم في صفحة من نحن، أو عطّله لإخفائه.",
           "membersHint": "ارفع صور أعضاء مجلس الإدارة. كرر الرفع لإضافة المزيد.",
           "removeMember": "إزالة العضو",
           "noMembers": "لا توجد صور أعضاء مرفوعة حتى الآن.",

@@ -11,6 +11,10 @@ import { HeroSectionValues } from "./_components/hero-section-form"
 import { BriefSectionValues } from "./_components/brief-section-form"
 import { AboutSectionValues } from "./_components/about-section-form"
 import {
+  StatsSectionForm,
+  StatsSectionValues,
+} from "./_components/stats-section-form"
+import {
   ContactSectionForm,
   ContactSectionValues,
 } from "./_components/contact-section-form"
@@ -30,6 +34,7 @@ type BilingualHomeContent = {
     heroSection?: Record<string, unknown>
     briefSection?: Record<string, unknown>
     aboutSection?: Record<string, unknown>
+    statsSection?: Record<string, unknown>
     partnersSection?: Record<string, unknown>
     contactSection?: Record<string, unknown>
     ctaSection?: Record<string, unknown>
@@ -38,6 +43,7 @@ type BilingualHomeContent = {
     heroSection?: Record<string, unknown>
     briefSection?: Record<string, unknown>
     aboutSection?: Record<string, unknown>
+    statsSection?: Record<string, unknown>
     partnersSection?: Record<string, unknown>
     contactSection?: Record<string, unknown>
     ctaSection?: Record<string, unknown>
@@ -48,6 +54,7 @@ type HomeEditorData = {
   heroSection: HeroSectionValues
   briefSection: BriefSectionValues
   aboutSection: AboutSectionValues
+  statsSection: StatsSectionValues
   partnersSection: PartnersSectionValues
   contactSection: ContactSectionValues
   rawContent: BilingualHomeContent
@@ -55,6 +62,8 @@ type HomeEditorData = {
 
 function extractHomeEditorData(content: BilingualHomeContent): HomeEditorData {
   const getString = (value: unknown) => (typeof value === "string" ? value : "")
+  const getBoolean = (value: unknown, fallback = true) =>
+    typeof value === "boolean" ? value : fallback
   const getStringArray = (value: unknown) =>
     Array.isArray(value)
       ? value.filter((item): item is string => typeof item === "string")
@@ -93,7 +102,23 @@ function extractHomeEditorData(content: BilingualHomeContent): HomeEditorData {
       ctaLabelAr: getString(content.ar?.aboutSection?.ctaLabel),
       ctaLabelEn: getString(content.en?.aboutSection?.ctaLabel),
     },
+    statsSection: {
+      isActive: getBoolean(content.ar?.statsSection?.isActive),
+      firstValueAr: getString(content.ar?.statsSection?.firstValue),
+      firstValueEn: getString(content.en?.statsSection?.firstValue),
+      firstLabelAr: getString(content.ar?.statsSection?.firstLabel),
+      firstLabelEn: getString(content.en?.statsSection?.firstLabel),
+      secondValueAr: getString(content.ar?.statsSection?.secondValue),
+      secondValueEn: getString(content.en?.statsSection?.secondValue),
+      secondLabelAr: getString(content.ar?.statsSection?.secondLabel),
+      secondLabelEn: getString(content.en?.statsSection?.secondLabel),
+      thirdValueAr: getString(content.ar?.statsSection?.thirdValue),
+      thirdValueEn: getString(content.en?.statsSection?.thirdValue),
+      thirdLabelAr: getString(content.ar?.statsSection?.thirdLabel),
+      thirdLabelEn: getString(content.en?.statsSection?.thirdLabel),
+    },
     partnersSection: {
+      isActive: getBoolean(arPartners?.isActive),
       logos: getStringArray(arPartners?.logos),
       eyebrowTitleAr: getString(arPartners?.eyebrowTitle),
       eyebrowTitleEn: getString(enPartners?.eyebrowTitle),
@@ -138,6 +163,7 @@ export default function WebsiteHomePage() {
       | "heroSection"
       | "briefSection"
       | "aboutSection"
+      | "statsSection"
       | "partnersSection"
       | "contactSection"
   }) => {
@@ -232,6 +258,7 @@ export default function WebsiteHomePage() {
     await saveSection({
       key: "partnersSection",
       ar: {
+        isActive: values.isActive,
         logos: values.logos,
         eyebrowTitle: values.eyebrowTitleAr,
         title: values.titleAr,
@@ -239,11 +266,40 @@ export default function WebsiteHomePage() {
         description: values.contentAr,
       },
       en: {
+        isActive: values.isActive,
         logos: values.logos,
         eyebrowTitle: values.eyebrowTitleEn,
         title: values.titleEn,
         content: values.contentEn,
         description: values.contentEn,
+      },
+    })
+  }
+
+  const handleStatsSectionSubmit = async ({
+    values,
+  }: {
+    values: StatsSectionValues
+  }) => {
+    await saveSection({
+      key: "statsSection",
+      ar: {
+        isActive: values.isActive,
+        firstValue: values.firstValueAr,
+        firstLabel: values.firstLabelAr,
+        secondValue: values.secondValueAr,
+        secondLabel: values.secondLabelAr,
+        thirdValue: values.thirdValueAr,
+        thirdLabel: values.thirdLabelAr,
+      },
+      en: {
+        isActive: values.isActive,
+        firstValue: values.firstValueEn,
+        firstLabel: values.firstLabelEn,
+        secondValue: values.secondValueEn,
+        secondLabel: values.secondLabelEn,
+        thirdValue: values.thirdValueEn,
+        thirdLabel: values.thirdLabelEn,
       },
     })
   }
@@ -314,6 +370,12 @@ export default function WebsiteHomePage() {
         slug="home"
         initialValues={data?.aboutSection}
         onSubmit={handleAboutSectionSubmit}
+      />
+
+      <StatsSectionForm
+        slug="home"
+        initialValues={data?.statsSection}
+        onSubmit={handleStatsSectionSubmit}
       />
 
       <PartnersSectionForm

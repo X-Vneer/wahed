@@ -62,7 +62,7 @@ export function BriefSectionForm({
 
   useEffect(() => {
     form.setValues(safeInitialValues)
-  }, [initialValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (values: BriefSectionValues) => {
     form.clearFieldError("root")
@@ -104,7 +104,9 @@ export function BriefSectionForm({
         >
           <FieldGroup className="flex flex-col gap-6">
             <Field>
-              <FieldLabel>{t(`${slug}.briefSection.fields.image` as never)}</FieldLabel>
+              <FieldLabel>
+                {t(`${slug}.briefSection.fields.image` as never)}
+              </FieldLabel>
               <FieldDescription>
                 {t(`${slug}.briefSection.ui.imageHint` as never)}
               </FieldDescription>
@@ -136,7 +138,9 @@ export function BriefSectionForm({
                       variant="destructive"
                       type="button"
                       onClick={() => form.setFieldValue("image", "")}
-                      aria-label={t(`${slug}.briefSection.ui.removeImage` as never)}
+                      aria-label={t(
+                        `${slug}.briefSection.ui.removeImage` as never
+                      )}
                     >
                       <X />
                     </Button>
