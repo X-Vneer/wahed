@@ -13,23 +13,23 @@ import { useTranslations } from "next-intl"
 import {
   AboutHeroSectionForm,
   AboutHeroSectionValues,
-} from "../_components/about-hero-section-form"
+} from "./_components/about-hero-section-form"
 import {
   AboutStorySectionForm,
   AboutStorySectionValues,
-} from "../_components/about-story-section-form"
+} from "./_components/about-story-section-form"
 import {
   AboutVisionMissionSectionForm,
   AboutVisionMissionSectionValues,
-} from "@/app/[locale]/(system)/website/_components/about-vision-mission-section-form"
+} from "@/app/[locale]/(system)/website/about/_components/about-vision-mission-section-form"
 import {
   AboutValuesSectionForm,
   AboutValuesSectionValues,
-} from "@/app/[locale]/(system)/website/_components/about-values-section-form"
+} from "@/app/[locale]/(system)/website/about/_components/about-values-section-form"
 import {
   AboutBoardSectionForm,
   AboutBoardSectionValues,
-} from "@/app/[locale]/(system)/website/_components/about-board-section-form"
+} from "@/app/[locale]/(system)/website/about/_components/about-board-section-form"
 import { PageSeoForm } from "@/app/[locale]/(system)/website/_components/page-seo-form"
 
 type BilingualAboutContent = {
