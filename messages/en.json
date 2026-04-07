@@ -1629,6 +1629,52 @@
       "actions": {
         "publishProject": "Publish new project",
         "publishComingSoon": "The publishing flow will be available in a later update."
+      },
+      "createModal": {
+        "trigger": "Create project",
+        "triggerHint": "Choose an empty project or start from an existing one.",
+        "title": "Create project",
+        "descriptionSelectSource": "Choose how you want to start creating this project.",
+        "descriptionSelectExisting": "Select a project from the system to start from.",
+        "empty": {
+          "title": "Start empty",
+          "description": "Open a blank project form and add details manually."
+        },
+        "existing": {
+          "title": "Use existing project",
+          "description": "Pick one project from the system, then continue to a blank form for now.",
+          "emptyTitle": "No projects found",
+          "emptyDescription": "There are no existing projects available in the system yet.",
+          "noDescription": "No description",
+          "statusLabel": "Status: {status}",
+          "statusNotAvailable": "N/A"
+        },
+        "actions": {
+          "back": "Back"
+        }
+      },
+      "createPage": {
+        "title": "Create project",
+        "description": "Placeholder page and form. Prisma and full submit logic will be added later.",
+        "sourceTitle": "Source",
+        "selectedOption": "Selected option:",
+        "sourceExisting": "Existing project from system",
+        "sourceEmpty": "Empty project",
+        "projectNotFound": "Selected project was not found.",
+        "formTitle": "Project form (temporary)",
+        "formDescription": "This is a simple empty form for now.",
+        "fields": {
+          "name": "Project name",
+          "description": "Description"
+        },
+        "placeholders": {
+          "name": "Enter project name",
+          "description": "Enter project description"
+        },
+        "actions": {
+          "saveComingSoon": "Save (coming soon)",
+          "backToProjects": "Back to projects"
+        }
       }
     },
     "about": {

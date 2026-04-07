@@ -9,7 +9,7 @@ import {
 import PageLoader from "@/components/page-loader"
 import { HeroSectionValues } from "./_components/hero-section-form"
 import { BriefSectionValues } from "./_components/brief-section-form"
-import { AboutSectionValues } from "./_components/about-section-form"
+import { AboutSectionValues } from "./about/_components/about-section-form"
 import {
   StatsSectionForm,
   StatsSectionValues,
@@ -17,7 +17,7 @@ import {
 import {
   ContactSectionForm,
   ContactSectionValues,
-} from "./_components/contact-section-form"
+} from "./contact/_components/contact-section-form"
 import {
   PartnersSectionForm,
   PartnersSectionValues,
@@ -27,7 +27,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { HeroSectionForm } from "./_components/hero-section-form"
 import { BriefSectionForm } from "./_components/brief-section-form"
-import { AboutSectionForm } from "./_components/about-section-form"
+import { AboutSectionForm } from "./about/_components/about-section-form"
 import { PageSeoForm } from "./_components/page-seo-form"
 
 type BilingualHomeContent = {

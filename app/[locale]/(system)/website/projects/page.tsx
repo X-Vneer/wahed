@@ -19,7 +19,9 @@ import apiClient from "@/services"
 import { useQuery } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useState } from "react"
 import { PageSeoForm } from "../_components/page-seo-form"
+import { CreateWebsiteProjectModal } from "./_components/create-website-project-modal"
 
 type ProjectCard = {
   title: string
@@ -41,6 +43,7 @@ function isPublished(card: ProjectCard) {
 
 export default function WebsiteProjectsPage() {
   const t = useTranslations("websiteCms.projects")
+  const [createModalOpen, setCreateModalOpen] = useState(false)
   const { data, isLoading } = useQuery<ProjectsContent, Error>({
     queryKey: ["website-content", "projects", "bilingual"],
     queryFn: async () => {
@@ -76,15 +79,19 @@ export default function WebsiteProjectsPage() {
             <TooltipTrigger
               render={
                 <span className="inline-flex sm:shrink-0">
-                  <Button type="button" disabled className="gap-2">
+                  <Button
+                    type="button"
+                    className="gap-2"
+                    onClick={() => setCreateModalOpen(true)}
+                  >
                     <Plus className="size-4" aria-hidden />
-                    {t("actions.publishProject")}
+                    {t("createModal.trigger")}
                   </Button>
                 </span>
               }
             />
             <TooltipContent side="bottom">
-              {t("actions.publishComingSoon")}
+              {t("createModal.triggerHint")}
             </TooltipContent>
           </Tooltip>
         </CardContent>
@@ -162,6 +169,11 @@ export default function WebsiteProjectsPage() {
           </ul>
         </section>
       ) : null}
+
+      <CreateWebsiteProjectModal
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+      />
 
       <PageSeoForm slug="projects" />
     </div>

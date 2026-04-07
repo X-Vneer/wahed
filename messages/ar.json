@@ -1629,6 +1629,52 @@
       "actions": {
         "publishProject": "نشر مشروع جديد",
         "publishComingSoon": "مسار النشر سيتوفر في تحديث لاحق."
+      },
+      "createModal": {
+        "trigger": "إنشاء مشروع",
+        "triggerHint": "اختر مشروعا فارغا أو ابدأ من مشروع موجود.",
+        "title": "إنشاء مشروع",
+        "descriptionSelectSource": "اختر كيف تريد البدء في إنشاء هذا المشروع.",
+        "descriptionSelectExisting": "اختر مشروعا من النظام للبدء منه.",
+        "empty": {
+          "title": "البدء من نموذج فارغ",
+          "description": "افتح نموذج مشروع فارغ وأضف التفاصيل يدويا."
+        },
+        "existing": {
+          "title": "استخدام مشروع موجود",
+          "description": "اختر مشروعا من النظام ثم تابع إلى نموذج فارغ حاليا.",
+          "emptyTitle": "لا توجد مشاريع",
+          "emptyDescription": "لا توجد مشاريع متاحة في النظام حاليا.",
+          "noDescription": "بدون وصف",
+          "statusLabel": "الحالة: {status}",
+          "statusNotAvailable": "غير متاح"
+        },
+        "actions": {
+          "back": "رجوع"
+        }
+      },
+      "createPage": {
+        "title": "إنشاء مشروع",
+        "description": "هذه صفحة ونموذج مبدئيان. سيتم إضافة Prisma ومنطق الحفظ الكامل لاحقا.",
+        "sourceTitle": "المصدر",
+        "selectedOption": "الخيار المحدد:",
+        "sourceExisting": "مشروع موجود من النظام",
+        "sourceEmpty": "مشروع فارغ",
+        "projectNotFound": "لم يتم العثور على المشروع المحدد.",
+        "formTitle": "نموذج المشروع (مؤقت)",
+        "formDescription": "هذا نموذج فارغ بسيط حاليا.",
+        "fields": {
+          "name": "اسم المشروع",
+          "description": "الوصف"
+        },
+        "placeholders": {
+          "name": "أدخل اسم المشروع",
+          "description": "أدخل وصف المشروع"
+        },
+        "actions": {
+          "saveComingSoon": "حفظ (قريبا)",
+          "backToProjects": "العودة إلى المشاريع"
+        }
       }
     },
     "about": {

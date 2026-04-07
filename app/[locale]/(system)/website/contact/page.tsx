@@ -13,7 +13,7 @@ import { useTranslations } from "next-intl"
 import {
   ContactHeroInfoSectionForm,
   ContactHeroInfoSectionValues,
-} from "../_components/contact-hero-info-section-form"
+} from "./_components/contact-hero-info-section-form"
 import { PageSeoForm } from "../_components/page-seo-form"
 
 type BilingualContactContent = {
