@@ -1654,26 +1654,111 @@
         }
       },
       "createPage": {
-        "title": "Create project",
-        "description": "Placeholder page and form. Prisma and full submit logic will be added later.",
+        "title": "Create public project",
+        "description": "Add a bilingual listing for the public website: URL slug, gallery, location, pricing, and optional link to an internal project.",
         "sourceTitle": "Source",
         "selectedOption": "Selected option:",
         "sourceExisting": "Existing project from system",
         "sourceEmpty": "Empty project",
         "projectNotFound": "Selected project was not found.",
-        "formTitle": "Project form (temporary)",
-        "formDescription": "This is a simple empty form for now.",
+        "formTitle": "Public project details",
+        "formDescription": "Fill in the fields below. The slug must be unique and use lowercase letters, numbers, and hyphens only."
+      },
+      "publicProjectForm": {
+        "sections": {
+          "core": "Titles and URL",
+          "descriptions": "Descriptions",
+          "gallery": "Gallery",
+          "attachments": "Attachments",
+          "location": "Location",
+          "details": "Project details",
+          "taxonomy": "Categories, badges, and features",
+          "pricing": "Pricing"
+        },
         "fields": {
-          "name": "Project name",
-          "description": "Description"
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "slug": "URL slug",
+          "isActive": "Published on website",
+          "linkedProjectId": "Internal project ID (optional)",
+          "shortDescriptionAr": "Short description (Arabic)",
+          "shortDescriptionEn": "Short description (English)",
+          "descriptionAr": "Full description (Arabic)",
+          "descriptionEn": "Full description (English)",
+          "images": "Images",
+          "attachments": "Documents and files",
+          "region": "Region",
+          "city": "City",
+          "locationAr": "Location label (Arabic)",
+          "locationEn": "Location label (English)",
+          "googleMaps": "Google Maps link",
+          "area": "Area",
+          "numberOfFloors": "Number of floors",
+          "deedNumber": "Deed number",
+          "workDuration": "Work duration",
+          "status": "Status",
+          "categories": "Categories",
+          "badges": "Badges",
+          "features": "Features",
+          "startingPrice": "Starting price",
+          "endingPrice": "Ending price"
         },
         "placeholders": {
-          "name": "Enter project name",
-          "description": "Enter project description"
+          "titleAr": "Arabic public title",
+          "titleEn": "English public title",
+          "slug": "my-residential-project",
+          "linkedProjectId": "Paste internal project ID if linking",
+          "shortDescription": "One or two lines for cards and SEO",
+          "description": "Longer copy for the project page",
+          "region": "Select region",
+          "city": "Select city",
+          "location": "Neighborhood or landmark",
+          "categories": "Select categories",
+          "badges": "Select badges",
+          "features": "Select features",
+          "price": "0.00",
+          "status": "Select status"
+        },
+        "ui": {
+          "slugHint": "Used in the public URL. Only lowercase letters, numbers, and hyphens.",
+          "isActiveHint": "Turn off to save as draft (hidden) if your site checks this flag.",
+          "linkedProjectHint": "Optional link to an internal project. When you start from an existing project, fields are filled automatically. Use the Load from project button to import data from any ID.",
+          "galleryHint": "Upload images for the public gallery. You can remove any image before saving.",
+          "attachmentsHint": "PDFs, images, and other files (same uploader as internal projects). Prefill copies attachments from the linked project when available.",
+          "noImages": "No images yet. Upload using the area above.",
+          "removeImage": "Remove image",
+          "noCategories": "No categories available.",
+          "badgesHint": "Select predefined badges if you have created them in the database.",
+          "featuresHint": "Select predefined feature rows (icon + labels) if available.",
+          "noBadges": "No badges yet. Create badge records first, or leave empty.",
+          "noFeatures": "No features yet. Create feature records first, or leave empty."
         },
         "actions": {
-          "saveComingSoon": "Save (coming soon)",
-          "backToProjects": "Back to projects"
+          "generateSlug": "Generate from English title",
+          "loadFromProject": "Load from project",
+          "save": "Create public project",
+          "saving": "Saving…",
+          "submitSection": "Save",
+          "submitHint": "Creates the public project and returns you to the website projects list."
+        },
+        "success": {
+          "created": "Public project created successfully",
+          "prefillLoaded": "Form filled from internal project"
+        },
+        "errors": {
+          "titleArRequired": "Arabic title is required",
+          "titleEnRequired": "English title is required",
+          "slugRequired": "Slug is required",
+          "slugInvalid": "Slug may only contain lowercase letters, numbers, and hyphens",
+          "cityIdRequired": "City is required",
+          "regionIdRequired": "Region is required",
+          "slugTaken": "This slug is already in use",
+          "projectNotFound": "Internal project was not found",
+          "invalidBadges": "One or more badges are invalid",
+          "invalidFeatures": "One or more features are invalid",
+          "prefillNeedProjectId": "Enter an internal project ID first",
+          "prefillFailed": "Could not load data for this project",
+          "prefillProjectNotFound": "Internal project was not found"
         }
       }
     },
