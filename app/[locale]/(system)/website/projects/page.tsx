@@ -19,6 +19,7 @@ import apiClient from "@/services"
 import { useQuery } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { PageSeoForm } from "../_components/page-seo-form"
 
 type ProjectCard = {
   title: string
@@ -161,6 +162,8 @@ export default function WebsiteProjectsPage() {
           </ul>
         </section>
       ) : null}
+
+      <PageSeoForm slug="projects" />
     </div>
   )
 }

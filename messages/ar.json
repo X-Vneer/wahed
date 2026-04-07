@@ -1946,6 +1946,36 @@
         "gaId": "معرّف قياس Google Analytics",
         "gaHint": "مثال: G-XXXXXXXXXX. تُعيده الواجهة العامة لتهيئة التحليلات."
       }
+    },
+    "pageSeo": {
+      "title": "SEO وبيانات الصفحة",
+      "description": "إعداد حقول SEO الخاصة بكل صفحة. الحقول الاختيارية الفارغة ستعتمد على القيم الافتراضية من إعدادات الموقع.",
+      "requiredHint": "مطلوب",
+      "optionalHint": "اختياري (اتركه فارغًا لاستخدام القيمة الافتراضية)",
+      "robotsHint": "استخدم هذا الخيار على مستوى الصفحة عندما تحتاج تجاوز سلوك الفهرسة العام للموقع.",
+      "errors": {
+        "metaTitleMax": "يجب ألا يتجاوز عنوان الميتا 200 حرف.",
+        "metaDescriptionMax": "يجب ألا يتجاوز وصف الميتا 500 حرف.",
+        "twitterHandleMax": "يجب ألا يتجاوز معرّف X (تويتر) 100 حرف.",
+        "keywordsMax": "يجب ألا تتجاوز الكلمات المفتاحية 500 حرف."
+      },
+      "fields": {
+        "metaTitleAr": "عنوان الميتا (عربي)",
+        "metaTitleEn": "عنوان الميتا (إنجليزي)",
+        "metaDescriptionAr": "وصف الميتا (عربي)",
+        "metaDescriptionEn": "وصف الميتا (إنجليزي)",
+        "canonicalUrl": "الرابط الأساسي Canonical",
+        "ogImageUrl": "رابط صورة Open Graph",
+        "twitterHandle": "معرّف X (تويتر)",
+        "keywordsAr": "الكلمات المفتاحية (عربي)",
+        "keywordsEn": "الكلمات المفتاحية (إنجليزي)",
+        "robotsAllowIndex": "السماح لمحركات البحث بفهرسة هذه الصفحة"
+      },
+      "toast": {
+        "saved": "تم حفظ SEO الصفحة",
+        "saveFailed": "تعذر حفظ SEO الصفحة"
+      },
+      "save": "حفظ SEO الصفحة"
     }
   },
   "something wrong happened": "حصل مشكلة ما",

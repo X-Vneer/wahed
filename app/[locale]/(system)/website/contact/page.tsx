@@ -14,6 +14,7 @@ import {
   ContactHeroInfoSectionForm,
   ContactHeroInfoSectionValues,
 } from "../_components/contact-hero-info-section-form"
+import { PageSeoForm } from "../_components/page-seo-form"
 
 type BilingualContactContent = {
   ar?: Record<string, unknown>
@@ -174,6 +175,8 @@ export default function WebsiteContactPage() {
         initialValues={data?.heroInfoSection}
         onSubmit={handleHeroInfoSubmit}
       />
+
+      <PageSeoForm slug="contact" />
     </div>
   )
 }

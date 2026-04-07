@@ -1,5 +1,8 @@
 import db from "@/lib/db"
-import { type Prisma, type WebsiteSiteSettings } from "@/lib/generated/prisma/client"
+import {
+  type Prisma,
+  type WebsiteSiteSettings,
+} from "@/lib/generated/prisma/client"
 import type { UpdateWebsiteSiteSettingsInput } from "@/lib/schemas/website-site-settings"
 
 const DEFAULT_CREATE: Prisma.WebsiteSiteSettingsCreateInput = {

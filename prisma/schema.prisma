@@ -483,3 +483,22 @@ model WebsiteSiteSettings {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model WebsitePageSeo {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  metaTitleAr       String?
+  metaTitleEn       String?
+  metaDescriptionAr String?
+  metaDescriptionEn String?
+  canonicalUrl      String?
+  ogImageUrl        String?
+  twitterHandle     String?
+  keywordsAr        String?
+  keywordsEn        String?
+  robotsAllowIndex  Boolean?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

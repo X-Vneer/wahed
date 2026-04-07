@@ -1,9 +1,9 @@
-import createMiddleware from "next-intl/middleware"
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
-import { routing } from "./lib/i18n/routing"
-import { SESSION_COOKIE_NAME } from "./config"
 import { jwtVerify } from "jose"
+import createMiddleware from "next-intl/middleware"
+import type { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
+import { SESSION_COOKIE_NAME } from "./config"
+import { routing } from "./lib/i18n/routing"
 
 const intlMiddleware = createMiddleware(routing)
 
@@ -38,15 +38,11 @@ export default async function middleware(request: NextRequest) {
     "/api/auth/login",
     "/api/health",
     "/api/uploadthing",
+    "/api/public/website/seo/",
   ]
   const isPublicApiRoute = publicApiRoutes.some((route) =>
     pathname.includes(route)
   )
-
-  /** Public CMS reads for the marketing site; writes stay protected in the route handler. */
-  const isPublicWebsiteContentGet =
-    request.method === "GET" &&
-    pathname.startsWith("/api/website/content/")
 
   // Get the access token from cookies
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value
@@ -54,7 +50,7 @@ export default async function middleware(request: NextRequest) {
   // Handle API routes
   if (isApiRoute) {
     // Allow public API routes to pass through
-    if (isPublicApiRoute || isPublicWebsiteContentGet) {
+    if (isPublicApiRoute) {
       return NextResponse.next()
     }
 

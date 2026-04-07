@@ -28,6 +28,7 @@ import { useTranslations } from "next-intl"
 import { HeroSectionForm } from "./_components/hero-section-form"
 import { BriefSectionForm } from "./_components/brief-section-form"
 import { AboutSectionForm } from "./_components/about-section-form"
+import { PageSeoForm } from "./_components/page-seo-form"
 
 type BilingualHomeContent = {
   ar?: {
@@ -389,6 +390,8 @@ export default function WebsiteHomePage() {
         initialValues={data?.contactSection}
         onSubmit={handleContactSectionSubmit}
       />
+
+      <PageSeoForm slug="home" />
     </div>
   )
 }

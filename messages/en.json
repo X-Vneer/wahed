@@ -1946,6 +1946,36 @@
         "gaId": "Google Analytics measurement ID",
         "gaHint": "Example: G-XXXXXXXXXX. Returned by the public API for your site to initialize analytics."
       }
+    },
+    "pageSeo": {
+      "title": "Page SEO & metadata",
+      "description": "Configure page-level SEO fields. Empty optional values will fallback to Website Settings defaults.",
+      "requiredHint": "Required",
+      "optionalHint": "Optional (leave empty to use fallback)",
+      "robotsHint": "Use this page-level indexing flag when you need to override general site behavior.",
+      "errors": {
+        "metaTitleMax": "Meta title must be at most 200 characters.",
+        "metaDescriptionMax": "Meta description must be at most 500 characters.",
+        "twitterHandleMax": "X (Twitter) handle must be at most 100 characters.",
+        "keywordsMax": "Keywords must be at most 500 characters."
+      },
+      "fields": {
+        "metaTitleAr": "Meta title (Arabic)",
+        "metaTitleEn": "Meta title (English)",
+        "metaDescriptionAr": "Meta description (Arabic)",
+        "metaDescriptionEn": "Meta description (English)",
+        "canonicalUrl": "Canonical URL",
+        "ogImageUrl": "Open Graph image URL",
+        "twitterHandle": "X (Twitter) handle",
+        "keywordsAr": "Keywords (Arabic)",
+        "keywordsEn": "Keywords (English)",
+        "robotsAllowIndex": "Allow search engines to index this page"
+      },
+      "toast": {
+        "saved": "Page SEO saved",
+        "saveFailed": "Could not save page SEO"
+      },
+      "save": "Save page SEO"
     }
   },
   "something wrong happened": "Something wrong happened",

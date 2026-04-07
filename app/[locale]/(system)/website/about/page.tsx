@@ -30,6 +30,7 @@ import {
   AboutBoardSectionForm,
   AboutBoardSectionValues,
 } from "@/app/[locale]/(system)/website/_components/about-board-section-form"
+import { PageSeoForm } from "@/app/[locale]/(system)/website/_components/page-seo-form"
 
 type BilingualAboutContent = {
   ar?: {
@@ -348,6 +349,8 @@ export default function WebsiteAboutPage() {
         initialValues={data?.boardSection}
         onSubmit={handleBoardSectionSubmit}
       />
+
+      <PageSeoForm slug="about" />
     </div>
   )
 }
