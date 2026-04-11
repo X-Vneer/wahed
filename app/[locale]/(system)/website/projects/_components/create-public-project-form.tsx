@@ -85,7 +85,7 @@ export function CreatePublicProjectForm({
       status: p.status,
       categoryIds: [...p.categoryIds],
       images: p.images.length > 0 ? p.images : prev.images,
-      attachments:
+      linkedAttachmentCandidates:
         p.attachments.length > 0
           ? p.attachments.map((a) => ({
               fileUrl: a.fileUrl,
@@ -93,7 +93,10 @@ export function CreatePublicProjectForm({
               fileType: a.fileType ?? undefined,
               fileSize: a.fileSize ?? undefined,
             }))
-          : prev.attachments,
+          : [],
+      selectedLinkedFileUrls:
+        p.attachments.length > 0 ? p.attachments.map((a) => a.fileUrl) : [],
+      attachments: prev.attachments,
       projectId: prev.projectId?.trim() ? prev.projectId : p.projectId,
       slug: prev.slug?.trim() ? prev.slug : p.suggestedSlug,
     }))
@@ -172,10 +175,20 @@ export function CreatePublicProjectForm({
 
   const handleSubmit = async (values: PublicProjectFormValues) => {
     try {
-      const { regionId, ...payload } = values
+      const {
+        regionId,
+        linkedAttachmentCandidates,
+        selectedLinkedFileUrls,
+        attachments: newAttachments,
+        ...rest
+      } = values
       void regionId
+      const fromLinked = linkedAttachmentCandidates.filter((a) =>
+        selectedLinkedFileUrls.includes(a.fileUrl)
+      )
       const body = {
-        ...payload,
+        ...rest,
+        attachments: [...fromLinked, ...newAttachments],
         status: values.status || undefined,
         projectId: values.projectId?.trim() || undefined,
       }

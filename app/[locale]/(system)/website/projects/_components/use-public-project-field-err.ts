@@ -24,6 +24,7 @@ export function usePublicProjectFieldErr() {
       "descriptionEnRequired",
       "cityIdRequired",
       "regionIdRequired",
+      "imagesMinFive",
     ] as const
     const isKnownErr = (x: string): x is (typeof known)[number] =>
       (known as readonly string[]).includes(x)

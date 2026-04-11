@@ -33,6 +33,9 @@ export type PublicProjectFormValues = {
   startingPrice: string | number
   endingPrice: string | number
   attachments: UploadedFileAttachment[]
+  /** Internal project attachments from prefill; user toggles inclusion via `selectedLinkedFileUrls`. */
+  linkedAttachmentCandidates: UploadedFileAttachment[]
+  selectedLinkedFileUrls: string[]
 }
 
 export function getPublicProjectFormInitialValues(
@@ -65,6 +68,8 @@ export function getPublicProjectFormInitialValues(
     startingPrice: "",
     endingPrice: "",
     attachments: [],
+    linkedAttachmentCandidates: [],
+    selectedLinkedFileUrls: [],
   }
 }
 

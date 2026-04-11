@@ -32,7 +32,9 @@ export const createPublicProjectSchema = z.object({
   descriptionEn: z.string().min(1, { error: "descriptionEnRequired" }),
   shortDescriptionAr: z.string().min(1, { error: "shortDescriptionArRequired" }),
   shortDescriptionEn: z.string().min(1, { error: "shortDescriptionEnRequired" }),
-  images: z.array(z.string().min(1)).default([]),
+  images: z
+    .array(z.string().min(1))
+    .min(5, { error: "imagesMinFive" }),
   isActive: z.boolean().optional().default(true),
   projectId: z
     .preprocess(
@@ -62,10 +64,16 @@ export const createPublicProjectSchema = z.object({
 
 export type CreatePublicProjectInput = z.infer<typeof createPublicProjectSchema>
 
-/** Includes `regionId` for the form; omit before sending to the API. */
-export const publicProjectFormSchema = createPublicProjectSchema.extend({
-  regionId: z.string().min(1, { error: "regionIdRequired" }),
-})
+/** Includes `regionId` and linked-project attachment UI state; merge `attachments` before POST. */
+export const publicProjectFormSchema = createPublicProjectSchema
+  .omit({ attachments: true })
+  .extend({
+    regionId: z.string().min(1, { error: "regionIdRequired" }),
+    /** Newly uploaded files only; linked project files live in `linkedAttachmentCandidates`. */
+    attachments: z.array(attachmentSchema).default([]),
+    linkedAttachmentCandidates: z.array(attachmentSchema).default([]),
+    selectedLinkedFileUrls: z.array(z.string()).default([]),
+  })
 
 export type PublicProjectFormInput = z.infer<typeof publicProjectFormSchema>
 
