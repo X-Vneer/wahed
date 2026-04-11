@@ -26,11 +26,12 @@ export const createPublicProjectSchema = z.object({
   slug: z
     .string()
     .min(1, { error: "slugRequired" })
+    .min(3, { error: "slugMinLength" })
     .regex(slugRegex, { error: "slugInvalid" }),
-  descriptionAr: z.string().optional(),
-  descriptionEn: z.string().optional(),
-  shortDescriptionAr: z.string().optional(),
-  shortDescriptionEn: z.string().optional(),
+  descriptionAr: z.string().min(1, { error: "descriptionArRequired" }),
+  descriptionEn: z.string().min(1, { error: "descriptionEnRequired" }),
+  shortDescriptionAr: z.string().min(1, { error: "shortDescriptionArRequired" }),
+  shortDescriptionEn: z.string().min(1, { error: "shortDescriptionEnRequired" }),
   images: z.array(z.string().min(1)).default([]),
   isActive: z.boolean().optional().default(true),
   projectId: z
@@ -62,10 +63,48 @@ export const createPublicProjectSchema = z.object({
 export type CreatePublicProjectInput = z.infer<typeof createPublicProjectSchema>
 
 /** Includes `regionId` for the form; omit before sending to the API. */
-export const publicProjectFormSchema = createPublicProjectSchema.and(
-  z.object({
-    regionId: z.string().min(1, { error: "regionIdRequired" }),
-  })
-)
+export const publicProjectFormSchema = createPublicProjectSchema.extend({
+  regionId: z.string().min(1, { error: "regionIdRequired" }),
+})
 
 export type PublicProjectFormInput = z.infer<typeof publicProjectFormSchema>
+
+/** One schema per wizard step; used with `safeParse(form.values)` for step navigation. */
+export const publicProjectFormStepSchemas = [
+  publicProjectFormSchema.pick({
+    titleAr: true,
+    titleEn: true,
+    slug: true,
+    isActive: true,
+    projectId: true,
+    shortDescriptionAr: true,
+    shortDescriptionEn: true,
+    descriptionAr: true,
+    descriptionEn: true,
+  }),
+  publicProjectFormSchema.pick({
+    images: true,
+    attachments: true,
+  }),
+  publicProjectFormSchema.pick({
+    regionId: true,
+    cityId: true,
+    locationAr: true,
+    locationEn: true,
+    googleMapsAddress: true,
+    area: true,
+    numberOfFloors: true,
+    deedNumber: true,
+    workDuration: true,
+    status: true,
+  }),
+  publicProjectFormSchema.pick({
+    categoryIds: true,
+    badgeIds: true,
+    featureIds: true,
+    startingPrice: true,
+    endingPrice: true,
+  }),
+] as const
+
+export const PUBLIC_PROJECT_FORM_STEP_COUNT = publicProjectFormStepSchemas.length

@@ -1720,7 +1720,7 @@
           "status": "Select status"
         },
         "ui": {
-          "slugHint": "Used in the public URL. Only lowercase letters, numbers, and hyphens.",
+          "slugHint": "Used in the public URL. At least 3 characters. Only lowercase letters, numbers, and hyphens.",
           "isActiveHint": "Turn off to save as draft (hidden) if your site checks this flag.",
           "linkedProjectHint": "Optional link to an internal project. When you start from an existing project, fields are filled automatically. Use the Load from project button to import data from any ID.",
           "galleryHint": "Upload images for the public gallery. You can remove any image before saving.",
@@ -1745,11 +1745,26 @@
           "created": "Public project created successfully",
           "prefillLoaded": "Form filled from internal project"
         },
+        "steps": {
+          "basics": "Basics & descriptions",
+          "media": "Gallery & documents",
+          "locationAndDetails": "Location & details",
+          "publish": "Categories & pricing",
+          "next": "Next",
+          "back": "Back",
+          "progress": "Step {current} of {total}",
+          "navAria": "Public project form steps"
+        },
         "errors": {
           "titleArRequired": "Arabic title is required",
           "titleEnRequired": "English title is required",
           "slugRequired": "Slug is required",
+          "slugMinLength": "Slug must be at least 3 characters",
           "slugInvalid": "Slug may only contain lowercase letters, numbers, and hyphens",
+          "shortDescriptionArRequired": "Arabic short description is required",
+          "shortDescriptionEnRequired": "English short description is required",
+          "descriptionArRequired": "Arabic full description is required",
+          "descriptionEnRequired": "English full description is required",
           "cityIdRequired": "City is required",
           "regionIdRequired": "Region is required",
           "slugTaken": "This slug is already in use",
