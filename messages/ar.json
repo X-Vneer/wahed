@@ -1626,6 +1626,11 @@
         "onSite": "على الموقع",
         "draft": "مسودة"
       },
+      "card": {
+        "viewProject": "عرض المشروع",
+        "features": "المميزات",
+        "noFeatures": "لا توجد مميزات"
+      },
       "actions": {
         "publishProject": "نشر مشروع جديد",
         "publishComingSoon": "مسار النشر سيتوفر في تحديث لاحق."

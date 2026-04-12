@@ -1626,6 +1626,11 @@
         "onSite": "On site",
         "draft": "Draft"
       },
+      "card": {
+        "viewProject": "View project",
+        "features": "Features",
+        "noFeatures": "No features added"
+      },
       "actions": {
         "publishProject": "Publish new project",
         "publishComingSoon": "The publishing flow will be available in a later update."

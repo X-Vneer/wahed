@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import type { TransformedPublicProject } from "@/prisma/public-projects"
 import apiClient from "@/services"
 import { useQuery } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
@@ -23,40 +24,26 @@ import { useState } from "react"
 import { PageSeoForm } from "../_components/page-seo-form"
 import { CreateWebsiteProjectModal } from "./_components/create-website-project-modal"
 
-type ProjectCard = {
-  title: string
-  status: string
-  description: string
-  /** When false, the project is a draft and hidden on the public site. */
-  published?: boolean
-  /** Optional hero image for the project card. */
-  coverImage?: string
-}
-
-type ProjectsContent = {
-  cards: ProjectCard[]
-}
-
-function isPublished(card: ProjectCard) {
-  return card.published !== false
+type PublicProjectsResponse = {
+  projects: TransformedPublicProject[]
 }
 
 export default function WebsiteProjectsPage() {
   const t = useTranslations("websiteCms.projects")
   const [createModalOpen, setCreateModalOpen] = useState(false)
-  const { data, isLoading } = useQuery<ProjectsContent, Error>({
-    queryKey: ["website-content", "projects", "bilingual"],
+  const { data, isLoading } = useQuery<PublicProjectsResponse, Error>({
+    queryKey: ["website", "public-projects"],
     queryFn: async () => {
-      const response = await apiClient.get<{ content: ProjectsContent }>(
-        "/api/website/content/projects?scope=bilingual"
+      const response = await apiClient.get<PublicProjectsResponse>(
+        "/api/website/public-projects"
       )
-      return response.data.content
+      return response.data
     },
   })
 
-  const cards = data?.cards ?? []
-  const visible = cards.filter(isPublished)
-  const drafts = cards.filter((c) => !isPublished(c))
+  const projects = data?.projects ?? []
+  const visible = projects.filter((p) => p.isActive)
+  const drafts = projects.filter((p) => !p.isActive)
 
   if (isLoading) {
     return <PageLoader />
@@ -119,17 +106,10 @@ export default function WebsiteProjectsPage() {
             </CardHeader>
           </Card>
         ) : (
-          <ul className="grid gap-4 lg:grid-cols-2">
-            {visible.map((card, index) => (
-              <li key={`${card.title}-${index}`} className="min-w-0">
-                <WebsiteProjectCard
-                  title={card.title}
-                  description={card.description}
-                  status={card.status}
-                  variant="published"
-                  stateBadgeLabel={t("badge.onSite")}
-                  coverImage={card.coverImage}
-                />
+          <ul className="grid gap-4">
+            {visible.map((project) => (
+              <li key={project.id}>
+                <WebsiteProjectCard project={project} />
               </li>
             ))}
           </ul>
@@ -153,17 +133,10 @@ export default function WebsiteProjectsPage() {
             </p>
           </div>
 
-          <ul className="grid gap-4 lg:grid-cols-2">
-            {drafts.map((card, index) => (
-              <li key={`draft-${card.title}-${index}`} className="min-w-0">
-                <WebsiteProjectCard
-                  title={card.title}
-                  description={card.description}
-                  status={card.status}
-                  variant="draft"
-                  stateBadgeLabel={t("badge.draft")}
-                  coverImage={card.coverImage}
-                />
+          <ul className="grid gap-4">
+            {drafts.map((project) => (
+              <li key={project.id}>
+                <WebsiteProjectCard project={project} />
               </li>
             ))}
           </ul>

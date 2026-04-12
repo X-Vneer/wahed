@@ -2,11 +2,42 @@ import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
 import { createPublicProjectSchema } from "@/lib/schemas/public-project"
+import {
+  publicProjectInclude,
+  transformPublicProject,
+} from "@/prisma/public-projects"
 import { transformZodError } from "@/lib/transform-errors"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
+
+export async function GET(request: NextRequest) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations({ locale })
+
+  try {
+    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
+    const raw = await db.publicProject.findMany({
+      orderBy: { createdAt: "desc" },
+      include: publicProjectInclude,
+    })
+
+    const projects = raw.map((p) => transformPublicProject(p, locale))
+
+    return NextResponse.json({ projects })
+  } catch (error) {
+    console.error("Error fetching public projects:", error)
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}
 
 function convertToPrismaJsonValue(
   value: unknown

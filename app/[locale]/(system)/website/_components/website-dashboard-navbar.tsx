@@ -79,7 +79,7 @@ export function WebsiteDashboardNavbar() {
             <SheetHeader className="border-b px-4 py-3">
               <SheetTitle>{t("layout.title")}</SheetTitle>
             </SheetHeader>
-            <div className="p-3">
+            <div className="mt-2 p-3">
               <nav className="flex flex-col gap-1.5">
                 {renderNavLinks(() => setIsMobileMenuOpen(false))}
               </nav>
@@ -92,7 +92,7 @@ export function WebsiteDashboardNavbar() {
         <CardHeader className="space-y-1 px-4 pt-4">
           <CardTitle className="text-base">{t("layout.title")}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 px-3 py-2">
+        <CardContent className="mt-4 space-y-3 px-3 py-2">
           <nav className="flex flex-col gap-1.5">{renderNavLinks()}</nav>
         </CardContent>
       </Card>
