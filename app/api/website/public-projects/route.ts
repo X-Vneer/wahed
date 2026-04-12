@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 
     const data = validationResult.data
 
-    const [city, project, categories, badges, features] = await Promise.all([
+    const [city, project, categories] = await Promise.all([
       db.city.findUnique({ where: { id: data.cityId }, select: { id: true } }),
       data.projectId
         ? db.project.findUnique({
@@ -95,18 +95,6 @@ export async function POST(request: NextRequest) {
               id: { in: data.categoryIds },
               isActive: true,
             },
-            select: { id: true },
-          })
-        : Promise.resolve([]),
-      data.badgeIds.length > 0
-        ? db.publicProjectBadge.findMany({
-            where: { id: { in: data.badgeIds } },
-            select: { id: true },
-          })
-        : Promise.resolve([]),
-      data.featureIds.length > 0
-        ? db.publicProjectFeature.findMany({
-            where: { id: { in: data.featureIds } },
             select: { id: true },
           })
         : Promise.resolve([]),
@@ -148,32 +136,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (data.badgeIds.length > 0 && badges.length !== data.badgeIds.length) {
-      return NextResponse.json(
-        {
-          error: t("websiteCms.projects.publicProjectForm.errors.invalidBadges"),
-          details: {
-            badgeIds: t("websiteCms.projects.publicProjectForm.errors.invalidBadges"),
-          },
-        },
-        { status: 400 }
-      )
-    }
-
-    if (data.featureIds.length > 0 && features.length !== data.featureIds.length) {
-      return NextResponse.json(
-        {
-          error: t("websiteCms.projects.publicProjectForm.errors.invalidFeatures"),
-          details: {
-            featureIds: t(
-              "websiteCms.projects.publicProjectForm.errors.invalidFeatures"
-            ),
-          },
-        },
-        { status: 400 }
-      )
-    }
-
     try {
       const created = await db.publicProject.create({
         data: {
@@ -190,9 +152,7 @@ export async function POST(request: NextRequest) {
           locationAr: emptyToNull(data.locationAr ?? undefined),
           locationEn: emptyToNull(data.locationEn ?? undefined),
           area: data.area ?? null,
-          numberOfFloors: data.numberOfFloors ?? null,
           deedNumber: emptyToNull(data.deedNumber ?? undefined),
-          workDuration: data.workDuration ?? null,
           googleMapsAddress: emptyToNull(data.googleMapsAddress ?? undefined),
           status: data.status ?? undefined,
           cityId: data.cityId,
@@ -206,12 +166,26 @@ export async function POST(request: NextRequest) {
                 }
               : undefined,
           badge:
-            data.badgeIds.length > 0
-              ? { connect: data.badgeIds.map((id) => ({ id })) }
+            data.badges.length > 0
+              ? {
+                  create: data.badges.map((b) => ({
+                    nameAr: b.nameAr.trim(),
+                    nameEn: b.nameEn.trim(),
+                    color: b.color.trim(),
+                  })),
+                }
               : undefined,
           features:
-            data.featureIds.length > 0
-              ? { connect: data.featureIds.map((id) => ({ id })) }
+            data.features.length > 0
+              ? {
+                  create: data.features.map((f) => ({
+                    labelAr: f.labelAr.trim(),
+                    labelEn: f.labelEn.trim(),
+                    valueAr: emptyToNull(f.valueAr),
+                    valueEn: emptyToNull(f.valueEn),
+                    icon: f.icon.trim(),
+                  })),
+                }
               : undefined,
         },
       })

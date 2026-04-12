@@ -1,13 +1,13 @@
 "use client"
 
-import { UploadDropzone } from "@/lib/uploadthing"
+import { UploadButton, UploadDropzone } from "@/lib/uploadthing"
 import { CloudUpload } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { ComponentProps } from "react"
 import { cn } from "@/lib/utils"
 
 type UploaderProps = ComponentProps<typeof UploadDropzone> & {
-  variant?: "default" | "circular"
+  variant?: "default" | "circular" | "button"
 }
 
 export default function Uploader({
@@ -16,6 +16,19 @@ export default function Uploader({
 }: UploaderProps) {
   const t = useTranslations()
   const isCircular = variant === "circular"
+
+  if (variant === "button") {
+    return (
+      <UploadButton
+        {...props}
+        appearance={{
+          button:
+            "bg-primary! text-white text-sm font-medium px-4 py-2 rounded-md shadow-sm hover:bg-primary/90 transition-colors",
+          allowedContent: "hidden",
+        }}
+      />
+    )
+  }
 
   return (
     <UploadDropzone

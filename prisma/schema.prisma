@@ -523,9 +523,7 @@ model PublicProject {
   locationAr         String?
   locationEn         String?
   area               Float?
-  numberOfFloors     Int?
   deedNumber         String?
-  workDuration       Int?
   googleMapsAddress  String?
   status             ProjectStatus             @default(PLANNING)
   cityId             String

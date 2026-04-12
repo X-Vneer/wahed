@@ -11,9 +11,7 @@ export type PublicProjectPrefillResponse = {
   cityId: string
   regionId: string
   area: number | null
-  numberOfFloors: number | null
   deedNumber: string | null
-  workDuration: number | null
   googleMapsAddress: string | null
   status: ProjectStatus
   categoryIds: string[]

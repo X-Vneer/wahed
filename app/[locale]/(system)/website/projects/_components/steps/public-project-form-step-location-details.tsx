@@ -200,21 +200,6 @@ export function PublicProjectFormStepLocationDetails() {
             />
           </Field>
           <Field>
-            <FieldLabel htmlFor="pp-floors">
-              {t(
-                "websiteCms.projects.publicProjectForm.fields.numberOfFloors"
-              )}
-            </FieldLabel>
-            <Input
-              id="pp-floors"
-              type="number"
-              min={0}
-              key={form.key("numberOfFloors")}
-              {...form.getInputProps("numberOfFloors")}
-              placeholder={t("projects.form.numberOfFloorsPlaceholder")}
-            />
-          </Field>
-          <Field>
             <FieldLabel htmlFor="pp-deed">
               {t("websiteCms.projects.publicProjectForm.fields.deedNumber")}
             </FieldLabel>
@@ -223,21 +208,6 @@ export function PublicProjectFormStepLocationDetails() {
               key={form.key("deedNumber")}
               {...form.getInputProps("deedNumber")}
               placeholder={t("projects.form.deedNumberPlaceholder")}
-            />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="pp-duration">
-              {t(
-                "websiteCms.projects.publicProjectForm.fields.workDuration"
-              )}
-            </FieldLabel>
-            <Input
-              id="pp-duration"
-              type="number"
-              min={0}
-              key={form.key("workDuration")}
-              {...form.getInputProps("workDuration")}
-              placeholder={t("projects.form.workDurationPlaceholder")}
             />
           </Field>
         </div>

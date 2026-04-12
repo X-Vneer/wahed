@@ -12,13 +12,25 @@ function optionalNumber() {
   )
 }
 
-function optionalInt() {
-  return z.preprocess(
-    (val) =>
-      val === "" || val === null || val === undefined ? undefined : val,
-    z.coerce.number().int().positive().optional()
-  )
-}
+export const publicProjectBadgeSchema = z.object({
+  nameAr: z.string().min(1, { error: "badgeNameArRequired" }),
+  nameEn: z.string().min(1, { error: "badgeNameEnRequired" }),
+  color: z.string().min(1, { error: "badgeColorRequired" }),
+})
+
+export type PublicProjectBadgeInput = z.infer<typeof publicProjectBadgeSchema>
+
+export const publicProjectFeatureSchema = z.object({
+  labelAr: z.string().min(1, { error: "featureLabelArRequired" }),
+  labelEn: z.string().min(1, { error: "featureLabelEnRequired" }),
+  valueAr: z.string().optional().default(""),
+  valueEn: z.string().optional().default(""),
+  icon: z.string().min(1, { error: "featureIconRequired" }),
+})
+
+export type PublicProjectFeatureInput = z.infer<
+  typeof publicProjectFeatureSchema
+>
 
 export const createPublicProjectSchema = z.object({
   titleAr: z.string().min(1, { error: "titleArRequired" }),
@@ -30,24 +42,22 @@ export const createPublicProjectSchema = z.object({
     .regex(slugRegex, { error: "slugInvalid" }),
   descriptionAr: z.string().min(1, { error: "descriptionArRequired" }),
   descriptionEn: z.string().min(1, { error: "descriptionEnRequired" }),
-  shortDescriptionAr: z.string().min(1, { error: "shortDescriptionArRequired" }),
-  shortDescriptionEn: z.string().min(1, { error: "shortDescriptionEnRequired" }),
-  images: z
-    .array(z.string().min(1))
-    .min(5, { error: "imagesMinFive" }),
+  shortDescriptionAr: z
+    .string()
+    .min(1, { error: "shortDescriptionArRequired" }),
+  shortDescriptionEn: z
+    .string()
+    .min(1, { error: "shortDescriptionEnRequired" }),
+  images: z.array(z.string().min(1)).min(5, { error: "imagesMinFive" }),
   isActive: z.boolean().optional().default(true),
-  projectId: z
-    .preprocess(
-      (v) =>
-        v === "" || v === null || v === undefined ? undefined : String(v),
-      z.string().min(1).optional()
-    ),
+  projectId: z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : String(v)),
+    z.string().min(1).optional()
+  ),
   locationAr: z.string().optional(),
   locationEn: z.string().optional(),
   area: optionalNumber(),
-  numberOfFloors: optionalInt(),
   deedNumber: z.string().optional(),
-  workDuration: optionalInt(),
   googleMapsAddress: z.string().optional(),
   status: z.preprocess(
     (v) => (v === "" || v === null || v === undefined ? undefined : v),
@@ -55,8 +65,8 @@ export const createPublicProjectSchema = z.object({
   ),
   cityId: z.string().min(1, { error: "cityIdRequired" }),
   categoryIds: z.array(z.string()).default([]),
-  badgeIds: z.array(z.string()).default([]),
-  featureIds: z.array(z.string()).default([]),
+  badges: z.array(publicProjectBadgeSchema).default([]),
+  features: z.array(publicProjectFeatureSchema).default([]),
   startingPrice: optionalNumber(),
   endingPrice: optionalNumber(),
   attachments: z.array(attachmentSchema).optional().default([]),
@@ -101,18 +111,17 @@ export const publicProjectFormStepSchemas = [
     locationEn: true,
     googleMapsAddress: true,
     area: true,
-    numberOfFloors: true,
     deedNumber: true,
-    workDuration: true,
     status: true,
   }),
   publicProjectFormSchema.pick({
     categoryIds: true,
-    badgeIds: true,
-    featureIds: true,
+    badges: true,
+    features: true,
     startingPrice: true,
     endingPrice: true,
   }),
 ] as const
 
-export const PUBLIC_PROJECT_FORM_STEP_COUNT = publicProjectFormStepSchemas.length
+export const PUBLIC_PROJECT_FORM_STEP_COUNT =
+  publicProjectFormStepSchemas.length

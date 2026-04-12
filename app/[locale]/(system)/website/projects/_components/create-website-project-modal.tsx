@@ -1,6 +1,13 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -9,20 +16,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { useRouter } from "@/lib/i18n/navigation"
-import { ArrowLeft, FolderOpen, Plus } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useProjects } from "@/hooks/use-projects"
-import { useTranslations } from "next-intl"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useProjects } from "@/hooks/use-projects"
+import { useRouter } from "@/lib/i18n/navigation"
+import { cn } from "@/lib/utils"
+import { ArrowLeft, FolderOpen, Plus } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
 
 type CreateWebsiteProjectModalProps = {
   open: boolean
@@ -81,17 +81,11 @@ export function CreateWebsiteProjectModal({
 
   const router = useRouter()
   const [step, setStep] = useState<Step>("source")
-  const { data: projectsData, isLoading } = useProjects(undefined, {
-    enabled: open,
-  })
+  const { data: projectsData, isLoading } = useProjects()
 
   const projects = projectsData?.projects ?? []
 
-  const hasExistingProjects = useMemo(
-    () => projects.length > 0,
-    [projects.length]
-  )
-
+  const hasExistingProjects = projects.length
   const handleSelectEmpty = () => {
     onOpenChange(false)
     router.push("/website/projects/create?source=empty")
