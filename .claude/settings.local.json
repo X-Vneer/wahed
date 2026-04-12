@@ -5,7 +5,8 @@
       "Read(//tmp/**)",
       "Bash(npx prisma:*)",
       "WebFetch(domain:ui.shadcn.com)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(pnpm db:seed)"
     ]
   }
 }

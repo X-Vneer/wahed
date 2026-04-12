@@ -38,8 +38,12 @@ export async function GET(
   const t = await getTranslations({ locale })
 
   try {
+    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
     const { slug } = await params
-    console.log("🚀 ~ GET ~ slug:", slug)
     if (!isWebsitePageSlug(slug)) {
       return NextResponse.json(
         { error: t("errors.invalid_request") },

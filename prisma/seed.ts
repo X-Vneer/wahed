@@ -1086,6 +1086,266 @@ async function main() {
     console.log("⚠️  Could not seed projects: city or category not found")
   }
 
+  // Seed public projects
+  const jeddahCity = await db.city.findUnique({
+    where: { id: "city-jeddah" },
+  })
+  const dammamCity = await db.city.findUnique({
+    where: { id: "city-dammam" },
+  })
+  const commercialCategory = await db.projectCategory.findUnique({
+    where: { id: "project-category-commercial" },
+  })
+  const hospitalityCategory = await db.projectCategory.findUnique({
+    where: { id: "project-category-hospitality" },
+  })
+
+  const publicProjectCities = [
+    riyadhCity,
+    jeddahCity,
+    dammamCity,
+    riyadhCity,
+  ]
+  const publicProjectCategories = [
+    residentialCategory,
+    commercialCategory,
+    hospitalityCategory,
+    residentialCategory,
+  ]
+
+  if (publicProjectCities.every(Boolean) && publicProjectCategories.every(Boolean)) {
+    const sampleImage =
+      "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8BSS2x61H8Ax9EvPen0fcBDUtWNq7MF2X3QZj"
+    const sampleImage2 =
+      "https://djqa8ir0x0.ufs.sh/f/INQfg0cC3Up8yb9Ur0XQuzJgmc1WL8sYPaBRD4VdKXnebMZI"
+
+    const publicProjects = [
+      {
+        id: "public-project-1",
+        titleAr: "أبراج الياسمين السكنية",
+        titleEn: "Al Yasmin Residential Towers",
+        slug: "al-yasmin-residential-towers",
+        descriptionAr:
+          "أبراج سكنية فاخرة في حي الياسمين بالرياض، تتميز بإطلالات بانورامية وتصميم عصري يجمع بين الفخامة والراحة. يضم المشروع شققاً بمساحات متنوعة ومرافق ترفيهية متكاملة تشمل مسابح ونوادي صحية.",
+        descriptionEn:
+          "Luxury residential towers in Al Yasmin district, Riyadh, featuring panoramic views and modern design combining elegance with comfort. The project includes apartments of various sizes and integrated recreational facilities including pools and health clubs.",
+        shortDescriptionAr: "أبراج سكنية فاخرة بإطلالات بانورامية في حي الياسمين",
+        shortDescriptionEn:
+          "Luxury residential towers with panoramic views in Al Yasmin district",
+        images: [sampleImage, sampleImage2, sampleImage, sampleImage2, sampleImage],
+        isActive: true,
+        status: ProjectStatus.IN_PROGRESS,
+        cityId: publicProjectCities[0]!.id,
+        categoryId: publicProjectCategories[0]!.id,
+        area: 12500.0,
+        deedNumber: "DEED-PUB-001",
+        startingPrice: 850000,
+        endingPrice: 2500000,
+        locationAr: "حي الياسمين، شمال الرياض",
+        locationEn: "Al Yasmin District, North Riyadh",
+        googleMapsAddress: "https://maps.google.com/?q=24.8200,46.6300",
+        badges: [
+          { nameAr: "جديد", nameEn: "New", color: "#22c55e" },
+          { nameAr: "تمويل متاح", nameEn: "Financing Available", color: "#3b82f6" },
+        ],
+        features: [
+          {
+            labelAr: "عدد الطوابق",
+            labelEn: "Floors",
+            valueAr: "١٥",
+            valueEn: "15",
+            icon: sampleImage,
+          },
+          {
+            labelAr: "مواقف سيارات",
+            labelEn: "Parking",
+            valueAr: "٣ لكل وحدة",
+            valueEn: "3 per unit",
+            icon: sampleImage,
+          },
+        ],
+      },
+      {
+        id: "public-project-2",
+        titleAr: "مجمع البحر التجاري",
+        titleEn: "Al Bahr Commercial Complex",
+        slug: "al-bahr-commercial-complex",
+        descriptionAr:
+          "مجمع تجاري حديث على كورنيش جدة يضم مكاتب ومحلات تجارية ومطاعم راقية. يتميز بموقعه الاستراتيجي المطل على البحر الأحمر وتصميمه المستدام الذي يراعي البيئة.",
+        descriptionEn:
+          "A modern commercial complex on Jeddah's Corniche featuring offices, retail spaces, and upscale restaurants. Distinguished by its strategic seafront location and sustainable, environmentally conscious design.",
+        shortDescriptionAr: "مجمع تجاري عصري على كورنيش جدة بإطلالة بحرية",
+        shortDescriptionEn:
+          "Modern commercial complex on Jeddah Corniche with sea views",
+        images: [sampleImage2, sampleImage, sampleImage2, sampleImage, sampleImage2],
+        isActive: true,
+        status: ProjectStatus.PLANNING,
+        cityId: publicProjectCities[1]!.id,
+        categoryId: publicProjectCategories[1]!.id,
+        area: 8700.0,
+        deedNumber: "DEED-PUB-002",
+        startingPrice: 1200000,
+        endingPrice: 5000000,
+        locationAr: "كورنيش جدة، جدة",
+        locationEn: "Jeddah Corniche, Jeddah",
+        googleMapsAddress: "https://maps.google.com/?q=21.5433,39.1728",
+        badges: [
+          { nameAr: "قريباً", nameEn: "Coming Soon", color: "#f59e0b" },
+        ],
+        features: [
+          {
+            labelAr: "المساحات التجارية",
+            labelEn: "Retail Spaces",
+            valueAr: "٤٥",
+            valueEn: "45",
+            icon: sampleImage,
+          },
+          {
+            labelAr: "مكاتب",
+            labelEn: "Offices",
+            valueAr: "٦٠",
+            valueEn: "60",
+            icon: sampleImage,
+          },
+        ],
+      },
+      {
+        id: "public-project-3",
+        titleAr: "منتجع الخليج السياحي",
+        titleEn: "Al Khaleej Tourism Resort",
+        slug: "al-khaleej-tourism-resort",
+        descriptionAr:
+          "منتجع سياحي فاخر على ساحل الخليج العربي في الدمام، يقدم تجربة ضيافة استثنائية مع فندق خمس نجوم وفلل خاصة ومنطقة شاطئية متكاملة.",
+        descriptionEn:
+          "A luxury tourism resort on the Arabian Gulf coast in Dammam, offering an exceptional hospitality experience with a five-star hotel, private villas, and a fully integrated beachfront area.",
+        shortDescriptionAr: "منتجع سياحي فاخر على ساحل الخليج في الدمام",
+        shortDescriptionEn:
+          "Luxury tourism resort on the Gulf coast in Dammam",
+        images: [sampleImage, sampleImage, sampleImage2, sampleImage, sampleImage2],
+        isActive: false,
+        status: ProjectStatus.PLANNING,
+        cityId: publicProjectCities[2]!.id,
+        categoryId: publicProjectCategories[2]!.id,
+        area: 35000.0,
+        deedNumber: "DEED-PUB-003",
+        startingPrice: 3000000,
+        endingPrice: 12000000,
+        locationAr: "الواجهة البحرية، الدمام",
+        locationEn: "Waterfront, Dammam",
+        googleMapsAddress: "https://maps.google.com/?q=26.4367,50.1040",
+        badges: [
+          { nameAr: "حصري", nameEn: "Exclusive", color: "#8b5cf6" },
+          { nameAr: "استثمار مميز", nameEn: "Premium Investment", color: "#ec4899" },
+        ],
+        features: [
+          {
+            labelAr: "الغرف الفندقية",
+            labelEn: "Hotel Rooms",
+            valueAr: "٢٠٠",
+            valueEn: "200",
+            icon: sampleImage,
+          },
+          {
+            labelAr: "فلل خاصة",
+            labelEn: "Private Villas",
+            valueAr: "٢٥",
+            valueEn: "25",
+            icon: sampleImage,
+          },
+          {
+            labelAr: "مسبح",
+            labelEn: "Swimming Pool",
+            valueAr: "٤",
+            valueEn: "4",
+            icon: sampleImage,
+          },
+        ],
+      },
+      {
+        id: "public-project-4",
+        titleAr: "حدائق الرمال السكنية",
+        titleEn: "Al Rimal Gardens Residences",
+        slug: "al-rimal-gardens-residences",
+        descriptionAr:
+          "مجمع سكني عائلي في شرق الرياض محاط بحدائق واسعة ومساحات خضراء. يوفر بيئة آمنة ومريحة للعائلات مع مدارس ومراكز صحية ومرافق رياضية داخل المجمع.",
+        descriptionEn:
+          "A family residential compound in East Riyadh surrounded by expansive gardens and green spaces. Provides a safe and comfortable environment for families with schools, health centers, and sports facilities within the compound.",
+        shortDescriptionAr: "مجمع سكني عائلي محاط بحدائق واسعة شرق الرياض",
+        shortDescriptionEn:
+          "Family residential compound with expansive gardens in East Riyadh",
+        images: [sampleImage2, sampleImage2, sampleImage, sampleImage2, sampleImage],
+        isActive: true,
+        status: ProjectStatus.COMPLETED,
+        cityId: publicProjectCities[3]!.id,
+        categoryId: publicProjectCategories[3]!.id,
+        area: 45000.0,
+        deedNumber: "DEED-PUB-004",
+        startingPrice: 600000,
+        endingPrice: 1800000,
+        locationAr: "حي الرمال، شرق الرياض",
+        locationEn: "Al Rimal District, East Riyadh",
+        googleMapsAddress: "https://maps.google.com/?q=24.7500,46.8100",
+        badges: [
+          { nameAr: "مكتمل", nameEn: "Completed", color: "#10b981" },
+          { nameAr: "جاهز للسكن", nameEn: "Ready to Move In", color: "#06b6d4" },
+        ],
+        features: [
+          {
+            labelAr: "الوحدات السكنية",
+            labelEn: "Residential Units",
+            valueAr: "٣٥٠",
+            valueEn: "350",
+            icon: sampleImage,
+          },
+          {
+            labelAr: "مساحات خضراء",
+            labelEn: "Green Areas",
+            valueAr: "٤٠٪",
+            valueEn: "40%",
+            icon: sampleImage,
+          },
+          {
+            labelAr: "مدارس",
+            labelEn: "Schools",
+            valueAr: "٢",
+            valueEn: "2",
+            icon: sampleImage,
+          },
+        ],
+      },
+    ]
+
+    for (const pp of publicProjects) {
+      const { badges, features, categoryId, ...fields } = pp
+
+      await db.publicProject.upsert({
+        where: { id: pp.id },
+        update: {
+          ...fields,
+          categories: { set: [{ id: categoryId }] },
+          badge: {
+            deleteMany: {},
+            create: badges,
+          },
+          features: {
+            deleteMany: {},
+            create: features,
+          },
+        },
+        create: {
+          ...fields,
+          categories: { connect: [{ id: categoryId }] },
+          badge: { create: badges },
+          features: { create: features },
+        },
+      })
+    }
+
+    console.log("✅ Seeded 4 public projects")
+  } else {
+    console.log("⚠️  Could not seed public projects: city or category not found")
+  }
+
   // Seed banners
   const now = new Date()
   const banners = [
@@ -1411,6 +1671,7 @@ async function main() {
   console.log("   Task Templates: 5 task templates")
   console.log("   Project Categories: 8 default categories")
   console.log("   Projects: 3 sample projects")
+  console.log("   Public Projects: 4 public website projects")
   console.log("   Banners: 4 sample banners")
   console.log("   Websites: 10 useful websites")
   console.log("   Events: 10 events for this month and next month")

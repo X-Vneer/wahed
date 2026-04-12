@@ -38,11 +38,11 @@ export default async function middleware(request: NextRequest) {
     "/api/auth/login",
     "/api/health",
     "/api/uploadthing",
-    "/api/public/website/seo/",
   ]
-  const isPublicApiRoute = publicApiRoutes.some((route) =>
-    pathname.includes(route)
-  )
+  const publicApiPrefixes = ["/api/public/website"]
+  const isPublicApiRoute =
+    publicApiRoutes.some((route) => pathname.includes(route)) ||
+    publicApiPrefixes.some((prefix) => pathname.startsWith(prefix))
 
   // Get the access token from cookies
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value
