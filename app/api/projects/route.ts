@@ -1,10 +1,12 @@
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { createProjectSchema } from "@/lib/schemas/project"
 import { transformZodError } from "@/lib/transform-errors"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
+import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import { projectInclude } from "@/prisma/projects"
 import { ProjectStatus } from "@/lib/generated/prisma/enums"
 import { transformProject } from "@/prisma/projects"
@@ -255,6 +257,22 @@ export async function POST(request: NextRequest) {
         attachments: buildAttachmentsForCreate(data.attachments),
         additionalData: buildAdditionalDataForCreate(data.additionalFields),
       },
+    })
+
+    // Notify admins about new project
+    const currentUser = await getAccessTokenPayload()
+    getAdminUserIds().then((adminIds) => {
+      const ids = adminIds.filter((id) => id !== currentUser?.userId)
+      if (ids.length > 0) {
+        createNotifications({
+          userIds: ids,
+          type: "PROJECT_CREATED",
+          title: "New Project Created",
+          message: `Project "${data.nameEn || data.nameAr}" has been created`,
+          relatedId: project.id,
+          relatedType: "project",
+        })
+      }
     })
 
     return NextResponse.json(project, { status: 201 })

@@ -1,5 +1,10 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_COMPLETED } from "@/config"
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  createNotifications,
+  getTaskStakeholderIds,
+} from "@/lib/notifications"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
@@ -52,6 +57,27 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         ...(done && { statusId: TASK_STATUS_ID_COMPLETED }),
       },
       include: taskInclude,
+    })
+
+    // Notify stakeholders about task completion
+    const currentUser = await getAccessTokenPayload()
+    getTaskStakeholderIds(id).then(({ creatorId, assigneeIds }) => {
+      const allIds = [...new Set([creatorId, ...assigneeIds].filter(Boolean))]
+      const notifyIds = allIds.filter(
+        (uid) => uid !== currentUser?.userId
+      ) as string[]
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "TASK_UPDATED",
+          title: done ? "Task Completed" : "Task Reopened",
+          message: done
+            ? `Task "${task.title}" has been marked as done`
+            : `Task "${task.title}" has been reopened`,
+          relatedId: id,
+          relatedType: "task",
+        })
+      }
     })
 
     return NextResponse.json(transformTask(task, locale))

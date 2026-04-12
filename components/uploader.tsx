@@ -18,9 +18,14 @@ export default function Uploader({
   const isCircular = variant === "circular"
 
   if (variant === "button") {
+    const { endpoint, onClientUploadComplete, onUploadError, onUploadBegin, onBeforeUploadBegin } = props
     return (
       <UploadButton
-        {...props}
+        endpoint={endpoint}
+        onClientUploadComplete={onClientUploadComplete}
+        onUploadError={onUploadError}
+        onUploadBegin={onUploadBegin}
+        onBeforeUploadBegin={onBeforeUploadBegin}
         appearance={{
           button:
             "bg-primary! text-white text-sm font-medium px-4 py-2 rounded-md shadow-sm hover:bg-primary/90 transition-colors",

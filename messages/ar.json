@@ -2181,6 +2181,14 @@
   "task": {
     "title": "مهمة"
   },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "empty": "لا توجد إشعارات",
+    "errors": {
+      "not_found": "الإشعار غير موجود"
+    }
+  },
   "contacts": {
     "title": "رسائل التواصل",
     "table": {

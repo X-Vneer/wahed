@@ -2181,6 +2181,14 @@
   "task": {
     "title": "Task"
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications",
+    "errors": {
+      "not_found": "Notification not found"
+    }
+  },
   "contacts": {
     "title": "Contact Messages",
     "table": {

@@ -1,10 +1,15 @@
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { createProjectSchema } from "@/lib/schemas/project"
 import { transformZodError } from "@/lib/transform-errors"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
+import {
+  createNotifications,
+  getProjectStakeholderIds,
+} from "@/lib/notifications"
 import { projectInclude, transformProject } from "@/prisma/projects"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { getReqLocale } from "@/utils/get-req-locale"
@@ -304,6 +309,24 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     })
 
     const transformedProject = transformProject(project, locale)
+
+    // Notify users working on this project's tasks
+    const currentUser = await getAccessTokenPayload()
+    getProjectStakeholderIds(id).then((stakeholderIds) => {
+      const notifyIds = stakeholderIds.filter(
+        (uid) => uid !== currentUser?.userId
+      )
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "PROJECT_UPDATED",
+          title: "Project Updated",
+          message: `Project "${data.nameEn || data.nameAr}" has been updated`,
+          relatedId: id,
+          relatedType: "project",
+        })
+      }
+    })
 
     return NextResponse.json(transformedProject)
   } catch (error) {

@@ -105,6 +105,7 @@ model User {
   assignedTasks Task[]        @relation("assignedTasks")
   taskComments  TaskComment[]
   subTasks      SubTasks[]
+  notifications Notification[]
 }
 
 model Permission {
@@ -505,6 +506,24 @@ model WebsitePageSeo {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id          String  @id @default(cuid())
+  userId      String
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String // TASK_CREATED, TASK_UPDATED, TASK_ASSIGNED, TASK_COMMENTED, PROJECT_CREATED, PROJECT_UPDATED, CONTACT_RECEIVED
+  title       String
+  message     String
+  relatedId   String? // ID of the related entity (task, project, contact)
+  relatedType String? // "task", "project", "contact"
+  isRead      Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt(sort: Desc)])
 }
 
 model ContactMessage {

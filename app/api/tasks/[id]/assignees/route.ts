@@ -1,5 +1,7 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
+import { createNotifications } from "@/lib/notifications"
 import { updateTaskAssigneesSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
 import { taskDetailInclude, transformTaskDetail } from "@/prisma/tasks"
@@ -64,6 +66,16 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       )
     }
 
+    // Get previous assignees to detect new ones
+    const previousTask = await db.task.findUnique({
+      where: { id },
+      select: {
+        title: true,
+        assignedTo: { select: { id: true } },
+      },
+    })
+    const previousAssigneeIds = previousTask?.assignedTo.map((u) => u.id) ?? []
+
     const task = await db.task.update({
       where: { id },
       data: {
@@ -73,6 +85,38 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       },
       include: taskDetailInclude,
     })
+
+    // Notify newly assigned users
+    const currentUser = await getAccessTokenPayload()
+    const newAssignees = assignedToIds.filter(
+      (uid) =>
+        !previousAssigneeIds.includes(uid) && uid !== currentUser?.userId
+    )
+    if (newAssignees.length > 0) {
+      createNotifications({
+        userIds: newAssignees,
+        type: "TASK_ASSIGNED",
+        title: "Task Assigned",
+        message: `You have been assigned to task: ${previousTask?.title ?? task.title}`,
+        relatedId: id,
+        relatedType: "task",
+      })
+    }
+
+    // Notify removed users
+    const removedAssignees = previousAssigneeIds.filter(
+      (uid) => !assignedToIds.includes(uid) && uid !== currentUser?.userId
+    )
+    if (removedAssignees.length > 0) {
+      createNotifications({
+        userIds: removedAssignees,
+        type: "TASK_UPDATED",
+        title: "Task Unassigned",
+        message: `You have been removed from task: ${previousTask?.title ?? task.title}`,
+        relatedId: id,
+        relatedType: "task",
+      })
+    }
 
     return NextResponse.json(transformTaskDetail(task, locale))
   } catch (error) {

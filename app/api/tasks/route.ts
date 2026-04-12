@@ -5,6 +5,10 @@ import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { createTaskSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
 import { TaskPriority } from "@/lib/generated/prisma/enums"
+import {
+  createNotifications,
+  getAdminUserIds,
+} from "@/lib/notifications"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
@@ -140,6 +144,36 @@ export async function POST(request: NextRequest) {
             : undefined,
       },
       include: taskInclude,
+    })
+
+    // Notify assigned users about new task
+    const notifyUserIds = [
+      ...data.assignedToIds.filter((id) => id !== payload.userId),
+    ]
+    if (notifyUserIds.length > 0) {
+      createNotifications({
+        userIds: notifyUserIds,
+        type: "TASK_ASSIGNED",
+        title: "New Task Assigned",
+        message: `You have been assigned to task: ${data.title}`,
+        relatedId: task.id,
+        relatedType: "task",
+      })
+    }
+
+    // Notify admins about new task creation
+    getAdminUserIds().then((adminIds) => {
+      const ids = adminIds.filter((id) => id !== payload.userId)
+      if (ids.length > 0) {
+        createNotifications({
+          userIds: ids,
+          type: "TASK_CREATED",
+          title: "New Task Created",
+          message: `Task "${data.title}" has been created`,
+          relatedId: task.id,
+          relatedType: "task",
+        })
+      }
     })
 
     // Optionally save this task as a reusable template

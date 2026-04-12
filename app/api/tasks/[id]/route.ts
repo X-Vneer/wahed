@@ -1,6 +1,11 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { TaskPriority } from "@/lib/generated/prisma/enums"
+import {
+  createNotifications,
+  getTaskStakeholderIds,
+} from "@/lib/notifications"
 import { updateTaskSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
 import {
@@ -175,6 +180,44 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       data: updateData,
       include: taskDetailInclude,
     })
+
+    // Notify task stakeholders about the update
+    const currentUser = await getAccessTokenPayload()
+    const currentUserId = currentUser?.userId
+    getTaskStakeholderIds(id).then(({ creatorId, assigneeIds }) => {
+      const allIds = [...new Set([creatorId, ...assigneeIds].filter(Boolean))]
+      const notifyIds = allIds.filter(
+        (uid) => uid !== currentUserId
+      ) as string[]
+
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "TASK_UPDATED",
+          title: "Task Updated",
+          message: `Task "${task.title}" has been updated`,
+          relatedId: id,
+          relatedType: "task",
+        })
+      }
+    })
+
+    // Notify newly assigned users
+    if (data.assignedToIds !== undefined) {
+      const newAssignees = data.assignedToIds.filter(
+        (uid) => uid !== currentUserId
+      )
+      if (newAssignees.length > 0) {
+        createNotifications({
+          userIds: newAssignees,
+          type: "TASK_ASSIGNED",
+          title: "Task Assigned",
+          message: `You have been assigned to task: ${task.title}`,
+          relatedId: id,
+          relatedType: "task",
+        })
+      }
+    }
 
     return NextResponse.json(transformTask(task, locale))
   } catch (error) {

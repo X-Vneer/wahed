@@ -1,4 +1,5 @@
 import db from "@/lib/db"
+import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import { createContactMessageSchema } from "@/lib/schemas/contact"
 import { transformZodError } from "@/lib/transform-errors"
 import { getReqLocale } from "@/utils/get-req-locale"
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     const data = validationResult.data
 
-    await db.contactMessage.create({
+    const contact = await db.contactMessage.create({
       data: {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -37,6 +38,20 @@ export async function POST(request: NextRequest) {
         phone: data.phone,
         message: data.message,
       },
+    })
+
+    // Notify all admins about new contact message
+    getAdminUserIds().then((adminIds) => {
+      if (adminIds.length > 0) {
+        createNotifications({
+          userIds: adminIds,
+          type: "CONTACT_RECEIVED",
+          title: "New Contact Message",
+          message: `${data.firstName} ${data.lastName}: ${data.message.substring(0, 100)}`,
+          relatedId: contact.id,
+          relatedType: "contact",
+        })
+      }
     })
 
     return NextResponse.json(

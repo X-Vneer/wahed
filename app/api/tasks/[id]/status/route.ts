@@ -1,6 +1,11 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
+import {
+  createNotifications,
+  getTaskStakeholderIds,
+} from "@/lib/notifications"
 import { changeTaskStatusSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
 import { taskInclude, transformTask } from "@/prisma/tasks"
@@ -71,6 +76,29 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         }),
       },
       include: taskInclude,
+    })
+
+    // Notify stakeholders about status change
+    const currentUser = await getAccessTokenPayload()
+    const statusName = await db.taskStatus.findUnique({
+      where: { id: statusId },
+      select: { nameEn: true, nameAr: true },
+    })
+    getTaskStakeholderIds(id).then(({ creatorId, assigneeIds }) => {
+      const allIds = [...new Set([creatorId, ...assigneeIds].filter(Boolean))]
+      const notifyIds = allIds.filter(
+        (uid) => uid !== currentUser?.userId
+      ) as string[]
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "TASK_UPDATED",
+          title: "Task Status Changed",
+          message: `Task "${task.title}" status changed to ${statusName?.nameEn ?? "new status"}`,
+          relatedId: id,
+          relatedType: "task",
+        })
+      }
     })
 
     const responseLocale = getLocaleFromRequest(request)
