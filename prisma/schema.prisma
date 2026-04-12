@@ -507,6 +507,19 @@ model WebsitePageSeo {
   updatedAt DateTime @updatedAt
 }
 
+model ContactMessage {
+  id        String  @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  message   String
+  isRead    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model PublicProject {
   id                 String                    @id @default(cuid())
   titleAr            String

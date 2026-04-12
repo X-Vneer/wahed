@@ -85,7 +85,8 @@
     "adminView": "واجهة الإدارة",
     "staffView": "واجهة الموظفين",
     "staffPageSettings": "إعدادات صفحة الموظفين",
-    "staff-settings": "إعدادات"
+    "staff-settings": "إعدادات",
+    "websiteContacts": "رسائل التواصل"
   },
   "lists": {
     "projectCategories": {
@@ -2179,5 +2180,64 @@
   "something wrong happened": "حصل مشكلة ما",
   "task": {
     "title": "مهمة"
+  },
+  "contacts": {
+    "title": "رسائل التواصل",
+    "table": {
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "message": "الرسالة",
+      "status": "الحالة",
+      "createdAt": "تاريخ الاستلام"
+    },
+    "status": {
+      "read": "مقروءة",
+      "unread": "غير مقروءة"
+    },
+    "filter": {
+      "all": "جميع الرسائل",
+      "read": "مقروءة",
+      "unread": "غير مقروءة"
+    },
+    "detail": {
+      "title": "تفاصيل الرسالة",
+      "firstName": "الاسم الأول",
+      "lastName": "الاسم الثاني",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "message": "تفاصيل الرسالة",
+      "receivedAt": "تاريخ الاستلام"
+    },
+    "deleteConfirm": {
+      "title": "حذف الرسالة",
+      "description": "هل أنت متأكد من حذف الرسالة من {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    },
+    "errors": {
+      "firstName": {
+        "required": "الاسم الأول مطلوب"
+      },
+      "lastName": {
+        "required": "الاسم الثاني مطلوب"
+      },
+      "email": {
+        "required": "البريد الإلكتروني مطلوب",
+        "invalid": "يرجى إدخال بريد إلكتروني صحيح"
+      },
+      "phone": {
+        "required": "رقم الهاتف مطلوب"
+      },
+      "message": {
+        "required": "الرسالة مطلوبة"
+      },
+      "not_found": "الرسالة غير موجودة"
+    },
+    "success": {
+      "created": "تم إرسال رسالتك بنجاح",
+      "deleted": "تم حذف الرسالة بنجاح"
+    }
   }
 }

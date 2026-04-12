@@ -85,7 +85,8 @@
     "adminView": "Admin view",
     "staffView": "Staff view",
     "staffPageSettings": "Staff page settings",
-    "staff-settings": "Settings"
+    "staff-settings": "Settings",
+    "websiteContacts": "Contact Messages"
   },
   "lists": {
     "projectCategories": {
@@ -2179,5 +2180,64 @@
   "something wrong happened": "Something wrong happened",
   "task": {
     "title": "Task"
+  },
+  "contacts": {
+    "title": "Contact Messages",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "status": "Status",
+      "createdAt": "Received At"
+    },
+    "status": {
+      "read": "Read",
+      "unread": "Unread"
+    },
+    "filter": {
+      "all": "All Messages",
+      "read": "Read",
+      "unread": "Unread"
+    },
+    "detail": {
+      "title": "Contact Message Details",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "receivedAt": "Received At"
+    },
+    "deleteConfirm": {
+      "title": "Delete Message",
+      "description": "Are you sure you want to delete the message from {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "firstName": {
+        "required": "First name is required"
+      },
+      "lastName": {
+        "required": "Last name is required"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Please enter a valid email address"
+      },
+      "phone": {
+        "required": "Phone number is required"
+      },
+      "message": {
+        "required": "Message is required"
+      },
+      "not_found": "Contact message not found"
+    },
+    "success": {
+      "created": "Your message has been sent successfully",
+      "deleted": "Message deleted successfully"
+    }
   }
 }
