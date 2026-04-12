@@ -1,6 +1,11 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { Prisma } from "@/lib/generated/prisma/client"
+import {
+  createNotifications,
+  getTaskStakeholderIds,
+} from "@/lib/notifications"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
 import { getTranslations } from "next-intl/server"
@@ -172,6 +177,29 @@ export async function POST(request: NextRequest, context: RouteContext) {
         data: { finalFileId },
       })
     }
+
+    // Notify task stakeholders about attachment changes
+    const currentUser = await getAccessTokenPayload()
+    const taskInfo = await db.task.findUnique({
+      where: { id: taskId },
+      select: { title: true },
+    })
+    getTaskStakeholderIds(taskId).then(({ creatorId, assigneeIds }) => {
+      const allIds = [...new Set([creatorId, ...assigneeIds].filter(Boolean))]
+      const notifyIds = allIds.filter(
+        (uid) => uid !== currentUser?.userId
+      ) as string[]
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "TASK_UPDATED",
+          title: "Task Attachments Updated",
+          message: `Attachments for task "${taskInfo?.title}" have been updated`,
+          relatedId: taskId,
+          relatedType: "task",
+        })
+      }
+    })
 
     return NextResponse.json(
       {

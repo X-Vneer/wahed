@@ -2,6 +2,7 @@ import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
+import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import {
   importTasksFromTemplatesSchema,
   type ImportTasksFromTemplatesInput,
@@ -159,6 +160,21 @@ export async function POST(request: NextRequest) {
         timeout: 30_000, // 30s for many templates with nested subTasks
       }
     )
+
+    // Notify admins about bulk task creation
+    getAdminUserIds().then((adminIds) => {
+      const ids = adminIds.filter((id) => id !== payload.userId)
+      if (ids.length > 0) {
+        createNotifications({
+          userIds: ids,
+          type: "TASK_CREATED",
+          title: "Tasks Imported from Templates",
+          message: `${createdTasks.length} task(s) created from templates`,
+          relatedId: data.projectId ?? createdTasks[0]?.id,
+          relatedType: data.projectId ? "project" : "task",
+        })
+      }
+    })
 
     const responseLocale = getLocaleFromRequest(request)
 

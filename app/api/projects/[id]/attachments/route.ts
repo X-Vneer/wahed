@@ -1,4 +1,9 @@
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  createNotifications,
+  getProjectStakeholderIds,
+} from "@/lib/notifications"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
@@ -106,6 +111,24 @@ export async function POST(request: NextRequest, context: RouteContext) {
     // Fetch all attachments for the project to return in response
     const createdAttachments = await db.projectAttachment.findMany({
       where: { projectId: id },
+    })
+
+    // Notify project stakeholders about attachment changes
+    const currentUser = await getAccessTokenPayload()
+    getProjectStakeholderIds(id).then((stakeholderIds) => {
+      const notifyIds = stakeholderIds.filter(
+        (uid) => uid !== currentUser?.userId
+      )
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "PROJECT_UPDATED",
+          title: "Project Attachments Updated",
+          message: `Attachments for project "${project.nameEn || project.nameAr}" have been updated`,
+          relatedId: id,
+          relatedType: "project",
+        })
+      }
     })
 
     return NextResponse.json(

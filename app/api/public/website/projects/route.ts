@@ -1,0 +1,60 @@
+import { NextRequest, NextResponse } from "next/server"
+import db from "@/lib/db"
+import {
+  publicProjectInclude,
+  transformPublicProject,
+} from "@/prisma/public-projects"
+import { getReqLocale } from "@/utils/get-req-locale"
+import { getTranslations } from "next-intl/server"
+import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
+import { transformZodError } from "@/lib/transform-errors"
+
+/**
+ * Public read-only endpoint to list active public projects.
+ * No authentication. Optional `locale=ar|en` query param.
+ */
+export async function GET(request: NextRequest) {
+  const fallbackLocale = await getReqLocale(request)
+  const t = await getTranslations({ locale: fallbackLocale })
+
+  try {
+    const localeParam = request.nextUrl.searchParams.get("locale")
+    const localeResult = websiteContentLocaleSchema.safeParse(
+      localeParam ?? fallbackLocale
+    )
+    if (!localeResult.success) {
+      return NextResponse.json(
+        {
+          error: t("errors.validation_failed"),
+          details: transformZodError(localeResult.error),
+        },
+        { status: 400 }
+      )
+    }
+
+    const locale = localeResult.data
+
+    const raw = await db.publicProject.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: "desc" },
+      include: publicProjectInclude,
+    })
+
+    const projects = raw.map((p) => transformPublicProject(p, locale))
+
+    return NextResponse.json(
+      { projects },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
+    )
+  } catch (error) {
+    console.error("Error fetching public projects:", error)
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}

@@ -85,7 +85,8 @@
     "adminView": "واجهة الإدارة",
     "staffView": "واجهة الموظفين",
     "staffPageSettings": "إعدادات صفحة الموظفين",
-    "staff-settings": "إعدادات"
+    "staff-settings": "إعدادات",
+    "websiteContacts": "رسائل التواصل"
   },
   "lists": {
     "projectCategories": {
@@ -117,7 +118,8 @@
     "failed_to_fetch_user_data": "فشل في جلب بيانات المستخدم",
     "upload_failed": "فشل تحميل الصورة",
     "failed_to_load": "فشل تحميل بيانات المستخدم",
-    "validation_failed": "فشل التحقق"
+    "validation_failed": "فشل التحقق",
+    "invalid_request": "طلب غير صالح"
   },
   "welcome": {
     "title": "مرحباً بعودتك",
@@ -1365,8 +1367,885 @@
       "cancel": "إلغاء"
     }
   },
+  "websiteCms": {
+    "layout": {
+      "title": "إدارة محتوى الموقع",
+      "description": "إدارة محتوى الموقع العام"
+    },
+    "nav": {
+      "home": "الرئيسية",
+      "projects": "المشاريع",
+      "about": "من نحن",
+      "contact": "اتصل بنا",
+      "settings": "إعدادات الموقع"
+    },
+    "home": {
+      "title": "صفحة الرئيسية",
+      "description": "إدارة واجهة الصفحة الرئيسية والأقسام البارزة.",
+      "stats": {
+        "heroTitleLabel": "عنوان الواجهة",
+        "heroTitleValue": "مرحباً بكم في موقعنا",
+        "featuredProjectsLabel": "المشاريع المميزة",
+        "featuredProjectsValue": "3 منشورة",
+        "liveBadge": "مباشر",
+        "lastUpdatedLabel": "آخر تحديث",
+        "lastUpdatedValue": "اليوم"
+      },
+      "heroSection": {
+        "title": "قسم الواجهة",
+        "description": "تحديث الرسالة الرئيسية وزر الدعوة لاتخاذ إجراء",
+        "fields": {
+          "backgroundImage": "رابط صورة الخلفية",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "descriptionAr": "الوصف (عربي)",
+          "descriptionEn": "الوصف (إنجليزي)",
+          "ctaLabelAr": "نص زر الدعوة (عربي)",
+          "ctaLabelEn": "نص زر الدعوة (إنجليزي)",
+          "ctaLink": "رابط زر الدعوة"
+        },
+        "placeholders": {
+          "backgroundImage": "https://images.unsplash.com/...",
+          "titleAr": "اكتب عنواناً واضحاً ومختصراً للواجهة",
+          "titleEn": "Write a clear and short hero title",
+          "descriptionAr": "اكتب وصفاً مختصراً يوضح قيمة هذا القسم",
+          "descriptionEn": "Write a concise description for this section",
+          "ctaLabelAr": "ابدأ الآن",
+          "ctaLabelEn": "Get Started",
+          "ctaLink": "https://yourwebsite.com/contact"
+        },
+        "ui": {
+          "backgroundImageHint": "ارفع صورة عريضة لتحسين مظهر الواجهة.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لعرض المحتوى باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الواجهة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الواجهة"
+        },
+        "previewBadge": "معاينة الواجهة",
+        "save": "حفظ محتوى الصفحة الرئيسية"
+      },
+      "briefSection": {
+        "title": "قسم النبذة",
+        "description": "التحكم في النص والصورة الخاصة بهذا القسم في الصفحة الرئيسية",
+        "fields": {
+          "image": "صورة القسم",
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)"
+        },
+        "placeholders": {
+          "contentAr": "اكتب محتوى القسم باللغة العربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "imageHint": "ارفع صورة الشعار أو الصورة التي تظهر بجانب النص.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة المحتوى العربي والإنجليزي لعرض القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم النبذة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم النبذة"
+        },
+        "save": "حفظ قسم النبذة"
+      },
+      "aboutSection": {
+        "title": "قسم من نحن",
+        "description": "إدارة قسم من نحن كقسم مستقل داخل الصفحة الرئيسية.",
+        "fields": {
+          "image": "صورة القسم",
+          "titlePartOneAr": "السطر الأول من العنوان (عربي)",
+          "titlePartOneEn": "السطر الأول من العنوان (إنجليزي)",
+          "titlePartTwoAr": "السطر الثاني من العنوان (عربي)",
+          "titlePartTwoEn": "السطر الثاني من العنوان (إنجليزي)",
+          "descriptionAr": "الوصف (عربي)",
+          "descriptionEn": "الوصف (إنجليزي)",
+          "ctaLabelAr": "نص الزر (عربي)",
+          "ctaLabelEn": "نص الزر (إنجليزي)"
+        },
+        "placeholders": {
+          "titlePartOneAr": "عن",
+          "titlePartOneEn": "About",
+          "titlePartTwoAr": "واعد أوربان",
+          "titlePartTwoEn": "Wahed Urban",
+          "descriptionAr": "اكتب وصف القسم بالعربية",
+          "descriptionEn": "Write section description in English",
+          "ctaLabelAr": "اعرف المزيد",
+          "ctaLabelEn": "Learn More"
+        },
+        "ui": {
+          "imageHint": "ارفع الصورة التي تظهر في يمين هذا القسم.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة حقول العربية والإنجليزية لضمان عرض القسم بشكل صحيح بكلتا اللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم من نحن بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم من نحن"
+        },
+        "save": "حفظ قسم من نحن"
+      },
+      "statsSection": {
+        "title": "قسم الإحصائيات",
+        "description": "إدارة بيانات الإحصائيات المعروضة في الصفحة الرئيسية.",
+        "items": {
+          "first": "الإحصائية الأولى",
+          "second": "الإحصائية الثانية",
+          "third": "الإحصائية الثالثة"
+        },
+        "fields": {
+          "isActive": "ظهور القسم",
+          "valueAr": "القيمة (عربي)",
+          "valueEn": "القيمة (إنجليزي)",
+          "labelAr": "الوصف (عربي)",
+          "labelEn": "الوصف (إنجليزي)"
+        },
+        "placeholders": {
+          "first": {
+            "valueAr": "20+",
+            "valueEn": "20+",
+            "labelAr": "إجمالي مساحة المشاريع",
+            "labelEn": "Total project area"
+          },
+          "second": {
+            "valueAr": "119K+",
+            "valueEn": "119K+",
+            "labelAr": "متر مربع مبني",
+            "labelEn": "Built square meters"
+          },
+          "third": {
+            "valueAr": "10+",
+            "valueEn": "10+",
+            "labelAr": "عام من الخبرة",
+            "labelEn": "Years of experience"
+          }
+        },
+        "ui": {
+          "isActiveHint": "فعّل هذا الخيار لإظهار القسم في الصفحة الرئيسية، أو عطّله لإخفائه.",
+          "bilingualHint": "قم بتعبئة القيم والأوصاف بالعربية والإنجليزية لضمان عرض الإحصائيات بكلتا اللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الإحصائيات بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الإحصائيات"
+        },
+        "save": "حفظ قسم الإحصائيات"
+      },
+      "partnersSection": {
+        "title": "قسم الشركاء",
+        "description": "إدارة شعارات الشركاء ومحتوى القسم باللغتين.",
+        "fields": {
+          "logos": "شعارات الشركاء",
+          "isActive": "ظهور القسم",
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بوابة التواصل",
+          "eyebrowTitleEn": "Communication Gateway",
+          "titleAr": "تحالف الريادة",
+          "titleEn": "Leadership Alliance",
+          "contentAr": "اكتب محتوى قسم الشركاء باللغة العربية",
+          "contentEn": "Write partners section content in English"
+        },
+        "ui": {
+          "isActiveHint": "فعّل هذا الخيار لإظهار القسم في الصفحة الرئيسية، أو عطّله لإخفائه.",
+          "logosHint": "ارفع عدة شعارات للشركاء. كرر الرفع لإضافة المزيد.",
+          "removeLogo": "إزالة الشعار",
+          "noLogos": "لا توجد شعارات مرفوعة حتى الآن.",
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لعرض القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الشركاء بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الشركاء"
+        },
+        "save": "حفظ قسم الشركاء"
+      },
+      "contactSection": {
+        "title": "قسم التواصل",
+        "description": "إدارة قسم التواصل بالمحتوى الثنائي ونص الزر.",
+        "fields": {
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)",
+          "ctaLabelAr": "نص الزر (عربي)",
+          "ctaLabelEn": "نص الزر (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بوابة التواصل",
+          "eyebrowTitleEn": "Communication Gateway",
+          "titleAr": "بداية الحوار",
+          "titleEn": "Start the Conversation",
+          "contentAr": "اكتب محتوى قسم الدعوة للتواصل باللغة العربية",
+          "contentEn": "Write contact section content in English",
+          "ctaLabelAr": "اضغط هنا",
+          "ctaLabelEn": "Click Here"
+        },
+        "ui": {
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لضمان ظهور قسم التواصل بشكل صحيح بكلتا اللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم التواصل بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم التواصل"
+        },
+        "save": "حفظ قسم التواصل"
+      }
+    },
+    "projects": {
+      "title": "مشاريع الموقع",
+      "description": "اطلع على ما يراه الزوار في صفحة المشاريع، وأدر المسودات، وانشر مشاريع جديدة عند الجاهزية.",
+      "sections": {
+        "visibleOnSite": "منشور على الموقع",
+        "visibleHint": "تظهر هذه العناصر لزوار صفحة المشاريع العامة.",
+        "drafts": "مسودات",
+        "draftsHint": "لا تظهر على الموقع حتى يتم نشرها."
+      },
+      "empty": {
+        "visible": "لا توجد مشاريع منشورة بعد. عند نشر مشروع سيظهر هنا."
+      },
+      "badge": {
+        "onSite": "منشور",
+        "draft": "مسودة"
+      },
+      "card": {
+        "viewProject": "عرض المشروع",
+        "editProject": "تعديل المشروع",
+        "seo": "SEO",
+        "publishedSuccess": "تم نشر المشروع على الموقع",
+        "unpublishedSuccess": "تم إلغاء نشر المشروع من الموقع",
+        "viewMore": "عرض المزيد",
+        "viewLess": "عرض أقل",
+        "features": "المميزات",
+        "details": "التفاصيل",
+        "area": "المساحة",
+        "deedNumber": "رقم الصك",
+        "priceRange": "نطاق السعر",
+        "location": "الموقع",
+        "description": "الوصف"
+      },
+      "actions": {
+        "publishProject": "نشر مشروع جديد",
+        "publishComingSoon": "مسار النشر سيتوفر في تحديث لاحق."
+      },
+      "createModal": {
+        "trigger": "إنشاء مشروع",
+        "triggerHint": "اختر مشروعا فارغا أو ابدأ من مشروع موجود.",
+        "title": "إنشاء مشروع",
+        "descriptionSelectSource": "اختر كيف تريد البدء في إنشاء هذا المشروع.",
+        "descriptionSelectExisting": "اختر مشروعا من النظام للبدء منه.",
+        "empty": {
+          "title": "البدء من نموذج فارغ",
+          "description": "افتح نموذج مشروع فارغ وأضف التفاصيل يدويا."
+        },
+        "existing": {
+          "title": "استخدام مشروع موجود",
+          "description": "اختر مشروعا من النظام ثم تابع إلى نموذج فارغ حاليا.",
+          "emptyTitle": "لا توجد مشاريع",
+          "emptyDescription": "لا توجد مشاريع متاحة في النظام حاليا.",
+          "noDescription": "بدون وصف",
+          "statusLabel": "الحالة: {status}",
+          "statusNotAvailable": "غير متاح"
+        },
+        "actions": {
+          "back": "رجوع"
+        }
+      },
+      "createPage": {
+        "title": "إنشاء مشروع عام",
+        "description": "أضف عرضا ثنائي اللغة للموقع العام: رابط slug، معرض صور، الموقع، التسعير، وربط اختياري بمشروع داخلي.",
+        "sourceTitle": "المصدر",
+        "selectedOption": "الخيار المحدد:",
+        "sourceExisting": "مشروع موجود من النظام",
+        "sourceEmpty": "مشروع فارغ",
+        "projectNotFound": "لم يتم العثور على المشروع المحدد.",
+        "formTitle": "تفاصيل المشروع العام",
+        "formDescription": "عبّئ الحقول أدناه. يجب أن يكون الرابط الفريد (slug) بحروف إنجليزية صغيرة وأرقام وشرطات فقط."
+      },
+      "editPage": {
+        "title": "تعديل المشروع العام",
+        "description": "تحديث بيانات المشروع العام على الموقع.",
+        "formTitle": "تفاصيل المشروع العام",
+        "formDescription": "حدّث الحقول أدناه. يجب أن يكون الرابط الفريد (slug) بحروف إنجليزية صغيرة وأرقام وشرطات فقط.",
+        "notFound": "لم يتم العثور على المشروع"
+      },
+      "seoPage": {
+        "title": "SEO المشروع",
+        "description": "إدارة إعدادات تحسين محركات البحث لهذا المشروع."
+      },
+      "publicProjectForm": {
+        "sections": {
+          "core": "العناوين والرابط",
+          "descriptions": "الأوصاف",
+          "gallery": "معرض الصور",
+          "attachments": "المرفقات",
+          "location": "الموقع",
+          "details": "تفاصيل المشروع",
+          "taxonomy": "التصنيفات والشارات والميزات",
+          "pricing": "التسعير"
+        },
+        "fields": {
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "slug": "رابط slug",
+          "isActive": "منشور على الموقع",
+          "linkedProjectId": "معرف المشروع الداخلي (اختياري)",
+          "shortDescriptionAr": "وصف قصير (عربي)",
+          "shortDescriptionEn": "وصف قصير (إنجليزي)",
+          "descriptionAr": "الوصف الكامل (عربي)",
+          "descriptionEn": "الوصف الكامل (إنجليزي)",
+          "images": "الصور",
+          "attachments": "مستندات وملفات",
+          "region": "المنطقة",
+          "city": "المدينة",
+          "locationAr": "تسمية الموقع (عربي)",
+          "locationEn": "تسمية الموقع (إنجليزي)",
+          "googleMaps": "رابط خرائط جوجل",
+          "area": "المساحة",
+          "numberOfFloors": "عدد الطوابق",
+          "deedNumber": "رقم الصك",
+          "workDuration": "مدة العمل",
+          "status": "الحالة",
+          "categories": "التصنيفات",
+          "badges": "الشارات",
+          "badgeNameAr": "نص الشارة (عربي)",
+          "badgeNameEn": "نص الشارة (إنجليزي)",
+          "badgeColor": "لون الشارة",
+          "features": "الميزات",
+          "featureLabelAr": "التسمية (عربي)",
+          "featureLabelEn": "التسمية (إنجليزي)",
+          "featureValueAr": "القيمة (عربي)",
+          "featureValueEn": "القيمة (إنجليزي)",
+          "featureIcon": "الأيقونة",
+          "startingPrice": "السعر الابتدائي",
+          "endingPrice": "السعر النهائي"
+        },
+        "placeholders": {
+          "titleAr": "العنوان العام بالعربية",
+          "titleEn": "العنوان العام بالإنجليزية",
+          "slug": "my-residential-project",
+          "linkedProjectId": "الصق معرف المشروع الداخلي عند الربط",
+          "shortDescription": "سطر أو سطران للبطاقات وSEO",
+          "description": "نص أطول لصفحة المشروع",
+          "region": "اختر المنطقة",
+          "city": "اختر المدينة",
+          "location": "حي أو معلم",
+          "categories": "اختر التصنيفات",
+          "badges": "اختر الشارات",
+          "features": "اختر الميزات",
+          "price": "0.00",
+          "status": "اختر الحالة"
+        },
+        "ui": {
+          "slugHint": "يُستخدم في الرابط العام. 3 أحرف على الأقل. حروف إنجليزية صغيرة وأرقام وشرطات فقط.",
+          "isActiveHint": "أوقف التفعيل لحفظ كمسودة (مخفية) إذا كان الموقع يعتمد هذا الحقل.",
+          "linkedProjectHint": "ربط اختياري بمشروع داخلي. عند البدء من مشروع موجود تُعبأ الحقول تلقائيا. استخدم «تحميل من المشروع» لاستيراد البيانات من أي معرف.",
+          "galleryHint": "أضف 5 صور على الأقل للمعرض العام. يمكنك حذف أي صورة قبل الحفظ.",
+          "attachmentsHint": "ملفات PDF وصور وغيرها (نفس رفع المشاريع الداخلية).",
+          "attachmentsUploadMoreHint": "ارفع ملفات إضافية. تُخزَّن مع أي ملفات من المشروع المرتبط التي تبقيها محددة أعلاه.",
+          "linkedProjectFilesSection": "ملفات من المشروع الداخلي المرتبط",
+          "linkedProjectFilesHint": "اختر الملفات الموجودة التي تريد إدراجها في الصفحة العامة. يمكنك أيضا رفع ملفات جديدة أدناه.",
+          "openLinkedFile": "فتح",
+          "noImages": "لا توجد صور بعد. استخدم منطقة الرفع أعلاه.",
+          "removeImage": "إزالة الصورة",
+          "noCategories": "لا توجد تصنيفات متاحة.",
+          "badgesHint": "أضف شارات اختيارية بعناوين بالعربية والإنجليزية ولون مميز.",
+          "featuresHint": "أضف صفوفا بتسميات وقيم باللغتين، وارفع صورة أيقونة لكل صف.",
+          "noBadges": "لا توجد شارات بعد. أنشئ سجلات الشارات أولا أو اترك الحقل فارغا.",
+          "noFeatures": "لا توجد ميزات بعد. أنشئ سجلات الميزات أولا أو اترك الحقل فارغا.",
+          "noBadgesAdded": "لا توجد شارات بعد. استخدم «إضافة» لإنشاء واحدة.",
+          "noFeaturesAdded": "لا توجد ميزات بعد. استخدم «إضافة» لإنشاء واحدة.",
+          "featureIconHint": "ارفع PNG أو SVG صغيرا. يُحفظ الرابط العام مع هذه الميزة.",
+          "removeFeatureIcon": "إزالة الأيقونة"
+        },
+        "actions": {
+          "generateSlug": "إنشاء من العنوان الإنجليزي",
+          "loadFromProject": "تحميل من المشروع",
+          "save": "إنشاء المشروع العام",
+          "update": "تحديث المشروع العام",
+          "saving": "جاري الحفظ…",
+          "submitSection": "حفظ",
+          "submitHint": "ينشئ المشروع العام ويعيدك إلى قائمة مشاريع الموقع."
+        },
+        "success": {
+          "created": "تم إنشاء المشروع العام بنجاح",
+          "updated": "تم تحديث المشروع العام بنجاح",
+          "prefillLoaded": "تم تعبئة النموذج من المشروع الداخلي"
+        },
+        "steps": {
+          "basics": "الأساسيات والأوصاف",
+          "media": "المعرض والمستندات",
+          "locationAndDetails": "الموقع والتفاصيل",
+          "publish": "التصنيفات والتسعير",
+          "next": "التالي",
+          "back": "السابق",
+          "progress": "الخطوة {current} من {total}",
+          "navAria": "خطوات نموذج المشروع العام"
+        },
+        "errors": {
+          "titleArRequired": "العنوان العربي مطلوب",
+          "titleEnRequired": "العنوان الإنجليزي مطلوب",
+          "slugRequired": "الرابط (slug) مطلوب",
+          "slugMinLength": "يجب أن يكون الرابط (slug) 3 أحرف على الأقل",
+          "slugInvalid": "يُسمح فقط بحروف إنجليزية صغيرة وأرقام وشرطات",
+          "shortDescriptionArRequired": "الوصف القصير بالعربية مطلوب",
+          "shortDescriptionEnRequired": "الوصف القصير بالإنجليزية مطلوب",
+          "descriptionArRequired": "الوصف الكامل بالعربية مطلوب",
+          "descriptionEnRequired": "الوصف الكامل بالإنجليزية مطلوب",
+          "cityIdRequired": "المدينة مطلوبة",
+          "regionIdRequired": "المنطقة مطلوبة",
+          "imagesMinFive": "أضف 5 صور على الأقل للمعرض",
+          "badgeNameArRequired": "نص الشارة بالعربية مطلوب",
+          "badgeNameEnRequired": "نص الشارة بالإنجليزية مطلوب",
+          "badgeColorRequired": "لون الشارة مطلوب",
+          "featureLabelArRequired": "التسمية بالعربية مطلوبة",
+          "featureLabelEnRequired": "التسمية بالإنجليزية مطلوبة",
+          "featureIconRequired": "أيقونة الميزة مطلوبة",
+          "slugTaken": "هذا الرابط مستخدم مسبقا",
+          "projectNotFound": "لم يُعثر على المشروع الداخلي",
+          "invalidBadges": "شارة أو أكثر غير صالحة",
+          "invalidFeatures": "ميزة أو أكثر غير صالحة",
+          "prefillNeedProjectId": "أدخل معرف المشروع الداخلي أولا",
+          "prefillFailed": "تعذر تحميل بيانات هذا المشروع",
+          "prefillProjectNotFound": "لم يُعثر على المشروع الداخلي"
+        }
+      }
+    },
+    "about": {
+      "title": "صفحة من نحن",
+      "description": "إدارة أقسام صفحة من نحن ومحتواها الثنائي.",
+      "heroSection": {
+        "title": "قسم الواجهة",
+        "description": "إدارة بانر الواجهة الخاص بصفحة من نحن.",
+        "fields": {
+          "backgroundImage": "صورة الخلفية",
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "descriptionAr": "الوصف (عربي)",
+          "descriptionEn": "الوصف (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "قصة ثقة ورؤية",
+          "eyebrowTitleEn": "A Story of Trust and Vision",
+          "titleAr": "اكتب عنوان القسم باللغة العربية",
+          "titleEn": "Write section title in English",
+          "descriptionAr": "اكتب وصف القسم باللغة العربية",
+          "descriptionEn": "Write section description in English"
+        },
+        "ui": {
+          "backgroundImageHint": "ارفع صورة عريضة لبانر قسم الواجهة.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لضمان عرض القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الواجهة لصفحة من نحن بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الواجهة لصفحة من نحن"
+        },
+        "save": "حفظ قسم الواجهة"
+      },
+      "storySection": {
+        "title": "قسم القصة",
+        "description": "إدارة عنوان ومحتوى فقرة القصة.",
+        "fields": {
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "صياغة الأثر",
+          "eyebrowTitleEn": "Shaping Impact",
+          "titleAr": "قصتنا",
+          "titleEn": "Our Story",
+          "contentAr": "اكتب محتوى القسم باللغة العربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية للحفاظ على المحتوى باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم القصة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم القصة"
+        },
+        "save": "حفظ قسم القصة"
+      },
+      "visionMissionSection": {
+        "title": "قسم الرؤية والرسالة",
+        "description": "إدارة كتل الرؤية والرسالة مع الصورة الوسطية.",
+        "fields": {
+          "image": "الصورة الوسطية",
+          "visionTitleAr": "عنوان الرؤية (عربي)",
+          "visionTitleEn": "عنوان الرؤية (إنجليزي)",
+          "visionContentAr": "محتوى الرؤية (عربي)",
+          "visionContentEn": "محتوى الرؤية (إنجليزي)",
+          "missionTitleAr": "عنوان الرسالة (عربي)",
+          "missionTitleEn": "عنوان الرسالة (إنجليزي)",
+          "missionContentAr": "محتوى الرسالة (عربي)",
+          "missionContentEn": "محتوى الرسالة (إنجليزي)"
+        },
+        "placeholders": {
+          "visionTitleAr": "رؤيتنا",
+          "visionTitleEn": "Our Vision",
+          "visionContentAr": "اكتب محتوى الرؤية باللغة العربية",
+          "visionContentEn": "Write vision content in English",
+          "missionTitleAr": "رسالتنا",
+          "missionTitleEn": "Our Mission",
+          "missionContentAr": "اكتب محتوى الرسالة باللغة العربية",
+          "missionContentEn": "Write mission content in English"
+        },
+        "ui": {
+          "imageHint": "ارفع الصورة التي تظهر في المنتصف بين الرؤية والرسالة.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "قم بتعبئة جميع الحقول العربية والإنجليزية لضمان العرض الكامل باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم الرؤية والرسالة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم الرؤية والرسالة"
+        },
+        "save": "حفظ قسم الرؤية والرسالة"
+      },
+      "valuesSection": {
+        "title": "قسم القيم",
+        "description": "إدارة عنوان القسم وبطاقات القيم الثلاث.",
+        "fields": {
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "عنوان القسم (عربي)",
+          "titleEn": "عنوان القسم (إنجليزي)",
+          "firstTitleAr": "عنوان البطاقة الأولى (عربي)",
+          "firstTitleEn": "عنوان البطاقة الأولى (إنجليزي)",
+          "firstContentAr": "محتوى البطاقة الأولى (عربي)",
+          "firstContentEn": "محتوى البطاقة الأولى (إنجليزي)",
+          "secondTitleAr": "عنوان البطاقة الثانية (عربي)",
+          "secondTitleEn": "عنوان البطاقة الثانية (إنجليزي)",
+          "secondContentAr": "محتوى البطاقة الثانية (عربي)",
+          "secondContentEn": "محتوى البطاقة الثانية (إنجليزي)",
+          "thirdTitleAr": "عنوان البطاقة الثالثة (عربي)",
+          "thirdTitleEn": "عنوان البطاقة الثالثة (إنجليزي)",
+          "thirdContentAr": "محتوى البطاقة الثالثة (عربي)",
+          "thirdContentEn": "محتوى البطاقة الثالثة (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "أواصر البقاء",
+          "eyebrowTitleEn": "Bonds of Continuity",
+          "titleAr": "قيمنا",
+          "titleEn": "Our Values",
+          "firstTitleAr": "الجودة",
+          "firstTitleEn": "Quality",
+          "firstContentAr": "اكتب وصف البطاقة الأولى باللغة العربية",
+          "firstContentEn": "Write first card description in English",
+          "secondTitleAr": "الابتكار",
+          "secondTitleEn": "Innovation",
+          "secondContentAr": "اكتب وصف البطاقة الثانية باللغة العربية",
+          "secondContentEn": "Write second card description in English",
+          "thirdTitleAr": "الإستدامة",
+          "thirdTitleEn": "Sustainability",
+          "thirdContentAr": "اكتب وصف البطاقة الثالثة باللغة العربية",
+          "thirdContentEn": "Write third card description in English"
+        },
+        "ui": {
+          "bilingualHint": "قم بتعبئة جميع الحقول العربية والإنجليزية لضمان عرض القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم القيم بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم القيم"
+        },
+        "save": "حفظ قسم القيم"
+      },
+      "boardSection": {
+        "title": "قسم مجلس الإدارة",
+        "description": "إدارة عنوان قسم مجلس الإدارة وصور الأعضاء.",
+        "fields": {
+          "isActive": "ظهور القسم",
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "عنوان القسم (عربي)",
+          "titleEn": "عنوان القسم (إنجليزي)",
+          "members": "صور أعضاء مجلس الإدارة"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "خلف القصة قيادة",
+          "eyebrowTitleEn": "Leadership Behind the Story",
+          "titleAr": "مجلس الإدارة",
+          "titleEn": "Board of Directors"
+        },
+        "ui": {
+          "isActiveHint": "فعّل هذا الخيار لإظهار القسم في صفحة من نحن، أو عطّله لإخفائه.",
+          "membersHint": "ارفع صور أعضاء مجلس الإدارة. كرر الرفع لإضافة المزيد.",
+          "removeMember": "إزالة العضو",
+          "noMembers": "لا توجد صور أعضاء مرفوعة حتى الآن.",
+          "bilingualHint": "قم بتعبئة عناوين العربية والإنجليزية لضمان ظهور القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم مجلس الإدارة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم مجلس الإدارة"
+        },
+        "save": "حفظ قسم مجلس الإدارة"
+      }
+    },
+    "contact": {
+      "title": "صفحة اتصل بنا",
+      "description": "إدارة نص الترويسة، عمود التواصل، وقنوات الاتصال المشتركة.",
+      "heroInfoSection": {
+        "title": "الترويسة وعمود التواصل",
+        "description": "نصوص أعلى الصفحة (بدون صورة خلفية)، مقدمة العمود، عنوان القنوات، الهاتف، البريد، وروابط التواصل.",
+        "groups": {
+          "hero": "الترويسة",
+          "sidebar": "العمود الجانبي",
+          "channels": "بيانات التواصل"
+        },
+        "fields": {
+          "eyebrowTitleAr": "عنوان علوي (عربي)",
+          "eyebrowTitleEn": "عنوان علوي (إنجليزي)",
+          "heroTitleAr": "عنوان رئيسي (عربي)",
+          "heroTitleEn": "عنوان رئيسي (إنجليزي)",
+          "infoTitleAr": "عنوان العمود (عربي)",
+          "infoTitleEn": "عنوان العمود (إنجليزي)",
+          "infoContentAr": "فقرة العمود (عربي)",
+          "infoContentEn": "فقرة العمود (إنجليزي)",
+          "channelsTitleAr": "عنوان قنوات التواصل (عربي)",
+          "channelsTitleEn": "عنوان قنوات التواصل (إنجليزي)",
+          "phone": "رقم الهاتف",
+          "email": "البريد الإلكتروني",
+          "linkedin": "رابط لينكدإن",
+          "instagram": "رابط إنستغرام"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "خطوة الأولى",
+          "eyebrowTitleEn": "The first step",
+          "heroTitleAr": "تواصل معنا",
+          "heroTitleEn": "Contact us",
+          "infoTitleAr": "لنبداً الحديث",
+          "infoTitleEn": "Let's start the conversation",
+          "infoContentAr": "نص قصير للزوار",
+          "infoContentEn": "نص قصير للزوار",
+          "channelsTitleAr": "وسائل التواصل",
+          "channelsTitleEn": "Contact channels",
+          "phone": "+966500000000",
+          "email": "info@example.com",
+          "linkedin": "https://www.linkedin.com/company/...",
+          "instagram": "https://www.instagram.com/..."
+        },
+        "ui": {
+          "sharedContactHint": "الهاتف والبريد والروابط تُحفظ مرة واحدة وتُعرض للغتين.",
+          "bilingualHint": "نصوص الترويسة والعمود تختلف حسب اللغة؛ بيانات التواصل موحدة."
+        },
+        "success": {
+          "saved": "تم حفظ محتوى صفحة التواصل بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ محتوى صفحة التواصل"
+        },
+        "save": "حفظ محتوى التواصل"
+      }
+    },
+    "settings": {
+      "pageTitle": "إعدادات الموقع",
+      "pageDescription": "ألوان الهوية والخطوط والشعارات وإعدادات SEO وبيانات التواصل للموقع العام. يمكن جلب القيم عبر واجهة برمجة التطبيقات العامة.",
+      "saveAll": "حفظ الإعدادات",
+      "tabs": {
+        "general": "عام",
+        "theme": "المظهر",
+        "fonts": "الخطوط",
+        "logos": "الشعارات",
+        "seo": "SEO",
+        "contact": "التواصل والتحليلات"
+      },
+      "toast": {
+        "saved": "تم حفظ الإعدادات",
+        "saveFailed": "تعذر حفظ الإعدادات"
+      },
+      "theme": {
+        "title": "المظهر والألوان",
+        "description": "لوحة ألوان الهوية للموقع العام (قيم hex).",
+        "primaryColor": "اللون الأساسي (hex)",
+        "accentColor": "لون التمييز (hex)",
+        "blackColor": "الأسود / القريب من الأسود (hex)",
+        "secondaryTextColor": "لون النص الثانوي (hex)"
+      },
+      "fonts": {
+        "title": "الخطوط",
+        "description": "أسماء عائلات الخط للعربية والإنجليزية في الموقع العام (أسماء Google Fonts أو تسلسل CSS كامل بفواصل).",
+        "hint": "الاسم الواحد يُحمّل عبر Google Fonts (أوزان 300–700). للتسلسل استخدم فواصل، مثل system-ui, sans-serif.",
+        "fontAr": "العربية",
+        "fontEn": "الإنجليزية"
+      },
+      "logos": {
+        "title": "الشعارات",
+        "description": "نسختان لضمان وضوح الشعار على الخلفيات الفاتحة والداكنة.",
+        "forDarkBg": "شعار للخلفيات الداكنة",
+        "forDarkBgHint": "عادة نسخة فاتحة أو بيضاء للشريط والتذييل على واجهة داكنة.",
+        "forLightBg": "شعار للخلفيات الفاتحة",
+        "forLightBgHint": "عادة نسخة داكنة للرؤوس على أقسام فاتحة.",
+        "remove": "إزالة الصورة"
+      },
+      "seo": {
+        "title": "SEO والبيانات الوصفية",
+        "description": "القيم الافتراضية للوسوم والمشاركة الاجتماعية. يمكن لكل صفحة تجاوز هذه القيم.",
+        "metaTitleAr": "عنوان الميتا الافتراضي (عربي)",
+        "metaTitleEn": "عنوان الميتا الافتراضي (إنجليزي)",
+        "metaDescriptionAr": "وصف الميتا الافتراضي (عربي)",
+        "metaDescriptionEn": "وصف الميتا الافتراضي (إنجليزي)",
+        "siteUrl": "رابط الموقع العام",
+        "siteUrlHint": "الرابط الأساسي (https) لبطاقات Open Graph والروابط.",
+        "ogImageUrl": "صورة Open Graph الافتراضية",
+        "ogImageHint": "تُعرض عند مشاركة الروابط. حوالي 1200×630 بكسل مناسب لمعظم المنصات.",
+        "removeOgImage": "إزالة صورة Open Graph",
+        "twitterSite": "معرّف X (تويتر)",
+        "twitterSiteHint": "اسم المستخدم لبطاقة تويتر، مثل @yourbrand.",
+        "keywordsAr": "الكلمات المفتاحية (عربي)",
+        "keywordsEn": "الكلمات المفتاحية (إنجليزي)",
+        "robotsAllowIndex": "السماح لمحركات البحث بفهرسة الموقع",
+        "robotsHint": "عطّل فقط في بيئة تجريبية أو قبل الإطلاق.",
+        "favicon": "أيقونة الموقع",
+        "faviconHint": "صورة مربعة، يُفضّل .ico أو .png. تظهر في تبويب المتصفح والعلامات المرجعية.",
+        "removeFavicon": "إزالة الأيقونة"
+      },
+      "contact": {
+        "title": "التواصل والتحليلات",
+        "description": "بيانات التواصل العامة ومعرّف القياس لواجهتك العامة.",
+        "email": "البريد العام للتواصل",
+        "emailHint": "قد يُعرض في التذييل أو البيانات المنظمة.",
+        "phone": "رقم الهاتف العام",
+        "gaId": "معرّف قياس Google Analytics",
+        "gaHint": "مثال: G-XXXXXXXXXX. تُعيده الواجهة العامة لتهيئة التحليلات."
+      }
+    },
+    "pageSeo": {
+      "title": "SEO وبيانات الصفحة",
+      "description": "إعداد حقول SEO الخاصة بكل صفحة. الحقول الاختيارية الفارغة ستعتمد على القيم الافتراضية من إعدادات الموقع.",
+      "requiredHint": "مطلوب",
+      "optionalHint": "اختياري (اتركه فارغًا لاستخدام القيمة الافتراضية)",
+      "robotsHint": "استخدم هذا الخيار على مستوى الصفحة عندما تحتاج تجاوز سلوك الفهرسة العام للموقع.",
+      "errors": {
+        "metaTitleMax": "يجب ألا يتجاوز عنوان الميتا 200 حرف.",
+        "metaDescriptionMax": "يجب ألا يتجاوز وصف الميتا 500 حرف.",
+        "twitterHandleMax": "يجب ألا يتجاوز معرّف X (تويتر) 100 حرف.",
+        "keywordsMax": "يجب ألا تتجاوز الكلمات المفتاحية 500 حرف."
+      },
+      "fields": {
+        "metaTitleAr": "عنوان الميتا (عربي)",
+        "metaTitleEn": "عنوان الميتا (إنجليزي)",
+        "metaDescriptionAr": "وصف الميتا (عربي)",
+        "metaDescriptionEn": "وصف الميتا (إنجليزي)",
+        "canonicalUrl": "الرابط الأساسي Canonical",
+        "ogImageUrl": "رابط صورة Open Graph",
+        "twitterHandle": "معرّف X (تويتر)",
+        "keywordsAr": "الكلمات المفتاحية (عربي)",
+        "keywordsEn": "الكلمات المفتاحية (إنجليزي)",
+        "robotsAllowIndex": "السماح لمحركات البحث بفهرسة هذه الصفحة"
+      },
+      "toast": {
+        "saved": "تم حفظ SEO الصفحة",
+        "saveFailed": "تعذر حفظ SEO الصفحة"
+      },
+      "save": "حفظ SEO الصفحة"
+    }
+  },
   "something wrong happened": "حصل مشكلة ما",
   "task": {
     "title": "مهمة"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "empty": "لا توجد إشعارات",
+    "errors": {
+      "not_found": "الإشعار غير موجود"
+    }
+  },
+  "contacts": {
+    "title": "رسائل التواصل",
+    "table": {
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "message": "الرسالة",
+      "status": "الحالة",
+      "createdAt": "تاريخ الاستلام"
+    },
+    "status": {
+      "read": "مقروءة",
+      "unread": "غير مقروءة"
+    },
+    "filter": {
+      "all": "جميع الرسائل",
+      "read": "مقروءة",
+      "unread": "غير مقروءة"
+    },
+    "detail": {
+      "title": "تفاصيل الرسالة",
+      "firstName": "الاسم الأول",
+      "lastName": "الاسم الثاني",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "message": "تفاصيل الرسالة",
+      "receivedAt": "تاريخ الاستلام"
+    },
+    "deleteConfirm": {
+      "title": "حذف الرسالة",
+      "description": "هل أنت متأكد من حذف الرسالة من {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    },
+    "errors": {
+      "firstName": {
+        "required": "الاسم الأول مطلوب"
+      },
+      "lastName": {
+        "required": "الاسم الثاني مطلوب"
+      },
+      "email": {
+        "required": "البريد الإلكتروني مطلوب",
+        "invalid": "يرجى إدخال بريد إلكتروني صحيح"
+      },
+      "phone": {
+        "required": "رقم الهاتف مطلوب"
+      },
+      "message": {
+        "required": "الرسالة مطلوبة"
+      },
+      "not_found": "الرسالة غير موجودة"
+    },
+    "success": {
+      "created": "تم إرسال رسالتك بنجاح",
+      "deleted": "تم حذف الرسالة بنجاح"
+    }
   }
 }

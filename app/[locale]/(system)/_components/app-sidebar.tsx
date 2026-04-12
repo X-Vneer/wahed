@@ -7,6 +7,7 @@ import {
   Globe,
   Home,
   List,
+  MessageSquare,
   Settings,
   Users,
   Users2,
@@ -145,11 +146,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         isActive: pathname === "/files",
       },
       {
+        title: t("websiteContacts"),
+        url: "/contacts",
+        icon: MessageSquare,
+        isActive: pathname?.startsWith("/contacts") ?? false,
+      },
+      {
         title: t("website"),
-        url: "#",
+        url: "/website",
         icon: Globe,
         items: [],
-        isActive: false,
+        isActive: pathname === "/website",
       },
     ],
   }

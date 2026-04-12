@@ -8,6 +8,7 @@ import { AppSidebar } from "./_components/app-sidebar"
 import { LangSwitcher } from "./_components/lang-switcher"
 import { LogoutButton } from "./_components/logout-button"
 import { LayoutViewSwitcher } from "./_components/layout-view-switcher"
+import { NotificationBell } from "./_components/notification-bell"
 
 import { SYSTEM_LAYOUT_COOKIE_NAME } from "@/config"
 import { QueryClient } from "@tanstack/react-query"
@@ -89,6 +90,7 @@ export default async function SystemLayout({
                   </Link>
                   <div className="flex items-center gap-2">
                     {isAdmin && <LayoutViewSwitcher variant="staff" />}
+                    <NotificationBell />
                     <LogoutButton />
                     <LangSwitcher />
                   </div>
@@ -117,6 +119,7 @@ export default async function SystemLayout({
                 </div>
                 <div className="flex items-center gap-2">
                   <LayoutViewSwitcher variant="admin" />
+                  <NotificationBell />
                   <LangSwitcher />
                 </div>
               </header>

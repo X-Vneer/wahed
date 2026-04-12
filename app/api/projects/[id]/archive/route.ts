@@ -1,4 +1,9 @@
 import db from "@/lib/db"
+import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  createNotifications,
+  getProjectStakeholderIds,
+} from "@/lib/notifications"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { hasPermission } from "@/utils/has-permission"
@@ -54,6 +59,30 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         id: true,
         archivedAt: true,
       },
+    })
+
+    // Notify project stakeholders about archive/unarchive
+    const currentUser = await getAccessTokenPayload()
+    const projectInfo = await db.project.findUnique({
+      where: { id },
+      select: { nameEn: true, nameAr: true },
+    })
+    getProjectStakeholderIds(id).then((stakeholderIds) => {
+      const notifyIds = stakeholderIds.filter(
+        (uid) => uid !== currentUser?.userId
+      )
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "PROJECT_UPDATED",
+          title: shouldArchive ? "Project Archived" : "Project Unarchived",
+          message: shouldArchive
+            ? `Project "${projectInfo?.nameEn || projectInfo?.nameAr}" has been archived`
+            : `Project "${projectInfo?.nameEn || projectInfo?.nameAr}" has been unarchived`,
+          relatedId: id,
+          relatedType: "project",
+        })
+      }
     })
 
     return NextResponse.json({

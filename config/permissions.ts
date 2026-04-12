@@ -42,6 +42,9 @@ export const PERMISSIONS_GROUPED = {
   STAFF_PAGE: {
     MANAGEMENT: PrismaPermissionKey.STAFF_PAGE_MANAGEMENT,
   },
+  WEBSITE: {
+    MANAGEMENT: PrismaPermissionKey.WEBSITE_MANAGEMENT,
+  },
   LIST: {
     CREATE: PrismaPermissionKey.LIST_CREATE,
     UPDATE: PrismaPermissionKey.LIST_UPDATE,

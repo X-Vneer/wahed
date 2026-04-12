@@ -1,6 +1,10 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  createNotifications,
+  getTaskStakeholderIds,
+} from "@/lib/notifications"
 import { createSubTaskSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
 import { getReqLocale } from "@/utils/get-req-locale"
@@ -64,6 +68,28 @@ export async function POST(request: NextRequest, context: RouteContext) {
         taskId,
         createdById: payload.userId,
       },
+    })
+
+    // Notify task stakeholders about new subtask
+    const parentTask = await db.task.findUnique({
+      where: { id: taskId },
+      select: { title: true },
+    })
+    getTaskStakeholderIds(taskId).then(({ creatorId, assigneeIds }) => {
+      const allIds = [...new Set([creatorId, ...assigneeIds].filter(Boolean))]
+      const notifyIds = allIds.filter(
+        (uid) => uid !== payload.userId
+      ) as string[]
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "TASK_UPDATED",
+          title: "New Subtask Added",
+          message: `Subtask "${data.title}" added to task "${parentTask?.title}"`,
+          relatedId: taskId,
+          relatedType: "task",
+        })
+      }
     })
 
     return NextResponse.json(subtask, { status: 201 })

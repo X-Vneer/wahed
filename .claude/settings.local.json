@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat)",
+      "Read(//tmp/**)",
+      "Bash(npx prisma:*)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm db:seed)",
+      "Bash(xargs grep:*)",
+      "Bash(xargs basename:*)",
+      "Bash(npx next:*)",
+      "Bash(mkdir -p \"D:/work/wahed/internal-system/app/[locale]/\\(system\\)/contacts/_components\")",
+      "Bash(mkdir -p \"D:/work/wahed/internal-system/app/[locale]/\\(system\\)/contacts/docs\")",
+      "Bash(cp \"app/[locale]/\\(system\\)/website/contacts/page.tsx\" \"app/[locale]/\\(system\\)/contacts/page.tsx\")",
+      "Bash(cp \"app/[locale]/\\(system\\)/website/contacts/docs/page.tsx\" \"app/[locale]/\\(system\\)/contacts/docs/page.tsx\")",
+      "Bash(cp \"app/[locale]/\\(system\\)/website/contacts/_components/table.tsx\" \"app/[locale]/\\(system\\)/contacts/_components/table.tsx\")",
+      "Bash(cp \"app/[locale]/\\(system\\)/website/contacts/_components/columns.tsx\" \"app/[locale]/\\(system\\)/contacts/_components/columns.tsx\")",
+      "Bash(cp \"app/[locale]/\\(system\\)/website/contacts/_components/actions-column.tsx\" \"app/[locale]/\\(system\\)/contacts/_components/actions-column.tsx\")",
+      "Bash(grep -E \"\\\\.tsx?$\")",
+      "Bash(ls -la /d/work/wahed/internal-system/app/\\\\[locale\\\\]/\\\\\\(system\\\\\\)/_components/*.tsx)",
+      "Bash(grep -r \"PERMISSIONS_GROUPED\\\\|SESSION_COOKIE\" /d/work/wahed/internal-system/config.*)",
+      "Bash(ls /d/work/wahed/internal-system/prisma/*.ts)"
+    ]
+  }
+}

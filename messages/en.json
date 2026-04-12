@@ -85,7 +85,8 @@
     "adminView": "Admin view",
     "staffView": "Staff view",
     "staffPageSettings": "Staff page settings",
-    "staff-settings": "Settings"
+    "staff-settings": "Settings",
+    "websiteContacts": "Contact Messages"
   },
   "lists": {
     "projectCategories": {
@@ -117,7 +118,8 @@
     "failed_to_fetch_user_data": "Failed to fetch user data",
     "upload_failed": "Failed to upload image",
     "failed_to_load": "Failed to load user data",
-    "validation_failed": "Validation failed"
+    "validation_failed": "Validation failed",
+    "invalid_request": "Invlaid request"
   },
   "welcome": {
     "title": "Welcome back",
@@ -1365,8 +1367,885 @@
       "cancel": "Cancel"
     }
   },
+  "websiteCms": {
+    "layout": {
+      "title": "Website CMS",
+      "description": "Manage public website content"
+    },
+    "nav": {
+      "home": "Home",
+      "projects": "Projects",
+      "about": "About",
+      "contact": "Contact",
+      "settings": "Website settings"
+    },
+    "home": {
+      "title": "Home Page",
+      "description": "Manage the homepage hero, highlights, and featured sections.",
+      "stats": {
+        "heroTitleLabel": "Hero title",
+        "heroTitleValue": "Welcome to Our Website",
+        "featuredProjectsLabel": "Featured projects",
+        "featuredProjectsValue": "3 published",
+        "liveBadge": "Live",
+        "lastUpdatedLabel": "Last updated",
+        "lastUpdatedValue": "Today"
+      },
+      "heroSection": {
+        "title": "Hero Section",
+        "description": "Update your main landing message and call-to-action",
+        "fields": {
+          "backgroundImage": "Background image URL",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "descriptionAr": "Description (Arabic)",
+          "descriptionEn": "Description (English)",
+          "ctaLabelAr": "CTA button label (Arabic)",
+          "ctaLabelEn": "CTA button label (English)",
+          "ctaLink": "CTA button link"
+        },
+        "placeholders": {
+          "backgroundImage": "https://images.unsplash.com/...",
+          "titleAr": "اكتب عنوان الواجهة بالعربية",
+          "titleEn": "Write the hero title in English",
+          "descriptionAr": "اكتب وصف القسم بالعربية",
+          "descriptionEn": "Write a short section description in English",
+          "ctaLabelAr": "ابدأ الآن",
+          "ctaLabelEn": "Get Started",
+          "ctaLink": "https://yourwebsite.com/contact"
+        },
+        "ui": {
+          "backgroundImageHint": "Upload a wide image for best hero appearance.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill in both Arabic and English fields so content is available in both languages."
+        },
+        "success": {
+          "saved": "Hero section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save hero section"
+        },
+        "previewBadge": "Hero Preview",
+        "save": "Save Home Content"
+      },
+      "briefSection": {
+        "title": "Brief Section",
+        "description": "Control this homepage section text and image",
+        "fields": {
+          "image": "Section image",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)"
+        },
+        "placeholders": {
+          "contentAr": "اكتب محتوى القسم بالعربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "imageHint": "Upload the logo or image shown next to the text.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill in Arabic and English content for bilingual display."
+        },
+        "success": {
+          "saved": "Brief section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save brief section"
+        },
+        "save": "Save Brief Section"
+      },
+      "aboutSection": {
+        "title": "About Section",
+        "description": "Manage the dedicated About block shown on the homepage.",
+        "fields": {
+          "image": "Section image",
+          "titlePartOneAr": "Title line 1 (Arabic)",
+          "titlePartOneEn": "Title line 1 (English)",
+          "titlePartTwoAr": "Title line 2 (Arabic)",
+          "titlePartTwoEn": "Title line 2 (English)",
+          "descriptionAr": "Description (Arabic)",
+          "descriptionEn": "Description (English)",
+          "ctaLabelAr": "Button label (Arabic)",
+          "ctaLabelEn": "Button label (English)"
+        },
+        "placeholders": {
+          "titlePartOneAr": "عن",
+          "titlePartOneEn": "About",
+          "titlePartTwoAr": "واعد أوربان",
+          "titlePartTwoEn": "Wahed Urban",
+          "descriptionAr": "اكتب وصف القسم بالعربية",
+          "descriptionEn": "Write section description in English",
+          "ctaLabelAr": "اعرف المزيد",
+          "ctaLabelEn": "Learn More"
+        },
+        "ui": {
+          "imageHint": "Upload the image displayed on the right side of this section.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill all Arabic and English fields so this section renders correctly in both languages."
+        },
+        "success": {
+          "saved": "About section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save about section"
+        },
+        "save": "Save About Section"
+      },
+      "statsSection": {
+        "title": "Statistics Section",
+        "description": "Manage the statistical information displayed on the homepage.",
+        "items": {
+          "first": "Statistic 1",
+          "second": "Statistic 2",
+          "third": "Statistic 3"
+        },
+        "fields": {
+          "isActive": "Section visibility",
+          "valueAr": "Value (Arabic)",
+          "valueEn": "Value (English)",
+          "labelAr": "Label (Arabic)",
+          "labelEn": "Label (English)"
+        },
+        "placeholders": {
+          "first": {
+            "valueAr": "20+",
+            "valueEn": "20+",
+            "labelAr": "إجمالي مساحة المشاريع",
+            "labelEn": "Total project area"
+          },
+          "second": {
+            "valueAr": "119K+",
+            "valueEn": "119K+",
+            "labelAr": "متر مربع مبني",
+            "labelEn": "Built square meters"
+          },
+          "third": {
+            "valueAr": "10+",
+            "valueEn": "10+",
+            "labelAr": "عام من الخبرة",
+            "labelEn": "Years of experience"
+          }
+        },
+        "ui": {
+          "isActiveHint": "Enable to show this section on the homepage. Disable to hide it.",
+          "bilingualHint": "Fill in values and labels in both Arabic and English for bilingual display."
+        },
+        "success": {
+          "saved": "Statistics section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save statistics section"
+        },
+        "save": "Save Statistics Section"
+      },
+      "partnersSection": {
+        "title": "Partners Section",
+        "description": "Manage partner logos and bilingual section content.",
+        "fields": {
+          "logos": "Partner logos",
+          "isActive": "Section visibility",
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بوابة التواصل",
+          "eyebrowTitleEn": "Communication Gateway",
+          "titleAr": "تحالف الريادة",
+          "titleEn": "Leadership Alliance",
+          "contentAr": "اكتب محتوى قسم الشركاء باللغة العربية",
+          "contentEn": "Write partners section content in English"
+        },
+        "ui": {
+          "isActiveHint": "Enable to show this section on the homepage. Disable to hide it.",
+          "logosHint": "Upload multiple partner logos. Repeat upload to add more logos.",
+          "removeLogo": "Remove logo",
+          "noLogos": "No logos uploaded yet.",
+          "bilingualHint": "Fill Arabic and English fields so this section appears in both languages."
+        },
+        "success": {
+          "saved": "Partners section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save partners section"
+        },
+        "save": "Save Partners Section"
+      },
+      "contactSection": {
+        "title": "Contact Section",
+        "description": "Manage the contact gateway block with bilingual content and button label.",
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)",
+          "ctaLabelAr": "Button label (Arabic)",
+          "ctaLabelEn": "Button label (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بوابة التواصل",
+          "eyebrowTitleEn": "Communication Gateway",
+          "titleAr": "بداية الحوار",
+          "titleEn": "Start the Conversation",
+          "contentAr": "اكتب محتوى دعوة الإجراء باللغة العربية",
+          "contentEn": "Write contact section content in English",
+          "ctaLabelAr": "اضغط هنا",
+          "ctaLabelEn": "Click Here"
+        },
+        "ui": {
+          "bilingualHint": "Fill Arabic and English fields so this contact section appears correctly in both languages."
+        },
+        "success": {
+          "saved": "Contact section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save contact section"
+        },
+        "save": "Save Contact Section"
+      }
+    },
+    "projects": {
+      "title": "Website projects",
+      "description": "See what visitors see on the projects page, manage drafts, and publish new entries when ready.",
+      "sections": {
+        "visibleOnSite": "Published on website",
+        "visibleHint": "These entries are shown to visitors on the public projects page.",
+        "drafts": "Drafts",
+        "draftsHint": "Not visible on the site until you publish them."
+      },
+      "empty": {
+        "visible": "No published projects yet. When you publish a project, it will appear here."
+      },
+      "badge": {
+        "onSite": "Published ",
+        "draft": "Draft"
+      },
+      "card": {
+        "viewProject": "View project",
+        "editProject": "Edit project",
+        "seo": "SEO",
+        "publishedSuccess": "Project published on website",
+        "unpublishedSuccess": "Project unpublished from website",
+        "viewMore": "View more",
+        "viewLess": "View less",
+        "features": "Features",
+        "details": "Details",
+        "area": "Area",
+        "deedNumber": "Deed number",
+        "priceRange": "Price range",
+        "location": "Location",
+        "description": "Description"
+      },
+      "actions": {
+        "publishProject": "Publish new project",
+        "publishComingSoon": "The publishing flow will be available in a later update."
+      },
+      "createModal": {
+        "trigger": "Create project",
+        "triggerHint": "Choose an empty project or start from an existing one.",
+        "title": "Create project",
+        "descriptionSelectSource": "Choose how you want to start creating this project.",
+        "descriptionSelectExisting": "Select a project from the system to start from.",
+        "empty": {
+          "title": "Start empty",
+          "description": "Open a blank project form and add details manually."
+        },
+        "existing": {
+          "title": "Use existing project",
+          "description": "Pick one project from the system, then continue to a blank form for now.",
+          "emptyTitle": "No projects found",
+          "emptyDescription": "There are no existing projects available in the system yet.",
+          "noDescription": "No description",
+          "statusLabel": "Status: {status}",
+          "statusNotAvailable": "N/A"
+        },
+        "actions": {
+          "back": "Back"
+        }
+      },
+      "createPage": {
+        "title": "Create public project",
+        "description": "Add a bilingual listing for the public website: URL slug, gallery, location, pricing, and optional link to an internal project.",
+        "sourceTitle": "Source",
+        "selectedOption": "Selected option:",
+        "sourceExisting": "Existing project from system",
+        "sourceEmpty": "Empty project",
+        "projectNotFound": "Selected project was not found.",
+        "formTitle": "Public project details",
+        "formDescription": "Fill in the fields below. The slug must be unique and use lowercase letters, numbers, and hyphens only."
+      },
+      "editPage": {
+        "title": "Edit public project",
+        "description": "Update the bilingual listing for the public website.",
+        "formTitle": "Public project details",
+        "formDescription": "Update the fields below. The slug must be unique and use lowercase letters, numbers, and hyphens only.",
+        "notFound": "Project not found"
+      },
+      "seoPage": {
+        "title": "Project SEO",
+        "description": "Manage search engine optimization settings for this project."
+      },
+      "publicProjectForm": {
+        "sections": {
+          "core": "Titles and URL",
+          "descriptions": "Descriptions",
+          "gallery": "Gallery",
+          "attachments": "Attachments",
+          "location": "Location",
+          "details": "Project details",
+          "taxonomy": "Categories, badges, and features",
+          "pricing": "Pricing"
+        },
+        "fields": {
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "slug": "URL slug",
+          "isActive": "Published on website",
+          "linkedProjectId": "Internal project ID (optional)",
+          "shortDescriptionAr": "Short description (Arabic)",
+          "shortDescriptionEn": "Short description (English)",
+          "descriptionAr": "Full description (Arabic)",
+          "descriptionEn": "Full description (English)",
+          "images": "Images",
+          "attachments": "Documents and files",
+          "region": "Region",
+          "city": "City",
+          "locationAr": "Location label (Arabic)",
+          "locationEn": "Location label (English)",
+          "googleMaps": "Google Maps link",
+          "area": "Area",
+          "numberOfFloors": "Number of floors",
+          "deedNumber": "Deed number",
+          "workDuration": "Work duration",
+          "status": "Status",
+          "categories": "Categories",
+          "badges": "Badges",
+          "badgeNameAr": "Badge label (Arabic)",
+          "badgeNameEn": "Badge label (English)",
+          "badgeColor": "Badge color",
+          "features": "Features",
+          "featureLabelAr": "Label (Arabic)",
+          "featureLabelEn": "Label (English)",
+          "featureValueAr": "Value (Arabic)",
+          "featureValueEn": "Value (English)",
+          "featureIcon": "Icon",
+          "startingPrice": "Starting price",
+          "endingPrice": "Ending price"
+        },
+        "placeholders": {
+          "titleAr": "Arabic public title",
+          "titleEn": "English public title",
+          "slug": "my-residential-project",
+          "linkedProjectId": "Paste internal project ID if linking",
+          "shortDescription": "One or two lines for cards and SEO",
+          "description": "Longer copy for the project page",
+          "region": "Select region",
+          "city": "Select city",
+          "location": "Neighborhood or landmark",
+          "categories": "Select categories",
+          "badges": "Select badges",
+          "features": "Select features",
+          "price": "0.00",
+          "status": "Select status"
+        },
+        "ui": {
+          "slugHint": "Used in the public URL. At least 3 characters. Only lowercase letters, numbers, and hyphens.",
+          "isActiveHint": "Turn off to save as draft (hidden) if your site checks this flag.",
+          "linkedProjectHint": "Optional link to an internal project. When you start from an existing project, fields are filled automatically. Use the Load from project button to import data from any ID.",
+          "galleryHint": "Add at least 5 images for the public gallery. You can remove any image before saving.",
+          "attachmentsHint": "PDFs, images, and other files (same uploader as internal projects).",
+          "attachmentsUploadMoreHint": "Upload additional files. These are stored together with any linked project files you keep selected above.",
+          "linkedProjectFilesSection": "Files from the linked internal project",
+          "linkedProjectFilesHint": "Select which existing files to include on the public listing. You can still upload new files below.",
+          "openLinkedFile": "Open",
+          "noImages": "No images yet. Upload using the area above.",
+          "removeImage": "Remove image",
+          "noCategories": "No categories available.",
+          "badgesHint": "Add optional badges with Arabic and English labels and a color.",
+          "featuresHint": "Add rows with bilingual labels and values, and upload an icon image for each.",
+          "noBadges": "No badges yet. Create badge records first, or leave empty.",
+          "noFeatures": "No features yet. Create feature records first, or leave empty.",
+          "noBadgesAdded": "No badges yet. Use Add to create one.",
+          "noFeaturesAdded": "No features yet. Use Add to create one.",
+          "featureIconHint": "Upload a small PNG or SVG. The public URL is saved with this feature.",
+          "removeFeatureIcon": "Remove icon"
+        },
+        "actions": {
+          "generateSlug": "Generate from English title",
+          "loadFromProject": "Load from project",
+          "save": "Create public project",
+          "update": "Update public project",
+          "saving": "Saving…",
+          "submitSection": "Save",
+          "submitHint": "Creates the public project and returns you to the website projects list."
+        },
+        "success": {
+          "created": "Public project created successfully",
+          "updated": "Public project updated successfully",
+          "prefillLoaded": "Form filled from internal project"
+        },
+        "steps": {
+          "basics": "Basics & descriptions",
+          "media": "Gallery & documents",
+          "locationAndDetails": "Location & details",
+          "publish": "Categories & pricing",
+          "next": "Next",
+          "back": "Back",
+          "progress": "Step {current} of {total}",
+          "navAria": "Public project form steps"
+        },
+        "errors": {
+          "titleArRequired": "Arabic title is required",
+          "titleEnRequired": "English title is required",
+          "slugRequired": "Slug is required",
+          "slugMinLength": "Slug must be at least 3 characters",
+          "slugInvalid": "Slug may only contain lowercase letters, numbers, and hyphens",
+          "shortDescriptionArRequired": "Arabic short description is required",
+          "shortDescriptionEnRequired": "English short description is required",
+          "descriptionArRequired": "Arabic full description is required",
+          "descriptionEnRequired": "English full description is required",
+          "cityIdRequired": "City is required",
+          "regionIdRequired": "Region is required",
+          "imagesMinFive": "Add at least 5 images to the gallery",
+          "badgeNameArRequired": "Arabic badge label is required",
+          "badgeNameEnRequired": "English badge label is required",
+          "badgeColorRequired": "Badge color is required",
+          "featureLabelArRequired": "Arabic label is required",
+          "featureLabelEnRequired": "English label is required",
+          "featureIconRequired": "Feature icon is required",
+          "slugTaken": "This slug is already in use",
+          "projectNotFound": "Internal project was not found",
+          "invalidBadges": "One or more badges are invalid",
+          "invalidFeatures": "One or more features are invalid",
+          "prefillNeedProjectId": "Enter an internal project ID first",
+          "prefillFailed": "Could not load data for this project",
+          "prefillProjectNotFound": "Internal project was not found"
+        }
+      }
+    },
+    "about": {
+      "title": "About Page",
+      "description": "Manage the About page sections and bilingual content.",
+      "heroSection": {
+        "title": "Hero Section",
+        "description": "Manage the hero banner for the About page.",
+        "fields": {
+          "backgroundImage": "Background image",
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "descriptionAr": "Description (Arabic)",
+          "descriptionEn": "Description (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "قصة ثقة ورؤية",
+          "eyebrowTitleEn": "A Story of Trust and Vision",
+          "titleAr": "اكتب عنوان القسم بالعربية",
+          "titleEn": "Write section title in English",
+          "descriptionAr": "اكتب وصف القسم بالعربية",
+          "descriptionEn": "Write section description in English"
+        },
+        "ui": {
+          "backgroundImageHint": "Upload a wide hero image for the About banner.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill Arabic and English fields so this section appears in both languages."
+        },
+        "success": {
+          "saved": "About hero section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save about hero section"
+        },
+        "save": "Save Hero Section"
+      },
+      "storySection": {
+        "title": "Story Section",
+        "description": "Manage the story headline and paragraph.",
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "صياغة الأثر",
+          "eyebrowTitleEn": "Shaping Impact",
+          "titleAr": "قصتنا",
+          "titleEn": "Our Story",
+          "contentAr": "اكتب محتوى القسم بالعربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "bilingualHint": "Fill Arabic and English fields to keep content synchronized in both locales."
+        },
+        "success": {
+          "saved": "Story section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save story section"
+        },
+        "save": "Save Story Section"
+      },
+      "visionMissionSection": {
+        "title": "Vision & Mission Section",
+        "description": "Manage vision and mission blocks with center image.",
+        "fields": {
+          "image": "Center image",
+          "visionTitleAr": "Vision title (Arabic)",
+          "visionTitleEn": "Vision title (English)",
+          "visionContentAr": "Vision content (Arabic)",
+          "visionContentEn": "Vision content (English)",
+          "missionTitleAr": "Mission title (Arabic)",
+          "missionTitleEn": "Mission title (English)",
+          "missionContentAr": "Mission content (Arabic)",
+          "missionContentEn": "Mission content (English)"
+        },
+        "placeholders": {
+          "visionTitleAr": "رؤيتنا",
+          "visionTitleEn": "Our Vision",
+          "visionContentAr": "اكتب محتوى الرؤية بالعربية",
+          "visionContentEn": "Write vision content in English",
+          "missionTitleAr": "رسالتنا",
+          "missionTitleEn": "Our Mission",
+          "missionContentAr": "اكتب محتوى الرسالة بالعربية",
+          "missionContentEn": "Write mission content in English"
+        },
+        "ui": {
+          "imageHint": "Upload the center image shown between vision and mission blocks.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill all Arabic and English fields for full bilingual rendering."
+        },
+        "success": {
+          "saved": "Vision and mission section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save vision and mission section"
+        },
+        "save": "Save Vision & Mission Section"
+      },
+      "valuesSection": {
+        "title": "Values Section",
+        "description": "Manage section heading and the three values cards.",
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Section title (Arabic)",
+          "titleEn": "Section title (English)",
+          "firstTitleAr": "First card title (Arabic)",
+          "firstTitleEn": "First card title (English)",
+          "firstContentAr": "First card content (Arabic)",
+          "firstContentEn": "First card content (English)",
+          "secondTitleAr": "Second card title (Arabic)",
+          "secondTitleEn": "Second card title (English)",
+          "secondContentAr": "Second card content (Arabic)",
+          "secondContentEn": "Second card content (English)",
+          "thirdTitleAr": "Third card title (Arabic)",
+          "thirdTitleEn": "Third card title (English)",
+          "thirdContentAr": "Third card content (Arabic)",
+          "thirdContentEn": "Third card content (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "أواصر البقاء",
+          "eyebrowTitleEn": "Bonds of Continuity",
+          "titleAr": "قيمنا",
+          "titleEn": "Our Values",
+          "firstTitleAr": "الجودة",
+          "firstTitleEn": "Quality",
+          "firstContentAr": "اكتب وصف البطاقة الأولى بالعربية",
+          "firstContentEn": "Write first card description in English",
+          "secondTitleAr": "الابتكار",
+          "secondTitleEn": "Innovation",
+          "secondContentAr": "اكتب وصف البطاقة الثانية بالعربية",
+          "secondContentEn": "Write second card description in English",
+          "thirdTitleAr": "الإستدامة",
+          "thirdTitleEn": "Sustainability",
+          "thirdContentAr": "اكتب وصف البطاقة الثالثة بالعربية",
+          "thirdContentEn": "Write third card description in English"
+        },
+        "ui": {
+          "bilingualHint": "Fill all Arabic and English fields for complete bilingual rendering."
+        },
+        "success": {
+          "saved": "Values section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save values section"
+        },
+        "save": "Save Values Section"
+      },
+      "boardSection": {
+        "title": "Board Section",
+        "description": "Manage board heading and members images.",
+        "fields": {
+          "isActive": "Section visibility",
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Section title (Arabic)",
+          "titleEn": "Section title (English)",
+          "members": "Board members images"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "خلف القصة قيادة",
+          "eyebrowTitleEn": "Leadership Behind the Story",
+          "titleAr": "مجلس الإدارة",
+          "titleEn": "Board of Directors"
+        },
+        "ui": {
+          "isActiveHint": "Enable to show this section on the About page. Disable to hide it.",
+          "membersHint": "Upload board members images. Repeat upload to add more.",
+          "removeMember": "Remove member",
+          "noMembers": "No board images uploaded yet.",
+          "bilingualHint": "Fill Arabic and English headings so the section appears in both languages."
+        },
+        "success": {
+          "saved": "Board section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save board section"
+        },
+        "save": "Save Board Section"
+      }
+    },
+    "contact": {
+      "title": "Contact Page",
+      "description": "Manage the contact page hero text, sidebar copy, and shared contact channels.",
+      "heroInfoSection": {
+        "title": "Hero & contact sidebar",
+        "description": "Top hero lines (no background image), sidebar intro, channels heading, phone, email, and social links.",
+        "groups": {
+          "hero": "Hero",
+          "sidebar": "Sidebar",
+          "channels": "Contact details"
+        },
+        "fields": {
+          "eyebrowTitleAr": "Eyebrow label (Arabic)",
+          "eyebrowTitleEn": "Eyebrow label (English)",
+          "heroTitleAr": "Hero headline (Arabic)",
+          "heroTitleEn": "Hero headline (English)",
+          "infoTitleAr": "Sidebar title (Arabic)",
+          "infoTitleEn": "Sidebar title (English)",
+          "infoContentAr": "Sidebar paragraph (Arabic)",
+          "infoContentEn": "Sidebar paragraph (English)",
+          "channelsTitleAr": "Channels heading (Arabic)",
+          "channelsTitleEn": "Channels heading (English)",
+          "phone": "Phone number",
+          "email": "Email",
+          "linkedin": "LinkedIn URL",
+          "instagram": "Instagram URL"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "خطوة الأولى",
+          "eyebrowTitleEn": "The first step",
+          "heroTitleAr": "تواصل معنا",
+          "heroTitleEn": "Contact us",
+          "infoTitleAr": "لنبداً الحديث",
+          "infoTitleEn": "Let's start the conversation",
+          "infoContentAr": "Short paragraph for visitors",
+          "infoContentEn": "Short paragraph for visitors",
+          "channelsTitleAr": "وسائل التواصل",
+          "channelsTitleEn": "Contact channels",
+          "phone": "+966500000000",
+          "email": "info@example.com",
+          "linkedin": "https://www.linkedin.com/company/...",
+          "instagram": "https://www.instagram.com/..."
+        },
+        "ui": {
+          "sharedContactHint": "Phone, email, and social URLs are stored once and shown for both languages.",
+          "bilingualHint": "Hero and sidebar text can differ per language; contact details are shared."
+        },
+        "success": {
+          "saved": "Contact content saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save contact content"
+        },
+        "save": "Save contact content"
+      }
+    },
+    "settings": {
+      "pageTitle": "Website settings",
+      "pageDescription": "Brand colors, typography, logos, SEO defaults, and public contact details for your marketing site. Load them on the live site via the public API.",
+      "saveAll": "Save settings",
+      "tabs": {
+        "general": "General",
+        "theme": "Theme",
+        "fonts": "Fonts",
+        "logos": "Logos",
+        "seo": "SEO",
+        "contact": "Contact & analytics"
+      },
+      "toast": {
+        "saved": "Settings saved",
+        "saveFailed": "Could not save settings"
+      },
+      "theme": {
+        "title": "Theme & colors",
+        "description": "Brand palette for the public site (hex values).",
+        "primaryColor": "Primary color (hex)",
+        "accentColor": "Accent color (hex)",
+        "blackColor": "Black / near-black (hex)",
+        "secondaryTextColor": "Secondary text (hex)"
+      },
+      "fonts": {
+        "title": "Typography",
+        "description": "Font family names for Arabic and English on the public site (Google Fonts names or a full CSS stack with commas).",
+        "hint": "Single names load via Google Fonts (weights 300–700). Use commas for stacks, e.g. system-ui, sans-serif.",
+        "fontAr": "Arabic",
+        "fontEn": "English"
+      },
+      "logos": {
+        "title": "Logos",
+        "description": "Two variants so the mark stays legible on light and dark backgrounds.",
+        "forDarkBg": "Logo for dark backgrounds",
+        "forDarkBgHint": "Usually a light or white version for navbars and footers on dark UI.",
+        "forLightBg": "Logo for light backgrounds",
+        "forLightBgHint": "Usually a dark version for headers on white or light sections.",
+        "remove": "Remove image"
+      },
+      "seo": {
+        "title": "SEO & metadata",
+        "description": "Defaults for meta tags and social sharing. Page-specific content can still override these.",
+        "metaTitleAr": "Default meta title (Arabic)",
+        "metaTitleEn": "Default meta title (English)",
+        "metaDescriptionAr": "Default meta description (Arabic)",
+        "metaDescriptionEn": "Default meta description (English)",
+        "siteUrl": "Public site URL",
+        "siteUrlHint": "Canonical base URL (https) used for Open Graph and links.",
+        "ogImageUrl": "Default Open Graph image",
+        "ogImageHint": "Shown when links are shared. Around 1200×630 px works well for most platforms.",
+        "removeOgImage": "Remove Open Graph image",
+        "twitterSite": "X (Twitter) handle",
+        "twitterSiteHint": "Site username for Twitter card attribution, e.g. @yourbrand.",
+        "keywordsAr": "Keywords (Arabic)",
+        "keywordsEn": "Keywords (English)",
+        "robotsAllowIndex": "Allow search engines to index the site",
+        "robotsHint": "Turn off only for staging or pre-launch environments.",
+        "favicon": "Favicon",
+        "faviconHint": "Square image, ideally .ico or .png. Shown in browser tabs and bookmarks.",
+        "removeFavicon": "Remove favicon"
+      },
+      "contact": {
+        "title": "Contact & analytics",
+        "description": "Public-facing contact details and measurement ID for your public frontend.",
+        "email": "Public contact email",
+        "emailHint": "May be shown in the footer or structured data.",
+        "phone": "Public phone number",
+        "gaId": "Google Analytics measurement ID",
+        "gaHint": "Example: G-XXXXXXXXXX. Returned by the public API for your site to initialize analytics."
+      }
+    },
+    "pageSeo": {
+      "title": "Page SEO & metadata",
+      "description": "Configure page-level SEO fields. Empty optional values will fallback to Website Settings defaults.",
+      "requiredHint": "Required",
+      "optionalHint": "Optional (leave empty to use fallback)",
+      "robotsHint": "Use this page-level indexing flag when you need to override general site behavior.",
+      "errors": {
+        "metaTitleMax": "Meta title must be at most 200 characters.",
+        "metaDescriptionMax": "Meta description must be at most 500 characters.",
+        "twitterHandleMax": "X (Twitter) handle must be at most 100 characters.",
+        "keywordsMax": "Keywords must be at most 500 characters."
+      },
+      "fields": {
+        "metaTitleAr": "Meta title (Arabic)",
+        "metaTitleEn": "Meta title (English)",
+        "metaDescriptionAr": "Meta description (Arabic)",
+        "metaDescriptionEn": "Meta description (English)",
+        "canonicalUrl": "Canonical URL",
+        "ogImageUrl": "Open Graph image URL",
+        "twitterHandle": "X (Twitter) handle",
+        "keywordsAr": "Keywords (Arabic)",
+        "keywordsEn": "Keywords (English)",
+        "robotsAllowIndex": "Allow search engines to index this page"
+      },
+      "toast": {
+        "saved": "Page SEO saved",
+        "saveFailed": "Could not save page SEO"
+      },
+      "save": "Save page SEO"
+    }
+  },
   "something wrong happened": "Something wrong happened",
   "task": {
     "title": "Task"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications",
+    "errors": {
+      "not_found": "Notification not found"
+    }
+  },
+  "contacts": {
+    "title": "Contact Messages",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "status": "Status",
+      "createdAt": "Received At"
+    },
+    "status": {
+      "read": "Read",
+      "unread": "Unread"
+    },
+    "filter": {
+      "all": "All Messages",
+      "read": "Read",
+      "unread": "Unread"
+    },
+    "detail": {
+      "title": "Contact Message Details",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "receivedAt": "Received At"
+    },
+    "deleteConfirm": {
+      "title": "Delete Message",
+      "description": "Are you sure you want to delete the message from {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "firstName": {
+        "required": "First name is required"
+      },
+      "lastName": {
+        "required": "Last name is required"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Please enter a valid email address"
+      },
+      "phone": {
+        "required": "Phone number is required"
+      },
+      "message": {
+        "required": "Message is required"
+      },
+      "not_found": "Contact message not found"
+    },
+    "success": {
+      "created": "Your message has been sent successfully",
+      "deleted": "Message deleted successfully"
+    }
   }
 }

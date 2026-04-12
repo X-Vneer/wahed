@@ -1,6 +1,10 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  createNotifications,
+  getTaskStakeholderIds,
+} from "@/lib/notifications"
 import { createTaskCommentSchema } from "@/lib/schemas/task"
 import { transformZodError } from "@/lib/transform-errors"
 import { getReqLocale } from "@/utils/get-req-locale"
@@ -66,6 +70,25 @@ export async function POST(request: NextRequest, context: RouteContext) {
       include: {
         createdBy: { select: { id: true, name: true, image: true } },
       },
+    })
+
+    // Notify task stakeholders about the new comment
+    getTaskStakeholderIds(taskId).then(({ creatorId, assigneeIds }) => {
+      const allIds = [...new Set([creatorId, ...assigneeIds].filter(Boolean))]
+      const notifyIds = allIds.filter(
+        (uid) => uid !== payload.userId
+      ) as string[]
+
+      if (notifyIds.length > 0) {
+        createNotifications({
+          userIds: notifyIds,
+          type: "TASK_COMMENTED",
+          title: "New Comment on Task",
+          message: `${comment.createdBy.name} commented: ${data.content.substring(0, 100)}`,
+          relatedId: taskId,
+          relatedType: "task",
+        })
+      }
     })
 
     return NextResponse.json(comment, { status: 201 })

@@ -225,7 +225,12 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
     uploadToastIdRef.current = toastId
     toast.loading(t("uploadingProgress", { progress: 0 }), { id: toastId })
     // @ts-expect-error -- useUploadThing generic union makes (files, input?) strict for multi-endpoint
-    startUpload(renamedFiles)
+    startUpload(renamedFiles).catch(() => {
+      if (uploadToastIdRef.current === toastId) {
+        toast.error(t("dialogDescError"), { id: toastId })
+        uploadToastIdRef.current = null
+      }
+    })
     setDialogOpen(false)
     setPendingFiles([])
     displayNamesRef.current = {}
