@@ -1623,13 +1623,24 @@
         "visible": "No published projects yet. When you publish a project, it will appear here."
       },
       "badge": {
-        "onSite": "On site",
+        "onSite": "Published ",
         "draft": "Draft"
       },
       "card": {
         "viewProject": "View project",
+        "editProject": "Edit project",
+        "seo": "SEO",
+        "publishedSuccess": "Project published on website",
+        "unpublishedSuccess": "Project unpublished from website",
+        "viewMore": "View more",
+        "viewLess": "View less",
         "features": "Features",
-        "noFeatures": "No features added"
+        "details": "Details",
+        "area": "Area",
+        "deedNumber": "Deed number",
+        "priceRange": "Price range",
+        "location": "Location",
+        "description": "Description"
       },
       "actions": {
         "publishProject": "Publish new project",
@@ -1668,6 +1679,17 @@
         "projectNotFound": "Selected project was not found.",
         "formTitle": "Public project details",
         "formDescription": "Fill in the fields below. The slug must be unique and use lowercase letters, numbers, and hyphens only."
+      },
+      "editPage": {
+        "title": "Edit public project",
+        "description": "Update the bilingual listing for the public website.",
+        "formTitle": "Public project details",
+        "formDescription": "Update the fields below. The slug must be unique and use lowercase letters, numbers, and hyphens only.",
+        "notFound": "Project not found"
+      },
+      "seoPage": {
+        "title": "Project SEO",
+        "description": "Manage search engine optimization settings for this project."
       },
       "publicProjectForm": {
         "sections": {
@@ -1758,12 +1780,14 @@
           "generateSlug": "Generate from English title",
           "loadFromProject": "Load from project",
           "save": "Create public project",
+          "update": "Update public project",
           "saving": "Saving…",
           "submitSection": "Save",
           "submitHint": "Creates the public project and returns you to the website projects list."
         },
         "success": {
           "created": "Public project created successfully",
+          "updated": "Public project updated successfully",
           "prefillLoaded": "Form filled from internal project"
         },
         "steps": {
