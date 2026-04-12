@@ -137,6 +137,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
+      // Step 1: Create the public project with scalar fields only
       const created = await db.publicProject.create({
         data: {
           titleAr: data.titleAr.trim(),
@@ -159,36 +160,54 @@ export async function POST(request: NextRequest) {
           startingPrice: data.startingPrice ?? null,
           endingPrice: data.endingPrice ?? null,
           attachments: buildPublicProjectAttachmentsForCreate(data.attachments),
-          categories:
-            data.categoryIds.length > 0
-              ? {
-                  connect: data.categoryIds.map((id) => ({ id })),
-                }
-              : undefined,
-          badge:
-            data.badges.length > 0
-              ? {
-                  create: data.badges.map((b) => ({
-                    nameAr: b.nameAr.trim(),
-                    nameEn: b.nameEn.trim(),
-                    color: b.color.trim(),
-                  })),
-                }
-              : undefined,
-          features:
-            data.features.length > 0
-              ? {
-                  create: data.features.map((f) => ({
-                    labelAr: f.labelAr.trim(),
-                    labelEn: f.labelEn.trim(),
-                    valueAr: emptyToNull(f.valueAr),
-                    valueEn: emptyToNull(f.valueEn),
-                    icon: f.icon.trim(),
-                  })),
-                }
-              : undefined,
         },
       })
+
+      // Step 2: Connect categories
+      if (data.categoryIds.length > 0) {
+        await db.publicProject.update({
+          where: { id: created.id },
+          data: {
+            categories: {
+              connect: data.categoryIds.map((id) => ({ id })),
+            },
+          },
+        })
+      }
+
+      // Step 3: Create badges
+      if (data.badges.length > 0) {
+        await db.publicProject.update({
+          where: { id: created.id },
+          data: {
+            badge: {
+              create: data.badges.map((b) => ({
+                nameAr: b.nameAr.trim(),
+                nameEn: b.nameEn.trim(),
+                color: b.color.trim(),
+              })),
+            },
+          },
+        })
+      }
+
+      // Step 4: Create features
+      if (data.features.length > 0) {
+        await db.publicProject.update({
+          where: { id: created.id },
+          data: {
+            features: {
+              create: data.features.map((f) => ({
+                labelAr: f.labelAr.trim(),
+                labelEn: f.labelEn.trim(),
+                valueAr: emptyToNull(f.valueAr),
+                valueEn: emptyToNull(f.valueEn),
+                icon: f.icon.trim(),
+              })),
+            },
+          },
+        })
+      }
 
       return NextResponse.json(created, { status: 201 })
     } catch (error) {
@@ -214,6 +233,9 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error("Error creating public project:", error)
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error("Prisma error meta:", JSON.stringify(error.meta, null, 2))
+    }
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

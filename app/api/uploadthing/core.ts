@@ -29,16 +29,19 @@ const auth = async () => {
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  projectImageUploader: f({
-    image: {
-      /**
-       * For full list of options and defaults, see the File Route API reference
-       * @see https://docs.uploadthing.com/file-routes#route-config
-       */
-      maxFileSize: "4MB",
-      maxFileCount: 1,
+  projectImageUploader: f(
+    {
+      image: {
+        /**
+         * For full list of options and defaults, see the File Route API reference
+         * @see https://docs.uploadthing.com/file-routes#route-config
+         */
+        maxFileSize: "4MB",
+        maxFileCount: 1,
+      },
     },
-  })
+    { awaitServerData: false }
+  )
     // Set permissions and file types for this FileRoute
     .middleware(async () => {
       // This code runs on your server before upload
@@ -63,14 +66,17 @@ export const ourFileRouter = {
         },
       }
     }),
-  projectAttachmentsUploader: f({
-    pdf: { maxFileSize: "64MB", maxFileCount: 10 },
-    image: { maxFileSize: "8MB", maxFileCount: 10 },
-    video: { maxFileSize: "256MB", maxFileCount: 10 },
-    audio: { maxFileSize: "8MB", maxFileCount: 10 },
-    text: { maxFileSize: "32MB", maxFileCount: 10 },
-    blob: { maxFileSize: "8MB", maxFileCount: 10 },
-  })
+  projectAttachmentsUploader: f(
+    {
+      pdf: { maxFileSize: "64MB", maxFileCount: 10 },
+      image: { maxFileSize: "8MB", maxFileCount: 10 },
+      video: { maxFileSize: "256MB", maxFileCount: 10 },
+      audio: { maxFileSize: "8MB", maxFileCount: 10 },
+      text: { maxFileSize: "32MB", maxFileCount: 10 },
+      blob: { maxFileSize: "8MB", maxFileCount: 10 },
+    },
+    { awaitServerData: false }
+  )
     .middleware(async () => {
       const user = await auth()
       if (!user) throw new UploadThingError("Unauthorized")
@@ -89,12 +95,15 @@ export const ourFileRouter = {
         },
       }
     }),
-  userImageUploader: f({
-    image: {
-      maxFileSize: "4MB",
-      maxFileCount: 1,
+  userImageUploader: f(
+    {
+      image: {
+        maxFileSize: "4MB",
+        maxFileCount: 1,
+      },
     },
-  })
+    { awaitServerData: false }
+  )
     .middleware(async () => {
       const user = await auth()
       if (!user) throw new UploadThingError("Unauthorized")
@@ -113,12 +122,15 @@ export const ourFileRouter = {
         },
       }
     }),
-  bannerImageUploader: f({
-    image: {
-      maxFileSize: "4MB",
-      maxFileCount: 1,
+  bannerImageUploader: f(
+    {
+      image: {
+        maxFileSize: "4MB",
+        maxFileCount: 1,
+      },
     },
-  })
+    { awaitServerData: false }
+  )
     .middleware(async () => {
       const user = await auth()
       if (!user) throw new UploadThingError("Unauthorized")
@@ -137,12 +149,15 @@ export const ourFileRouter = {
         },
       }
     }),
-  websiteImageUploader: f({
-    image: {
-      maxFileSize: "8MB",
-      maxFileCount: 1,
+  websiteImageUploader: f(
+    {
+      image: {
+        maxFileSize: "8MB",
+        maxFileCount: 1,
+      },
     },
-  })
+    { awaitServerData: false }
+  )
     .middleware(async () => {
       const user = await auth()
       if (!user) throw new UploadThingError("Unauthorized")
@@ -161,12 +176,15 @@ export const ourFileRouter = {
         },
       }
     }),
-  websiteMultiImageUploader: f({
-    image: {
-      maxFileSize: "8MB",
-      maxFileCount: 20,
+  websiteMultiImageUploader: f(
+    {
+      image: {
+        maxFileSize: "8MB",
+        maxFileCount: 20,
+      },
     },
-  })
+    { awaitServerData: false }
+  )
     .middleware(async () => {
       const user = await auth()
       if (!user) throw new UploadThingError("Unauthorized")
@@ -185,12 +203,15 @@ export const ourFileRouter = {
         },
       }
     }),
-  staffHeroImageUploader: f({
-    image: {
-      maxFileSize: "4MB",
-      maxFileCount: 1,
+  staffHeroImageUploader: f(
+    {
+      image: {
+        maxFileSize: "4MB",
+        maxFileCount: 1,
+      },
     },
-  })
+    { awaitServerData: false }
+  )
     .middleware(async () => {
       const user = await auth()
       if (!user) throw new UploadThingError("Unauthorized")
@@ -246,14 +267,17 @@ export const ourFileRouter = {
         },
       }
     }),
-  taskAttachmentsUploader: f({
-    pdf: { maxFileSize: "64MB", maxFileCount: 10 },
-    image: { maxFileSize: "8MB", maxFileCount: 10 },
-    video: { maxFileSize: "256MB", maxFileCount: 10 },
-    audio: { maxFileSize: "8MB", maxFileCount: 10 },
-    text: { maxFileSize: "32MB", maxFileCount: 10 },
-    blob: { maxFileSize: "8MB", maxFileCount: 10 },
-  })
+  taskAttachmentsUploader: f(
+    {
+      pdf: { maxFileSize: "64MB", maxFileCount: 10 },
+      image: { maxFileSize: "8MB", maxFileCount: 10 },
+      video: { maxFileSize: "256MB", maxFileCount: 10 },
+      audio: { maxFileSize: "8MB", maxFileCount: 10 },
+      text: { maxFileSize: "32MB", maxFileCount: 10 },
+      blob: { maxFileSize: "8MB", maxFileCount: 10 },
+    },
+    { awaitServerData: false }
+  )
     .middleware(async () => {
       const user = await auth()
       if (!user) throw new UploadThingError("Unauthorized")
