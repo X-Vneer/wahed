@@ -2174,7 +2174,8 @@
         "saved": "Page SEO saved",
         "saveFailed": "Could not save page SEO"
       },
-      "save": "Save page SEO"
+      "save": "Save page SEO",
+      "removeOgImage": "Remove OG image"
     }
   },
   "something wrong happened": "Something wrong happened",

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -20,6 +21,7 @@ import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import Uploader from "@/components/uploader"
 import { handleFormErrors } from "@/lib/handle-form-errors"
 import {
   type WebsitePageSeoValues,
@@ -28,7 +30,7 @@ import {
 import type { WebsitePageSlug } from "@/lib/website-content/default-content"
 import apiClient from "@/services"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { Search } from "lucide-react"
+import { Search, X } from "lucide-react"
 import { useForm } from "@mantine/form"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
@@ -209,24 +211,50 @@ export function PageSeoForm({ slug }: Props) {
               </FieldContent>
             </Field>
             <Field data-invalid={!!form.errors.ogImageUrl}>
-              <FieldLabel htmlFor={`${slug}-og-image-url`}>
-                {t("fields.ogImageUrl")}
-              </FieldLabel>
+              <FieldLabel>{t("fields.ogImageUrl")}</FieldLabel>
               <FieldDescription>{t("optionalHint")}</FieldDescription>
-              <FieldContent>
-                <Input
-                  id={`${slug}-og-image-url`}
-                  type="url"
-                  key={form.key("ogImageUrl")}
-                  {...form.getInputProps("ogImageUrl")}
-                  placeholder={fallback.ogImageUrl}
-                  disabled={isLoading}
-                  aria-invalid={!!form.errors.ogImageUrl}
-                />
-                {form.errors.ogImageUrl ? (
+              {form.errors.ogImageUrl ? (
+                <FieldContent>
                   <FieldError>{String(form.errors.ogImageUrl)}</FieldError>
-                ) : null}
-              </FieldContent>
+                </FieldContent>
+              ) : null}
+              {!form.values.ogImageUrl ? (
+                <div className="bg-muted/40 mt-2 rounded-xl border border-dashed p-4">
+                  <Uploader
+                    endpoint="websiteImageUploader"
+                    disabled={isLoading}
+                    onClientUploadComplete={(res) => {
+                      if (res?.[0]?.ufsUrl) {
+                        form.setFieldValue("ogImageUrl", res[0].ufsUrl)
+                      }
+                    }}
+                    onUploadError={(err) => {
+                      toast.error(err.message)
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="bg-muted/30 mt-2 flex max-w-md flex-col gap-3 rounded-xl border p-3">
+                  <div className="bg-background relative aspect-[1200/630] w-full overflow-hidden rounded-lg border">
+                    <img
+                      src={form.values.ogImageUrl}
+                      alt=""
+                      className="size-full object-contain"
+                    />
+                    <Button
+                      size="icon"
+                      type="button"
+                      variant="destructive"
+                      className="absolute top-1.5 right-1.5 size-7"
+                      onClick={() => form.setFieldValue("ogImageUrl", "")}
+                      aria-label={t("removeOgImage")}
+                      disabled={isLoading}
+                    >
+                      <X className="size-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              )}
             </Field>
             <Field data-invalid={!!form.errors.twitterHandle}>
               <FieldLabel htmlFor={`${slug}-twitter-handle`}>

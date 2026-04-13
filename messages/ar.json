@@ -2174,7 +2174,8 @@
         "saved": "تم حفظ SEO الصفحة",
         "saveFailed": "تعذر حفظ SEO الصفحة"
       },
-      "save": "حفظ SEO الصفحة"
+      "save": "حفظ SEO الصفحة",
+      "removeOgImage": "إزالة صورة OG"
     }
   },
   "something wrong happened": "حصل مشكلة ما",
