@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/field"
 import Uploader from "@/components/uploader"
 import { useTranslations } from "next-intl"
-import { ExternalLink, X } from "lucide-react"
+import { ExternalLink, FileText, X } from "lucide-react"
 import { toast } from "sonner"
 import { usePublicProjectFormContext } from "../public-project-form-context"
 import { usePublicProjectFieldErr } from "../use-public-project-field-err"
@@ -106,6 +106,57 @@ export function PublicProjectFormStepMedia() {
             {t("websiteCms.projects.publicProjectForm.ui.noImages")}
           </p>
         )}
+      </FieldSet>
+
+      <FieldSet className="gap-6">
+        <FieldLegend>
+          {t("websiteCms.projects.publicProjectForm.sections.projectGuide")}
+        </FieldLegend>
+        <Field>
+          <FieldLabel>
+            {t("websiteCms.projects.publicProjectForm.fields.projectGuide")}
+          </FieldLabel>
+          <FieldDescription>
+            {t("websiteCms.projects.publicProjectForm.ui.projectGuideHint")}
+          </FieldDescription>
+          {form.values.projectGuide ? (
+            <div className="mt-2 flex items-center gap-3 rounded-lg border p-3">
+              <FileText className="text-primary size-5 shrink-0" />
+              <a
+                href={form.values.projectGuide}
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary min-w-0 flex-1 truncate text-sm underline-offset-4 hover:underline"
+              >
+                {t("websiteCms.projects.publicProjectForm.ui.viewProjectGuide")}
+              </a>
+              <Button
+                type="button"
+                size="icon"
+                variant="destructive"
+                className="h-8 w-8 shrink-0"
+                onClick={() => form.setFieldValue("projectGuide", "")}
+                aria-label={t("websiteCms.projects.publicProjectForm.ui.removeProjectGuide")}
+              >
+                <X className="size-4" />
+              </Button>
+            </div>
+          ) : (
+            <div className="bg-muted/40 mt-2 rounded-xl border border-dashed p-4">
+              <Uploader
+                endpoint="projectAttachmentsUploader"
+                onClientUploadComplete={(res) => {
+                  if (res?.[0]) {
+                    form.setFieldValue("projectGuide", res[0].ufsUrl)
+                  }
+                }}
+                onUploadError={(err: Error) => {
+                  toast.error(err.message || t("errors.internal_server_error"))
+                }}
+              />
+            </div>
+          )}
+        </Field>
       </FieldSet>
 
       <FieldSet className="gap-6">

@@ -27,6 +27,25 @@ Examples:
 - `theme`: `primaryColor`, `accentColor`, `fontStyle`
 - `projects`: `cards[]`
 
+## Public Projects
+
+Public projects are managed through the `PublicProject` model (not JSON content).
+
+### Featured Projects (Homepage)
+
+- Each `PublicProject` has an `isFeatured` boolean flag (default `false`).
+- A maximum of **2** projects can be featured at any time. The API enforces this limit.
+- Featured projects are displayed on the homepage.
+- Toggle via `PATCH /api/website/public-projects/:id/featured` with `{ isFeatured: boolean }`.
+- Public read endpoint supports filtering: `GET /api/public/projects?featured=true`.
+
+### Project Guide (PDF)
+
+- Each `PublicProject` has an optional `projectGuide` field (URL string).
+- Stores a single uploaded PDF file URL acting as the project guide.
+- Uploaded through the `projectAttachmentsUploader` endpoint in the media step of the form.
+- Returned in both the public and edit transforms.
+
 ## Locale Behavior
 
 - Default API mode reads/saves one locale with payload `{ locale, content }`.

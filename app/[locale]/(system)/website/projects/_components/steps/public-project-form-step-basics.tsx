@@ -12,6 +12,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import apiClient from "@/services"
+import { useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { slugFromEnglishTitle } from "../public-project-form-constants"
 import { usePublicProjectFormContext } from "../public-project-form-context"
@@ -22,6 +24,8 @@ type PublicProjectFormStepBasicsProps = {
   onLoadFromInternalProject: () => void
 }
 
+const MAX_FEATURED = 2
+
 export function PublicProjectFormStepBasics({
   manualPrefillLoading,
   onLoadFromInternalProject,
@@ -29,6 +33,21 @@ export function PublicProjectFormStepBasics({
   const form = usePublicProjectFormContext()
   const t = useTranslations()
   const fieldErr = usePublicProjectFieldErr()
+
+  const { data: projectsData } = useQuery<{
+    projects: { isFeatured: boolean }[]
+  }>({
+    queryKey: ["website", "public-projects"],
+    queryFn: async () => {
+      const res = await apiClient.get("/api/website/public-projects")
+      return res.data
+    },
+  })
+
+  const featuredCount =
+    projectsData?.projects.filter((p) => p.isFeatured).length ?? 0
+  const featuredLimitReached =
+    featuredCount >= MAX_FEATURED && !form.values.isFeatured
 
   return (
     <div className="space-y-8">
@@ -123,6 +142,26 @@ export function PublicProjectFormStepBasics({
             checked={form.values.isActive}
             onCheckedChange={(c) =>
               form.setFieldValue("isActive", Boolean(c))
+            }
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
+          <div>
+            <p className="text-sm font-medium">
+              {t("websiteCms.projects.publicProjectForm.fields.isFeatured")}
+            </p>
+            <p className="text-muted-foreground text-sm">
+              {featuredLimitReached
+                ? t("websiteCms.projects.publicProjectForm.ui.isFeaturedLimitReached")
+                : t("websiteCms.projects.publicProjectForm.ui.isFeaturedHint")}
+            </p>
+          </div>
+          <Switch
+            checked={form.values.isFeatured}
+            disabled={featuredLimitReached}
+            onCheckedChange={(c) =>
+              form.setFieldValue("isFeatured", Boolean(c))
             }
           />
         </div>

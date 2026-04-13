@@ -16,6 +16,7 @@ import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import type { TransformedPublicProject } from "@/prisma/public-projects"
 import apiClient from "@/services"
+import axios from "axios"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   Building2,
@@ -25,6 +26,7 @@ import {
   MapPin,
   Pencil,
   Search,
+  Star,
 } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 import { useState } from "react"
@@ -89,6 +91,54 @@ export function WebsiteProjectCard({
 
   const config = statusConfig[project.status] ?? statusConfig.PLANNING
   const statusLabel = t(`projects.status.${config.key}`)
+
+  const featuredMutation = useMutation({
+    mutationFn: (isFeatured: boolean) =>
+      apiClient.patch(
+        `/api/website/public-projects/${project.id}/featured`,
+        { isFeatured }
+      ),
+    onMutate: async (isFeatured) => {
+      await queryClient.cancelQueries({ queryKey })
+      const previous = queryClient.getQueryData<{
+        projects: TransformedPublicProject[]
+      }>(queryKey)
+
+      queryClient.setQueryData<{ projects: TransformedPublicProject[] }>(
+        queryKey,
+        (old) =>
+          old
+            ? {
+                projects: old.projects.map((p) =>
+                  p.id === project.id ? { ...p, isFeatured } : p
+                ),
+              }
+            : old
+      )
+
+      return { previous }
+    },
+    onError: (err, _isFeatured, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKey, context.previous)
+      }
+      const message =
+        axios.isAxiosError(err) && err.response?.data?.error
+          ? String(err.response.data.error)
+          : t("errors.internal_server_error")
+      toast.error(message)
+    },
+    onSuccess: (_data, isFeatured) => {
+      toast.success(
+        isFeatured
+          ? t("websiteCms.projects.card.featuredSuccess")
+          : t("websiteCms.projects.card.unfeaturedSuccess")
+      )
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey })
+    },
+  })
 
   const visibilityMutation = useMutation({
     mutationFn: (isActive: boolean) =>
@@ -209,6 +259,37 @@ export function WebsiteProjectCard({
                       {project.isActive
                         ? t("websiteCms.projects.badge.onSite")
                         : t("websiteCms.projects.badge.draft")}
+                    </label>
+                  </div>
+
+                  {/* Featured toggle */}
+                  <div className="flex items-center gap-1.5">
+                    <Switch
+                      id={`featured-${project.id}`}
+                      checked={project.isFeatured}
+                      onCheckedChange={(checked) =>
+                        featuredMutation.mutate(checked)
+                      }
+                      disabled={featuredMutation.isPending}
+                      className="scale-85"
+                    />
+                    <label
+                      htmlFor={`featured-${project.id}`}
+                      className={cn(
+                        "cursor-pointer text-xs font-medium",
+                        project.isFeatured
+                          ? "text-foreground"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      {project.isFeatured ? (
+                        <span className="flex items-center gap-1">
+                          <Star className="size-3 fill-yellow-400 text-yellow-400" />
+                          {t("websiteCms.projects.badge.featured")}
+                        </span>
+                      ) : (
+                        t("websiteCms.projects.badge.notFeatured")
+                      )}
                     </label>
                   </div>
 

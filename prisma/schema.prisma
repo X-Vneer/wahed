@@ -554,6 +554,8 @@ model PublicProject {
   shortDescriptionEn String?
   images             String[]
   isActive           Boolean                   @default(true)
+  isFeatured         Boolean                   @default(false)
+  projectGuide       String?
   projectId          String?
   project            Project?                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   locationAr         String?

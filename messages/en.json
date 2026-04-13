@@ -1672,12 +1672,17 @@
         "drafts": "Drafts",
         "draftsHint": "Not visible on the site until you publish them."
       },
+      "errors": {
+        "maxFeatured": "Maximum 2 projects can be featured on the homepage. Please unfeature another project first."
+      },
       "empty": {
         "visible": "No published projects yet. When you publish a project, it will appear here."
       },
       "badge": {
         "onSite": "Published ",
-        "draft": "Draft"
+        "draft": "Draft",
+        "featured": "Featured",
+        "notFeatured": "Not featured"
       },
       "card": {
         "viewProject": "View project",
@@ -1685,6 +1690,8 @@
         "seo": "SEO",
         "publishedSuccess": "Project published on website",
         "unpublishedSuccess": "Project unpublished from website",
+        "featuredSuccess": "Project marked as featured on homepage",
+        "unfeaturedSuccess": "Project removed from homepage featured",
         "viewMore": "View more",
         "viewLess": "View less",
         "features": "Features",
@@ -1749,6 +1756,7 @@
           "core": "Titles and URL",
           "descriptions": "Descriptions",
           "gallery": "Gallery",
+          "projectGuide": "Project guide",
           "attachments": "Attachments",
           "location": "Location",
           "details": "Project details",
@@ -1760,6 +1768,8 @@
           "titleEn": "Title (English)",
           "slug": "URL slug",
           "isActive": "Published on website",
+          "isFeatured": "Featured on homepage",
+          "projectGuide": "Project guide (PDF)",
           "linkedProjectId": "Internal project ID (optional)",
           "shortDescriptionAr": "Short description (Arabic)",
           "shortDescriptionEn": "Short description (English)",
@@ -1810,6 +1820,11 @@
         "ui": {
           "slugHint": "Used in the public URL. At least 3 characters. Only lowercase letters, numbers, and hyphens.",
           "isActiveHint": "Turn off to save as draft (hidden) if your site checks this flag.",
+          "isFeaturedHint": "Show this project on the homepage. Maximum 2 projects can be featured.",
+          "isFeaturedLimitReached": "2 projects are already featured. Unfeature one from the projects list to enable this.",
+          "projectGuideHint": "Upload a PDF file as the project guide. Only one file allowed.",
+          "viewProjectGuide": "View project guide",
+          "removeProjectGuide": "Remove project guide",
           "linkedProjectHint": "Optional link to an internal project. When you start from an existing project, fields are filled automatically. Use the Load from project button to import data from any ID.",
           "galleryHint": "Add at least 5 images for the public gallery. You can remove any image before saving.",
           "attachmentsHint": "PDFs, images, and other files (same uploader as internal projects).",

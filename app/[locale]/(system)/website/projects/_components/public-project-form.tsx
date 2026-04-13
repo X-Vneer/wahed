@@ -51,6 +51,8 @@ function editDataToFormValues(
     shortDescriptionEn: data.shortDescriptionEn,
     images: data.images,
     isActive: data.isActive,
+    isFeatured: data.isFeatured,
+    projectGuide: data.projectGuide ?? "",
     projectId: data.projectId,
     locationAr: data.locationAr,
     locationEn: data.locationEn,
@@ -240,6 +242,7 @@ export function PublicProjectForm({
         attachments: [...fromLinked, ...newAttachments],
         status: values.status || undefined,
         projectId: values.projectId?.trim() || undefined,
+        projectGuide: values.projectGuide?.trim() || undefined,
       }
 
       if (isEdit && initialData) {

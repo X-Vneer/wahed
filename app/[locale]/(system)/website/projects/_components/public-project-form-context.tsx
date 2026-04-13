@@ -24,6 +24,8 @@ export type PublicProjectFormValues = {
   shortDescriptionEn: string
   images: string[]
   isActive: boolean
+  isFeatured: boolean
+  projectGuide: string
   projectId: string
   locationAr: string
   locationEn: string
@@ -57,6 +59,8 @@ export function getPublicProjectFormInitialValues(
     shortDescriptionEn: "",
     images: [],
     isActive: true,
+    isFeatured: false,
+    projectGuide: "",
     projectId: linkedProjectId ?? "",
     locationAr: "",
     locationEn: "",

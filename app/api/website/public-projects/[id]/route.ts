@@ -118,6 +118,15 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     const data = validationResult.data
 
+    if (data.isFeatured && !existing.isFeatured) {
+      const featuredCount = await db.publicProject.count({
+        where: { isFeatured: true },
+      })
+      if (featuredCount >= 2) {
+        data.isFeatured = false
+      }
+    }
+
     const [city, project, categories] = await Promise.all([
       db.city.findUnique({ where: { id: data.cityId }, select: { id: true } }),
       data.projectId
@@ -217,6 +226,8 @@ export async function PUT(request: NextRequest, context: RouteContext) {
             ),
             images: data.images ?? [],
             isActive: data.isActive ?? true,
+            isFeatured: data.isFeatured ?? false,
+            projectGuide: emptyToNull(data.projectGuide ?? undefined),
             projectId: data.projectId ?? null,
             locationAr: emptyToNull(data.locationAr ?? undefined),
             locationEn: emptyToNull(data.locationEn ?? undefined),
