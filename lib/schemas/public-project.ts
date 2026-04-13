@@ -25,7 +25,7 @@ export const publicProjectFeatureSchema = z.object({
   labelEn: z.string().min(1, { error: "featureLabelEnRequired" }),
   valueAr: z.string().optional().default(""),
   valueEn: z.string().optional().default(""),
-  icon: z.string().min(1, { error: "featureIconRequired" }),
+  icon: z.string().optional().default(""),
 })
 
 export type PublicProjectFeatureInput = z.infer<

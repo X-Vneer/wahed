@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
     const isRead = searchParams.get("is_read")
+    const source = searchParams.get("source")
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
@@ -41,6 +42,10 @@ export async function GET(request: NextRequest) {
       where.isRead = true
     } else if (isRead === "false") {
       where.isRead = false
+    }
+
+    if (source && source !== "all") {
+      where.source = source
     }
 
     const total = await db.contactMessage.count({ where })

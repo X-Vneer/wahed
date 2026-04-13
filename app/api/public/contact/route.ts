@@ -37,6 +37,8 @@ export async function POST(request: NextRequest) {
         email: data.email,
         phone: data.phone,
         message: data.message,
+        source: data.source,
+        projectSlug: data.projectSlug,
       },
     })
 

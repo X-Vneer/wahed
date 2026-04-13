@@ -527,16 +527,20 @@ model Notification {
 }
 
 model ContactMessage {
-  id        String  @id @default(cuid())
-  firstName String
-  lastName  String
-  email     String
-  phone     String
-  message   String
-  isRead    Boolean @default(false)
+  id          String  @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String
+  message     String
+  isRead      Boolean @default(false)
+  source      String  @default("general")
+  projectSlug String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([source])
 }
 
 model PublicProject {

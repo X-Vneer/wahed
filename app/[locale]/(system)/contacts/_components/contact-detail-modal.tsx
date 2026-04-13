@@ -93,6 +93,31 @@ export function ContactDetailModal({
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-muted-foreground text-sm">
+                {t("contacts.detail.source")}
+              </p>
+              <Badge
+                variant={
+                  contact.source === "project" ? "outline" : "secondary"
+                }
+              >
+                {contact.source === "project"
+                  ? t("contacts.source.project")
+                  : t("contacts.source.general")}
+              </Badge>
+            </div>
+            {contact.projectSlug ? (
+              <div>
+                <p className="text-muted-foreground text-sm">
+                  {t("contacts.detail.projectSlug")}
+                </p>
+                <p className="font-medium">{contact.projectSlug}</p>
+              </div>
+            ) : null}
+          </div>
+
           <div>
             <p className="text-muted-foreground mb-2 text-sm">
               {t("contacts.detail.message")}

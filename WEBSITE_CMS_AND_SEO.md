@@ -197,6 +197,51 @@ Returns the full content for a specific page, deep-merged with defaults. Read-on
 
 ---
 
+### 5. Contact Form Submission
+
+```
+POST /api/public/contact
+```
+
+Submits a contact form message. No authentication required. The endpoint validates input, stores the message, and notifies all admin users.
+
+**Request Body:**
+```json
+{
+  "firstName": "أحمد",
+  "lastName": "محمد",
+  "email": "ahmed@example.com",
+  "phone": "+966501234567",
+  "message": "أرغب في الاستفسار عن المشروع...",
+  "source": "project",
+  "projectSlug": "al-nakheel-residences"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `firstName` | `string` | Yes | Sender's first name |
+| `lastName` | `string` | Yes | Sender's last name |
+| `email` | `string` | Yes | Valid email address |
+| `phone` | `string` | Yes | Phone number |
+| `message` | `string` | Yes | Message content |
+| `source` | `"general" \| "project"` | No | Where the form was submitted from. Defaults to `"general"` |
+| `projectSlug` | `string` | No | The project slug, when `source` is `"project"` |
+
+**Response (201):**
+```json
+{
+  "message": "Your message has been sent successfully"
+}
+```
+
+**How to use:**
+- For the main contact page form, send with `source: "general"` (or omit `source`).
+- For the project page contact form, send with `source: "project"` and `projectSlug` set to the current project's slug.
+- Admin users can filter contact messages by source in the internal system.
+
+---
+
 ## Page Content Structure
 
 Page content is managed in the CMS admin and stored as flexible JSON per page per locale. The content is deep-merged with hardcoded defaults — if a field is not explicitly set by the admin, the default value is used.
@@ -324,11 +369,27 @@ Page content is managed in the CMS admin and stored as flexible JSON per page pe
 
 ```json
 {
+  "heroSection": {
+    "backgroundImage": "",
+    "eyebrowTitle": "رؤية بناء مستدام",
+    "title": "نطوّر مشاريع متكاملة برؤية احترافية تنفَّذ بجودة عالية وقيمة مستدامة"
+  },
+  "introSection": {
+    "content": "مشاريع وهد ليست مساحات إنشائية فقط، بل تجارب متكاملة تجمع بين الجودة والاستدامة وأسلوب الحياة العصري."
+  },
   "cards": []
 }
 ```
 
-This page primarily displays `PublicProject` records (see below).
+| Field | Type | Description |
+|-------|------|-------------|
+| `heroSection.backgroundImage` | `string` | URL of the hero banner background image |
+| `heroSection.eyebrowTitle` | `string` | Small label above the main title |
+| `heroSection.title` | `string` | Main hero heading text |
+| `introSection.content` | `string` | Descriptive paragraph shown below the hero |
+| `cards` | `array` | Reserved — project cards come from `PublicProject` records (see below) |
+
+This page primarily displays `PublicProject` records (see below). The `heroSection` and `introSection` provide the page-level banner and introductory text above the project cards.
 
 ---
 
@@ -480,6 +541,7 @@ Use Next.js `fetch` with `next: { revalidate: 60 }` or ISR for static generation
 | GET | `/api/public/website/projects?locale={locale}` | List active public projects |
 | GET | `/api/public/website/projects/{slug}?locale={locale}` | Get single project by slug |
 | GET | `/api/public/website/projects/{slug}/seo?locale={locale}` | Project SEO with fallback |
+| POST | `/api/public/contact` | Submit contact form (supports `source` and `projectSlug`) |
 
 ### Admin (Requires `WEBSITE_MANAGEMENT` Permission)
 

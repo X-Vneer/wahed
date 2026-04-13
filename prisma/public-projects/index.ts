@@ -4,6 +4,7 @@ export const publicProjectInclude = {
   badge: true,
   features: true,
   categories: true,
+  attachments: true,
   city: {
     include: {
       region: true,
@@ -20,7 +21,7 @@ function localized(
   en: string | null,
   locale: string
 ): string | null {
-  return locale === "ar" ? (ar || en) : (en || ar)
+  return locale === "ar" ? ar || en : en || ar
 }
 
 export const transformPublicProject = (
@@ -31,7 +32,11 @@ export const transformPublicProject = (
     id: project.id,
     slug: project.slug,
     title: localized(project.titleAr, project.titleEn, locale) ?? "",
-    description: localized(project.descriptionAr, project.descriptionEn, locale),
+    description: localized(
+      project.descriptionAr,
+      project.descriptionEn,
+      locale
+    ),
     shortDescription: localized(
       project.shortDescriptionAr,
       project.shortDescriptionEn,

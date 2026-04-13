@@ -2249,8 +2249,18 @@
       "email": "البريد الإلكتروني",
       "phone": "رقم الهاتف",
       "message": "الرسالة",
+      "source": "المصدر",
       "status": "الحالة",
       "createdAt": "تاريخ الاستلام"
+    },
+    "source": {
+      "general": "عام",
+      "project": "مشروع"
+    },
+    "sourceFilter": {
+      "all": "جميع المصادر",
+      "general": "عام",
+      "project": "مشروع"
     },
     "status": {
       "read": "مقروءة",
@@ -2267,6 +2277,8 @@
       "lastName": "الاسم الثاني",
       "email": "البريد الإلكتروني",
       "phone": "رقم الهاتف",
+      "source": "المصدر",
+      "projectSlug": "المشروع",
       "message": "تفاصيل الرسالة",
       "receivedAt": "تاريخ الاستلام"
     },

@@ -42,6 +42,17 @@ export const useContactColumns = () => {
       ),
     },
     {
+      accessorKey: "source",
+      header: t("contacts.table.source"),
+      cell: ({ row }) => (
+        <Badge variant={row.original.source === "project" ? "outline" : "secondary"}>
+          {row.original.source === "project"
+            ? t("contacts.source.project")
+            : t("contacts.source.general")}
+        </Badge>
+      ),
+    },
+    {
       accessorKey: "isRead",
       header: t("contacts.table.status"),
       cell: ({ row }) => (

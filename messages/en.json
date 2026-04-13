@@ -2249,8 +2249,18 @@
       "email": "Email",
       "phone": "Phone",
       "message": "Message",
+      "source": "Source",
       "status": "Status",
       "createdAt": "Received At"
+    },
+    "source": {
+      "general": "General",
+      "project": "Project"
+    },
+    "sourceFilter": {
+      "all": "All Sources",
+      "general": "General",
+      "project": "Project"
     },
     "status": {
       "read": "Read",
@@ -2267,6 +2277,8 @@
       "lastName": "Last Name",
       "email": "Email",
       "phone": "Phone",
+      "source": "Source",
+      "projectSlug": "Project",
       "message": "Message",
       "receivedAt": "Received At"
     },

@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl"
 import { useContactColumns } from "./columns"
 import { useActionsColumn } from "./actions-column"
 import { ReadFilter } from "./read-filter"
+import { SourceFilter } from "./source-filter"
 import { ContactDetailModal } from "./contact-detail-modal"
 import { useState } from "react"
 
@@ -25,6 +26,7 @@ export function ContactsTable() {
   ): Promise<TableQueryResponse<Contact>> => {
     const search = searchParams.get("q") || ""
     const isRead = searchParams.get("is_read")
+    const source = searchParams.get("source")
     const page = parseInt(searchParams.get("page") || "1", 10)
     const perPage = parseInt(searchParams.get("per_page") || "15", 10)
 
@@ -32,6 +34,7 @@ export function ContactsTable() {
       params: {
         q: search || undefined,
         is_read: isRead || undefined,
+        source: source || undefined,
         page,
         per_page: perPage,
       },
@@ -54,7 +57,12 @@ export function ContactsTable() {
         queryKey={["contacts"]}
         queryFn={queryFn}
         emptyMessage={t("table.noDataFound")}
-        filters={<ReadFilter />}
+        filters={
+          <>
+            <ReadFilter />
+            <SourceFilter />
+          </>
+        }
       />
 
       <ContactDetailModal
