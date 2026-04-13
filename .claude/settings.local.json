@@ -20,7 +20,8 @@
       "Bash(grep -E \"\\\\.tsx?$\")",
       "Bash(ls -la /d/work/wahed/internal-system/app/\\\\[locale\\\\]/\\\\\\(system\\\\\\)/_components/*.tsx)",
       "Bash(grep -r \"PERMISSIONS_GROUPED\\\\|SESSION_COOKIE\" /d/work/wahed/internal-system/config.*)",
-      "Bash(ls /d/work/wahed/internal-system/prisma/*.ts)"
+      "Bash(ls /d/work/wahed/internal-system/prisma/*.ts)",
+      "Bash(xargs ls:*)"
     ]
   }
 }
