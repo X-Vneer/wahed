@@ -39,7 +39,7 @@ export default async function middleware(request: NextRequest) {
     "/api/health",
     "/api/uploadthing",
   ]
-  const publicApiPrefixes = ["/api/public/website"]
+  const publicApiPrefixes = ["/api/public"]
   const isPublicApiRoute =
     publicApiRoutes.some((route) => pathname.includes(route)) ||
     publicApiPrefixes.some((prefix) => pathname.startsWith(prefix))
