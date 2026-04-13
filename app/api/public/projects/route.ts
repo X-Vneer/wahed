@@ -33,9 +33,15 @@ export async function GET(request: NextRequest) {
     }
 
     const locale = localeResult.data
+    const featured = request.nextUrl.searchParams.get("featured")
+
+    const where: { isActive: true; isFeatured?: true } = { isActive: true }
+    if (featured === "true") {
+      where.isFeatured = true
+    }
 
     const raw = await db.publicProject.findMany({
-      where: { isActive: true },
+      where,
       orderBy: { createdAt: "desc" },
       include: publicProjectInclude,
     })

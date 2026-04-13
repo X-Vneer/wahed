@@ -50,6 +50,8 @@ export const createPublicProjectSchema = z.object({
     .min(1, { error: "shortDescriptionEnRequired" }),
   images: z.array(z.string().min(1)).min(5, { error: "imagesMinFive" }),
   isActive: z.boolean().optional().default(true),
+  isFeatured: z.boolean().optional().default(false),
+  projectGuide: z.string().optional(),
   projectId: z.preprocess(
     (v) => (v === "" || v === null || v === undefined ? undefined : String(v)),
     z.string().min(1).optional()
@@ -94,6 +96,7 @@ export const publicProjectFormStepSchemas = [
     titleEn: true,
     slug: true,
     isActive: true,
+    isFeatured: true,
     projectId: true,
     shortDescriptionAr: true,
     shortDescriptionEn: true,
@@ -103,6 +106,7 @@ export const publicProjectFormStepSchemas = [
   publicProjectFormSchema.pick({
     images: true,
     attachments: true,
+    projectGuide: true,
   }),
   publicProjectFormSchema.pick({
     regionId: true,
