@@ -20,6 +20,36 @@ async function verifyToken(token: string): Promise<boolean> {
   }
 }
 
+const ALLOWED_ORIGINS = [
+  process.env.PUBLIC_WEBSITE_URL,
+  "http://localhost:3000",
+  "http://localhost:3001",
+].filter(Boolean) as string[]
+
+function getCorsHeaders(origin: string | null) {
+  const headers: Record<string, string> = {
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Accept-Language",
+    "Access-Control-Max-Age": "86400",
+  }
+
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin
+  } else if (ALLOWED_ORIGINS.length === 0) {
+    headers["Access-Control-Allow-Origin"] = "*"
+  }
+
+  return headers
+}
+
+function withCorsHeaders(response: NextResponse, origin: string | null) {
+  const corsHeaders = getCorsHeaders(origin)
+  for (const [key, value] of Object.entries(corsHeaders)) {
+    response.headers.set(key, value)
+  }
+  return response
+}
+
 export default async function middleware(request: NextRequest) {
   // Get the pathname
   const pathname = request.nextUrl.pathname
@@ -44,14 +74,32 @@ export default async function middleware(request: NextRequest) {
     publicApiRoutes.some((route) => pathname.includes(route)) ||
     publicApiPrefixes.some((prefix) => pathname.startsWith(prefix))
 
+  // Check if this is a public API route that needs CORS
+  const isPublicCorsRoute = publicApiPrefixes.some((prefix) =>
+    pathname.startsWith(prefix)
+  )
+  const origin = request.headers.get("origin")
+
   // Get the access token from cookies
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value
 
   // Handle API routes
   if (isApiRoute) {
-    // Allow public API routes to pass through
+    // Allow public API routes to pass through (with CORS if needed)
     if (isPublicApiRoute) {
-      return NextResponse.next()
+      // Handle preflight OPTIONS request
+      if (isPublicCorsRoute && request.method === "OPTIONS") {
+        return new NextResponse(null, {
+          status: 204,
+          headers: getCorsHeaders(origin),
+        })
+      }
+
+      const response = NextResponse.next()
+      if (isPublicCorsRoute) {
+        return withCorsHeaders(response, origin)
+      }
+      return response
     }
 
     // For protected API routes, verify authentication
