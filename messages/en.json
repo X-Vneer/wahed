@@ -1614,6 +1614,58 @@
     "projects": {
       "title": "Website projects",
       "description": "See what visitors see on the projects page, manage drafts, and publish new entries when ready.",
+      "heroSection": {
+        "title": "Hero Section",
+        "description": "Manage the hero banner for the Projects page.",
+        "fields": {
+          "backgroundImage": "Background image",
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "رؤية بناء مستدام",
+          "eyebrowTitleEn": "A Vision for Sustainable Building",
+          "titleAr": "اكتب عنوان القسم بالعربية",
+          "titleEn": "Write section title in English"
+        },
+        "ui": {
+          "backgroundImageHint": "Upload a wide hero image for the Projects banner.",
+          "removeImage": "Remove image",
+          "imageUploaded": "Image uploaded. You can remove it and upload another one.",
+          "bilingualHint": "Fill Arabic and English fields so this section appears in both languages."
+        },
+        "success": {
+          "saved": "Projects hero section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save projects hero section"
+        },
+        "save": "Save Hero Section"
+      },
+      "introSection": {
+        "title": "Intro Section",
+        "description": "Manage the introductory text shown below the hero.",
+        "fields": {
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)"
+        },
+        "placeholders": {
+          "contentAr": "اكتب محتوى القسم بالعربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "bilingualHint": "Fill Arabic and English content for bilingual display."
+        },
+        "success": {
+          "saved": "Intro section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save intro section"
+        },
+        "save": "Save Intro Section"
+      },
       "sections": {
         "visibleOnSite": "Published on website",
         "visibleHint": "These entries are shown to visitors on the public projects page.",

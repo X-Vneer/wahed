@@ -1614,6 +1614,58 @@
     "projects": {
       "title": "مشاريع الموقع",
       "description": "اطلع على ما يراه الزوار في صفحة المشاريع، وأدر المسودات، وانشر مشاريع جديدة عند الجاهزية.",
+      "heroSection": {
+        "title": "قسم البانر الرئيسي",
+        "description": "إدارة بانر صفحة المشاريع.",
+        "fields": {
+          "backgroundImage": "صورة الخلفية",
+          "eyebrowTitleAr": "العنوان الفرعي (عربي)",
+          "eyebrowTitleEn": "العنوان الفرعي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "رؤية بناء مستدام",
+          "eyebrowTitleEn": "A Vision for Sustainable Building",
+          "titleAr": "اكتب عنوان القسم بالعربية",
+          "titleEn": "Write section title in English"
+        },
+        "ui": {
+          "backgroundImageHint": "ارفع صورة عريضة لبانر صفحة المشاريع.",
+          "removeImage": "إزالة الصورة",
+          "imageUploaded": "تم رفع الصورة. يمكنك إزالتها ورفع صورة أخرى.",
+          "bilingualHint": "املأ الحقول بالعربية والإنجليزية ليظهر القسم بكلتا اللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم البانر بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم البانر"
+        },
+        "save": "حفظ قسم البانر"
+      },
+      "introSection": {
+        "title": "قسم المقدمة",
+        "description": "إدارة النص التعريفي الظاهر أسفل البانر.",
+        "fields": {
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)"
+        },
+        "placeholders": {
+          "contentAr": "اكتب محتوى القسم بالعربية",
+          "contentEn": "Write section content in English"
+        },
+        "ui": {
+          "bilingualHint": "املأ المحتوى بالعربية والإنجليزية للعرض ثنائي اللغة."
+        },
+        "success": {
+          "saved": "تم حفظ قسم المقدمة بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم المقدمة"
+        },
+        "save": "حفظ قسم المقدمة"
+      },
       "sections": {
         "visibleOnSite": "منشور على الموقع",
         "visibleHint": "تظهر هذه العناصر لزوار صفحة المشاريع العامة.",

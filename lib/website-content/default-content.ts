@@ -254,9 +254,29 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
   },
   projects: {
     ar: {
+      heroSection: {
+        backgroundImage: "",
+        eyebrowTitle: "رؤية بناء مستدام",
+        title:
+          "نطوّر مشاريع متكاملة برؤية احترافية تنفَّذ بجودة عالية وقيمة مستدامة",
+      },
+      introSection: {
+        content:
+          "مشاريع وهد ليست مساحات إنشائية فقط، بل تجارب متكاملة تجمع بين الجودة والاستدامة وأسلوب الحياة العصري.",
+      },
       cards: [],
     },
     en: {
+      heroSection: {
+        backgroundImage: "",
+        eyebrowTitle: "A Vision for Sustainable Building",
+        title:
+          "We develop integrated projects with a professional vision, executed with high quality and sustainable value",
+      },
+      introSection: {
+        content:
+          "Wahed projects are not just construction spaces, but integrated experiences that combine quality, sustainability, and modern lifestyle.",
+      },
       cards: [],
     },
   },
