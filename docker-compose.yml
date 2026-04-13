@@ -18,10 +18,17 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
     labels:
       - traefik.enable=true
+      # HTTPS router
       - traefik.http.routers.wahdomrania.rule=Host(`wahdomrania.com`) || Host(`www.wahdomrania.com`)
       - traefik.http.routers.wahdomrania.entrypoints=websecure
       - traefik.http.routers.wahdomrania.tls.certresolver=letsencrypt
       - traefik.http.services.wahdomrania.loadbalancer.server.port=3000
+      # HTTP → HTTPS redirect
+      - traefik.http.routers.wahdomrania-http.rule=Host(`wahdomrania.com`) || Host(`www.wahdomrania.com`)
+      - traefik.http.routers.wahdomrania-http.entrypoints=web
+      - traefik.http.routers.wahdomrania-http.middlewares=wahdomrania-redirect
+      - traefik.http.middlewares.wahdomrania-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.wahdomrania-redirect.redirectscheme.permanent=true
     networks:
       - internal-system-network
       - traefik-proxy
