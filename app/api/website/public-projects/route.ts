@@ -153,7 +153,9 @@ export async function POST(request: NextRequest) {
     if (data.projectId && !project) {
       return NextResponse.json(
         {
-          error: t("websiteCms.projects.publicProjectForm.errors.projectNotFound"),
+          error: t(
+            "websiteCms.projects.publicProjectForm.errors.projectNotFound"
+          ),
           details: {
             projectId: t(
               "websiteCms.projects.publicProjectForm.errors.projectNotFound"
@@ -161,18 +163,6 @@ export async function POST(request: NextRequest) {
           },
         },
         { status: 404 }
-      )
-    }
-
-    if (data.categoryIds.length > 0 && categories.length !== data.categoryIds.length) {
-      return NextResponse.json(
-        {
-          error: t("projects.errors.invalid_categories"),
-          details: {
-            categoryIds: t("projects.errors.invalid_categories"),
-          },
-        },
-        { status: 400 }
       )
     }
 
@@ -261,9 +251,13 @@ export async function POST(request: NextRequest) {
         if (target?.includes("slug")) {
           return NextResponse.json(
             {
-              error: t("websiteCms.projects.publicProjectForm.errors.slugTaken"),
+              error: t(
+                "websiteCms.projects.publicProjectForm.errors.slugTaken"
+              ),
               details: {
-                slug: t("websiteCms.projects.publicProjectForm.errors.slugTaken"),
+                slug: t(
+                  "websiteCms.projects.publicProjectForm.errors.slugTaken"
+                ),
               },
             },
             { status: 409 }
