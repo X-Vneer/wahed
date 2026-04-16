@@ -36,6 +36,14 @@ export const websiteSiteSettingsFormSchema = z.object({
   publicPhone: z.string().max(40),
   faviconUrl: urlOrEmpty,
   googleAnalyticsMeasurementId: z.string().max(32),
+
+  facebookUrl: urlOrEmpty,
+  instagramUrl: urlOrEmpty,
+  youtubeUrl: urlOrEmpty,
+  xUrl: urlOrEmpty,
+
+  footerDescriptionAr: z.string().max(1000),
+  footerDescriptionEn: z.string().max(1000),
 })
 
 export type WebsiteSiteSettingsFormValues = z.infer<

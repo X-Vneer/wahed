@@ -485,6 +485,14 @@ model WebsiteSiteSettings {
   faviconUrl                   String?
   googleAnalyticsMeasurementId String?
 
+  facebookUrl  String?
+  instagramUrl String?
+  youtubeUrl   String?
+  xUrl         String?
+
+  footerDescriptionAr String?
+  footerDescriptionEn String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

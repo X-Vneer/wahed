@@ -30,7 +30,39 @@ import {
 import type { WebsiteSiteSettingsAdminDto } from "@/lib/website-site-settings/service"
 import { useForm } from "@mantine/form"
 import axios from "axios"
-import { ImageIcon, Megaphone, Palette, Search, X } from "lucide-react"
+import { FileText, ImageIcon, Megaphone, Palette, Search, X } from "lucide-react"
+
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+    </svg>
+  )
+}
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+    </svg>
+  )
+}
+
+function YoutubeIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  )
+}
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932zM17.61 20.644h2.039L6.486 3.24H4.298z" />
+    </svg>
+  )
+}
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
@@ -64,6 +96,12 @@ function valuesFromSettings(
     publicPhone: s.publicPhone ?? "",
     faviconUrl: s.faviconUrl ?? "",
     googleAnalyticsMeasurementId: s.googleAnalyticsMeasurementId ?? "",
+    facebookUrl: s.facebookUrl ?? "",
+    instagramUrl: s.instagramUrl ?? "",
+    youtubeUrl: s.youtubeUrl ?? "",
+    xUrl: s.xUrl ?? "",
+    footerDescriptionAr: s.footerDescriptionAr ?? "",
+    footerDescriptionEn: s.footerDescriptionEn ?? "",
   }
 }
 
@@ -90,6 +128,12 @@ const emptyValues: WebsiteSiteSettingsFormValues = {
   publicPhone: "",
   faviconUrl: "",
   googleAnalyticsMeasurementId: "",
+  facebookUrl: "",
+  instagramUrl: "",
+  youtubeUrl: "",
+  xUrl: "",
+  footerDescriptionAr: "",
+  footerDescriptionEn: "",
 }
 
 type Props = {
@@ -802,6 +846,163 @@ export function WebsiteSettingsForm({ settings, isLoading, onSave }: Props) {
                 {form.errors.googleAnalyticsMeasurementId ? (
                   <FieldError>
                     {String(form.errors.googleAnalyticsMeasurementId)}
+                  </FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
+          </FieldGroup>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/70 bg-card/80 backdrop-blur">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <FacebookIcon className="text-muted-foreground size-5" />
+            {t("social.title")}
+          </CardTitle>
+          <CardDescription>{t("social.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FieldGroup className="grid gap-5 md:grid-cols-2">
+            <Field data-invalid={!!form.errors.facebookUrl}>
+              <FieldLabel htmlFor="ws-facebook">
+                <span className="flex items-center gap-1.5">
+                  <FacebookIcon className="size-4" />
+                  {t("social.facebook")}
+                </span>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="ws-facebook"
+                  dir="ltr"
+                  key={form.key("facebookUrl")}
+                  {...form.getInputProps("facebookUrl")}
+                  placeholder="https://facebook.com/yourpage"
+                  disabled={isLoading}
+                  aria-invalid={!!form.errors.facebookUrl}
+                />
+                {form.errors.facebookUrl ? (
+                  <FieldError>{String(form.errors.facebookUrl)}</FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
+            <Field data-invalid={!!form.errors.instagramUrl}>
+              <FieldLabel htmlFor="ws-instagram">
+                <span className="flex items-center gap-1.5">
+                  <InstagramIcon className="size-4" />
+                  {t("social.instagram")}
+                </span>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="ws-instagram"
+                  dir="ltr"
+                  key={form.key("instagramUrl")}
+                  {...form.getInputProps("instagramUrl")}
+                  placeholder="https://instagram.com/yourpage"
+                  disabled={isLoading}
+                  aria-invalid={!!form.errors.instagramUrl}
+                />
+                {form.errors.instagramUrl ? (
+                  <FieldError>{String(form.errors.instagramUrl)}</FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
+            <Field data-invalid={!!form.errors.youtubeUrl}>
+              <FieldLabel htmlFor="ws-youtube">
+                <span className="flex items-center gap-1.5">
+                  <YoutubeIcon className="size-4" />
+                  {t("social.youtube")}
+                </span>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="ws-youtube"
+                  dir="ltr"
+                  key={form.key("youtubeUrl")}
+                  {...form.getInputProps("youtubeUrl")}
+                  placeholder="https://youtube.com/@yourchannel"
+                  disabled={isLoading}
+                  aria-invalid={!!form.errors.youtubeUrl}
+                />
+                {form.errors.youtubeUrl ? (
+                  <FieldError>{String(form.errors.youtubeUrl)}</FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
+            <Field data-invalid={!!form.errors.xUrl}>
+              <FieldLabel htmlFor="ws-x">
+                <span className="flex items-center gap-1.5">
+                  <XIcon className="size-4" />
+                  {t("social.x")}
+                </span>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="ws-x"
+                  dir="ltr"
+                  key={form.key("xUrl")}
+                  {...form.getInputProps("xUrl")}
+                  placeholder="https://x.com/yourhandle"
+                  disabled={isLoading}
+                  aria-invalid={!!form.errors.xUrl}
+                />
+                {form.errors.xUrl ? (
+                  <FieldError>{String(form.errors.xUrl)}</FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
+          </FieldGroup>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/70 bg-card/80 backdrop-blur">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <FileText className="text-muted-foreground size-5" />
+            {t("footer.title")}
+          </CardTitle>
+          <CardDescription>{t("footer.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FieldGroup className="grid gap-5 md:grid-cols-2">
+            <Field data-invalid={!!form.errors.footerDescriptionAr}>
+              <FieldLabel htmlFor="ws-footer-ar">
+                {t("footer.descriptionAr")}
+              </FieldLabel>
+              <FieldContent>
+                <Textarea
+                  id="ws-footer-ar"
+                  key={form.key("footerDescriptionAr")}
+                  {...form.getInputProps("footerDescriptionAr")}
+                  disabled={isLoading}
+                  rows={3}
+                  dir="rtl"
+                  aria-invalid={!!form.errors.footerDescriptionAr}
+                />
+                {form.errors.footerDescriptionAr ? (
+                  <FieldError>
+                    {String(form.errors.footerDescriptionAr)}
+                  </FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
+            <Field data-invalid={!!form.errors.footerDescriptionEn}>
+              <FieldLabel htmlFor="ws-footer-en">
+                {t("footer.descriptionEn")}
+              </FieldLabel>
+              <FieldContent>
+                <Textarea
+                  id="ws-footer-en"
+                  key={form.key("footerDescriptionEn")}
+                  {...form.getInputProps("footerDescriptionEn")}
+                  disabled={isLoading}
+                  rows={3}
+                  aria-invalid={!!form.errors.footerDescriptionEn}
+                />
+                {form.errors.footerDescriptionEn ? (
+                  <FieldError>
+                    {String(form.errors.footerDescriptionEn)}
                   </FieldError>
                 ) : null}
               </FieldContent>

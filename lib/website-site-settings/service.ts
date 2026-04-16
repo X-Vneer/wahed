@@ -69,6 +69,14 @@ export type WebsiteSiteSettingsAdminDto = {
   publicPhone: string | null
   faviconUrl: string | null
   googleAnalyticsMeasurementId: string | null
+
+  facebookUrl: string | null
+  instagramUrl: string | null
+  youtubeUrl: string | null
+  xUrl: string | null
+
+  footerDescriptionAr: string | null
+  footerDescriptionEn: string | null
 }
 
 function rowToAdminDto(row: WebsiteSiteSettings): WebsiteSiteSettingsAdminDto {
@@ -96,6 +104,14 @@ function rowToAdminDto(row: WebsiteSiteSettings): WebsiteSiteSettingsAdminDto {
     publicPhone: row.publicPhone,
     faviconUrl: row.faviconUrl,
     googleAnalyticsMeasurementId: row.googleAnalyticsMeasurementId,
+
+    facebookUrl: row.facebookUrl,
+    instagramUrl: row.instagramUrl,
+    youtubeUrl: row.youtubeUrl,
+    xUrl: row.xUrl,
+
+    footerDescriptionAr: row.footerDescriptionAr,
+    footerDescriptionEn: row.footerDescriptionEn,
   }
 }
 
@@ -150,6 +166,12 @@ export async function patchWebsiteSiteSettings(
     googleAnalyticsMeasurementId: emptyToNull(
       input.googleAnalyticsMeasurementId
     ),
+    facebookUrl: emptyToNull(input.facebookUrl),
+    instagramUrl: emptyToNull(input.instagramUrl),
+    youtubeUrl: emptyToNull(input.youtubeUrl),
+    xUrl: emptyToNull(input.xUrl),
+    footerDescriptionAr: emptyToNull(input.footerDescriptionAr),
+    footerDescriptionEn: emptyToNull(input.footerDescriptionEn),
   }
 
   const updated = await db.websiteSiteSettings.update({
@@ -216,6 +238,16 @@ export function toPublicWebsiteSettings(
     contact: {
       email: row.publicContactEmail,
       phone: row.publicPhone,
+    },
+    socialMedia: {
+      facebook: row.facebookUrl,
+      instagram: row.instagramUrl,
+      youtube: row.youtubeUrl,
+      x: row.xUrl,
+    },
+    footer: {
+      description:
+        locale === "ar" ? row.footerDescriptionAr : row.footerDescriptionEn,
     },
     faviconUrl: row.faviconUrl,
     googleAnalyticsMeasurementId: row.googleAnalyticsMeasurementId,

@@ -2211,6 +2211,20 @@
         "phone": "Public phone number",
         "gaId": "Google Analytics measurement ID",
         "gaHint": "Example: G-XXXXXXXXXX. Returned by the public API for your site to initialize analytics."
+      },
+      "social": {
+        "title": "Social media",
+        "description": "Links to your social media profiles. Displayed in the public site footer and returned by the public API.",
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "youtube": "YouTube",
+        "x": "X (Twitter)"
+      },
+      "footer": {
+        "title": "Footer",
+        "description": "Footer description text shown at the bottom of the public site.",
+        "descriptionAr": "Footer description (Arabic)",
+        "descriptionEn": "Footer description (English)"
       }
     },
     "pageSeo": {
