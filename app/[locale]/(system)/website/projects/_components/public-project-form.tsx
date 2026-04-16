@@ -12,7 +12,7 @@ import { usePublicProjectPrefill } from "@/hooks/use-public-project-prefill"
 import type { PublicProjectPrefillResponse } from "@/lib/types/public-project-prefill"
 import type { PublicProjectEditData } from "@/prisma/public-projects"
 import apiClient from "@/services"
-import { useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
@@ -102,7 +102,6 @@ export function PublicProjectForm({
     Boolean(linkedProjectId) && !isEdit
   )
   const appliedPrefillFor = useRef<string | null>(null)
-  const [manualPrefillLoading, setManualPrefillLoading] = useState(false)
   const [step, setStep] = useState(0)
   const stepperRef = useRef<HTMLDivElement | null>(null)
 
@@ -170,36 +169,41 @@ export function PublicProjectForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- apply server prefill once per linked id
   }, [linkedProjectId, linkedPrefill])
 
-  const handleLoadFromInternalProject = async () => {
-    const id = form.values.projectId.trim()
+  const prefillMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await apiClient.get<PublicProjectPrefillResponse>(
+        `/api/website/public-projects/prefill/${id}`
+      )
+      return res.data
+    },
+    onSuccess: (data) => {
+      mergePrefillIntoForm(data)
+      appliedPrefillFor.current = form.getValues().projectId.trim()
+      toast.success(
+        t("websiteCms.projects.publicProjectForm.success.prefillLoaded")
+      )
+    },
+    onError: () => {
+      toast.error(
+        t("websiteCms.projects.publicProjectForm.errors.prefillFailed")
+      )
+    },
+  })
+
+  const handleLoadFromInternalProject = () => {
+    const id = form.getValues().projectId.trim()
     if (!id) {
       toast.error(
         t("websiteCms.projects.publicProjectForm.errors.prefillNeedProjectId")
       )
       return
     }
-    setManualPrefillLoading(true)
-    try {
-      const res = await apiClient.get<PublicProjectPrefillResponse>(
-        `/api/website/public-projects/prefill/${id}`
-      )
-      mergePrefillIntoForm(res.data)
-      appliedPrefillFor.current = id
-      toast.success(
-        t("websiteCms.projects.publicProjectForm.success.prefillLoaded")
-      )
-    } catch {
-      toast.error(
-        t("websiteCms.projects.publicProjectForm.errors.prefillFailed")
-      )
-    } finally {
-      setManualPrefillLoading(false)
-    }
+    prefillMutation.mutate(id)
   }
 
   const validateStep = (stepIndex: number) => {
     const schema = publicProjectFormStepSchemas[stepIndex]
-    const result = schema.safeParse(form.values)
+    const result = schema.safeParse(form.getValues())
     if (result.success) {
       for (const key of Object.keys(schema.shape)) {
         form.clearFieldError(key as keyof PublicProjectFormValues)
@@ -311,8 +315,9 @@ export function PublicProjectForm({
 
         {step === 0 ? (
           <PublicProjectFormStepBasics
-            manualPrefillLoading={manualPrefillLoading}
+            manualPrefillLoading={prefillMutation.isPending}
             onLoadFromInternalProject={handleLoadFromInternalProject}
+            excludeProjectId={isEdit ? initialData?.id : undefined}
           />
         ) : null}
         {step === 1 ? <PublicProjectFormStepMedia /> : null}

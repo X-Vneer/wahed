@@ -21,13 +21,16 @@ export const STATUS_LABEL_KEYS: Record<
   CANCELLED: "projects.status.cancelled",
 }
 
-export function slugFromEnglishTitle(title: string): string {
+export function generateSlug(title: string): string {
   return title
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]+/g, "")
     .toLowerCase()
     .trim()
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
+    .replace(/&/g, "-and-")
     .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-{2,}/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 96)
 }

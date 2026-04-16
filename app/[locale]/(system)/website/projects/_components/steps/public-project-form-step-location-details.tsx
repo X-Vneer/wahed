@@ -22,7 +22,10 @@ import {
   PROJECT_STATUSES,
   STATUS_LABEL_KEYS,
 } from "../public-project-form-constants"
-import { usePublicProjectFormContext } from "../public-project-form-context"
+import {
+  usePublicProjectFormContext,
+  type PublicProjectFormValues,
+} from "../public-project-form-context"
 import { usePublicProjectFieldErr } from "../use-public-project-field-err"
 
 export function PublicProjectFormStepLocationDetails() {
@@ -32,7 +35,7 @@ export function PublicProjectFormStepLocationDetails() {
 
   const { data: regionsRes } = useRegions()
   const regions = regionsRes?.data?.data ?? []
-  const { data: citiesRes } = useCities(form.values.regionId || null)
+  const { data: citiesRes } = useCities(form.getValues().regionId || null)
   const cities = citiesRes?.data?.data ?? []
 
   return (
@@ -47,7 +50,7 @@ export function PublicProjectFormStepLocationDetails() {
               {t("websiteCms.projects.publicProjectForm.fields.region")}
             </FieldLabel>
             <Select
-              value={form.values.regionId || ""}
+              value={form.getValues().regionId || ""}
               onValueChange={(value) => {
                 form.setFieldValue("regionId", value || "")
                 form.setFieldValue("cityId", "")
@@ -58,8 +61,8 @@ export function PublicProjectFormStepLocationDetails() {
                 aria-invalid={!!form.errors.regionId}
               >
                 <SelectValue>
-                  {form.values.regionId
-                    ? regions.find((r) => r.id === form.values.regionId)
+                  {form.getValues().regionId
+                    ? regions.find((r) => r.id === form.getValues().regionId)
                         ?.name ||
                       t(
                         "websiteCms.projects.publicProjectForm.placeholders.region"
@@ -92,16 +95,16 @@ export function PublicProjectFormStepLocationDetails() {
               {t("websiteCms.projects.publicProjectForm.fields.city")}
             </FieldLabel>
             <Select
-              value={form.values.cityId || ""}
+              value={form.getValues().cityId || ""}
               onValueChange={(value) =>
                 form.setFieldValue("cityId", value || "")
               }
-              disabled={!form.values.regionId}
+              disabled={!form.getValues().regionId}
             >
               <SelectTrigger id="pp-city" aria-invalid={!!form.errors.cityId}>
                 <SelectValue>
-                  {form.values.cityId
-                    ? cities.find((c) => c.id === form.values.cityId)?.name ||
+                  {form.getValues().cityId
+                    ? cities.find((c) => c.id === form.getValues().cityId)?.name ||
                       t(
                         "websiteCms.projects.publicProjectForm.placeholders.city"
                       )
@@ -113,7 +116,7 @@ export function PublicProjectFormStepLocationDetails() {
               <SelectContent>
                 {cities.length === 0 ? (
                   <div className="text-muted-foreground px-2 py-2 text-sm">
-                    {form.values.regionId
+                    {form.getValues().regionId
                       ? t("projects.form.noCitiesAvailable")
                       : t("projects.form.selectRegionFirst")}
                   </div>
@@ -216,18 +219,18 @@ export function PublicProjectFormStepLocationDetails() {
             {t("websiteCms.projects.publicProjectForm.fields.status")}
           </FieldLabel>
           <Select
-            value={form.values.status || ""}
+            value={form.getValues().status || ""}
             onValueChange={(value) =>
               form.setFieldValue(
                 "status",
-                (value || "") as typeof form.values.status
+                (value || "") as PublicProjectFormValues["status"]
               )
             }
           >
             <SelectTrigger id="pp-status">
               <SelectValue>
-                {form.values.status
-                  ? t(STATUS_LABEL_KEYS[form.values.status])
+                {form.getValues().status
+                  ? t(STATUS_LABEL_KEYS[form.getValues().status as keyof typeof STATUS_LABEL_KEYS])
                   : t(
                       "websiteCms.projects.publicProjectForm.placeholders.status"
                     )}

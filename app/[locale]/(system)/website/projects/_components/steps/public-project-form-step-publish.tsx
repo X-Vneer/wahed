@@ -79,13 +79,13 @@ export function PublicProjectFormStepPublish() {
           </FieldLabel>
           <Select
             multiple
-            value={form.values.categoryIds}
+            value={form.getValues().categoryIds}
             onValueChange={(value) => form.setFieldValue("categoryIds", value)}
           >
             <SelectTrigger id="pp-categories" className="w-full">
               <SelectValue>
-                {form.values.categoryIds.length > 0
-                  ? form.values.categoryIds
+                {form.getValues().categoryIds.length > 0
+                  ? form.getValues().categoryIds
                       .map((id) => categories.find((c) => c.id === id)?.name)
                       .filter(Boolean)
                       .join(", ")
@@ -128,13 +128,13 @@ export function PublicProjectFormStepPublish() {
           </Button>
         </div>
 
-        {form.values.badges.length === 0 ? (
+        {form.getValues().badges.length === 0 ? (
           <p className="text-muted-foreground text-sm">
             {t("websiteCms.projects.publicProjectForm.ui.noBadgesAdded")}
           </p>
         ) : (
           <div className="space-y-4">
-            {form.values.badges.map((_badge, index) => (
+            {form.getValues().badges.map((_badge, index) => (
               <Card key={index} className="shadow-none">
                 <CardContent className="space-y-4 pt-4">
                   <div className="flex items-start justify-between gap-2">
@@ -232,13 +232,13 @@ export function PublicProjectFormStepPublish() {
           </Button>
         </div>
 
-        {form.values.features.length === 0 ? (
+        {form.getValues().features.length === 0 ? (
           <p className="text-muted-foreground text-sm">
             {t("websiteCms.projects.publicProjectForm.ui.noFeaturesAdded")}
           </p>
         ) : (
           <div className="space-y-4">
-            {form.values.features.map((_feature, index) => (
+            {form.getValues().features.map((_feature, index) => (
               <Card key={index} className="shadow-none">
                 <CardContent className="space-y-4 pt-4">
                   <div className="flex items-start justify-between gap-2">
@@ -323,7 +323,7 @@ export function PublicProjectFormStepPublish() {
                         "websiteCms.projects.publicProjectForm.ui.featureIconHint"
                       )}
                     </FieldDescription>
-                    {!form.values.features[index]?.icon ? (
+                    {!form.getValues().features[index]?.icon ? (
                       <div className="mt-2 flex items-center gap-3">
                         <div className="bg-primary/10 flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-dashed border-primary/30">
                           <ImageUp className="text-primary size-6" />
@@ -352,7 +352,7 @@ export function PublicProjectFormStepPublish() {
                         <div className="bg-primary/5 relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-primary/20">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={form.values.features[index].icon}
+                            src={form.getValues().features[index].icon}
                             alt=""
                             className="h-full w-full object-contain p-1"
                           />

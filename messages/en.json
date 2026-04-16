@@ -1819,6 +1819,8 @@
         },
         "ui": {
           "slugHint": "Used in the public URL. At least 3 characters. Only lowercase letters, numbers, and hyphens.",
+          "slugChecking": "Checking availability...",
+          "slugAvailable": "This slug is available",
           "isActiveHint": "Turn off to save as draft (hidden) if your site checks this flag.",
           "isFeaturedHint": "Show this project on the homepage. Maximum 2 projects can be featured.",
           "isFeaturedLimitReached": "2 projects are already featured. Unfeature one from the projects list to enable this.",

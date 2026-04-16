@@ -12,16 +12,21 @@ import {
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { useCheckSlug } from "@/hooks/use-check-slug"
 import apiClient from "@/services"
 import { useQuery } from "@tanstack/react-query"
+import { CheckCircle2, Loader2, XCircle } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { slugFromEnglishTitle } from "../public-project-form-constants"
+import { useRef } from "react"
+import { generateSlug } from "../public-project-form-constants"
 import { usePublicProjectFormContext } from "../public-project-form-context"
 import { usePublicProjectFieldErr } from "../use-public-project-field-err"
 
 type PublicProjectFormStepBasicsProps = {
   manualPrefillLoading: boolean
   onLoadFromInternalProject: () => void
+  /** Pass the current project id in edit mode so its own slug is not flagged as taken. */
+  excludeProjectId?: string
 }
 
 const MAX_FEATURED = 2
@@ -29,6 +34,7 @@ const MAX_FEATURED = 2
 export function PublicProjectFormStepBasics({
   manualPrefillLoading,
   onLoadFromInternalProject,
+  excludeProjectId,
 }: PublicProjectFormStepBasicsProps) {
   const form = usePublicProjectFormContext()
   const t = useTranslations()
@@ -47,7 +53,16 @@ export function PublicProjectFormStepBasics({
   const featuredCount =
     projectsData?.projects.filter((p) => p.isFeatured).length ?? 0
   const featuredLimitReached =
-    featuredCount >= MAX_FEATURED && !form.values.isFeatured
+    featuredCount >= MAX_FEATURED && !form.getValues().isFeatured
+
+  const slugRef = useRef<HTMLInputElement>(null)
+
+  const {
+    setSlug: notifySlugChanged,
+    isChecking: slugCheckLoading,
+    isTaken: showSlugTaken,
+    isAvailable: showSlugAvailable,
+  } = useCheckSlug({ excludeId: excludeProjectId })
 
   return (
     <div className="space-y-8">
@@ -92,7 +107,7 @@ export function PublicProjectFormStepBasics({
           </Field>
         </div>
 
-        <Field data-invalid={!!form.errors.slug}>
+        <Field data-invalid={!!form.errors.slug || showSlugTaken}>
           <FieldLabel htmlFor="pp-slug">
             {t("websiteCms.projects.publicProjectForm.fields.slug")}
           </FieldLabel>
@@ -101,32 +116,63 @@ export function PublicProjectFormStepBasics({
           </FieldDescription>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Input
+              ref={slugRef}
               id="pp-slug"
-              key={form.key("slug")}
-              {...form.getInputProps("slug")}
+              defaultValue={form.getValues().slug}
+              onChange={(e) => {
+                const raw = e.currentTarget.value
+                const sanitized = raw
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")
+                  .replace(/[^a-z0-9-]/g, "")
+                if (sanitized !== raw) {
+                  e.currentTarget.value = sanitized
+                }
+                notifySlugChanged(sanitized)
+              }}
+              onBlur={(e) => {
+                form.setFieldValue("slug", e.currentTarget.value)
+              }}
               placeholder={t(
                 "websiteCms.projects.publicProjectForm.placeholders.slug"
               )}
               className="sm:flex-1"
-              aria-invalid={!!form.errors.slug}
+              dir="ltr"
+              aria-invalid={!!form.errors.slug || showSlugTaken}
             />
             <Button
               type="button"
               variant="outline"
               className="shrink-0"
               onClick={() => {
-                const next = slugFromEnglishTitle(form.values.titleEn)
-                if (next) form.setFieldValue("slug", next)
+                const next = generateSlug(form.getValues().titleEn)
+                if (next) {
+                  form.setFieldValue("slug", next)
+                  if (slugRef.current) slugRef.current.value = next
+                  notifySlugChanged(next)
+                }
               }}
             >
-              {t(
-                "websiteCms.projects.publicProjectForm.actions.generateSlug"
-              )}
+              {t("websiteCms.projects.publicProjectForm.actions.generateSlug")}
             </Button>
           </div>
-          {form.errors.slug ? (
-            <FieldError errors={fieldErr("slug")!} />
+          {slugCheckLoading ? (
+            <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
+              <Loader2 className="size-3.5 animate-spin" />
+              {t("websiteCms.projects.publicProjectForm.ui.slugChecking")}
+            </p>
+          ) : showSlugTaken ? (
+            <p className="text-destructive flex items-center gap-1.5 text-sm">
+              <XCircle className="size-3.5" />
+              {t("websiteCms.projects.publicProjectForm.errors.slugTaken")}
+            </p>
+          ) : showSlugAvailable ? (
+            <p className="flex items-center gap-1.5 text-sm text-green-600">
+              <CheckCircle2 className="size-3.5" />
+              {t("websiteCms.projects.publicProjectForm.ui.slugAvailable")}
+            </p>
           ) : null}
+          {form.errors.slug ? <FieldError errors={fieldErr("slug")!} /> : null}
         </Field>
 
         <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
@@ -139,10 +185,8 @@ export function PublicProjectFormStepBasics({
             </p>
           </div>
           <Switch
-            checked={form.values.isActive}
-            onCheckedChange={(c) =>
-              form.setFieldValue("isActive", Boolean(c))
-            }
+            checked={form.getValues().isActive}
+            onCheckedChange={(c) => form.setFieldValue("isActive", Boolean(c))}
           />
         </div>
 
@@ -153,12 +197,14 @@ export function PublicProjectFormStepBasics({
             </p>
             <p className="text-muted-foreground text-sm">
               {featuredLimitReached
-                ? t("websiteCms.projects.publicProjectForm.ui.isFeaturedLimitReached")
+                ? t(
+                    "websiteCms.projects.publicProjectForm.ui.isFeaturedLimitReached"
+                  )
                 : t("websiteCms.projects.publicProjectForm.ui.isFeaturedHint")}
             </p>
           </div>
           <Switch
-            checked={form.values.isFeatured}
+            checked={form.getValues().isFeatured}
             disabled={featuredLimitReached}
             onCheckedChange={(c) =>
               form.setFieldValue("isFeatured", Boolean(c))
@@ -199,9 +245,7 @@ export function PublicProjectFormStepBasics({
             </Button>
           </div>
           {form.errors.projectId ? (
-            <FieldError
-              errors={[{ message: String(form.errors.projectId) }]}
-            />
+            <FieldError errors={[{ message: String(form.errors.projectId) }]} />
           ) : null}
         </Field>
       </FieldSet>

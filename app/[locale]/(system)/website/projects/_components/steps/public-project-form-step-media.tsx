@@ -28,7 +28,7 @@ export function PublicProjectFormStepMedia() {
   const fieldErr = usePublicProjectFieldErr()
 
   const toggleLinkedFile = (fileUrl: string, checked: boolean) => {
-    const next = new Set(form.values.selectedLinkedFileUrls)
+    const next = new Set(form.getValues().selectedLinkedFileUrls)
     if (checked) next.add(fileUrl)
     else next.delete(fileUrl)
     form.setFieldValue("selectedLinkedFileUrls", [...next])
@@ -54,7 +54,7 @@ export function PublicProjectFormStepMedia() {
                 if (res?.length) {
                   const urls = res.map((f) => f.ufsUrl)
                   form.setFieldValue("images", [
-                    ...form.values.images,
+                    ...form.getValues().images,
                     ...urls,
                   ])
                 }
@@ -68,9 +68,9 @@ export function PublicProjectFormStepMedia() {
             <FieldError errors={fieldErr("images")!} />
           ) : null}
         </Field>
-        {form.values.images.length > 0 ? (
+        {form.getValues().images.length > 0 ? (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {form.values.images.map((url, index) => (
+            {form.getValues().images.map((url, index) => (
               <div
                 key={`${url}-${index}`}
                 className="bg-muted/20 relative rounded-lg border p-2"
@@ -89,7 +89,7 @@ export function PublicProjectFormStepMedia() {
                   onClick={() =>
                     form.setFieldValue(
                       "images",
-                      form.values.images.filter((_, i) => i !== index)
+                      form.getValues().images.filter((_, i) => i !== index)
                     )
                   }
                   aria-label={t(
@@ -119,11 +119,11 @@ export function PublicProjectFormStepMedia() {
           <FieldDescription>
             {t("websiteCms.projects.publicProjectForm.ui.projectGuideHint")}
           </FieldDescription>
-          {form.values.projectGuide ? (
+          {form.getValues().projectGuide ? (
             <div className="mt-2 flex items-center gap-3 rounded-lg border p-3">
               <FileText className="text-primary size-5 shrink-0" />
               <a
-                href={form.values.projectGuide}
+                href={form.getValues().projectGuide}
                 target="_blank"
                 rel="noreferrer"
                 className="text-primary min-w-0 flex-1 truncate text-sm underline-offset-4 hover:underline"
@@ -164,7 +164,7 @@ export function PublicProjectFormStepMedia() {
           {t("websiteCms.projects.publicProjectForm.sections.attachments")}
         </FieldLegend>
 
-        {form.values.linkedAttachmentCandidates.length > 0 ? (
+        {form.getValues().linkedAttachmentCandidates.length > 0 ? (
           <Field>
             <FieldLabel>
               {t(
@@ -177,8 +177,8 @@ export function PublicProjectFormStepMedia() {
               )}
             </FieldDescription>
             <ul className="mt-3 space-y-2 rounded-lg border p-3">
-              {form.values.linkedAttachmentCandidates.map((file, index) => {
-                const checked = form.values.selectedLinkedFileUrls.includes(
+              {form.getValues().linkedAttachmentCandidates.map((file, index) => {
+                const checked = form.getValues().selectedLinkedFileUrls.includes(
                   file.fileUrl
                 )
                 const label = file.fileName || file.fileUrl
@@ -223,7 +223,7 @@ export function PublicProjectFormStepMedia() {
             {t("websiteCms.projects.publicProjectForm.fields.attachments")}
           </FieldLabel>
           <FieldDescription>
-            {form.values.linkedAttachmentCandidates.length > 0
+            {form.getValues().linkedAttachmentCandidates.length > 0
               ? t(
                   "websiteCms.projects.publicProjectForm.ui.attachmentsUploadMoreHint"
                 )
@@ -233,7 +233,7 @@ export function PublicProjectFormStepMedia() {
             <CardContent className="pt-6">
               <FormFileUpload
                 endpoint="projectAttachmentsUploader"
-                value={form.values.attachments.map((a) => ({
+                value={form.getValues().attachments.map((a) => ({
                   fileUrl: a.fileUrl,
                   fileName: a.fileName ?? a.fileUrl,
                   fileType: a.fileType ?? undefined,
