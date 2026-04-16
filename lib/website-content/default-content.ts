@@ -207,8 +207,6 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
         channelsTitle: "وسائل التواصل",
         phone: "+96658241563",
         email: "info@wahdeinvestment.sa",
-        linkedin: "https://www.linkedin.com/company/example",
-        instagram: "https://www.instagram.com/example",
       },
     },
     en: {
@@ -223,8 +221,6 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
         channelsTitle: "Contact channels",
         phone: "+96658241563",
         email: "info@wahdeinvestment.sa",
-        linkedin: "https://www.linkedin.com/company/example",
-        instagram: "https://www.instagram.com/example",
       },
     },
   },

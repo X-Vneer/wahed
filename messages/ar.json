@@ -2108,9 +2108,7 @@
           "channelsTitleAr": "عنوان قنوات التواصل (عربي)",
           "channelsTitleEn": "عنوان قنوات التواصل (إنجليزي)",
           "phone": "رقم الهاتف",
-          "email": "البريد الإلكتروني",
-          "linkedin": "رابط لينكدإن",
-          "instagram": "رابط إنستغرام"
+          "email": "البريد الإلكتروني"
         },
         "placeholders": {
           "eyebrowTitleAr": "خطوة الأولى",
@@ -2124,12 +2122,10 @@
           "channelsTitleAr": "وسائل التواصل",
           "channelsTitleEn": "Contact channels",
           "phone": "+966500000000",
-          "email": "info@example.com",
-          "linkedin": "https://www.linkedin.com/company/...",
-          "instagram": "https://www.instagram.com/..."
+          "email": "info@example.com"
         },
         "ui": {
-          "sharedContactHint": "الهاتف والبريد والروابط تُحفظ مرة واحدة وتُعرض للغتين.",
+          "sharedContactHint": "الهاتف والبريد يُحفظان مرة واحدة ويُعرضان للغتين.",
           "bilingualHint": "نصوص الترويسة والعمود تختلف حسب اللغة؛ بيانات التواصل موحدة."
         },
         "success": {

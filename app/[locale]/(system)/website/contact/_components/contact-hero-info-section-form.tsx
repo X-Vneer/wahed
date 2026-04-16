@@ -39,8 +39,6 @@ export type ContactHeroInfoSectionValues = {
   channelsTitleEn: string
   phone: string
   email: string
-  linkedin: string
-  instagram: string
 }
 
 type ContactHeroInfoSectionFormProps = {
@@ -65,8 +63,6 @@ const emptyValues: ContactHeroInfoSectionValues = {
   channelsTitleEn: "",
   phone: "",
   email: "",
-  linkedin: "",
-  instagram: "",
 }
 
 export function ContactHeroInfoSectionForm({
@@ -303,33 +299,6 @@ export function ContactHeroInfoSectionForm({
                 />
               </Field>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field>
-                <FieldLabel htmlFor="contact-hi-linkedin">
-                  {t(`${slug}.heroInfoSection.fields.linkedin` as never)}
-                </FieldLabel>
-                <Input
-                  id="contact-hi-linkedin"
-                  placeholder={t(
-                    `${slug}.heroInfoSection.placeholders.linkedin` as never
-                  )}
-                  {...form.getInputProps("linkedin")}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="contact-hi-instagram">
-                  {t(`${slug}.heroInfoSection.fields.instagram` as never)}
-                </FieldLabel>
-                <Input
-                  id="contact-hi-instagram"
-                  placeholder={t(
-                    `${slug}.heroInfoSection.placeholders.instagram` as never
-                  )}
-                  {...form.getInputProps("instagram")}
-                />
-              </Field>
-            </div>
-
             <Field>
               <FieldDescription>
                 {t(`${slug}.heroInfoSection.ui.bilingualHint` as never)}

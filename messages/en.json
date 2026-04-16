@@ -2108,9 +2108,7 @@
           "channelsTitleAr": "Channels heading (Arabic)",
           "channelsTitleEn": "Channels heading (English)",
           "phone": "Phone number",
-          "email": "Email",
-          "linkedin": "LinkedIn URL",
-          "instagram": "Instagram URL"
+          "email": "Email"
         },
         "placeholders": {
           "eyebrowTitleAr": "خطوة الأولى",
@@ -2124,12 +2122,10 @@
           "channelsTitleAr": "وسائل التواصل",
           "channelsTitleEn": "Contact channels",
           "phone": "+966500000000",
-          "email": "info@example.com",
-          "linkedin": "https://www.linkedin.com/company/...",
-          "instagram": "https://www.instagram.com/..."
+          "email": "info@example.com"
         },
         "ui": {
-          "sharedContactHint": "Phone, email, and social URLs are stored once and shown for both languages.",
+          "sharedContactHint": "Phone and email are stored once and shown for both languages.",
           "bilingualHint": "Hero and sidebar text can differ per language; contact details are shared."
         },
         "success": {

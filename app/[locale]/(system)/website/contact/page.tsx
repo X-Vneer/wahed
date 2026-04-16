@@ -44,15 +44,6 @@ function extractContactEditorData(
     getString(arInfo?.phone) || getString(ar.phone) || getString(enInfo?.phone)
   const email =
     getString(arInfo?.email) || getString(ar.email) || getString(enInfo?.email)
-  const linkedin =
-    getString(arInfo?.linkedin) ||
-    getString(ar.linkedin) ||
-    getString(enInfo?.linkedin)
-  const instagram =
-    getString(arInfo?.instagram) ||
-    getString(ar.instagram) ||
-    getString(enInfo?.instagram)
-
   return {
     heroInfoSection: {
       eyebrowTitleAr: getString(arHero?.eyebrowTitle),
@@ -67,8 +58,6 @@ function extractContactEditorData(
       channelsTitleEn: getString(enInfo?.channelsTitle),
       phone,
       email,
-      linkedin,
-      instagram,
     },
     rawContent: content,
   }
@@ -98,7 +87,7 @@ export default function WebsiteContactPage() {
     const currentAr = { ...(data?.rawContent?.ar ?? {}) }
     const currentEn = { ...(data?.rawContent?.en ?? {}) }
 
-    for (const key of ["email", "phone", "linkedin", "instagram"] as const) {
+    for (const key of ["email", "phone"] as const) {
       delete currentAr[key]
       delete currentEn[key]
     }
@@ -106,8 +95,6 @@ export default function WebsiteContactPage() {
     const shared = {
       phone: values.phone,
       email: values.email,
-      linkedin: values.linkedin,
-      instagram: values.instagram,
     }
 
     await apiClient.put("/api/website/content/contact?scope=bilingual", {
