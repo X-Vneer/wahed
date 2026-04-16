@@ -32,10 +32,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     })
 
     if (!project) {
-      return NextResponse.json(
-        { error: "Not found" },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -97,10 +94,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     })
 
     if (!existing) {
-      return NextResponse.json(
-        { error: "Not found" },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
     }
 
     const body = await request.json()
@@ -159,7 +153,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     if (data.projectId && !project) {
       return NextResponse.json(
         {
-          error: t("websiteCms.projects.publicProjectForm.errors.projectNotFound"),
+          error: t(
+            "websiteCms.projects.publicProjectForm.errors.projectNotFound"
+          ),
           details: {
             projectId: t(
               "websiteCms.projects.publicProjectForm.errors.projectNotFound"
@@ -167,18 +163,6 @@ export async function PUT(request: NextRequest, context: RouteContext) {
           },
         },
         { status: 404 }
-      )
-    }
-
-    if (data.categoryIds.length > 0 && categories.length !== data.categoryIds.length) {
-      return NextResponse.json(
-        {
-          error: t("projects.errors.invalid_categories"),
-          details: {
-            categoryIds: t("projects.errors.invalid_categories"),
-          },
-        },
-        { status: 400 }
       )
     }
 
@@ -233,9 +217,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
             locationEn: emptyToNull(data.locationEn ?? undefined),
             area: data.area ?? null,
             deedNumber: emptyToNull(data.deedNumber ?? undefined),
-            googleMapsAddress: emptyToNull(
-              data.googleMapsAddress ?? undefined
-            ),
+            googleMapsAddress: emptyToNull(data.googleMapsAddress ?? undefined),
             status: data.status ?? undefined,
             cityId: data.cityId,
             startingPrice: data.startingPrice ?? null,
@@ -243,9 +225,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
             // Replace attachments
             attachments:
-              attachments.length > 0
-                ? { create: attachments }
-                : undefined,
+              attachments.length > 0 ? { create: attachments } : undefined,
 
             // Replace categories: disconnect old, connect new
             categories: {
@@ -293,9 +273,13 @@ export async function PUT(request: NextRequest, context: RouteContext) {
         if (target?.includes("slug")) {
           return NextResponse.json(
             {
-              error: t("websiteCms.projects.publicProjectForm.errors.slugTaken"),
+              error: t(
+                "websiteCms.projects.publicProjectForm.errors.slugTaken"
+              ),
               details: {
-                slug: t("websiteCms.projects.publicProjectForm.errors.slugTaken"),
+                slug: t(
+                  "websiteCms.projects.publicProjectForm.errors.slugTaken"
+                ),
               },
             },
             { status: 409 }
