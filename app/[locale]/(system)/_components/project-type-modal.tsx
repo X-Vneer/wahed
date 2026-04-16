@@ -189,7 +189,7 @@ export function ProjectTypeModal({
                   </FieldLabel>
                   <Switch
                     id="isActive"
-                    checked={form.values.isActive}
+                    checked={form.getValues().isActive}
                     onCheckedChange={(checked) =>
                       form.setFieldValue("isActive", checked)
                     }
