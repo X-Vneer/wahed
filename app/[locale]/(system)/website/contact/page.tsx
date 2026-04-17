@@ -47,15 +47,8 @@ function extractContactEditorData(
   const arForm = ar.formSection as Record<string, unknown> | undefined
   const enForm = en.formSection as Record<string, unknown> | undefined
 
-  const phone =
-    getString(arInfo?.phone) || getString(ar.phone) || getString(enInfo?.phone)
-  const email =
-    getString(arInfo?.email) || getString(ar.email) || getString(enInfo?.email)
-
   const avatarImage =
     getString(arForm?.avatarImage) || getString(enForm?.avatarImage)
-  const whatsappNumber =
-    getString(arForm?.whatsappNumber) || getString(enForm?.whatsappNumber)
 
   return {
     heroInfoSection: {
@@ -69,8 +62,6 @@ function extractContactEditorData(
       infoContentEn: getString(enInfo?.content),
       channelsTitleAr: getString(arInfo?.channelsTitle),
       channelsTitleEn: getString(enInfo?.channelsTitle),
-      phone,
-      email,
     },
     formSection: {
       sectionTitleAr: getString(arForm?.sectionTitle),
@@ -84,7 +75,6 @@ function extractContactEditorData(
       orTextEn: getString(enForm?.orText),
       whatsappLabelAr: getString(arForm?.whatsappLabel),
       whatsappLabelEn: getString(enForm?.whatsappLabel),
-      whatsappNumber,
     },
     rawContent: content,
   }
@@ -119,11 +109,6 @@ export default function WebsiteContactPage() {
       delete currentEn[key]
     }
 
-    const shared = {
-      phone: values.phone,
-      email: values.email,
-    }
-
     await apiClient.put("/api/website/content/contact?scope=bilingual", {
       ar: {
         ...currentAr,
@@ -135,7 +120,6 @@ export default function WebsiteContactPage() {
           title: values.infoTitleAr,
           content: values.infoContentAr,
           channelsTitle: values.channelsTitleAr,
-          ...shared,
         },
       },
       en: {
@@ -148,7 +132,6 @@ export default function WebsiteContactPage() {
           title: values.infoTitleEn,
           content: values.infoContentEn,
           channelsTitle: values.channelsTitleEn,
-          ...shared,
         },
       },
     })
@@ -169,7 +152,6 @@ export default function WebsiteContactPage() {
 
     const shared = {
       avatarImage: values.avatarImage,
-      whatsappNumber: values.whatsappNumber,
     }
 
     await apiClient.put("/api/website/content/contact?scope=bilingual", {
