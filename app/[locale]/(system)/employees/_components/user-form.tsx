@@ -187,7 +187,7 @@ export function UserForm({ selectedUser, onSuccess }: UserFormProps) {
               </div>
             ) : (
               <div className="relative inline-block">
-                <div className="relative h-[200px] w-[200px]">
+                <div className="relative h-50 w-50">
                   <Avatar className="h-full w-full rounded-lg">
                     <AvatarImage src={form.values.image} alt="User" />
                     <AvatarFallback></AvatarFallback>
