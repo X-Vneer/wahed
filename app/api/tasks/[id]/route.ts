@@ -194,8 +194,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "TASK_UPDATED",
-          title: "Task Updated",
-          message: `Task "${task.title}" has been updated`,
+          contentKey: "task_updated",
+          messageParams: { taskTitle: task.title },
           relatedId: id,
           relatedType: "task",
         })
@@ -211,8 +211,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: newAssignees,
           type: "TASK_ASSIGNED",
-          title: "Task Assigned",
-          message: `You have been assigned to task: ${task.title}`,
+          contentKey: "task_assigned",
+          messageParams: { taskTitle: task.title },
           relatedId: id,
           relatedType: "task",
         })

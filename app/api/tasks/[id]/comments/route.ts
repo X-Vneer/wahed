@@ -83,8 +83,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "TASK_COMMENTED",
-          title: "New Comment on Task",
-          message: `${comment.createdBy.name} commented: ${data.content.substring(0, 100)}`,
+          contentKey: "task_commented",
+          messageParams: { userName: comment.createdBy.name, comment: data.content.substring(0, 100) },
           relatedId: taskId,
           relatedType: "task",
         })

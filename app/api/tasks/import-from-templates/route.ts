@@ -168,8 +168,8 @@ export async function POST(request: NextRequest) {
         createNotifications({
           userIds: ids,
           type: "TASK_CREATED",
-          title: "Tasks Imported from Templates",
-          message: `${createdTasks.length} task(s) created from templates`,
+          contentKey: "tasks_imported",
+          messageParams: { count: createdTasks.length },
           relatedId: data.projectId ?? createdTasks[0]?.id,
           relatedType: data.projectId ? "project" : "task",
         })

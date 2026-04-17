@@ -2267,6 +2267,80 @@
     "empty": "No notifications",
     "errors": {
       "not_found": "Notification not found"
+    },
+    "content": {
+      "new_task_assigned": {
+        "title": "New Task Assigned",
+        "message": "You have been assigned to task: {taskTitle}"
+      },
+      "task_created": {
+        "title": "New Task Created",
+        "message": "Task \"{taskTitle}\" has been created"
+      },
+      "task_updated": {
+        "title": "Task Updated",
+        "message": "Task \"{taskTitle}\" has been updated"
+      },
+      "task_status_changed": {
+        "title": "Task Status Changed",
+        "message": "Task \"{taskTitle}\" status changed to {statusName}"
+      },
+      "task_completed": {
+        "title": "Task Completed",
+        "message": "Task \"{taskTitle}\" has been marked as done"
+      },
+      "task_reopened": {
+        "title": "Task Reopened",
+        "message": "Task \"{taskTitle}\" has been reopened"
+      },
+      "task_commented": {
+        "title": "New Comment on Task",
+        "message": "{userName} commented: {comment}"
+      },
+      "task_attachments_updated": {
+        "title": "Task Attachments Updated",
+        "message": "Attachments for task \"{taskTitle}\" have been updated"
+      },
+      "task_assigned": {
+        "title": "Task Assigned",
+        "message": "You have been assigned to task: {taskTitle}"
+      },
+      "task_unassigned": {
+        "title": "Task Unassigned",
+        "message": "You have been removed from task: {taskTitle}"
+      },
+      "subtask_added": {
+        "title": "New Subtask Added",
+        "message": "Subtask \"{subtaskTitle}\" added to task \"{taskTitle}\""
+      },
+      "project_created": {
+        "title": "New Project Created",
+        "message": "Project \"{projectName}\" has been created"
+      },
+      "project_updated": {
+        "title": "Project Updated",
+        "message": "Project \"{projectName}\" has been updated"
+      },
+      "project_attachments_updated": {
+        "title": "Project Attachments Updated",
+        "message": "Attachments for project \"{projectName}\" have been updated"
+      },
+      "project_archived": {
+        "title": "Project Archived",
+        "message": "Project \"{projectName}\" has been archived"
+      },
+      "project_unarchived": {
+        "title": "Project Unarchived",
+        "message": "Project \"{projectName}\" has been unarchived"
+      },
+      "contact_received": {
+        "title": "New Contact Message",
+        "message": "{senderName}: {messagePreview}"
+      },
+      "tasks_imported": {
+        "title": "Tasks Imported from Templates",
+        "message": "{count} task(s) created from templates"
+      }
     }
   },
   "contacts": {

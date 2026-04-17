@@ -48,8 +48,8 @@ export async function POST(request: NextRequest) {
         createNotifications({
           userIds: adminIds,
           type: "CONTACT_RECEIVED",
-          title: "New Contact Message",
-          message: `${data.firstName} ${data.lastName}: ${data.message.substring(0, 100)}`,
+          contentKey: "contact_received",
+          messageParams: { senderName: `${data.firstName} ${data.lastName}`, messagePreview: data.message.substring(0, 100) },
           relatedId: contact.id,
           relatedType: "contact",
         })

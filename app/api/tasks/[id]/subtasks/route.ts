@@ -84,8 +84,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "TASK_UPDATED",
-          title: "New Subtask Added",
-          message: `Subtask "${data.title}" added to task "${parentTask?.title}"`,
+          contentKey: "subtask_added",
+          messageParams: { subtaskTitle: data.title, taskTitle: parentTask?.title ?? "" },
           relatedId: taskId,
           relatedType: "task",
         })

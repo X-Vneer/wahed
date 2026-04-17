@@ -70,10 +70,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "TASK_UPDATED",
-          title: done ? "Task Completed" : "Task Reopened",
-          message: done
-            ? `Task "${task.title}" has been marked as done`
-            : `Task "${task.title}" has been reopened`,
+          contentKey: done ? "task_completed" : "task_reopened",
+          messageParams: { taskTitle: task.title },
           relatedId: id,
           relatedType: "task",
         })

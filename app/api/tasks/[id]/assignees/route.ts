@@ -96,8 +96,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       createNotifications({
         userIds: newAssignees,
         type: "TASK_ASSIGNED",
-        title: "Task Assigned",
-        message: `You have been assigned to task: ${previousTask?.title ?? task.title}`,
+        contentKey: "task_assigned",
+        messageParams: { taskTitle: previousTask?.title ?? task.title },
         relatedId: id,
         relatedType: "task",
       })
@@ -111,8 +111,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       createNotifications({
         userIds: removedAssignees,
         type: "TASK_UPDATED",
-        title: "Task Unassigned",
-        message: `You have been removed from task: ${previousTask?.title ?? task.title}`,
+        contentKey: "task_unassigned",
+        messageParams: { taskTitle: previousTask?.title ?? task.title },
         relatedId: id,
         relatedType: "task",
       })

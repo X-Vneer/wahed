@@ -32,6 +32,43 @@ const typeIconColors: Record<string, string> = {
   CONTACT_RECEIVED: "text-rose-500",
 }
 
+/**
+ * Translate a notification's title and message.
+ * New notifications store a contentKey in `title` and JSON params in `message`.
+ * Old notifications store plain-text strings — we fall back to those.
+ */
+function useTranslatedNotification(notification: Notification) {
+  const t = useTranslations()
+  const contentKey = notification.title
+
+  // Try to translate using the content key
+  const titleKey = `notifications.content.${contentKey}.title`
+  const messageKey = `notifications.content.${contentKey}.message`
+
+  try {
+    const translatedTitle = t.has(titleKey)
+      ? t(titleKey)
+      : notification.title
+
+    let params: Record<string, string | number> = {}
+    try {
+      params = JSON.parse(notification.message)
+    } catch {
+      // Old notification with plain-text message
+      return { title: translatedTitle, message: notification.message }
+    }
+
+    const translatedMessage = t.has(messageKey)
+      ? t(messageKey, params)
+      : notification.message
+
+    return { title: translatedTitle, message: translatedMessage }
+  } catch {
+    // Fallback for any translation error
+    return { title: notification.title, message: notification.message }
+  }
+}
+
 function NotificationItem({
   notification,
   onRead,
@@ -43,6 +80,7 @@ function NotificationItem({
 }) {
   const locale = useLocale()
   const dateLocale = locale === "ar" ? ar : enUS
+  const { title, message } = useTranslatedNotification(notification)
 
   return (
     <div
@@ -66,10 +104,10 @@ function NotificationItem({
             !notification.isRead && "font-semibold"
           )}
         >
-          {notification.title}
+          {title}
         </p>
         <p className="text-muted-foreground line-clamp-2 text-xs">
-          {notification.message}
+          {message}
         </p>
         <p className="text-muted-foreground text-xs">
           {formatDistanceToNow(new Date(notification.createdAt), {

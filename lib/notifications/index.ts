@@ -13,21 +13,23 @@ export type NotificationType =
 interface CreateNotificationParams {
   userIds: string[]
   type: NotificationType
-  title: string
-  message: string
+  contentKey: string
+  messageParams?: Record<string, string | number>
   relatedId?: string
   relatedType?: "task" | "project" | "contact"
 }
 
 /**
  * Create notifications for multiple users.
+ * Stores the contentKey in `title` and JSON-encoded messageParams in `message`.
+ * The frontend translates using these keys at display time.
  * Non-blocking — errors are logged but never thrown.
  */
 export async function createNotifications({
   userIds,
   type,
-  title,
-  message,
+  contentKey,
+  messageParams,
   relatedId,
   relatedType,
 }: CreateNotificationParams) {
@@ -39,8 +41,8 @@ export async function createNotifications({
       data: uniqueIds.map((userId) => ({
         userId,
         type,
-        title,
-        message,
+        title: contentKey,
+        message: JSON.stringify(messageParams ?? {}),
         relatedId: relatedId ?? null,
         relatedType: relatedType ?? null,
       })),

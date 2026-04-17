@@ -75,10 +75,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "PROJECT_UPDATED",
-          title: shouldArchive ? "Project Archived" : "Project Unarchived",
-          message: shouldArchive
-            ? `Project "${projectInfo?.nameEn || projectInfo?.nameAr}" has been archived`
-            : `Project "${projectInfo?.nameEn || projectInfo?.nameAr}" has been unarchived`,
+          contentKey: shouldArchive ? "project_archived" : "project_unarchived",
+          messageParams: { projectName: projectInfo?.nameEn || projectInfo?.nameAr || "" },
           relatedId: id,
           relatedType: "project",
         })

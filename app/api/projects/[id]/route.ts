@@ -320,8 +320,8 @@ export async function PUT(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "PROJECT_UPDATED",
-          title: "Project Updated",
-          message: `Project "${data.nameEn || data.nameAr}" has been updated`,
+          contentKey: "project_updated",
+          messageParams: { projectName: data.nameEn || data.nameAr },
           relatedId: id,
           relatedType: "project",
         })

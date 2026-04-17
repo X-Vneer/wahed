@@ -123,8 +123,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "PROJECT_UPDATED",
-          title: "Project Attachments Updated",
-          message: `Attachments for project "${project.nameEn || project.nameAr}" have been updated`,
+          contentKey: "project_attachments_updated",
+          messageParams: { projectName: project.nameEn || project.nameAr },
           relatedId: id,
           relatedType: "project",
         })

@@ -267,8 +267,8 @@ export async function POST(request: NextRequest) {
         createNotifications({
           userIds: ids,
           type: "PROJECT_CREATED",
-          title: "New Project Created",
-          message: `Project "${data.nameEn || data.nameAr}" has been created`,
+          contentKey: "project_created",
+          messageParams: { projectName: data.nameEn || data.nameAr },
           relatedId: project.id,
           relatedType: "project",
         })

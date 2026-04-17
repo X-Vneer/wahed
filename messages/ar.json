@@ -2267,6 +2267,80 @@
     "empty": "لا توجد إشعارات",
     "errors": {
       "not_found": "الإشعار غير موجود"
+    },
+    "content": {
+      "new_task_assigned": {
+        "title": "تعيين مهمة جديدة",
+        "message": "تم تعيينك في المهمة: {taskTitle}"
+      },
+      "task_created": {
+        "title": "مهمة جديدة",
+        "message": "تم إنشاء المهمة \"{taskTitle}\""
+      },
+      "task_updated": {
+        "title": "تحديث المهمة",
+        "message": "تم تحديث المهمة \"{taskTitle}\""
+      },
+      "task_status_changed": {
+        "title": "تغيير حالة المهمة",
+        "message": "تم تغيير حالة المهمة \"{taskTitle}\" إلى {statusName}"
+      },
+      "task_completed": {
+        "title": "اكتمال المهمة",
+        "message": "تم تحديد المهمة \"{taskTitle}\" كمكتملة"
+      },
+      "task_reopened": {
+        "title": "إعادة فتح المهمة",
+        "message": "تمت إعادة فتح المهمة \"{taskTitle}\""
+      },
+      "task_commented": {
+        "title": "تعليق جديد على المهمة",
+        "message": "{userName} علّق: {comment}"
+      },
+      "task_attachments_updated": {
+        "title": "تحديث مرفقات المهمة",
+        "message": "تم تحديث مرفقات المهمة \"{taskTitle}\""
+      },
+      "task_assigned": {
+        "title": "تعيين مهمة",
+        "message": "تم تعيينك في المهمة: {taskTitle}"
+      },
+      "task_unassigned": {
+        "title": "إلغاء تعيين مهمة",
+        "message": "تمت إزالتك من المهمة: {taskTitle}"
+      },
+      "subtask_added": {
+        "title": "مهمة فرعية جديدة",
+        "message": "تمت إضافة المهمة الفرعية \"{subtaskTitle}\" إلى المهمة \"{taskTitle}\""
+      },
+      "project_created": {
+        "title": "مشروع جديد",
+        "message": "تم إنشاء المشروع \"{projectName}\""
+      },
+      "project_updated": {
+        "title": "تحديث المشروع",
+        "message": "تم تحديث المشروع \"{projectName}\""
+      },
+      "project_attachments_updated": {
+        "title": "تحديث مرفقات المشروع",
+        "message": "تم تحديث مرفقات المشروع \"{projectName}\""
+      },
+      "project_archived": {
+        "title": "أرشفة المشروع",
+        "message": "تمت أرشفة المشروع \"{projectName}\""
+      },
+      "project_unarchived": {
+        "title": "إلغاء أرشفة المشروع",
+        "message": "تم إلغاء أرشفة المشروع \"{projectName}\""
+      },
+      "contact_received": {
+        "title": "رسالة تواصل جديدة",
+        "message": "{senderName}: {messagePreview}"
+      },
+      "tasks_imported": {
+        "title": "استيراد مهام من القوالب",
+        "message": "تم إنشاء {count} مهمة من القوالب"
+      }
     }
   },
   "contacts": {

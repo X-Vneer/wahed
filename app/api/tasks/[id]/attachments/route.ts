@@ -193,8 +193,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "TASK_UPDATED",
-          title: "Task Attachments Updated",
-          message: `Attachments for task "${taskInfo?.title}" have been updated`,
+          contentKey: "task_attachments_updated",
+          messageParams: { taskTitle: taskInfo?.title ?? "" },
           relatedId: taskId,
           relatedType: "task",
         })

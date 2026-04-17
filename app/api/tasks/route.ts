@@ -154,8 +154,8 @@ export async function POST(request: NextRequest) {
       createNotifications({
         userIds: notifyUserIds,
         type: "TASK_ASSIGNED",
-        title: "New Task Assigned",
-        message: `You have been assigned to task: ${data.title}`,
+        contentKey: "new_task_assigned",
+        messageParams: { taskTitle: data.title },
         relatedId: task.id,
         relatedType: "task",
       })
@@ -168,8 +168,8 @@ export async function POST(request: NextRequest) {
         createNotifications({
           userIds: ids,
           type: "TASK_CREATED",
-          title: "New Task Created",
-          message: `Task "${data.title}" has been created`,
+          contentKey: "task_created",
+          messageParams: { taskTitle: data.title },
           relatedId: task.id,
           relatedType: "task",
         })

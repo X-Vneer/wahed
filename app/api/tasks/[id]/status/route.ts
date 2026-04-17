@@ -93,8 +93,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         createNotifications({
           userIds: notifyIds,
           type: "TASK_UPDATED",
-          title: "Task Status Changed",
-          message: `Task "${task.title}" status changed to ${statusName?.nameEn ?? "new status"}`,
+          contentKey: "task_status_changed",
+          messageParams: { taskTitle: task.title, statusName: statusName?.nameEn ?? "" },
           relatedId: id,
           relatedType: "task",
         })
