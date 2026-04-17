@@ -468,6 +468,8 @@ model WebsiteSiteSettings {
 
   logoForDarkBgUrl  String?
   logoForLightBgUrl String?
+  siteNameAr        String?
+  siteNameEn        String?
 
   defaultMetaTitleAr       String?
   defaultMetaTitleEn       String?

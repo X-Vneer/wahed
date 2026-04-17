@@ -77,7 +77,13 @@ export const transformPublicProject = (
       value: localized(f.valueAr, f.valueEn, locale),
       icon: f.icon,
     })),
-    attachments: project.attachments,
+    attachments: project.attachments.map((a) => ({
+      fileUrl: a.fileUrl,
+      fileName: a.fileName ?? undefined,
+      fileType: a.fileType ?? undefined,
+      fileSize: a.fileSize ?? undefined,
+      additionalInfo: a.additionalInfo ?? undefined,
+    })),
     createdAt: project.createdAt,
   }
 }

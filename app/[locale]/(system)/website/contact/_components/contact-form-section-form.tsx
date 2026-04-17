@@ -40,7 +40,6 @@ export type ContactFormSectionValues = {
   orTextEn: string
   whatsappLabelAr: string
   whatsappLabelEn: string
-  whatsappNumber: string
 }
 
 type ContactFormSectionFormProps = {
@@ -64,7 +63,6 @@ const emptyValues: ContactFormSectionValues = {
   orTextEn: "",
   whatsappLabelAr: "",
   whatsappLabelEn: "",
-  whatsappNumber: "",
 }
 
 export function ContactFormSectionForm({
@@ -310,23 +308,6 @@ export function ContactFormSectionForm({
                 />
               </Field>
             </div>
-            <Field>
-              <FieldLabel htmlFor="contact-form-whatsapp-number">
-                {t(`${slug}.formSection.fields.whatsappNumber` as never)}
-              </FieldLabel>
-              <Input
-                id="contact-form-whatsapp-number"
-                placeholder={t(
-                  `${slug}.formSection.placeholders.whatsappNumber` as never
-                )}
-                {...form.getInputProps("whatsappNumber")}
-              />
-            </Field>
-            <Field>
-              <FieldDescription>
-                {t(`${slug}.formSection.ui.bilingualHint` as never)}
-              </FieldDescription>
-            </Field>
           </FieldGroup>
 
           {form.errors.root && (

@@ -41,7 +41,7 @@ Base URL: `{INTERNAL_SYSTEM_URL}/api/public/website`
 GET /api/public/website/settings?locale=ar
 ```
 
-Returns global theme, fonts, logos, default SEO, contact info, and analytics config.
+Returns global theme, fonts, logos, site name, default SEO, contact info, social media links, and analytics config.
 
 **Response:**
 ```json
@@ -63,6 +63,7 @@ Returns global theme, fonts, logos, default SEO, contact info, and analytics con
     "forDarkBackground": "https://...",
     "forLightBackground": "https://..."
   },
+  "siteName": "وهد العمرانية",
   "seo": {
     "defaultMetaTitle": "وهد العمرانية",
     "defaultMetaDescription": "...",
@@ -75,6 +76,12 @@ Returns global theme, fonts, logos, default SEO, contact info, and analytics con
   "contact": {
     "email": "info@wahdeinvestment.sa",
     "phone": "+96658241563"
+  },
+  "socialMedia": {
+    "facebook": "https://facebook.com/yourpage",
+    "instagram": "https://instagram.com/yourpage",
+    "youtube": "https://youtube.com/@yourchannel",
+    "x": "https://x.com/yourhandle"
   },
   "faviconUrl": "https://...",
   "googleAnalyticsMeasurementId": "G-XXXXXXXXXX"
@@ -89,7 +96,9 @@ Returns global theme, fonts, logos, default SEO, contact info, and analytics con
 - Add `<link rel="stylesheet" href={fonts.googleFontsCssHref} />` to `<head>`.
 - Set `font-family` using `fonts.family` (locale-resolved) or `fonts.fontAr`/`fonts.fontEn` directly.
 - Use `logos.forDarkBackground` on dark sections, `logos.forLightBackground` on light sections.
+- Use `siteName` as text next to the logo and as a fallback when the logo is missing (resolves to Arabic or English based on `?locale=`).
 - Use `seo` values as fallback metadata when page-specific SEO is not set.
+- Render `socialMedia.*` links in the footer; any field may be `null` when not configured.
 - Use `faviconUrl` for `<link rel="icon">`.
 - Initialize Google Analytics with `googleAnalyticsMeasurementId`.
 
@@ -358,9 +367,16 @@ Page content is managed in the CMS admin and stored as flexible JSON per page pe
     "content": "فريقنا جاهز لتقديم الإرشاد...",
     "channelsTitle": "وسائل التواصل",
     "phone": "+96658241563",
-    "email": "info@wahdeinvestment.sa",
-    "linkedin": "https://www.linkedin.com/company/example",
-    "instagram": "https://www.instagram.com/example"
+    "email": "info@wahdeinvestment.sa"
+  },
+  "formSection": {
+    "sectionTitle": "دائرة التواصل - وهد",
+    "sectionSubtitle": "مسؤول دائرة التواصل في وهد",
+    "avatarImage": "https://...",
+    "submitLabel": "إرسال",
+    "orText": "أو تواصل عبر",
+    "whatsappLabel": "واتساب",
+    "whatsappNumber": "+96658241563"
   }
 }
 ```
@@ -548,7 +564,7 @@ Use Next.js `fetch` with `next: { revalidate: 60 }` or ISR for static generation
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
 | GET | `/api/website/content/{slug}?locale={locale}` | Get page content (single locale) |
-| GET | `/api/website/content/{slug}?scope=bilingual` | Get page content (both locales) |
+| GET | `/api/website/content/{slug}?scope=bilingual` | Get page content (both locales) — used by `home` and `contact` |
 | PUT | `/api/website/content/{slug}` | Update page content |
 | GET | `/api/website/seo/{slug}` | Get page SEO for editor (with fallback preview) |
 | PUT | `/api/website/seo/{slug}` | Update page SEO |
@@ -561,6 +577,7 @@ Use Next.js `fetch` with `next: { revalidate: 60 }` or ISR for static generation
 | GET | `/api/website/public-projects/{id}/seo` | Get project SEO for editor |
 | PUT | `/api/website/public-projects/{id}/seo` | Update project SEO |
 | PATCH | `/api/website/public-projects/{id}/visibility` | Toggle project visibility |
+| DELETE | `/api/website/public-projects/{id}` | Permanently delete a public project |
 | GET | `/api/website/public-projects/badges` | List all badges |
 | GET | `/api/website/public-projects/features` | List all features |
 | GET | `/api/website/public-projects/prefill/{projectId}` | Prefill from internal project |

@@ -55,6 +55,8 @@ export type WebsiteSiteSettingsAdminDto = {
 
   logoForDarkBgUrl: string | null
   logoForLightBgUrl: string | null
+  siteNameAr: string | null
+  siteNameEn: string | null
   defaultMetaTitleAr: string | null
   defaultMetaTitleEn: string | null
   defaultMetaDescriptionAr: string | null
@@ -90,6 +92,8 @@ function rowToAdminDto(row: WebsiteSiteSettings): WebsiteSiteSettingsAdminDto {
 
     logoForDarkBgUrl: row.logoForDarkBgUrl,
     logoForLightBgUrl: row.logoForLightBgUrl,
+    siteNameAr: row.siteNameAr,
+    siteNameEn: row.siteNameEn,
     defaultMetaTitleAr: row.defaultMetaTitleAr,
     defaultMetaTitleEn: row.defaultMetaTitleEn,
     defaultMetaDescriptionAr: row.defaultMetaDescriptionAr,
@@ -150,6 +154,8 @@ export async function patchWebsiteSiteSettings(
     fontEn: input.fontEn.trim() || null,
     logoForDarkBgUrl: emptyToNull(input.logoForDarkBgUrl),
     logoForLightBgUrl: emptyToNull(input.logoForLightBgUrl),
+    siteNameAr: emptyToNull(input.siteNameAr),
+    siteNameEn: emptyToNull(input.siteNameEn),
     defaultMetaTitleAr: emptyToNull(input.defaultMetaTitleAr),
     defaultMetaTitleEn: emptyToNull(input.defaultMetaTitleEn),
     defaultMetaDescriptionAr: emptyToNull(input.defaultMetaDescriptionAr),
@@ -226,6 +232,7 @@ export function toPublicWebsiteSettings(
       forDarkBackground: row.logoForDarkBgUrl,
       forLightBackground: row.logoForLightBgUrl,
     },
+    siteName: locale === "ar" ? row.siteNameAr : row.siteNameEn,
     seo: {
       defaultMetaTitle,
       defaultMetaDescription,

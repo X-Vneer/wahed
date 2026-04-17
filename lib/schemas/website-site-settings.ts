@@ -20,6 +20,8 @@ export const websiteSiteSettingsFormSchema = z.object({
 
   logoForDarkBgUrl: urlOrEmpty,
   logoForLightBgUrl: urlOrEmpty,
+  siteNameAr: z.string().max(120),
+  siteNameEn: z.string().max(120),
 
   defaultMetaTitleAr: z.string().max(200),
   defaultMetaTitleEn: z.string().max(200),

@@ -37,8 +37,6 @@ export type ContactHeroInfoSectionValues = {
   infoContentEn: string
   channelsTitleAr: string
   channelsTitleEn: string
-  phone: string
-  email: string
 }
 
 type ContactHeroInfoSectionFormProps = {
@@ -61,8 +59,6 @@ const emptyValues: ContactHeroInfoSectionValues = {
   infoContentEn: "",
   channelsTitleAr: "",
   channelsTitleEn: "",
-  phone: "",
-  email: "",
 }
 
 export function ContactHeroInfoSectionForm({
@@ -263,47 +259,6 @@ export function ContactHeroInfoSectionForm({
                 />
               </Field>
             </div>
-
-            <p className="text-muted-foreground text-sm font-medium">
-              {t(`${slug}.heroInfoSection.groups.channels` as never)}
-            </p>
-            <Field>
-              <FieldDescription>
-                {t(`${slug}.heroInfoSection.ui.sharedContactHint` as never)}
-              </FieldDescription>
-            </Field>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field>
-                <FieldLabel htmlFor="contact-hi-phone">
-                  {t(`${slug}.heroInfoSection.fields.phone` as never)}
-                </FieldLabel>
-                <Input
-                  id="contact-hi-phone"
-                  placeholder={t(
-                    `${slug}.heroInfoSection.placeholders.phone` as never
-                  )}
-                  {...form.getInputProps("phone")}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="contact-hi-email">
-                  {t(`${slug}.heroInfoSection.fields.email` as never)}
-                </FieldLabel>
-                <Input
-                  id="contact-hi-email"
-                  type="email"
-                  placeholder={t(
-                    `${slug}.heroInfoSection.placeholders.email` as never
-                  )}
-                  {...form.getInputProps("email")}
-                />
-              </Field>
-            </div>
-            <Field>
-              <FieldDescription>
-                {t(`${slug}.heroInfoSection.ui.bilingualHint` as never)}
-              </FieldDescription>
-            </Field>
           </FieldGroup>
 
           {form.errors.root && (

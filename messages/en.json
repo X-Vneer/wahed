@@ -2229,13 +2229,16 @@
         "fontEn": "English"
       },
       "logos": {
-        "title": "Logos",
-        "description": "Two variants so the mark stays legible on light and dark backgrounds.",
+        "title": "Logos & site name",
+        "description": "Two logo variants so the mark stays legible on light and dark backgrounds, plus the public site name.",
         "forDarkBg": "Logo for dark backgrounds",
         "forDarkBgHint": "Usually a light or white version for navbars and footers on dark UI.",
         "forLightBg": "Logo for light backgrounds",
         "forLightBgHint": "Usually a dark version for headers on white or light sections.",
-        "remove": "Remove image"
+        "remove": "Remove image",
+        "siteNameAr": "Site name (Arabic)",
+        "siteNameEn": "Site name (English)",
+        "siteNameHint": "Shown as the text alongside the logo and used as a fallback when the logo is missing."
       },
       "seo": {
         "title": "SEO & metadata",
@@ -2260,17 +2263,17 @@
         "removeFavicon": "Remove favicon"
       },
       "contact": {
-        "title": "Contact & analytics",
-        "description": "Public-facing contact details and measurement ID for your public frontend.",
-        "email": "Public contact email",
-        "emailHint": "May be shown in the footer or structured data.",
-        "phone": "Public phone number",
+        "title": "Analytics",
+        "description": "Measurement ID for your public frontend.",
         "gaId": "Google Analytics measurement ID",
         "gaHint": "Example: G-XXXXXXXXXX. Returned by the public API for your site to initialize analytics."
       },
       "social": {
-        "title": "Social media",
-        "description": "Links to your social media profiles. Displayed in the public site footer and returned by the public API.",
+        "title": "Contact & social media",
+        "description": "Public contact details and links to your social media profiles. Displayed in the public site footer and returned by the public API.",
+        "email": "Public contact email",
+        "emailHint": "May be shown in the footer or structured data.",
+        "phone": "Public phone number",
         "facebook": "Facebook",
         "instagram": "Instagram",
         "youtube": "YouTube",
