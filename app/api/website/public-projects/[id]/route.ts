@@ -2,11 +2,11 @@ import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
 import { createPublicProjectSchema } from "@/lib/schemas/public-project"
+import { transformZodError } from "@/lib/transform-errors"
 import {
   publicProjectEditInclude,
   transformPublicProjectForEdit,
 } from "@/prisma/public-projects"
-import { transformZodError } from "@/lib/transform-errors"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
 import { getTranslations } from "next-intl/server"
@@ -294,6 +294,39 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       console.error("Prisma error meta:", JSON.stringify(error.meta, null, 2))
     }
+    return NextResponse.json(
+      { error: t("errors.internal_server_error") },
+      { status: 500 }
+    )
+  }
+}
+
+export async function Delete(request: NextRequest, context: RouteContext) {
+  const locale = await getReqLocale(request)
+  const t = await getTranslations({ locale })
+  try {
+    // Check permission
+    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (!permissionCheck.hasPermission) {
+      return permissionCheck.error!
+    }
+
+    const { id } = await context.params
+
+    // check for public project
+    const project = await db.publicProject.findUnique({ where: { id } })
+    if (!project) {
+      return NextResponse.json(
+        { error: t("errors.not_found") },
+        { status: 404 }
+      )
+    }
+
+    await db.publicProject.delete({ where: { id } })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Error deleting public project:", error)
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
