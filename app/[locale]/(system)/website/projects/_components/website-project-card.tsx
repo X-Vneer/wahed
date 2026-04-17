@@ -6,6 +6,16 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -27,6 +37,7 @@ import {
   Pencil,
   Search,
   Star,
+  Trash2,
 } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 import { useState } from "react"
@@ -86,6 +97,7 @@ export function WebsiteProjectCard({
   const formatter = useFormatter()
   const [isOpen, setIsOpen] = useState(false)
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const queryClient = useQueryClient()
   const queryKey = ["website", "public-projects"]
 
@@ -181,6 +193,22 @@ export function WebsiteProjectCard({
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey })
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: () =>
+      apiClient.delete(`/api/website/public-projects/${project.id}`),
+    onSuccess: () => {
+      toast.success(t("websiteCms.projects.card.deleteSuccess"))
+      queryClient.invalidateQueries({ queryKey })
+    },
+    onError: (err) => {
+      const message =
+        axios.isAxiosError(err) && err.response?.data?.error
+          ? String(err.response.data.error)
+          : t("websiteCms.projects.card.deleteError")
+      toast.error(message)
     },
   })
 
@@ -400,6 +428,17 @@ export function WebsiteProjectCard({
                     }
                   />
 
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-destructive hover:bg-destructive/10 border-destructive/30 text-sm max-md:h-10 max-md:w-full"
+                    onClick={() => setDeleteDialogOpen(true)}
+                    disabled={deleteMutation.isPending}
+                  >
+                    <Trash2 className="size-4" />
+                    {t("websiteCms.projects.card.deleteProject")}
+                  </Button>
+
                   {hasDetails && (
                     <CollapsibleTrigger
                       render={
@@ -523,6 +562,36 @@ export function WebsiteProjectCard({
           </CollapsibleContent>
         )}
       </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("websiteCms.projects.deleteConfirm.title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("websiteCms.projects.deleteConfirm.description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>
+              {t("websiteCms.projects.deleteConfirm.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90 text-white"
+              onClick={() => {
+                setDeleteDialogOpen(false)
+                deleteMutation.mutate()
+              }}
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending
+                ? t("websiteCms.projects.deleteConfirm.deleting")
+                : t("websiteCms.projects.deleteConfirm.delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Collapsible>
   )
 }

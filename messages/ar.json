@@ -1700,7 +1700,17 @@
         "deedNumber": "رقم الصك",
         "priceRange": "نطاق السعر",
         "location": "الموقع",
-        "description": "الوصف"
+        "description": "الوصف",
+        "deleteProject": "حذف",
+        "deleteSuccess": "تم حذف المشروع بنجاح",
+        "deleteError": "فشل حذف المشروع"
+      },
+      "deleteConfirm": {
+        "title": "حذف المشروع",
+        "description": "هل أنت متأكد من حذف هذا المشروع؟ لا يمكن التراجع عن هذا الإجراء.",
+        "cancel": "إلغاء",
+        "delete": "حذف",
+        "deleting": "جاري الحذف..."
       },
       "actions": {
         "publishProject": "نشر مشروع جديد",

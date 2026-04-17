@@ -301,7 +301,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function Delete(request: NextRequest, context: RouteContext) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
   const locale = await getReqLocale(request)
   const t = await getTranslations({ locale })
   try {
