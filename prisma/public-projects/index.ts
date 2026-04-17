@@ -77,6 +77,7 @@ export const transformPublicProject = (
       value: localized(f.valueAr, f.valueEn, locale),
       icon: f.icon,
     })),
+    attachments: project.attachments,
     createdAt: project.createdAt,
   }
 }

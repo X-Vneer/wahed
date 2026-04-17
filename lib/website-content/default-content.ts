@@ -208,6 +208,15 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
         phone: "+96658241563",
         email: "info@wahdeinvestment.sa",
       },
+      formSection: {
+        sectionTitle: "دائرة التواصل - وهد",
+        sectionSubtitle: "مسؤول دائرة التواصل في وهد",
+        avatarImage: "",
+        submitLabel: "إرسال",
+        orText: "أو تواصل عبر",
+        whatsappLabel: "واتساب",
+        whatsappNumber: "+96658241563",
+      },
     },
     en: {
       heroSection: {
@@ -221,6 +230,15 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
         channelsTitle: "Contact channels",
         phone: "+96658241563",
         email: "info@wahdeinvestment.sa",
+      },
+      formSection: {
+        sectionTitle: "Communication Department - Wahed",
+        sectionSubtitle: "Communication Department Manager at Wahed",
+        avatarImage: "",
+        submitLabel: "Send",
+        orText: "Or contact via",
+        whatsappLabel: "WhatsApp",
+        whatsappNumber: "+96658241563",
       },
     },
   },

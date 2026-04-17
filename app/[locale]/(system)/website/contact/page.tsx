@@ -14,6 +14,10 @@ import {
   ContactHeroInfoSectionForm,
   ContactHeroInfoSectionValues,
 } from "./_components/contact-hero-info-section-form"
+import {
+  ContactFormSectionForm,
+  ContactFormSectionValues,
+} from "./_components/contact-form-section-form"
 import { PageSeoForm } from "../_components/page-seo-form"
 
 type BilingualContactContent = {
@@ -23,6 +27,7 @@ type BilingualContactContent = {
 
 type ContactEditorData = {
   heroInfoSection: ContactHeroInfoSectionValues
+  formSection: ContactFormSectionValues
   rawContent: BilingualContactContent
 }
 
@@ -39,11 +44,19 @@ function extractContactEditorData(
   const enHero = en.heroSection as Record<string, unknown> | undefined
   const arInfo = ar.infoSection as Record<string, unknown> | undefined
   const enInfo = en.infoSection as Record<string, unknown> | undefined
+  const arForm = ar.formSection as Record<string, unknown> | undefined
+  const enForm = en.formSection as Record<string, unknown> | undefined
 
   const phone =
     getString(arInfo?.phone) || getString(ar.phone) || getString(enInfo?.phone)
   const email =
     getString(arInfo?.email) || getString(ar.email) || getString(enInfo?.email)
+
+  const avatarImage =
+    getString(arForm?.avatarImage) || getString(enForm?.avatarImage)
+  const whatsappNumber =
+    getString(arForm?.whatsappNumber) || getString(enForm?.whatsappNumber)
+
   return {
     heroInfoSection: {
       eyebrowTitleAr: getString(arHero?.eyebrowTitle),
@@ -58,6 +71,20 @@ function extractContactEditorData(
       channelsTitleEn: getString(enInfo?.channelsTitle),
       phone,
       email,
+    },
+    formSection: {
+      sectionTitleAr: getString(arForm?.sectionTitle),
+      sectionTitleEn: getString(enForm?.sectionTitle),
+      sectionSubtitleAr: getString(arForm?.sectionSubtitle),
+      sectionSubtitleEn: getString(enForm?.sectionSubtitle),
+      avatarImage,
+      submitLabelAr: getString(arForm?.submitLabel),
+      submitLabelEn: getString(enForm?.submitLabel),
+      orTextAr: getString(arForm?.orText),
+      orTextEn: getString(enForm?.orText),
+      whatsappLabelAr: getString(arForm?.whatsappLabel),
+      whatsappLabelEn: getString(enForm?.whatsappLabel),
+      whatsappNumber,
     },
     rawContent: content,
   }
@@ -131,6 +158,50 @@ export default function WebsiteContactPage() {
     })
   }
 
+  const handleFormSectionSubmit = async ({
+    values,
+  }: {
+    slug: string
+    values: ContactFormSectionValues
+  }) => {
+    const currentAr = { ...(data?.rawContent?.ar ?? {}) }
+    const currentEn = { ...(data?.rawContent?.en ?? {}) }
+
+    const shared = {
+      avatarImage: values.avatarImage,
+      whatsappNumber: values.whatsappNumber,
+    }
+
+    await apiClient.put("/api/website/content/contact?scope=bilingual", {
+      ar: {
+        ...currentAr,
+        formSection: {
+          sectionTitle: values.sectionTitleAr,
+          sectionSubtitle: values.sectionSubtitleAr,
+          submitLabel: values.submitLabelAr,
+          orText: values.orTextAr,
+          whatsappLabel: values.whatsappLabelAr,
+          ...shared,
+        },
+      },
+      en: {
+        ...currentEn,
+        formSection: {
+          sectionTitle: values.sectionTitleEn,
+          sectionSubtitle: values.sectionSubtitleEn,
+          submitLabel: values.submitLabelEn,
+          orText: values.orTextEn,
+          whatsappLabel: values.whatsappLabelEn,
+          ...shared,
+        },
+      },
+    })
+
+    await queryClient.invalidateQueries({
+      queryKey: ["website-content", "contact", "bilingual"],
+    })
+  }
+
   if (isLoading) {
     return <PageLoader />
   }
@@ -161,6 +232,12 @@ export default function WebsiteContactPage() {
         slug="contact"
         initialValues={data?.heroInfoSection}
         onSubmit={handleHeroInfoSubmit}
+      />
+
+      <ContactFormSectionForm
+        slug="contact"
+        initialValues={data?.formSection}
+        onSubmit={handleFormSectionSubmit}
       />
 
       <PageSeoForm slug="contact" />

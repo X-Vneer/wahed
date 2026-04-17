@@ -2147,6 +2147,54 @@
           "saveFailed": "Failed to save contact content"
         },
         "save": "Save contact content"
+      },
+      "formSection": {
+        "title": "Contact form section",
+        "description": "Manage the communication department title, representative photo, and submit/WhatsApp button labels.",
+        "groups": {
+          "header": "Heading & photo",
+          "actions": "Action buttons",
+          "whatsapp": "WhatsApp button"
+        },
+        "fields": {
+          "sectionTitleAr": "Section title (Arabic)",
+          "sectionTitleEn": "Section title (English)",
+          "sectionSubtitleAr": "Subtitle (Arabic)",
+          "sectionSubtitleEn": "Subtitle (English)",
+          "avatarImage": "Representative photo",
+          "submitLabelAr": "Submit button label (Arabic)",
+          "submitLabelEn": "Submit button label (English)",
+          "orTextAr": "Divider text (Arabic)",
+          "orTextEn": "Divider text (English)",
+          "whatsappLabelAr": "WhatsApp button label (Arabic)",
+          "whatsappLabelEn": "WhatsApp button label (English)",
+          "whatsappNumber": "WhatsApp number"
+        },
+        "placeholders": {
+          "sectionTitleAr": "دائرة التواصل - وهد",
+          "sectionTitleEn": "Communication Department - Wahed",
+          "sectionSubtitleAr": "مسؤول دائرة التواصل في وهد",
+          "sectionSubtitleEn": "Communication Department Manager at Wahed",
+          "submitLabelAr": "إرسال",
+          "submitLabelEn": "Send",
+          "orTextAr": "أو تواصل عبر",
+          "orTextEn": "Or contact via",
+          "whatsappLabelAr": "واتساب",
+          "whatsappLabelEn": "WhatsApp",
+          "whatsappNumber": "+966500000000"
+        },
+        "ui": {
+          "avatarHint": "Circular photo shown next to the section title.",
+          "removeAvatar": "Remove photo",
+          "bilingualHint": "Text differs per language; the photo and WhatsApp number are shared."
+        },
+        "success": {
+          "saved": "Contact form section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save contact form section"
+        },
+        "save": "Save contact form section"
       }
     },
     "settings": {

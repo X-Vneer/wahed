@@ -2147,6 +2147,54 @@
           "saveFailed": "فشل حفظ محتوى صفحة التواصل"
         },
         "save": "حفظ محتوى التواصل"
+      },
+      "formSection": {
+        "title": "قسم نموذج التواصل",
+        "description": "عنوان وصورة مسؤول دائرة التواصل ونصوص أزرار الإرسال والواتساب.",
+        "groups": {
+          "header": "العنوان والصورة",
+          "actions": "أزرار الإجراءات",
+          "whatsapp": "زر واتساب"
+        },
+        "fields": {
+          "sectionTitleAr": "عنوان القسم (عربي)",
+          "sectionTitleEn": "عنوان القسم (إنجليزي)",
+          "sectionSubtitleAr": "العنوان الفرعي (عربي)",
+          "sectionSubtitleEn": "العنوان الفرعي (إنجليزي)",
+          "avatarImage": "صورة المسؤول",
+          "submitLabelAr": "نص زر الإرسال (عربي)",
+          "submitLabelEn": "نص زر الإرسال (إنجليزي)",
+          "orTextAr": "نص الفاصل (عربي)",
+          "orTextEn": "نص الفاصل (إنجليزي)",
+          "whatsappLabelAr": "نص زر واتساب (عربي)",
+          "whatsappLabelEn": "نص زر واتساب (إنجليزي)",
+          "whatsappNumber": "رقم واتساب"
+        },
+        "placeholders": {
+          "sectionTitleAr": "دائرة التواصل - وهد",
+          "sectionTitleEn": "Communication Department - Wahed",
+          "sectionSubtitleAr": "مسؤول دائرة التواصل في وهد",
+          "sectionSubtitleEn": "Communication Department Manager at Wahed",
+          "submitLabelAr": "إرسال",
+          "submitLabelEn": "Send",
+          "orTextAr": "أو تواصل عبر",
+          "orTextEn": "Or contact via",
+          "whatsappLabelAr": "واتساب",
+          "whatsappLabelEn": "WhatsApp",
+          "whatsappNumber": "+966500000000"
+        },
+        "ui": {
+          "avatarHint": "صورة دائرية تظهر بجانب عنوان القسم.",
+          "removeAvatar": "إزالة الصورة",
+          "bilingualHint": "النصوص تختلف حسب اللغة؛ الصورة ورقم واتساب مشتركان."
+        },
+        "success": {
+          "saved": "تم حفظ قسم نموذج التواصل بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم نموذج التواصل"
+        },
+        "save": "حفظ قسم نموذج التواصل"
       }
     },
     "settings": {
