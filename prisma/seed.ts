@@ -196,6 +196,10 @@ async function main() {
 
     { key: PermissionKey.STAFF_MANAGEMENT, name: "Staff Management" },
     { key: PermissionKey.STAFF_PAGE_MANAGEMENT, name: "Staff Page Management" },
+    {
+      key: PermissionKey.SYSTEM_SETTINGS_MANAGEMENT,
+      name: "System Settings Management",
+    },
     { key: PermissionKey.LIST_CREATE, name: "Create List" },
     { key: PermissionKey.LIST_UPDATE, name: "Update List" },
     { key: PermissionKey.LIST_DELETE, name: "Delete List" },

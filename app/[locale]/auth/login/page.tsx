@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
+import { useSystemBranding } from "@/contexts/system-branding-context"
 import { handleFormErrors } from "@/lib/handle-form-errors"
 import { useForm } from "@mantine/form"
 import axios from "axios"
@@ -23,6 +24,11 @@ import { loginAction } from "./actions"
 
 export default function LoginPage() {
   const t = useTranslations("auth.login")
+  const branding = useSystemBranding()
+  const loginLogoUrl = branding.logoForLightBgUrl ?? branding.logoSquareUrl
+  const loginBackground = branding.loginBackgroundUrl ?? loginBg
+  const loginTitle = branding.loginWelcomeTitle ?? t("title")
+  const loginSubtitle = branding.loginSubtitle ?? t("subtitle")
 
   const router = useRouter()
 
@@ -60,11 +66,20 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center">
-      <Image
-        src={loginBg}
-        className="absolute h-full w-full object-cover"
-        alt="bg"
-      />
+      {typeof loginBackground === "string" ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={loginBackground}
+          className="absolute h-full w-full object-cover"
+          alt="bg"
+        />
+      ) : (
+        <Image
+          src={loginBackground}
+          className="absolute h-full w-full object-cover"
+          alt="bg"
+        />
+      )}
       <Image
         src={noise}
         className="absolute h-full w-full object-cover opacity-10"
@@ -94,13 +109,26 @@ export default function LoginPage() {
       <Card className="relative z-1 mx-4 w-full max-w-md rounded-2xl bg-white shadow-2xl">
         <CardHeader className="flex flex-col items-center gap-6">
           {/* Logo */}
-          <Image src={logo} className="mx-auto w-32" alt="Wahd Logo" />
+          {loginLogoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={loginLogoUrl}
+              className="mx-auto max-h-20 w-32 object-contain"
+              alt={`${branding.systemName} Logo`}
+            />
+          ) : (
+            <Image
+              src={logo}
+              className="mx-auto w-32"
+              alt={`${branding.systemName} Logo`}
+            />
+          )}
 
           {/* Welcome Message */}
           <div className="space-y-2 text-center">
-            <h1 className="text-2xl font-bold">{t("title")}</h1>
+            <h1 className="text-2xl font-bold">{loginTitle}</h1>
 
-            <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
+            <p className="text-muted-foreground text-sm">{loginSubtitle}</p>
           </div>
         </CardHeader>
 

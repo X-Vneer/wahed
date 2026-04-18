@@ -37,7 +37,7 @@ export function NavUser() {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" disabled>
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+            <div className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
               <User className="size-4" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -56,7 +56,7 @@ export function NavUser() {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" disabled>
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+            <div className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
               <User className="size-4" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -76,7 +76,7 @@ export function NavUser() {
           size="lg"
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
         >
-          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+          <div className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
             <User className="size-4" />
           </div>
           <div className="grid flex-1 text-start text-sm leading-tight">
@@ -89,9 +89,8 @@ export function NavUser() {
       </SidebarMenuItem>
       <SidebarMenuItem>
         <SidebarMenuButton
-          variant="outline"
           onClick={handleLogout}
-          className="border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive focus-visible:ring-destructive/20"
+          className="border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive focus-visible:ring-destructive/20 border"
         >
           <LogOut className="size-4" />
           <span>{t("logout")}</span>

@@ -24,6 +24,7 @@ import StaffHeroSection from "./_components/staff/hero-section"
 import { UserLocationProvider } from "@/contexts/user-location-context"
 import { StaffPageSettingsProvider } from "@/contexts/staff-page-settings-context"
 import { getStaffPageSettings } from "@/lib/get-staff-page-settings"
+import { getSystemBrandingSafe } from "@/lib/get-system-branding"
 
 export default async function SystemLayout({
   children,
@@ -73,6 +74,9 @@ export default async function SystemLayout({
     }
   }
 
+  const branding = await getSystemBrandingSafe(locale === "ar" ? "ar" : "en")
+  const headerLogoUrl = branding.logoForLightBgUrl ?? branding.logoSquareUrl
+
   if (showStaffLayout) {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
@@ -83,9 +87,9 @@ export default async function SystemLayout({
                 <header className="flex h-15 shrink-0 items-center justify-between gap-2 bg-white px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                   <Link href="/">
                     <img
-                      src={logo.src}
-                      alt={"logo"}
-                      className="h-10 rounded-full"
+                      src={headerLogoUrl ?? logo.src}
+                      alt={branding.systemName}
+                      className="h-10 rounded-full object-contain"
                     />
                   </Link>
                   <div className="flex items-center gap-2">

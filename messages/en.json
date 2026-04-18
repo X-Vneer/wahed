@@ -86,7 +86,8 @@
     "staffView": "Staff view",
     "staffPageSettings": "Staff page settings",
     "staff-settings": "Settings",
-    "websiteContacts": "Contact Messages"
+    "websiteContacts": "Contact Messages",
+    "systemSettings": "System settings"
   },
   "lists": {
     "projectCategories": {
@@ -1213,6 +1214,66 @@
     "save": "Save",
     "success": {
       "updated": "Staff page settings saved successfully"
+    }
+  },
+  "systemSettings": {
+    "pageTitle": "System settings",
+    "pageDescription": "Branding and appearance of the internal admin system: system name, logos, theme color, login screen, and support contacts.",
+    "saveAll": "Save settings",
+    "toast": {
+      "saved": "System settings saved",
+      "saveFailed": "Could not save system settings"
+    },
+    "identity": {
+      "title": "Identity",
+      "description": "The name of your system and default language/appearance for new users.",
+      "systemNameAr": "System name (Arabic)",
+      "systemNameEn": "System name (English)",
+      "defaultLocale": "Default language",
+      "sidebarVariant": "Sidebar style",
+      "locales": {
+        "ar": "Arabic",
+        "en": "English"
+      },
+      "variants": {
+        "light": "Light",
+        "dark": "Dark"
+      }
+    },
+    "logos": {
+      "title": "Logos & favicon",
+      "description": "Upload the logo variants shown across the admin system. The favicon appears in the browser tab.",
+      "forLightBg": "Logo on light backgrounds",
+      "forLightBgHint": "Used on the login card and light headers.",
+      "forDarkBg": "Logo on dark backgrounds",
+      "forDarkBgHint": "Used on dark sidebars and toolbars.",
+      "squareLogo": "Square logo",
+      "squareLogoHint": "Small icon-style logo used in the sidebar and compact spaces.",
+      "favicon": "Favicon",
+      "faviconHint": "Square image used in the browser tab, ideally .png / .ico around 64×64.",
+      "remove": "Remove image"
+    },
+    "theme": {
+      "title": "Theme colors",
+      "description": "Brand hex colors. These override the system primary and accent colors.",
+      "primaryColor": "Primary color (hex)",
+      "accentColor": "Accent color (hex)"
+    },
+    "login": {
+      "title": "Login screen",
+      "description": "Customize the welcome copy and background shown on the login page.",
+      "background": "Login background image",
+      "backgroundHint": "Full-bleed background behind the login card.",
+      "titleAr": "Welcome title (Arabic)",
+      "titleEn": "Welcome title (English)",
+      "subtitleAr": "Welcome subtitle (Arabic)",
+      "subtitleEn": "Welcome subtitle (English)"
+    },
+    "support": {
+      "title": "Support",
+      "description": "Contact details shown to staff when they need help with the system.",
+      "email": "Support email",
+      "phone": "Support phone"
     }
   },
   "banners": {

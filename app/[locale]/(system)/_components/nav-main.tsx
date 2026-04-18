@@ -81,7 +81,7 @@ export function NavMain({
                         return (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton
-                              className="text-muted-foreground text-sm"
+                              className="text-sidebar-foreground/70 text-sm"
                               size="md"
                               isActive={isSubItemActive}
                               render={

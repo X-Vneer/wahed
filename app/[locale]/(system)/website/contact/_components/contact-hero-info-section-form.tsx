@@ -1,5 +1,3 @@
-"use client"
-
 import { useForm } from "@mantine/form"
 import axios from "axios"
 import { useTranslations } from "next-intl"
@@ -16,7 +14,6 @@ import {
 } from "@/components/ui/card"
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,

@@ -45,6 +45,7 @@ enum PermissionKey {
   LIST_UPDATE
   WEBSITE_MANAGEMENT
   STAFF_PAGE_MANAGEMENT
+  SYSTEM_SETTINGS_MANAGEMENT
 }
 
 enum EventColor {
@@ -452,6 +453,43 @@ model StaffPageSettings {
   accountingLink         String   @default("/accounting")
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
+}
+
+/// Singleton row: branding/appearance of the internal admin system itself.
+model SystemSiteSettings {
+  id String @id @default(cuid())
+
+  // Identity
+  systemNameAr String?
+  systemNameEn String?
+
+  // Branding assets
+  logoForDarkBgUrl  String?
+  logoForLightBgUrl String?
+  logoSquareUrl     String?
+  faviconUrl        String?
+
+  // Theme colors (hex, applied to admin UI via CSS variables)
+  primaryColor String?
+  accentColor  String?
+
+  // Appearance
+  sidebarVariant String? @default("light") // "light" | "dark"
+  defaultLocale  String? @default("en") // "ar" | "en"
+
+  // Auth / login page
+  loginBackgroundUrl  String?
+  loginWelcomeTitleAr String?
+  loginWelcomeTitleEn String?
+  loginSubtitleAr     String?
+  loginSubtitleEn     String?
+
+  // Contact / support (shown in help menus etc.)
+  supportEmail String?
+  supportPhone String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 /// Singleton row: global public website appearance, SEO, and contact/analytics.

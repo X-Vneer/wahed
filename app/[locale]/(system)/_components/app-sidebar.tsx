@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import {
@@ -9,6 +10,7 @@ import {
   List,
   MessageSquare,
   Settings,
+  SlidersHorizontal,
   Users,
   Users2,
 } from "lucide-react"
@@ -22,9 +24,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useSystemBranding } from "@/contexts/system-branding-context"
 import { usePathname } from "@/lib/i18n/navigation"
 import { useLocale, useTranslations } from "next-intl"
-import Image from "next/image"
 import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
@@ -34,6 +36,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const t = useTranslations("sidebar")
   const pathname = usePathname()
   const isRtl = locale === "ar"
+  const branding = useSystemBranding()
+  const sidebarLogo = branding.logoSquareUrl
+  const sidebarLabel = branding.systemName || t("companyName")
 
   const data = {
     navMain: [
@@ -158,9 +163,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [],
         isActive: pathname === "/website",
       },
+      {
+        title: t("systemSettings"),
+        url: "/system-settings",
+        icon: SlidersHorizontal,
+        isActive: pathname?.startsWith("/system-settings") ?? false,
+      },
     ],
   }
-  return (
+  const isDarkSidebar = branding.sidebarVariant === "dark"
+  const darkSidebarStyle = {
+    "--sidebar": "oklch(0.205 0 0)",
+    "--sidebar-foreground": "oklch(0.985 0 0)",
+    "--sidebar-primary": "oklch(0.488 0.243 264.376)",
+    "--sidebar-primary-foreground": "oklch(0.985 0 0)",
+    "--sidebar-accent": "oklch(0.269 0 0)",
+    "--sidebar-accent-foreground": "oklch(0.985 0 0)",
+    "--sidebar-border": "oklch(1 0 0 / 10%)",
+    "--sidebar-ring": "oklch(0.556 0 0)",
+  } as React.CSSProperties
+
+  const sidebarNode = (
     <Sidebar
       dir={isRtl ? "rtl" : "ltr"}
       side={isRtl ? "right" : "left"}
@@ -168,10 +191,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     >
       <SidebarHeader>
         <div className="flex items-center gap-2">
-          <Image src={logoSquare} alt="Logo" className="size-11 rounded-md" />
+          {sidebarLogo ? (
+            <img
+              src={sidebarLogo}
+              alt={sidebarLabel}
+              className="size-11 rounded-md object-contain"
+            />
+          ) : (
+            <img
+              src={logoSquare.src}
+              alt={sidebarLabel}
+              className="size-11 rounded-md"
+            />
+          )}
           <div>
-            <p className="leading-none font-bold">{t("companyName")}</p>
-            <span className="text-sm text-gray-500">{t("companyName")}</span>
+            <p className="leading-none font-bold">{sidebarLabel}</p>
+            <span className="text-sidebar-foreground/60 text-sm">
+              {sidebarLabel}
+            </span>
           </div>
         </div>
       </SidebarHeader>
@@ -185,4 +222,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarRail />
     </Sidebar>
   )
+
+  if (isDarkSidebar) {
+    return <div style={darkSidebarStyle}>{sidebarNode}</div>
+  }
+  return sidebarNode
 }

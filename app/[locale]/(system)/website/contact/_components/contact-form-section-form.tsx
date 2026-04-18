@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-"use client"
 
 import { useForm } from "@mantine/form"
 import axios from "axios"
