@@ -178,7 +178,11 @@
           "accounting": "المحاسبة",
           "goToAccounting": "انتقل إلى المحاسبة",
           "projects": "المشاريع",
-          "viewProjects": "مشاهدة المشاريعي"
+          "viewProjects": "مشاهدة المشاريعي",
+          "contacts": "رسائل التواصل",
+          "goToContacts": "الذهاب إلى رسائل التواصل",
+          "website": "الموقع الإلكتروني",
+          "goToWebsite": "الذهاب إلى محتوى الموقع"
         },
         "weeklySchedule": "الجدول الأسبوعي"
       },

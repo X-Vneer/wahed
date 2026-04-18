@@ -2,16 +2,20 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
+import { PERMISSIONS } from "@/config"
+import { usePermission } from "@/hooks/use-permission"
+import { useStaffPageSettings } from "@/hooks/use-staff-page-settings"
 import { Link, useRouter } from "@/lib/i18n/navigation"
 import {
   Calculator,
   ChevronRight,
   Folder,
+  Globe,
   LogInIcon,
   LucideIcon,
+  MessageSquare,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useStaffPageSettings } from "@/hooks/use-staff-page-settings"
 
 interface QuickAccessCardData {
   icon: LucideIcon
@@ -68,6 +72,9 @@ function QuickAccessCard({
 export function QuickAccessCards() {
   const t = useTranslations("welcome.staff.home")
   const { data: staffSettings } = useStaffPageSettings()
+  const { checkPermission } = usePermission()
+
+  const canManageWebsite = checkPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
 
   const cards: QuickAccessCardData[] = [
     {
@@ -88,10 +95,26 @@ export function QuickAccessCards() {
       href: staffSettings?.accountingLink ?? "/accounting",
       linkTextKey: "quickAccess.goToAccounting",
     },
+    ...(canManageWebsite
+      ? [
+          {
+            icon: MessageSquare,
+            titleKey: "quickAccess.contacts",
+            href: "/contacts",
+            linkTextKey: "quickAccess.goToContacts",
+          },
+          {
+            icon: Globe,
+            titleKey: "quickAccess.website",
+            href: "/website",
+            linkTextKey: "quickAccess.goToWebsite",
+          },
+        ]
+      : []),
   ]
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
       {cards.map((card) => (
         <QuickAccessCard
           key={card.href}

@@ -178,7 +178,11 @@
           "accounting": "Accounting",
           "goToAccounting": "Go to Accounting",
           "projects": "Projects",
-          "viewProjects": "View my projects"
+          "viewProjects": "View my projects",
+          "contacts": "Contact messages",
+          "goToContacts": "Go to contact messages",
+          "website": "Website",
+          "goToWebsite": "Go to website content"
         },
         "weeklySchedule": "Weekly Schedule"
       },
