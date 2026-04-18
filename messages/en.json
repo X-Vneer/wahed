@@ -2466,6 +2466,22 @@
       "tasks_imported": {
         "title": "Tasks Imported from Templates",
         "message": "{count} task(s) created from templates"
+      },
+      "event_created": {
+        "title": "New Event Created",
+        "message": "Event \"{eventTitle}\" has been created"
+      },
+      "event_updated": {
+        "title": "Event Updated",
+        "message": "Event \"{eventTitle}\" has been updated"
+      },
+      "event_deleted": {
+        "title": "Event Cancelled",
+        "message": "Event \"{eventTitle}\" has been cancelled"
+      },
+      "event_invited": {
+        "title": "Event Invitation",
+        "message": "You have been invited to event: {eventTitle}"
       }
     }
   },

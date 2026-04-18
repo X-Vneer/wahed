@@ -9,6 +9,10 @@ export type NotificationType =
   | "PROJECT_CREATED"
   | "PROJECT_UPDATED"
   | "CONTACT_RECEIVED"
+  | "EVENT_CREATED"
+  | "EVENT_UPDATED"
+  | "EVENT_DELETED"
+  | "EVENT_INVITED"
 
 interface CreateNotificationParams {
   userIds: string[]
@@ -16,7 +20,7 @@ interface CreateNotificationParams {
   contentKey: string
   messageParams?: Record<string, string | number>
   relatedId?: string
-  relatedType?: "task" | "project" | "contact"
+  relatedType?: "task" | "project" | "contact" | "event"
 }
 
 /**
@@ -99,6 +103,17 @@ export async function getProjectStakeholderIds(
     }
   }
   return [...userIds]
+}
+
+/**
+ * Get all attendee user IDs for an event.
+ */
+export async function getEventAttendeeIds(eventId: string): Promise<string[]> {
+  const attendees = await db.eventAttendee.findMany({
+    where: { eventId },
+    select: { userId: true },
+  })
+  return attendees.map((a) => a.userId)
 }
 
 /**

@@ -2,6 +2,10 @@ import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
 import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  createNotifications,
+  getEventAttendeeIds,
+} from "@/lib/notifications"
 import { updateEventSchema } from "@/lib/schemas/event"
 import { transformZodError } from "@/lib/transform-errors"
 import {
@@ -122,6 +126,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       )
     }
 
+    // Capture attendees before the update so we can diff old vs new.
+    const previousAttendeeIds = await getEventAttendeeIds(id)
+
     // Parse and validate request body
     const body = await request.json()
     const validationResult = updateEventSchema.safeParse(body)
@@ -212,6 +219,42 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       include: eventInclude,
     })) as EventInclude
 
+    // Compute current attendees (after update). If attendeeIds wasn't in the
+    // payload the list is unchanged, so reuse the previous snapshot.
+    const currentAttendeeIds =
+      data.attendeeIds !== undefined ? data.attendeeIds : previousAttendeeIds
+
+    const newlyInvitedIds = currentAttendeeIds.filter(
+      (attendeeId) =>
+        attendeeId !== userId && !previousAttendeeIds.includes(attendeeId)
+    )
+    const stillAttendingIds = currentAttendeeIds.filter(
+      (attendeeId) =>
+        attendeeId !== userId && previousAttendeeIds.includes(attendeeId)
+    )
+
+    if (newlyInvitedIds.length > 0) {
+      await createNotifications({
+        userIds: newlyInvitedIds,
+        type: "EVENT_INVITED",
+        contentKey: "event_invited",
+        messageParams: { eventTitle: event.title },
+        relatedId: event.id,
+        relatedType: "event",
+      })
+    }
+
+    if (stillAttendingIds.length > 0) {
+      await createNotifications({
+        userIds: stillAttendingIds,
+        type: "EVENT_UPDATED",
+        contentKey: "event_updated",
+        messageParams: { eventTitle: event.title },
+        relatedId: event.id,
+        relatedType: "event",
+      })
+    }
+
     return NextResponse.json(transformEvent(event))
   } catch (error) {
     console.error("Error updating event:", error)
@@ -255,7 +298,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     // Check if event exists and user is the creator or admin
     const existingEvent = await db.event.findUnique({
       where: { id },
-      select: { id: true, createdById: true },
+      select: { id: true, createdById: true, title: true },
     })
 
     if (!existingEvent) {
@@ -272,10 +315,25 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       )
     }
 
+    // Capture attendees + creator before deletion so we can notify them.
+    const attendeeIds = await getEventAttendeeIds(id)
+
     // Delete event (cascade will handle attendees)
     await db.event.delete({
       where: { id },
     })
+
+    const notifyIds = [
+      ...new Set([...attendeeIds, existingEvent.createdById]),
+    ].filter((notifyId) => notifyId !== userId)
+    if (notifyIds.length > 0) {
+      await createNotifications({
+        userIds: notifyIds,
+        type: "EVENT_DELETED",
+        contentKey: "event_deleted",
+        messageParams: { eventTitle: existingEvent.title },
+      })
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

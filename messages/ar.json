@@ -2466,6 +2466,22 @@
       "tasks_imported": {
         "title": "استيراد مهام من القوالب",
         "message": "تم إنشاء {count} مهمة من القوالب"
+      },
+      "event_created": {
+        "title": "تم إنشاء حدث جديد",
+        "message": "تم إنشاء الحدث \"{eventTitle}\""
+      },
+      "event_updated": {
+        "title": "تم تحديث الحدث",
+        "message": "تم تحديث الحدث \"{eventTitle}\""
+      },
+      "event_deleted": {
+        "title": "تم إلغاء الحدث",
+        "message": "تم إلغاء الحدث \"{eventTitle}\""
+      },
+      "event_invited": {
+        "title": "دعوة إلى حدث",
+        "message": "تمت دعوتك إلى الحدث: {eventTitle}"
       }
     }
   },

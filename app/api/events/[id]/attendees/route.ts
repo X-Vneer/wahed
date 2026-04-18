@@ -2,6 +2,7 @@ import db from "@/lib/db"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
+import { createNotifications } from "@/lib/notifications"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { UserRole } from "@/lib/generated/prisma/enums"
 import { z } from "zod/v4"
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       select: {
         id: true,
         createdById: true,
+        title: true,
       },
     })
 
@@ -127,6 +129,18 @@ export async function POST(request: NextRequest, context: RouteContext) {
         },
       },
     })
+
+    // Notify the new attendee (skip if they added themselves).
+    if (attendeeId !== userId) {
+      await createNotifications({
+        userIds: [attendeeId],
+        type: "EVENT_INVITED",
+        contentKey: "event_invited",
+        messageParams: { eventTitle: event.title },
+        relatedId: eventId,
+        relatedType: "event",
+      })
+    }
 
     return NextResponse.json(
       {

@@ -6,6 +6,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
+import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import {
   eventInclude,
   transformEvent,
@@ -217,6 +218,34 @@ export async function POST(request: NextRequest) {
       },
       include: eventInclude,
     })
+
+    // Notify attendees they were invited (excluding the creator).
+    const inviteeIds = (data.attendeeIds ?? []).filter((id) => id !== userId)
+    if (inviteeIds.length > 0) {
+      await createNotifications({
+        userIds: inviteeIds,
+        type: "EVENT_INVITED",
+        contentKey: "event_invited",
+        messageParams: { eventTitle: event.title },
+        relatedId: event.id,
+        relatedType: "event",
+      })
+    }
+
+    // Notify admins that a new event was created (excluding the creator).
+    const adminIds = (await getAdminUserIds()).filter(
+      (id) => id !== userId && !inviteeIds.includes(id)
+    )
+    if (adminIds.length > 0) {
+      await createNotifications({
+        userIds: adminIds,
+        type: "EVENT_CREATED",
+        contentKey: "event_created",
+        messageParams: { eventTitle: event.title },
+        relatedId: event.id,
+        relatedType: "event",
+      })
+    }
 
     // Transform event to match CalendarEvent format
     const transformedEvent = transformEvent(event)

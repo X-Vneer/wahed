@@ -157,6 +157,7 @@ export function NotificationBell() {
         task: `/task/${notification.relatedId}`,
         project: `/projects/${notification.relatedId}`,
         contact: `/contacts`,
+        event: `/calendar`,
       }
       const route = routes[notification.relatedType]
       if (route) {
