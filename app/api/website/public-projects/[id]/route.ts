@@ -14,7 +14,7 @@ import {
   publicProjectEditInclude,
   transformPublicProjectForEdit,
 } from "@/prisma/public-projects"
-import { type NextRequest, NextResponse } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 
 export async function GET(
   request: NextRequest,
@@ -89,7 +89,7 @@ export async function PUT(
       }
     }
 
-    const [city, project, categories] = await Promise.all([
+    const [city, project] = await Promise.all([
       db.city.findUnique({ where: { id: data.cityId }, select: { id: true } }),
       data.projectId
         ? db.project.findUnique({
@@ -97,15 +97,6 @@ export async function PUT(
             select: { id: true },
           })
         : Promise.resolve(null),
-      data.categoryIds.length > 0
-        ? db.projectCategory.findMany({
-            where: {
-              id: { in: data.categoryIds },
-              isActive: true,
-            },
-            select: { id: true },
-          })
-        : Promise.resolve([]),
     ])
 
     if (!city) {
