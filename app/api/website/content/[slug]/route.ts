@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { PERMISSIONS } from "@/config"
+import {
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
 import { transformZodError } from "@/lib/transform-errors"
 import {
@@ -11,9 +17,6 @@ import {
   upsertPageContent,
 } from "@/lib/website-content/service"
 import { Prisma } from "@/lib/generated/prisma/client"
-import { hasPermission } from "@/utils/has-permission"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import * as z from "zod/v4"
 
 const singleLocalePayloadSchema = z.object({
@@ -32,16 +35,13 @@ const bilingualPayloadSchema = z
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: DynamicRouteContext<{ slug: string }>
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { slug } = await params
     if (!isWebsitePageSlug(slug)) {
@@ -84,16 +84,13 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: DynamicRouteContext<{ slug: string }>
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { slug } = await params
     if (!isWebsitePageSlug(slug)) {
@@ -107,39 +104,23 @@ export async function PUT(
     const body = await request.json()
 
     if (scope === "bilingual") {
-      const validationResult = bilingualPayloadSchema.safeParse(body)
-      if (!validationResult.success) {
-        return NextResponse.json(
-          {
-            error: t("errors.validation_failed"),
-            details: transformZodError(validationResult.error),
-          },
-          { status: 400 }
-        )
-      }
+      const validation = validateRequest(bilingualPayloadSchema, body, t)
+      if (validation.error) return validation.error
 
       await upsertBilingualPageContent(
         slug,
-        validationResult.data as BilingualContentPatch
+        validation.data as BilingualContentPatch
       )
       return NextResponse.json({ message: t("common.saved") })
     }
 
-    const validationResult = singleLocalePayloadSchema.safeParse(body)
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
+    const validation = validateRequest(singleLocalePayloadSchema, body, t)
+    if (validation.error) return validation.error
 
     await upsertPageContent(
       slug,
-      validationResult.data.locale,
-      validationResult.data.content as Prisma.InputJsonObject
+      validation.data.locale,
+      validation.data.content as Prisma.InputJsonObject
     )
 
     return NextResponse.json({ message: t("common.saved") })

@@ -1,24 +1,22 @@
 import db from "@/lib/db"
 import { taskInclude } from "@/prisma/tasks"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { transformTask } from "@/prisma/tasks"
+import {
+  initLocale,
+  requirePermission,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 
-type RouteContext = {
-  params: Promise<{ id: string }>
-}
+export async function GET(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
 
-export async function GET(request: NextRequest, context: RouteContext) {
+  const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.VIEW)
+  if (permError) return permError
+
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
-
     const { id: projectId } = await context.params
 
     const project = await db.project.findUnique({
@@ -27,8 +25,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     })
 
     if (!project) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
       return NextResponse.json(
         { error: t("projects.errors.not_found") },
         { status: 404 }
@@ -50,8 +46,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     })
   } catch (error) {
     console.error("Error fetching project tasks:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

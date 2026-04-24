@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
+import { initLocale } from "@/lib/helpers"
 import {
   publicProjectInclude,
   transformPublicProject,
 } from "@/prisma/public-projects"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
 import { transformZodError } from "@/lib/transform-errors"
 
@@ -14,8 +13,7 @@ import { transformZodError } from "@/lib/transform-errors"
  * No authentication. Optional `locale=ar|en` query param.
  */
 export async function GET(request: NextRequest) {
-  const fallbackLocale = await getReqLocale(request)
-  const t = await getTranslations({ locale: fallbackLocale })
+  const { locale: fallbackLocale, t } = await initLocale(request)
 
   try {
     const localeParam = request.nextUrl.searchParams.get("locale")

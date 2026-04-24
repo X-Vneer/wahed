@@ -1,27 +1,25 @@
 import db from "@/lib/db"
 import { UserRole, type PermissionKey } from "@/lib/generated/prisma/enums"
 import { createUserSchema } from "@/lib/schemas/user"
-import { transformZodError } from "@/lib/transform-errors"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import bcrypt from "bcryptjs"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
+import {
+  initLocale,
+  requirePermission,
+  validateRequest,
+} from "@/lib/helpers"
 import { PERMISSIONS_GROUPED } from "@/config"
-import { getReqLocale } from "@/utils/get-req-locale"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     // Check permission
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     // Get search query from URL params
     const searchParams = request.nextUrl.searchParams
@@ -61,32 +59,19 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   // Get translations based on request locale
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     // Check permission
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = createUserSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createUserSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     const payload = await getAccessTokenPayload()
     const currentRole = payload?.role

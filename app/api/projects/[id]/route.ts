@@ -1,10 +1,7 @@
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { createProjectSchema } from "@/lib/schemas/project"
-import { transformZodError } from "@/lib/transform-errors"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
 import {
   createNotifications,
@@ -12,14 +9,14 @@ import {
 } from "@/lib/notifications"
 import { projectInclude, transformProject } from "@/prisma/projects"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
-import { getReqLocale } from "@/utils/get-req-locale"
 import { Prisma } from "@/lib/generated/prisma/client"
-
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
+import {
+  convertToPrismaJsonValue,
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 
 type AttachmentWithOptionalId = {
   id?: string
@@ -28,23 +25,6 @@ type AttachmentWithOptionalId = {
   fileType?: string
   fileSize?: number
   additionalInfo?: unknown
-}
-
-// Helper function to convert additional field value to Prisma JSON format
-function convertToPrismaJsonValue(
-  value: unknown
-): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
-  if (value === undefined || value === null) {
-    return Prisma.JsonNull
-  }
-  if (typeof value === "string") {
-    const trimmed = value.trim()
-    return trimmed || Prisma.JsonNull
-  }
-  if (Array.isArray(value)) {
-    return value
-  }
-  return value as Prisma.InputJsonValue
 }
 
 // Helper function to handle attachment updates
@@ -141,16 +121,14 @@ function buildAdditionalData(
   }
 }
 
-export async function GET(request: NextRequest, context: RouteContext) {
-  try {
-    // Check permission
-    const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.PROJECT.VIEW
-    )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+export async function GET(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
 
+  // Check permission
+  const permError = await requirePermission(PERMISSIONS_GROUPED.PROJECT.VIEW)
+  if (permError) return permError
+
+  try {
     const { id } = await context.params
 
     // Fetch project with all relations
@@ -160,8 +138,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     })
 
     if (!project) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
       return NextResponse.json(
         { error: t("projects.errors.not_found") },
         { status: 404 }
@@ -174,8 +150,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json(transformedProject)
   } catch (error) {
     console.error("Error fetching project:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -183,20 +157,14 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function PUT(request: NextRequest, context: RouteContext) {
+export async function PUT(request: NextRequest, context: DynamicRouteContext) {
+  const { locale, t } = await initLocale(request)
+
+  // Check permission
+  const permError = await requirePermission(PERMISSIONS_GROUPED.PROJECT.UPDATE)
+  if (permError) return permError
+
   try {
-    // Check permission
-    const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.PROJECT.UPDATE
-    )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
-
-    // Get translations based on request locale
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-
     const { id } = await context.params
 
     // Check if project exists (optimized - only check existence, not full data)
@@ -214,19 +182,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = createProjectSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createProjectSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     // Validate city and categories in parallel for better performance
     const [city, categories] = await Promise.all([
@@ -331,8 +289,6 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     return NextResponse.json(transformedProject)
   } catch (error) {
     console.error("Error updating project:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -340,18 +296,17 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
-  try {
-    // Check permission
-    const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.PROJECT.DELETE
-    )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
 
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
+  // Check permission
+  const permError = await requirePermission(PERMISSIONS_GROUPED.PROJECT.DELETE)
+  if (permError) return permError
+
+  try {
     const { id } = await context.params
 
     // Check if project exists
@@ -375,8 +330,6 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error deleting project:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

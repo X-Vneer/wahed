@@ -1,6 +1,6 @@
 import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
-import { hasPermission } from "@/utils/has-permission"
+import { requirePermission } from "@/lib/helpers"
 import { type NextRequest, NextResponse } from "next/server"
 
 /**
@@ -11,10 +11,8 @@ import { type NextRequest, NextResponse } from "next/server"
  * so the project's own slug doesn't count as a conflict.
  */
 export async function GET(request: NextRequest) {
-  const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-  if (!permissionCheck.hasPermission) {
-    return permissionCheck.error!
-  }
+  const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+  if (permError) return permError
 
   const slug = request.nextUrl.searchParams.get("slug")?.trim().toLowerCase()
   if (!slug) {

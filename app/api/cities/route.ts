@@ -1,24 +1,26 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
+import {
+  initLocale,
+  parsePagination,
+  requirePermission,
+  validateRequest,
+} from "@/lib/helpers"
 import { createCitySchema } from "@/lib/schemas/cities"
-import { transformZodError } from "@/lib/transform-errors"
 import { transformCity } from "@/prisma/cities"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
   try {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
     const status = searchParams.get("status")
     const regionId = searchParams.get("region_id")
-    const page = parseInt(searchParams.get("page") || "1", 10)
-    const perPage = parseInt(searchParams.get("per_page") || "15", 10)
+    const { page, perPage, skip, take } = parsePagination(searchParams, {
+      perPage: 15,
+    })
 
     const where: Prisma.CityWhereInput = {}
 
@@ -50,11 +52,9 @@ export async function GET(request: NextRequest) {
       include: {
         region: true,
       },
-      skip: (page - 1) * perPage,
-      take: perPage,
+      skip,
+      take,
     })
-
-    const locale = await getReqLocale(request)
 
     const transformedCities = cities.map((city) => transformCity(city, locale))
 
@@ -81,28 +81,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.CREATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.LIST.CREATE)
+    if (permError) return permError
 
     const body = await request.json()
-    const validationResult = createCitySchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createCitySchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     const city = await db.city.create({
       data: {

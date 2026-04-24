@@ -1,12 +1,10 @@
 import db from "@/lib/db"
+import { initLocale } from "@/lib/helpers"
 import { userListSelect } from "@/prisma/users/select"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { NextResponse, type NextRequest } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     // Get search query from URL params
     const searchParams = request.nextUrl.searchParams

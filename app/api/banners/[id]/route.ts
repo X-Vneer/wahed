@@ -1,28 +1,27 @@
 import db from "@/lib/db"
 import { updateBannerSchema } from "@/lib/schemas/banner"
-import { transformZodError } from "@/lib/transform-errors"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
-import { getReqLocale } from "@/utils/get-req-locale"
+import {
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { bannerInclude } from "@/prisma/banners"
 import { transformBanner } from "@/prisma/banners"
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: DynamicRouteContext
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
   try {
     // Check permission
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const { id } = await params
 
@@ -54,36 +53,23 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: DynamicRouteContext
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
   try {
     // Check permission
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const { id } = await params
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = updateBannerSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(updateBannerSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     // Check if banner exists
     const existingBanner = await db.banner.findUnique({
@@ -188,18 +174,15 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: DynamicRouteContext
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     // Check permission
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const { id } = await params
 

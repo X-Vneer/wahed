@@ -1,11 +1,10 @@
+import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
 import { updateStaffPageSettingsSchema } from "@/lib/schemas/staff-page-settings"
-import { transformZodError } from "@/lib/transform-errors"
+import { getReqLocale } from "@/utils/get-req-locale"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
-import { PERMISSIONS_GROUPED } from "@/config"
-import { getReqLocale } from "@/utils/get-req-locale"
 
 const DEFAULT_ATTENDANCE_LINK = "/attendance"
 const DEFAULT_ACCOUNTING_LINK = "/accounting"
@@ -42,31 +41,22 @@ export async function GET() {
 }
 
 export async function PATCH(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const body = await request.json()
-    const validationResult = updateStaffPageSettingsSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(
+      updateStaffPageSettingsSchema,
+      body,
+      t
+    )
+    if (validation.error) return validation.error
+    const data = validation.data
     const heroUrl =
       data.heroBackgroundImageUrl === "" || data.heroBackgroundImageUrl == null
         ? null

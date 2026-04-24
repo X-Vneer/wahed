@@ -3,6 +3,7 @@ import {
   type Prisma,
   type WebsiteSiteSettings,
 } from "@/lib/generated/prisma/client"
+import { emptyToNull } from "@/lib/helpers"
 import type { UpdateWebsiteSiteSettingsInput } from "@/lib/schemas/website-site-settings"
 
 const DEFAULT_CREATE: Prisma.WebsiteSiteSettingsCreateInput = {
@@ -133,11 +134,6 @@ export async function getOrCreateWebsiteSiteSettings(): Promise<WebsiteSiteSetti
 export async function getWebsiteSiteSettingsAdmin(): Promise<WebsiteSiteSettingsAdminDto> {
   const row = await getOrCreateWebsiteSiteSettings()
   return rowToAdminDto(row)
-}
-
-function emptyToNull(value: string): string | null {
-  if (value === "" || value == null) return null
-  return value
 }
 
 export async function patchWebsiteSiteSettings(

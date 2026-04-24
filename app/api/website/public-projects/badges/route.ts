@@ -1,19 +1,14 @@
 import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
+import { initLocale, requirePermission } from "@/lib/helpers"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(_request: NextRequest) {
-  const locale = await getReqLocale(_request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(_request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const badges = await db.publicProjectBadge.findMany({
       orderBy: { createdAt: "desc" },

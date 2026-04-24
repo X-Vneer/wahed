@@ -4,37 +4,34 @@ import {
   createNotifications,
   getProjectStakeholderIds,
 } from "@/lib/notifications"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
-import { getReqLocale } from "@/utils/get-req-locale"
+import {
+  initLocale,
+  requirePermission,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
+export async function PATCH(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
 
     // Parse request body to check if we're archiving or unarchiving
     const body = await request.json().catch(() => ({}))
     const shouldArchive = body.archive !== false // Default to archive if not specified
 
     // Check permission based on action
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       shouldArchive
         ? PERMISSIONS_GROUPED.PROJECT.ARCHIVE
         : PERMISSIONS_GROUPED.PROJECT.UNARCHIVE
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     // Check if project exists
     const project = await db.project.findUnique({
@@ -90,8 +87,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     })
   } catch (error) {
     console.error("Error archiving/unarchiving project:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

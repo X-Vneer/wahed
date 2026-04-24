@@ -3,23 +3,20 @@ import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
 import type { WebsiteSiteSettings } from "@/lib/generated/prisma/client"
 import {
+  emptyToNull,
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
+import {
   websitePageSeoSchema,
   type WebsitePageSeoValues,
 } from "@/lib/schemas/website-page-seo"
-import { transformZodError } from "@/lib/transform-errors"
-import { hasPermission } from "@/utils/has-permission"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
-
-type RouteContext = { params: Promise<{ id: string }> }
 
 /** Convention: per-project SEO rows use slug = `project/{publicProject.slug}` */
 function projectSeoSlug(projectSlug: string) {
   return `project/${projectSlug}`
-}
-
-function emptyToNull(value: string): string | null {
-  return value === "" ? null : value
 }
 
 function toFormValues(
@@ -67,15 +64,15 @@ function buildFallbackValues(
   }
 }
 
-export async function GET(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function GET(
+  request: NextRequest,
+  context: DynamicRouteContext<{ id: string }>
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { id } = await context.params
 
@@ -113,15 +110,15 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function PUT(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function PUT(
+  request: NextRequest,
+  context: DynamicRouteContext<{ id: string }>
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { id } = await context.params
 
@@ -138,18 +135,10 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     }
 
     const body = await request.json()
-    const validationResult = websitePageSeoSchema.safeParse(body)
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
+    const validation = validateRequest(websitePageSeoSchema, body, t)
+    if (validation.error) return validation.error
 
-    const values = validationResult.data
+    const values = validation.data
     const seoSlug = projectSeoSlug(project.slug)
 
     await db.websitePageSeo.upsert({

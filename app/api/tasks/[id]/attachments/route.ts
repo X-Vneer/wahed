@@ -3,19 +3,15 @@ import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { Prisma } from "@/lib/generated/prisma/client"
 import {
+  DynamicRouteContext,
+  initLocale,
+  requirePermission,
+} from "@/lib/helpers"
+import {
   createNotifications,
   getTaskStakeholderIds,
 } from "@/lib/notifications"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
 
 type AttachmentInput = {
   id?: string
@@ -27,15 +23,15 @@ type AttachmentInput = {
   isFinal?: boolean
 }
 
-export async function POST(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function POST(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+    if (permError) return permError
 
     const { id: taskId } = await context.params
 

@@ -1,25 +1,17 @@
 import db from "@/lib/db"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
+import { initLocale, parsePagination, requireAuth } from "@/lib/helpers"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const payload = await getAccessTokenPayload()
-    if (!payload?.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const searchParams = request.nextUrl.searchParams
-    const page = parseInt(searchParams.get("page") || "1", 10)
-    const perPage = parseInt(searchParams.get("per_page") || "20", 10)
+    const { page, perPage, skip, take } = parsePagination(searchParams)
     const unreadOnly = searchParams.get("unread_only") === "true"
 
     const where = {
@@ -31,8 +23,8 @@ export async function GET(request: NextRequest) {
       db.notification.findMany({
         where,
         orderBy: { createdAt: "desc" },
-        skip: (page - 1) * perPage,
-        take: perPage,
+        skip,
+        take,
       }),
       db.notification.count({ where }),
       db.notification.count({

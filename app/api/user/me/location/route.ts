@@ -1,42 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
+import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
 import db from "@/lib/db"
-import { getTranslations } from "next-intl/server"
-import { getReqLocale } from "@/utils/get-req-locale"
 import {
   updateUserLocationSchema,
   type UpdateUserLocationInput,
 } from "@/lib/schemas/user"
-import { transformZodError } from "@/lib/transform-errors"
 import { transformUser, userSelect } from "@/prisma/users/select"
 
 export async function PATCH(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
-    const payload = await getAccessTokenPayload()
-
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const body = await request.json()
-    const validationResult = updateUserLocationSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data: UpdateUserLocationInput = validationResult.data
+    const validation = validateRequest(updateUserLocationSchema, body, t)
+    if (validation.error) return validation.error
+    const data: UpdateUserLocationInput = validation.data
 
     const existingUser = await db.user.findUnique({
       where: { id: payload.userId },

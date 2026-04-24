@@ -1,26 +1,20 @@
 import { PERMISSIONS } from "@/config"
+import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
 import { updateSystemSiteSettingsSchema } from "@/lib/schemas/system-site-settings"
 import {
   getSystemSiteSettingsAdmin,
   patchSystemSiteSettings,
 } from "@/lib/system-site-settings/service"
-import { transformZodError } from "@/lib/transform-errors"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS.SYSTEM_SETTINGS_MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const settings = await getSystemSiteSettingsAdmin()
     return NextResponse.json(settings)
@@ -34,30 +28,19 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS.SYSTEM_SETTINGS_MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const body = await request.json()
-    const validationResult = updateSystemSiteSettingsSchema.safeParse(body)
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
+    const validation = validateRequest(updateSystemSiteSettingsSchema, body, t)
+    if (validation.error) return validation.error
 
-    const settings = await patchSystemSiteSettings(validationResult.data)
+    const settings = await patchSystemSiteSettings(validation.data)
     return NextResponse.json(settings)
   } catch (error) {
     console.error("Error updating system site settings:", error)

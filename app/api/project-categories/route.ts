@@ -1,24 +1,26 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
+import {
+  initLocale,
+  parsePagination,
+  requirePermission,
+  validateRequest,
+} from "@/lib/helpers"
 import { createProjectCategorySchema } from "@/lib/schemas/project-categories"
-import { transformZodError } from "@/lib/transform-errors"
 import { transformProjectCategory } from "@/prisma/project-categories"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getLocale, getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
   try {
     // Get search query and filters from URL params
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
     const status = searchParams.get("status")
-    const page = parseInt(searchParams.get("page") || "1", 10)
-    const perPage = parseInt(searchParams.get("per_page") || "15", 10)
+    const { page, perPage, skip, take } = parsePagination(searchParams, {
+      perPage: 15,
+    })
 
     // Build where clause
     const where: Prisma.ProjectCategoryWhereInput = {}
@@ -43,8 +45,8 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: "desc",
       },
-      skip: (page - 1) * perPage,
-      take: perPage,
+      skip,
+      take,
     })
 
     const transformedProjectCategories = projectCategories.map(
@@ -77,30 +79,17 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   // Get translations based on request locale
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     // Check permission
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.CREATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.LIST.CREATE)
+    if (permError) return permError
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = createProjectCategorySchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createProjectCategorySchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     // Create project category
     const projectCategory = await db.projectCategory.create({

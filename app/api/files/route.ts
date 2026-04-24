@@ -2,20 +2,15 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import type { FileItem, FilesFolder, FilesResponse } from "@/@types/files"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
+import { initLocale, requirePermission } from "@/lib/helpers"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
+  const { t } = await initLocale(request)
   try {
     // Require project view permission to access the files archive
-    const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.PROJECT.VIEW
-    )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.PROJECT.VIEW)
+    if (permError) return permError
 
     const locale = getLocaleFromRequest(request)
 
@@ -134,8 +129,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response)
   } catch (error) {
     console.error("Error fetching files archive:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { cookies } from "next/headers"
 import { SESSION_COOKIE_NAME } from "@/config"
-import { getTranslations } from "next-intl/server"
-import { getReqLocale } from "@/utils/get-req-locale"
+import { initLocale } from "@/lib/helpers"
 
 /** Logout never returns 401; it always clears the session cookie and returns 200. */
 export async function POST(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   const cookiesStore = await cookies()
   try {
     cookiesStore.delete(SESSION_COOKIE_NAME)

@@ -4,32 +4,27 @@ import {
   createNotifications,
   getProjectStakeholderIds,
 } from "@/lib/notifications"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
-import { getReqLocale } from "@/utils/get-req-locale"
 import { Prisma } from "@/lib/generated/prisma/client"
+import {
+  initLocale,
+  requirePermission,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
+export async function POST(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
 
-export async function POST(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  // Check permission
+  const permError = await requirePermission(PERMISSIONS_GROUPED.PROJECT.UPDATE)
+  if (permError) return permError
+
   try {
     const { id } = await context.params
-
-    // Check permission
-    const permissionCheck = await hasPermission(
-      PERMISSIONS_GROUPED.PROJECT.UPDATE
-    )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
 
     // Verify project exists
     const project = await db.project.findUnique({

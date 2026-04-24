@@ -1,17 +1,13 @@
-import { db } from "@/lib/db"
-import { transformWebsite } from "@/prisma/websites"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
-import { NextRequest, NextResponse } from "next/server"
-import { Prisma } from "@/lib/generated/prisma/client"
-import { createWebsiteSchema } from "@/lib/schemas/website"
-import { transformZodError } from "@/lib/transform-errors"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
+import { db } from "@/lib/db"
+import { Prisma } from "@/lib/generated/prisma/client"
+import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
+import { createWebsiteSchema } from "@/lib/schemas/website"
+import { transformWebsite } from "@/prisma/websites"
+import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
   try {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
@@ -66,31 +62,18 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const body = await request.json()
-    const validationResult = createWebsiteSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createWebsiteSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     const website = await db.website.create({
       data: {

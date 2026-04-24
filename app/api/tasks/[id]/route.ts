@@ -1,35 +1,33 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  type DynamicRouteContext,
+  initLocale,
+  requirePermission,
+  validateRequest,
+} from "@/lib/helpers"
 import { TaskPriority } from "@/lib/generated/prisma/enums"
 import {
   createNotifications,
   getTaskStakeholderIds,
 } from "@/lib/notifications"
 import { updateTaskSchema } from "@/lib/schemas/task"
-import { transformZodError } from "@/lib/transform-errors"
 import {
   taskDetailInclude,
   transformTask,
   transformTaskDetail,
 } from "@/prisma/tasks"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{ id: string }>
-}
-
-export async function GET(request: NextRequest, context: RouteContext) {
+export async function GET(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { locale, t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.VIEW)
+    if (permError) return permError
 
     const { id } = await context.params
 
@@ -48,8 +46,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json(transformTaskDetail(task, locale))
   } catch (error) {
     console.error("Error fetching task:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -57,30 +53,20 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function PATCH(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { locale, t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+    if (permError) return permError
 
     const { id } = await context.params
     const body = await request.json()
-    const validationResult = updateTaskSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(updateTaskSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     const existing = await db.task.findUnique({
       where: { id },
@@ -222,8 +208,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return NextResponse.json(transformTask(task, locale))
   } catch (error) {
     console.error("Error updating task:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -231,14 +215,14 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.DELETE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.DELETE)
+    if (permError) return permError
 
     const { id } = await context.params
 
@@ -259,8 +243,6 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error deleting task:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

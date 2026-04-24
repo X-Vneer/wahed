@@ -1,20 +1,19 @@
 import db from "@/lib/db"
+import {
+  initLocale,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { updateProjectCategorySchema } from "@/lib/schemas/project-categories"
-import { transformZodError } from "@/lib/transform-errors"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
-export async function GET(request: NextRequest, context: RouteContext) {
+export async function GET(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
   try {
     const { id } = await context.params
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
 
     const projectCategory = await db.projectCategory.findUnique({
       where: { id },
@@ -30,8 +29,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json(projectCategory)
   } catch (error) {
     console.error("Error fetching project category:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -39,25 +36,18 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function PUT(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function PUT(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
   try {
     const { id } = await context.params
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = updateProjectCategorySchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
+    const validation = validateRequest(updateProjectCategorySchema, body, t)
+    if (validation.error) return validation.error
 
     // Check if project category exists
     const existingProjectCategory = await db.projectCategory.findUnique({
@@ -71,7 +61,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       )
     }
 
-    const data = validationResult.data
+    const data = validation.data
 
     // Update project category
     const projectCategory = await db.projectCategory.update({
@@ -94,9 +84,11 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(_request)
-  const t = await getTranslations({ locale })
+export async function DELETE(
+  _request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(_request)
   try {
     const { id } = await context.params
 

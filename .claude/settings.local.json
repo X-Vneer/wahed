@@ -30,5 +30,9 @@
       "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(p.dependencies?.next || p.devDependencies?.next\\)\")",
       "Bash(ls -la /d/work/wahed/internal-system/*.ts /d/work/wahed/internal-system/*.js)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ],
+  "enableAllProjectMcpServers": true
 }

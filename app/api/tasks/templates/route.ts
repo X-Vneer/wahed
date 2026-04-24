@@ -1,23 +1,25 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
+import {
+  initLocale,
+  parsePagination,
+  requirePermission,
+} from "@/lib/helpers"
 import { tasksTemplateInclude } from "@/prisma/task-templates"
 import { createTaskTemplateSchema } from "@/lib/schemas/task-template"
 import { transformZodError } from "@/lib/transform-errors"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get("q")
     const status = searchParams.get("status")
-    const page = parseInt(searchParams.get("page") || "1", 10)
-    const perPage = parseInt(searchParams.get("per_page") || "15", 10)
+    const { page, perPage, skip, take } = parsePagination(searchParams, {
+      perPage: 15,
+    })
 
     const where: Prisma.TaskTemplateWhereInput = {}
 
@@ -38,12 +40,12 @@ export async function GET(request: NextRequest) {
       where,
       include: tasksTemplateInclude,
       orderBy: { createdAt: "desc" },
-      skip: (page - 1) * perPage,
-      take: perPage,
+      skip,
+      take,
     })
 
     const lastPage = Math.ceil(total / perPage)
-    const from = total > 0 ? (page - 1) * perPage + 1 : 0
+    const from = total > 0 ? skip + 1 : 0
     const to = Math.min(page * perPage, total)
 
     return NextResponse.json({
@@ -65,13 +67,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.CREATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.CREATE)
+    if (permError) return permError
 
     const body = await request.json()
     const validationResult = createTaskTemplateSchema.safeParse(body)

@@ -1,10 +1,7 @@
 import db from "@/lib/db"
 import { createEventSchema } from "@/lib/schemas/event"
-import { transformZodError } from "@/lib/transform-errors"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
-import { getReqLocale } from "@/utils/get-req-locale"
+import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
 import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import {
@@ -17,17 +14,12 @@ import type { CalendarEvent } from "@/components/event-calendar"
 import { Prisma } from "@/lib/generated/prisma/client"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     // Get current user
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const userId = payload.userId
     // check if user is admin
@@ -138,35 +130,20 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     // Get current user
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const userId = payload.userId
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = createEventSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createEventSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     // Validate attendee IDs if provided
     if (data.attendeeIds && data.attendeeIds.length > 0) {

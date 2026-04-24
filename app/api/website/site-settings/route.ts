@@ -1,24 +1,18 @@
 import { PERMISSIONS } from "@/config"
+import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
 import { updateWebsiteSiteSettingsSchema } from "@/lib/schemas/website-site-settings"
-import { transformZodError } from "@/lib/transform-errors"
 import {
   getWebsiteSiteSettingsAdmin,
   patchWebsiteSiteSettings,
 } from "@/lib/website-site-settings/service"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const settings = await getWebsiteSiteSettingsAdmin()
     return NextResponse.json(settings)
@@ -32,28 +26,21 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const body = await request.json()
-    const validationResult = updateWebsiteSiteSettingsSchema.safeParse(body)
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
+    const validation = validateRequest(
+      updateWebsiteSiteSettingsSchema,
+      body,
+      t
+    )
+    if (validation.error) return validation.error
 
-    const settings = await patchWebsiteSiteSettings(validationResult.data)
+    const settings = await patchWebsiteSiteSettings(validation.data)
     return NextResponse.json(settings)
   } catch (error) {
     console.error("Error updating website site settings:", error)

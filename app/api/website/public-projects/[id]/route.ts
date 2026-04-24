@@ -1,28 +1,30 @@
 import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
+import {
+  convertToPrismaJsonValue,
+  emptyToNull,
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { createPublicProjectSchema } from "@/lib/schemas/public-project"
-import { transformZodError } from "@/lib/transform-errors"
 import {
   publicProjectEditInclude,
   transformPublicProjectForEdit,
 } from "@/prisma/public-projects"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = { params: Promise<{ id: string }> }
-
-export async function GET(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function GET(
+  request: NextRequest,
+  context: DynamicRouteContext<{ id: string }>
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { id } = await context.params
 
@@ -47,39 +49,15 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-/* ── helpers (shared with ../route.ts) ────────────────────────── */
-
-function convertToPrismaJsonValue(
-  value: unknown
-): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
-  if (value === undefined || value === null) {
-    return Prisma.JsonNull
-  }
-  if (typeof value === "string") {
-    const trimmed = value.trim()
-    return trimmed || Prisma.JsonNull
-  }
-  if (Array.isArray(value)) {
-    return value
-  }
-  return value as Prisma.InputJsonValue
-}
-
-function emptyToNull(s: string | undefined): string | null {
-  if (s === undefined || s === null) return null
-  const t = String(s).trim()
-  return t.length ? t : null
-}
-
-export async function PUT(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function PUT(
+  request: NextRequest,
+  context: DynamicRouteContext<{ id: string }>
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { id } = await context.params
 
@@ -98,19 +76,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     }
 
     const body = await request.json()
-    const validationResult = createPublicProjectSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createPublicProjectSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     if (data.isFeatured && !existing.isFeatured) {
       const featuredCount = await db.publicProject.count({
@@ -301,15 +269,15 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext<{ id: string }>
+) {
+  const { t } = await initLocale(request)
   try {
     // Check permission
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { id } = await context.params
 

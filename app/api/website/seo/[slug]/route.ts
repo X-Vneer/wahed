@@ -1,28 +1,27 @@
 import { NextRequest, NextResponse } from "next/server"
 import { PERMISSIONS } from "@/config"
+import {
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { websitePageSeoSchema } from "@/lib/schemas/website-page-seo"
-import { transformZodError } from "@/lib/transform-errors"
 import {
   getPageSeoForEditor,
   upsertPageSeo,
 } from "@/lib/website-page-seo/service"
 import { isWebsitePageSlug } from "@/lib/website-content/service"
-import { hasPermission } from "@/utils/has-permission"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: DynamicRouteContext<{ slug: string }>
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
     const { slug } = await params
     if (!isWebsitePageSlug(slug)) {
       return NextResponse.json(
@@ -44,16 +43,13 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: DynamicRouteContext<{ slug: string }>
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { slug } = await params
     if (!isWebsitePageSlug(slug)) {
@@ -64,18 +60,10 @@ export async function PUT(
     }
 
     const body = await request.json()
-    const validationResult = websitePageSeoSchema.safeParse(body)
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
+    const validation = validateRequest(websitePageSeoSchema, body, t)
+    if (validation.error) return validation.error
 
-    await upsertPageSeo(slug, validationResult.data)
+    await upsertPageSeo(slug, validation.data)
     return NextResponse.json({ message: t("common.saved") })
   } catch (error) {
     console.error("Error updating website page SEO:", error)

@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
 import type { WebsiteSiteSettings } from "@/lib/generated/prisma/client"
+import { initLocale, type DynamicRouteContext } from "@/lib/helpers"
 import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
 import type { WebsitePageSeoValues } from "@/lib/schemas/website-page-seo"
 import { transformZodError } from "@/lib/transform-errors"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
-
-type RouteContext = { params: Promise<{ slug: string }> }
 
 function projectSeoSlug(projectSlug: string) {
   return `project/${projectSlug}`
@@ -74,9 +71,11 @@ function pickByLocale(
   }
 }
 
-export async function GET(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function GET(
+  request: NextRequest,
+  context: DynamicRouteContext<{ slug: string }>
+) {
+  const { locale, t } = await initLocale(request)
 
   try {
     const { slug } = await context.params

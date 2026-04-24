@@ -2,27 +2,25 @@ import { PERMISSIONS_GROUPED, TASK_STATUS_ID_COMPLETED } from "@/config"
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import {
+  DynamicRouteContext,
+  initLocale,
+  requirePermission,
+} from "@/lib/helpers"
+import {
   createNotifications,
   getTaskStakeholderIds,
 } from "@/lib/notifications"
 import { taskInclude, transformTask } from "@/prisma/tasks"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{ id: string }>
-}
-
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function PATCH(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { locale, t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.VIEW)
+    if (permError) return permError
 
     const { id } = await context.params
 
@@ -81,8 +79,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return NextResponse.json(transformTask(task, locale))
   } catch (error) {
     console.error("Error setting task done:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

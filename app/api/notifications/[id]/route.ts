@@ -1,25 +1,21 @@
 import db from "@/lib/db"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
+import {
+  initLocale,
+  requireAuth,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{ id: string }>
-}
-
-export async function PATCH(request: NextRequest, { params }: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function PATCH(
+  request: NextRequest,
+  { params }: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const payload = await getAccessTokenPayload()
-    if (!payload?.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const { id } = await params
 
@@ -49,18 +45,16 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function DELETE(
+  request: NextRequest,
+  { params }: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const payload = await getAccessTokenPayload()
-    if (!payload?.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const { id } = await params
 

@@ -1,21 +1,19 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import {
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { updateTaskCategorySchema } from "@/lib/schemas/task-category"
-import { transformZodError } from "@/lib/transform-errors"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
-
-export async function GET(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function GET(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
   try {
     const { id } = await context.params
 
@@ -33,8 +31,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json(taskCategory)
   } catch (error) {
     console.error("Error fetching task category:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -42,31 +38,22 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function PUT(request: NextRequest, context: RouteContext) {
+export async function PUT(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
   try {
     const { id } = await context.params
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
 
     // Check permission
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.LIST.UPDATE)
+    if (permError) return permError
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = updateTaskCategorySchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
+    const validation = validateRequest(updateTaskCategorySchema, body, t)
+    if (validation.error) return validation.error
 
     // Check if task category exists
     const existingTaskCategory = await db.taskCategory.findUnique({
@@ -80,7 +67,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       )
     }
 
-    const data = validationResult.data
+    const data = validation.data
 
     // Update task category
     const taskCategory = await db.taskCategory.update({
@@ -95,8 +82,6 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     return NextResponse.json(taskCategory)
   } catch (error) {
     console.error("Error updating task category:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -104,17 +89,17 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
   try {
     const { id } = await context.params
 
     // Check permission
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.DELETE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.LIST.DELETE)
+    if (permError) return permError
 
     // Check if task category exists
     const existingTaskCategory = await db.taskCategory.findUnique({

@@ -1,18 +1,14 @@
 import db from "@/lib/db"
 import { createBannerSchema } from "@/lib/schemas/banner"
-import { transformZodError } from "@/lib/transform-errors"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
-import { getReqLocale } from "@/utils/get-req-locale"
+import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
 import { bannerInclude } from "@/prisma/banners"
 import { transformBanner } from "@/prisma/banners"
 import { Prisma } from "@/lib/generated/prisma/client"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
   try {
     // Get search query and status filter from URL params
     const searchParams = request.nextUrl.searchParams
@@ -98,32 +94,19 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
   try {
     // Check permission
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = createBannerSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createBannerSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     // Create banner
     const banner = await db.banner.create({

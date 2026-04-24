@@ -1,3 +1,4 @@
+import { initLocale } from "@/lib/helpers"
 import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
 import { transformZodError } from "@/lib/transform-errors"
 import {
@@ -5,8 +6,6 @@ import {
   toPublicWebsiteSettings,
   type PublicWebsiteSettingsLocale,
 } from "@/lib/website-site-settings/service"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 /**
@@ -14,8 +13,7 @@ import { type NextRequest, NextResponse } from "next/server"
  * No authentication. Optional `locale=ar|en` (defaults from Accept-Language / ar).
  */
 export async function GET(request: NextRequest) {
-  const fallbackLocale = await getReqLocale(request)
-  const t = await getTranslations({ locale: fallbackLocale })
+  const { locale: fallbackLocale, t } = await initLocale(request)
 
   try {
     const localeParam = request.nextUrl.searchParams.get("locale")

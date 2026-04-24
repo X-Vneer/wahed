@@ -1,40 +1,31 @@
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
 import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
 import {
   createNotifications,
   getEventAttendeeIds,
 } from "@/lib/notifications"
 import { updateEventSchema } from "@/lib/schemas/event"
-import { transformZodError } from "@/lib/transform-errors"
 import {
   eventInclude,
   transformEvent,
   type EventInclude,
 } from "@/prisma/events"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
+import {
+  initLocale,
+  requireAuth,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { NextResponse, type NextRequest } from "next/server"
 
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
-
-export async function GET(request: NextRequest, context: RouteContext) {
+export async function GET(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
   try {
     // Get current user
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const userId = payload.userId
     const { id } = await context.params
@@ -49,8 +40,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     })
 
     if (!event) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
       return NextResponse.json(
         { error: t("events.errors.not_found") },
         { status: 404 }
@@ -66,8 +55,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
       event.attendees.some((attendee) => attendee.userId === userId) // User is attendee and event is not private
 
     if (!canView) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
       return NextResponse.json(
         { error: t("errors.forbidden") },
         { status: 403 }
@@ -77,8 +64,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json(transformEvent(event))
   } catch (error) {
     console.error("Error fetching event:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -86,25 +71,16 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function PUT(request: NextRequest, context: RouteContext) {
+export async function PUT(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
   try {
     // Get current user
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const userId = payload.userId
     const { id } = await context.params
-
-    // Get translations
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
 
     // Check if event exists and user is the creator
     const existingEvent = await db.event.findUnique({
@@ -131,19 +107,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = updateEventSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(updateEventSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     // Validate that end date is after start date if both are provided
     if (data.start && data.end && data.end < data.start) {
@@ -258,8 +224,6 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     return NextResponse.json(transformEvent(event))
   } catch (error) {
     console.error("Error updating event:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -267,25 +231,16 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
+export async function DELETE(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
   try {
     // Get current user
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const userId = payload.userId
     const { id } = await context.params
-
-    // Get translations
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
 
     // Check if user is admin
     const currentUser = await db.user.findUnique({
@@ -338,8 +293,6 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error deleting event:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

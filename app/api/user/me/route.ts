@@ -1,28 +1,17 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
+import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
 import db from "@/lib/db"
-import { getTranslations } from "next-intl/server"
 import { transformUser, userSelect } from "@/prisma/users/select"
-import { getReqLocale } from "@/utils/get-req-locale"
 import { updateUserSettingsSchema } from "@/lib/schemas/user"
-import { transformZodError } from "@/lib/transform-errors"
 import { Gender } from "@/lib/generated/prisma/enums"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
-    // Get translations based on request locale
-
     // Get and verify token from cookies
-    const payload = await getAccessTokenPayload()
-
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     // Fetch user from database
     const user = await db.user.findUnique({
@@ -57,34 +46,18 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
   try {
     // Get and verify token from cookies
-    const payload = await getAccessTokenPayload()
-
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     // Parse and validate request body
     const body = await request.json()
-    const validationResult = updateUserSettingsSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(updateUserSettingsSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     // Check if user exists
     const existingUser = await db.user.findUnique({

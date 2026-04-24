@@ -1,27 +1,26 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
+import {
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { transformWebsite } from "@/prisma/websites"
 import { updateWebsiteSchema } from "@/lib/schemas/website"
-import { transformZodError } from "@/lib/transform-errors"
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: DynamicRouteContext<{ id: string }>
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const { id } = await params
 
@@ -37,19 +36,9 @@ export async function PUT(
     }
 
     const body = await request.json()
-    const validationResult = updateWebsiteSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(updateWebsiteSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     const website = await db.website.update({
       where: { id },
@@ -78,18 +67,15 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: DynamicRouteContext<{ id: string }>
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF_PAGE.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const { id } = await params
 

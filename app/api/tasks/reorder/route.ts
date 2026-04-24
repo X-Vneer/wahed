@@ -1,9 +1,7 @@
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
+import { initLocale, requirePermission } from "@/lib/helpers"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { z } from "zod"
 
@@ -13,18 +11,15 @@ const reorderSchema = z.object({
 })
 
 export async function PATCH(request: NextRequest) {
+  const { t } = await initLocale(request)
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+    if (permError) return permError
 
     const body = await request.json()
     const parsed = reorderSchema.safeParse(body)
 
     if (!parsed.success) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
       return NextResponse.json(
         { error: t("errors.validation_failed") ?? "Validation failed" },
         { status: 400 }
@@ -39,8 +34,6 @@ export async function PATCH(request: NextRequest) {
     })
 
     if (!project) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
       return NextResponse.json(
         { error: t("projects.errors.not_found") },
         { status: 404 }
@@ -67,8 +60,6 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error reordering tasks:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

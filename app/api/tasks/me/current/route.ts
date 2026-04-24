@@ -1,23 +1,15 @@
 import { TASK_STATUS_ID_IN_PROGRESS, TASK_STATUS_ID_PENDING } from "@/config"
 import db from "@/lib/db"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
+import { initLocale, requireAuth } from "@/lib/helpers"
 import { taskInclude, transformTask } from "@/prisma/tasks"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
+  const { locale, t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     // First: in-progress tasks assigned to the current user
     const inProgressTask = await db.task.findFirst({
@@ -57,8 +49,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(transformTask(task, locale))
   } catch (error) {
     console.error("Error fetching current user task:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

@@ -1,40 +1,29 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import {
+  DynamicRouteContext,
+  initLocale,
+  requirePermission,
+  validateRequest,
+} from "@/lib/helpers"
 import { updateSubTaskSchema } from "@/lib/schemas/task"
-import { transformZodError } from "@/lib/transform-errors"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{ id: string; subtaskId: string }>
-}
-
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function PATCH(
+  request: NextRequest,
+  context: DynamicRouteContext<{ id: string; subtaskId: string }>
+) {
+  const { t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+    if (permError) return permError
 
     const { id: taskId, subtaskId } = await context.params
     const body = await request.json()
-    const validationResult = updateSubTaskSchema.safeParse(body)
+    const validation = validateRequest(updateSubTaskSchema, body, t)
+    if (validation.error) return validation.error
 
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const data = validation.data
 
     const existing = await db.subTasks.findFirst({
       where: { id: subtaskId, taskId },
@@ -65,8 +54,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return NextResponse.json(subtask)
   } catch (error) {
     console.error("Error updating subtask:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -74,14 +61,14 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext<{ id: string; subtaskId: string }>
+) {
+  const { t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+    if (permError) return permError
 
     const { id: taskId, subtaskId } = await context.params
 
@@ -104,8 +91,6 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error deleting subtask:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

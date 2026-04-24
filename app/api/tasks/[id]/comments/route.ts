@@ -1,53 +1,38 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  DynamicRouteContext,
+  initLocale,
+  requireAuth,
+  requirePermission,
+  validateRequest,
+} from "@/lib/helpers"
 import {
   createNotifications,
   getTaskStakeholderIds,
 } from "@/lib/notifications"
 import { createTaskCommentSchema } from "@/lib/schemas/task"
-import { transformZodError } from "@/lib/transform-errors"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{ id: string }>
-}
-
-export async function POST(request: NextRequest, context: RouteContext) {
+export async function POST(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+    if (permError) return permError
 
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const { id: taskId } = await context.params
     const body = await request.json()
-    const validationResult = createTaskCommentSchema.safeParse(body)
+    const validation = validateRequest(createTaskCommentSchema, body, t)
+    if (validation.error) return validation.error
 
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const data = validation.data
 
     const task = await db.task.findUnique({
       where: { id: taskId },
@@ -94,8 +79,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
     return NextResponse.json(comment, { status: 201 })
   } catch (error) {
     console.error("Error creating task comment:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -103,14 +86,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function GET(request: NextRequest, context: RouteContext) {
+export async function GET(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.VIEW)
+    if (permError) return permError
 
     const { id: taskId } = await context.params
 
@@ -137,8 +117,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json(comments)
   } catch (error) {
     console.error("Error fetching task comments:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

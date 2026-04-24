@@ -1,52 +1,39 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  initLocale,
+  requireAuth,
+  requirePermission,
+  validateRequest,
+} from "@/lib/helpers"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import {
   importTasksFromTemplatesSchema,
   type ImportTasksFromTemplatesInput,
 } from "@/lib/schemas/task"
-import { transformZodError } from "@/lib/transform-errors"
 import { TaskPriority } from "@/lib/generated/prisma/enums"
 import { taskInclude, transformTask } from "@/prisma/tasks"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
+  const { t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.CREATE)
+    if (permError) return permError
 
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.CREATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
-
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const body = (await request.json()) as ImportTasksFromTemplatesInput
-    const validationResult = importTasksFromTemplatesSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(
+      importTasksFromTemplatesSchema,
+      body,
+      t
+    )
+    if (validation.error) return validation.error
+    const data = validation.data
 
     const [project, maxOrder, templates] = await Promise.all([
       data.projectId
@@ -186,8 +173,6 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error("Error importing tasks from templates:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

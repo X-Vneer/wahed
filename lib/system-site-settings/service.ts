@@ -3,6 +3,7 @@ import {
   type Prisma,
   type SystemSiteSettings,
 } from "@/lib/generated/prisma/client"
+import { emptyToNull } from "@/lib/helpers"
 import type { UpdateSystemSiteSettingsInput } from "@/lib/schemas/system-site-settings"
 
 const DEFAULT_CREATE: Prisma.SystemSiteSettingsCreateInput = {
@@ -73,11 +74,6 @@ export async function getOrCreateSystemSiteSettings(): Promise<SystemSiteSetting
 export async function getSystemSiteSettingsAdmin(): Promise<SystemSiteSettingsAdminDto> {
   const row = await getOrCreateSystemSiteSettings()
   return rowToAdminDto(row)
-}
-
-function emptyToNull(value: string): string | null {
-  if (value === "" || value == null) return null
-  return value
 }
 
 export async function patchSystemSiteSettings(

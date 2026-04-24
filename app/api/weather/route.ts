@@ -1,13 +1,11 @@
 import axios from "axios"
 import { NextRequest, NextResponse } from "next/server"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
+import { initLocale } from "@/lib/helpers"
 
 const OPEN_WEATHER_BASE = "https://api.openweathermap.org/data/2.5/weather"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
 
   try {
     const apiKey = process.env.OPEN_WEATHER_API_KEY

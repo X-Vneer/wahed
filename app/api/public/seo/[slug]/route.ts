@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
+import { initLocale, type DynamicRouteContext } from "@/lib/helpers"
 import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
 import { transformZodError } from "@/lib/transform-errors"
 import { isWebsitePageSlug } from "@/lib/website-content/service"
 import { getPageSeoWithFallback } from "@/lib/website-page-seo/service"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: DynamicRouteContext<{ slug: string }>
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
 
   try {
     const { slug } = await params

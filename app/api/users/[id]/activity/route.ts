@@ -1,27 +1,26 @@
 import db from "@/lib/db"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { hasPermission } from "@/utils/has-permission"
+import {
+  initLocale,
+  requirePermission,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { PERMISSIONS_GROUPED } from "@/config"
-import { getReqLocale } from "@/utils/get-req-locale"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { UserRole } from "@/lib/generated/prisma/enums"
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: DynamicRouteContext
 ) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(
+    const permError = await requirePermission(
       PERMISSIONS_GROUPED.STAFF.MANAGEMENT
     )
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    if (permError) return permError
 
     const { id } = await params
     const body = await request.json()
@@ -101,4 +100,3 @@ export async function PATCH(
     )
   }
 }
-

@@ -1,18 +1,15 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import { initLocale, requirePermission } from "@/lib/helpers"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { taskInclude, transformTask } from "@/prisma/tasks"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
+  const { t } = await initLocale(request)
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.VIEW)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.VIEW)
+    if (permError) return permError
 
     const tasks = await db.task.findMany({
       where: { projectId: null },
@@ -27,8 +24,6 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error("Error fetching general tasks:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

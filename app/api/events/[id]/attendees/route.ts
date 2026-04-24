@@ -1,41 +1,28 @@
 import db from "@/lib/db"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  initLocale,
+  requireAuth,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { createNotifications } from "@/lib/notifications"
-import { getReqLocale } from "@/utils/get-req-locale"
 import { UserRole } from "@/lib/generated/prisma/enums"
 import { z } from "zod/v4"
-
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
 
 const addAttendeeSchema = z.object({
   userId: z.string().min(1),
 })
 
-export async function POST(request: NextRequest, context: RouteContext) {
+export async function POST(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
   try {
     // Get current user
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      const locale = await getReqLocale(request)
-      const t = await getTranslations({ locale })
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const userId = payload.userId
     const { id: eventId } = await context.params
-
-    // Get translations
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
 
     // Check if user is admin
     const isAdmin = payload.role === UserRole.ADMIN
@@ -152,8 +139,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
     )
   } catch (error) {
     console.error("Error adding attendee:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }
@@ -161,20 +146,14 @@ export async function POST(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
-  // Get translations
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function DELETE(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
 
   try {
     // Get current user
-    const payload = await getAccessTokenPayload()
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     const userId = payload.userId
     const { id: eventId } = await context.params
@@ -247,8 +226,6 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error removing attendee:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

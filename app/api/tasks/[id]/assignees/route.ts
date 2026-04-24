@@ -1,43 +1,32 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
+import {
+  DynamicRouteContext,
+  initLocale,
+  requirePermission,
+  validateRequest,
+} from "@/lib/helpers"
 import { createNotifications } from "@/lib/notifications"
 import { updateTaskAssigneesSchema } from "@/lib/schemas/task"
-import { transformZodError } from "@/lib/transform-errors"
 import { taskDetailInclude, transformTaskDetail } from "@/prisma/tasks"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{ id: string }>
-}
-
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function PATCH(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { locale, t } = await initLocale(request)
   try {
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.ASSIGN)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.ASSIGN)
+    if (permError) return permError
 
     const { id } = await context.params
     const body = await request.json()
-    const validationResult = updateTaskAssigneesSchema.safeParse(body)
+    const validation = validateRequest(updateTaskAssigneesSchema, body, t)
+    if (validation.error) return validation.error
 
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const { assignedToIds } = validationResult.data
+    const { assignedToIds } = validation.data
 
     const [existing, users] = await Promise.all([
       db.task.findUnique({
@@ -121,8 +110,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return NextResponse.json(transformTaskDetail(task, locale))
   } catch (error) {
     console.error("Error updating task assignees:", error)
-    const locale = await getReqLocale(request)
-    const t = await getTranslations({ locale })
     return NextResponse.json(
       { error: t("errors.internal_server_error") },
       { status: 500 }

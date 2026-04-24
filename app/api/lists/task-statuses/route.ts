@@ -1,12 +1,10 @@
 import db from "@/lib/db"
+import { initLocale } from "@/lib/helpers"
 import { transformTaskStatus } from "@/prisma/task-statuses"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { locale, t } = await initLocale(request)
   try {
     const taskStatuses = await db.taskStatus.findMany({
       orderBy: [{ isSystem: "desc" }, { createdAt: "desc" }],

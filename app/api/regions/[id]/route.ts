@@ -1,43 +1,29 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import {
+  initLocale,
+  requirePermission,
+  validateRequest,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { updateRegionSchema } from "@/lib/schemas/regions"
-import { transformZodError } from "@/lib/transform-errors"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
-import { getReqLocale } from "@/utils/get-req-locale"
 
-type RouteContext = {
-  params: Promise<{
-    id: string
-  }>
-}
-
-export async function PUT(request: NextRequest, context: RouteContext) {
+export async function PUT(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
   const { id } = await context.params
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.LIST.UPDATE)
+    if (permError) return permError
 
     const body = await request.json()
-    const validationResult = updateRegionSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(updateRegionSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     const region = await db.region.update({
       where: { id },
@@ -57,16 +43,16 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
   const { id } = await context.params
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.LIST.DELETE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.LIST.DELETE)
+    if (permError) return permError
 
     await db.region.delete({
       where: { id },

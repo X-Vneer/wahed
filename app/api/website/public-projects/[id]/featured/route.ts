@@ -1,12 +1,12 @@
 import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
-import { hasPermission } from "@/utils/has-permission"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
+import {
+  initLocale,
+  requirePermission,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import { type NextRequest, NextResponse } from "next/server"
 import * as z from "zod/v4"
-
-type RouteContext = { params: Promise<{ id: string }> }
 
 const MAX_FEATURED = 2
 
@@ -14,15 +14,15 @@ const schema = z.object({
   isFeatured: z.boolean(),
 })
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function PATCH(
+  request: NextRequest,
+  context: DynamicRouteContext<{ id: string }>
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { id } = await context.params
 

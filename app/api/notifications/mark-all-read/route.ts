@@ -1,21 +1,14 @@
 import db from "@/lib/db"
-import { getAccessTokenPayload } from "@/lib/get-access-token"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
+import { initLocale, requireAuth } from "@/lib/helpers"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function PATCH(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
-    const payload = await getAccessTokenPayload()
-    if (!payload?.userId) {
-      return NextResponse.json(
-        { error: t("errors.unauthorized") },
-        { status: 401 }
-      )
-    }
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
 
     await db.notification.updateMany({
       where: { userId: payload.userId, isRead: false },

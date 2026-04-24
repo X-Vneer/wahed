@@ -1,20 +1,17 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import {
+  DynamicRouteContext,
+  initLocale,
+  requirePermission,
+} from "@/lib/helpers"
 import { updateTaskTemplateSchema } from "@/lib/schemas/task-template"
 import { transformZodError } from "@/lib/transform-errors"
 import { tasksTemplateInclude } from "@/prisma/task-templates"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
-type RouteContext = {
-  params: Promise<{ id: string }>
-}
-
-export async function GET(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function GET(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
   try {
     const { id } = await context.params
 
@@ -40,16 +37,13 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function PUT(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function PUT(request: NextRequest, context: DynamicRouteContext) {
+  const { t } = await initLocale(request)
   try {
     const { id } = await context.params
 
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
+    if (permError) return permError
 
     const body = await request.json()
     const validationResult = updateTaskTemplateSchema.safeParse(body)
@@ -119,16 +113,16 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
+  const { t } = await initLocale(request)
   try {
     const { id } = await context.params
 
-    const permissionCheck = await hasPermission(PERMISSIONS_GROUPED.TASK.DELETE)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.DELETE)
+    if (permError) return permError
 
     const existing = await db.taskTemplate.findUnique({ where: { id } })
     if (!existing) {

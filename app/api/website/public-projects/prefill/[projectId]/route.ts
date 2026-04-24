@@ -1,9 +1,11 @@
 import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
+import {
+  initLocale,
+  requirePermission,
+  type DynamicRouteContext,
+} from "@/lib/helpers"
 import type { PublicProjectPrefillResponse } from "@/lib/types/public-project-prefill"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { hasPermission } from "@/utils/has-permission"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 const SHORT_MAX = 240
@@ -26,19 +28,15 @@ function suggestedSlugFromTitleEn(nameEn: string): string {
     .slice(0, 96)
 }
 
-type RouteContext = {
-  params: Promise<{ projectId: string }>
-}
-
-export async function GET(request: NextRequest, context: RouteContext) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+export async function GET(
+  request: NextRequest,
+  context: DynamicRouteContext<{ projectId: string }>
+) {
+  const { t } = await initLocale(request)
 
   try {
-    const permissionCheck = await hasPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
-    if (!permissionCheck.hasPermission) {
-      return permissionCheck.error!
-    }
+    const permError = await requirePermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+    if (permError) return permError
 
     const { projectId } = await context.params
 

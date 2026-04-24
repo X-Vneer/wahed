@@ -1,9 +1,7 @@
 import db from "@/lib/db"
+import { initLocale, validateRequest } from "@/lib/helpers"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import { createContactMessageSchema } from "@/lib/schemas/contact"
-import { transformZodError } from "@/lib/transform-errors"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
 
 /**
@@ -11,24 +9,13 @@ import { type NextRequest, NextResponse } from "next/server"
  * Receives contact form submissions from the website.
  */
 export async function POST(request: NextRequest) {
-  const locale = await getReqLocale(request)
-  const t = await getTranslations({ locale })
+  const { t } = await initLocale(request)
 
   try {
     const body = await request.json()
-    const validationResult = createContactMessageSchema.safeParse(body)
-
-    if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          error: t("errors.validation_failed"),
-          details: transformZodError(validationResult.error),
-        },
-        { status: 400 }
-      )
-    }
-
-    const data = validationResult.data
+    const validation = validateRequest(createContactMessageSchema, body, t)
+    if (validation.error) return validation.error
+    const data = validation.data
 
     const contact = await db.contactMessage.create({
       data: {

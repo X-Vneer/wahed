@@ -1,23 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
+import { initLocale, type DynamicRouteContext } from "@/lib/helpers"
 import {
   publicProjectInclude,
   transformPublicProject,
 } from "@/prisma/public-projects"
-import { getReqLocale } from "@/utils/get-req-locale"
-import { getTranslations } from "next-intl/server"
 import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
 import { transformZodError } from "@/lib/transform-errors"
-
-type RouteContext = { params: Promise<{ slug: string }> }
 
 /**
  * Public read-only endpoint to get a single active public project by slug.
  * No authentication. Optional `locale=ar|en` query param.
  */
-export async function GET(request: NextRequest, context: RouteContext) {
-  const fallbackLocale = await getReqLocale(request)
-  const t = await getTranslations({ locale: fallbackLocale })
+export async function GET(
+  request: NextRequest,
+  context: DynamicRouteContext<{ slug: string }>
+) {
+  const { locale: fallbackLocale, t } = await initLocale(request)
 
   try {
     const { slug } = await context.params
