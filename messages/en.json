@@ -2404,6 +2404,7 @@
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "empty": "No notifications",
+    "loadingMore": "Loading more...",
     "errors": {
       "not_found": "Notification not found"
     },

@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import apiClient from "@/services"
 
 export interface Notification {
@@ -22,20 +27,27 @@ interface NotificationsResponse {
   last_page: number
 }
 
-export function useNotifications(page = 1) {
-  return useQuery({
-    queryKey: ["notifications", page],
-    queryFn: async () => {
+const NOTIFICATIONS_PER_PAGE = 20
+
+export function useInfiniteNotifications() {
+  return useInfiniteQuery({
+    queryKey: ["notifications", "infinite"],
+    queryFn: async ({ pageParam = 1 }) => {
       const response = await apiClient.get<NotificationsResponse>(
         "/api/notifications",
         {
-          params: { page, per_page: 20 },
+          params: { page: pageParam, per_page: NOTIFICATIONS_PER_PAGE },
         }
       )
       return response.data
     },
-    refetchInterval: 15000, // Poll every 15 seconds
-    staleTime: 10000,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.current_page < lastPage.last_page
+        ? lastPage.current_page + 1
+        : undefined,
+    refetchInterval: 5000,
+    staleTime: 5000,
   })
 }
 
@@ -51,8 +63,8 @@ export function useUnreadCount() {
       )
       return response.data.unreadCount
     },
-    refetchInterval: 15000,
-    staleTime: 10000,
+    refetchInterval: 5000,
+    staleTime: 4000,
   })
 }
 
@@ -75,9 +87,7 @@ export function useMarkAllNotificationsRead() {
 
   return useMutation({
     mutationFn: async () => {
-      const response = await apiClient.patch(
-        "/api/notifications/mark-all-read"
-      )
+      const response = await apiClient.patch("/api/notifications/mark-all-read")
       return response.data
     },
     onSuccess: () => {

@@ -8,18 +8,18 @@ import {
 } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
-  useNotifications,
+  useInfiniteNotifications,
   useMarkNotificationRead,
   useMarkAllNotificationsRead,
   type Notification,
 } from "@/hooks/use-notifications"
-import { Bell, CheckCheck, Mail, MailOpen } from "lucide-react"
+import { Bell, CheckCheck, Loader2, Mail, MailOpen } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useRouter } from "@/lib/i18n/navigation"
 import { formatDistanceToNow } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import { useLocale } from "next-intl"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { cn } from "@/lib/utils"
 
 const typeIconColors: Record<string, string> = {
@@ -46,9 +46,7 @@ function useTranslatedNotification(notification: Notification) {
   const messageKey = `notifications.content.${contentKey}.message`
 
   try {
-    const translatedTitle = t.has(titleKey)
-      ? t(titleKey)
-      : notification.title
+    const translatedTitle = t.has(titleKey) ? t(titleKey) : notification.title
 
     let params: Record<string, string | number> = {}
     try {
@@ -106,9 +104,7 @@ function NotificationItem({
         >
           {title}
         </p>
-        <p className="text-muted-foreground line-clamp-2 text-xs">
-          {message}
-        </p>
+        <p className="text-muted-foreground line-clamp-2 text-xs">{message}</p>
         <p className="text-muted-foreground text-xs">
           {formatDistanceToNow(new Date(notification.createdAt), {
             addSuffix: true,
@@ -138,13 +134,47 @@ export function NotificationBell() {
   const locale = useLocale()
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const [viewportEl, setViewportEl] = useState<HTMLDivElement | null>(null)
 
-  const { data } = useNotifications()
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteNotifications()
   const markRead = useMarkNotificationRead()
   const markAllRead = useMarkAllNotificationsRead()
 
-  const unreadCount = data?.unreadCount ?? 0
-  const notifications = data?.data ?? []
+  const unreadCount = data?.pages[0]?.unreadCount ?? 0
+  const notifications = useMemo(
+    () => data?.pages.flatMap((page) => page.data) ?? [],
+    [data]
+  )
+
+  // Pull next page when user scrolls near the bottom.
+  useEffect(() => {
+    if (!viewportEl) return
+    const onScroll = () => {
+      if (!hasNextPage || isFetchingNextPage) return
+      const { scrollTop, clientHeight, scrollHeight } = viewportEl
+      if (scrollTop + clientHeight >= scrollHeight - 100) {
+        fetchNextPage()
+      }
+    }
+    viewportEl.addEventListener("scroll", onScroll, { passive: true })
+    return () => viewportEl.removeEventListener("scroll", onScroll)
+  }, [viewportEl, hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  // Auto-fill: when the loaded content does not yet overflow the viewport,
+  // keep pulling pages until it does (or no more pages remain).
+  useEffect(() => {
+    if (!viewportEl || !hasNextPage || isFetchingNextPage) return
+    if (viewportEl.scrollHeight <= viewportEl.clientHeight + 1) {
+      fetchNextPage()
+    }
+  }, [
+    viewportEl,
+    notifications.length,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  ])
 
   const handleNotificationClick = (notification: Notification) => {
     if (!notification.isRead) {
@@ -196,21 +226,29 @@ export function NotificationBell() {
           )}
         </div>
 
-        <ScrollArea className="max-h-100">
+        <ScrollArea viewportRef={setViewportEl} className="h-50">
           {notifications.length === 0 ? (
             <div className="text-muted-foreground flex flex-col items-center justify-center py-12 text-sm">
               <Bell className="text-muted-foreground/50 mb-2 size-8" />
               {t("notifications.empty")}
             </div>
           ) : (
-            notifications.map((notification) => (
-              <NotificationItem
-                key={notification.id}
-                notification={notification}
-                onRead={(id) => markRead.mutate(id)}
-                onClick={handleNotificationClick}
-              />
-            ))
+            <>
+              {notifications.map((notification) => (
+                <NotificationItem
+                  key={notification.id}
+                  notification={notification}
+                  onRead={(id) => markRead.mutate(id)}
+                  onClick={handleNotificationClick}
+                />
+              ))}
+              {isFetchingNextPage && (
+                <div className="text-muted-foreground flex items-center justify-center gap-2 py-3 text-xs">
+                  <Loader2 className="size-3.5 animate-spin" />
+                  {t("notifications.loadingMore")}
+                </div>
+              )}
+            </>
           )}
         </ScrollArea>
       </PopoverContent>
