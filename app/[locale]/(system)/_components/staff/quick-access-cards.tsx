@@ -11,9 +11,13 @@ import {
   ChevronRight,
   Folder,
   Globe,
+  List,
   LogInIcon,
   LucideIcon,
   MessageSquare,
+  SlidersHorizontal,
+  Users,
+  Users2,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
@@ -74,7 +78,16 @@ export function QuickAccessCards() {
   const { data: staffSettings } = useStaffPageSettings()
   const { checkPermission } = usePermission()
 
+  const canManageStaff = checkPermission(PERMISSIONS.STAFF_MANAGEMENT)
+  const canManageLists =
+    checkPermission(PERMISSIONS.LIST_CREATE) ||
+    checkPermission(PERMISSIONS.LIST_UPDATE) ||
+    checkPermission(PERMISSIONS.LIST_DELETE)
+  const canManageStaffPage = checkPermission(PERMISSIONS.STAFF_PAGE_MANAGEMENT)
   const canManageWebsite = checkPermission(PERMISSIONS.WEBSITE_MANAGEMENT)
+  const canManageSystemSettings = checkPermission(
+    PERMISSIONS.SYSTEM_SETTINGS_MANAGEMENT
+  )
 
   const cards: QuickAccessCardData[] = [
     {
@@ -95,6 +108,36 @@ export function QuickAccessCards() {
       href: staffSettings?.accountingLink ?? "/accounting",
       linkTextKey: "quickAccess.goToAccounting",
     },
+    ...(canManageStaff
+      ? [
+          {
+            icon: Users,
+            titleKey: "quickAccess.employees",
+            href: "/employees",
+            linkTextKey: "quickAccess.goToEmployees",
+          },
+        ]
+      : []),
+    ...(canManageLists
+      ? [
+          {
+            icon: List,
+            titleKey: "quickAccess.lists",
+            href: "/lists/project-categories",
+            linkTextKey: "quickAccess.goToLists",
+          },
+        ]
+      : []),
+    ...(canManageStaffPage
+      ? [
+          {
+            icon: Users2,
+            titleKey: "quickAccess.staffPage",
+            href: "/staff/settings",
+            linkTextKey: "quickAccess.goToStaffPage",
+          },
+        ]
+      : []),
     ...(canManageWebsite
       ? [
           {
@@ -108,6 +151,16 @@ export function QuickAccessCards() {
             titleKey: "quickAccess.website",
             href: "/website",
             linkTextKey: "quickAccess.goToWebsite",
+          },
+        ]
+      : []),
+    ...(canManageSystemSettings
+      ? [
+          {
+            icon: SlidersHorizontal,
+            titleKey: "quickAccess.systemSettings",
+            href: "/system-settings",
+            linkTextKey: "quickAccess.goToSystemSettings",
           },
         ]
       : []),

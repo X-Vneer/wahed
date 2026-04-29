@@ -41,6 +41,7 @@ export function PermissionsSelector({
         LIST: "manageLists",
         WEBSITE: "manageWebsite",
         REPORT: "manageReports",
+        SYSTEM: "manageSystem",
       }
       const translationKey =
         translationKeyMap[groupKey] || groupKey.toLowerCase()
