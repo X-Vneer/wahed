@@ -27,7 +27,7 @@ export function ReadFilter() {
             setIsRead(value === "all" ? null : value)
           }}
         >
-          <SelectTrigger className="h-10 min-w-[180px] bg-white">
+          <SelectTrigger className="h-10 bg-white lg:min-w-25">
             <SelectValue>
               {isRead === "" || isRead === "all"
                 ? t("contacts.filter.all")

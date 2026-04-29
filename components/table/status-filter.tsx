@@ -37,7 +37,7 @@ export default function StatusFilter({
             setStatus(value)
           }}
         >
-          <SelectTrigger className="h-10 min-w-[180px] bg-white">
+          <SelectTrigger className="h-10 bg-white lg:min-w-25">
             <SelectValue>
               {status === "all"
                 ? t("table-status-filter.all")

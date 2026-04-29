@@ -38,11 +38,6 @@ export default function StaffTabs() {
         <TabsTrigger className={"px-3"} value="/settings">
           {t("settings")}
         </TabsTrigger>
-        {/* {canManageStaffPage && (
-          <TabsTrigger className={"px-3"} value="/staff/settings">
-            {t("staffPageSettings")}
-          </TabsTrigger>
-        )} */}
       </TabsList>
     </Tabs>
   )

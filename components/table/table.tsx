@@ -130,7 +130,7 @@ export function BaseTable<TData>({
 
   return (
     <>
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-4">
         <SearchInput />
 
         <div className="flex items-center gap-2">

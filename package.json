@@ -15,6 +15,7 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:test": "tsx scripts/test-database.ts",
+    "email:test": "tsx scripts/test-email.ts",
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:production": "tsx scripts/production-seed.ts",
     "db:reset": "prisma migrate reset"
@@ -66,12 +67,14 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^25",
+    "@types/nodemailer": "^8.0.0",
     "@types/react": "^19",
     "@types/react-big-calendar": "^1.16.3",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^10.1.8",
+    "nodemailer": "^8.0.7",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "prisma": "^7.4.0",

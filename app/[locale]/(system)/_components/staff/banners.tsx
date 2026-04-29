@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/carousel"
 import { Spinner } from "@/components/ui/spinner"
 import { useBanners } from "@/hooks/use-banners"
-import type { BannerInclude } from "@/prisma/banners"
-import { useLocale, useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
+import type { BannerInclude } from "@/prisma/banners"
 import Autoplay from "embla-carousel-autoplay"
+import { useLocale, useTranslations } from "next-intl"
 
 function getLocalizedFields(banner: BannerInclude, locale: string) {
   const isAr = locale === "ar"
@@ -37,7 +37,10 @@ export function BannersSlider({ className }: BannersSliderProps) {
   if (isLoading) {
     return (
       <div
-        className={`bg-muted/40 flex h-48 items-center justify-center rounded-xl border ${className || ""}`}
+        className={cn(
+          `bg-muted/40 flex h-48 items-center justify-center rounded-xl border`,
+          className || ""
+        )}
       >
         <Spinner className="mr-2 size-4" />
         <span className="text-muted-foreground text-sm">
@@ -47,7 +50,7 @@ export function BannersSlider({ className }: BannersSliderProps) {
     )
   }
 
-  if (isError || !data?.length) {
+  if (isError) {
     return (
       <div
         className={`bg-muted/40 flex h-48 items-center justify-center rounded-xl border ${className || ""}`}
@@ -56,6 +59,8 @@ export function BannersSlider({ className }: BannersSliderProps) {
       </div>
     )
   }
+
+  if (!data?.length) return null
 
   return (
     <section aria-label={t("banners.title")}>

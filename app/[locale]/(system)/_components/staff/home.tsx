@@ -75,10 +75,10 @@ export default function StaffPage() {
           <WeeklySchedule />
         </div>
         <div className="space-y-4 lg:max-w-[calc(100%-340px)]">
+          <BannersSlider />
           <QuickAccessCards />
           {/* Current task */}
           <CurrentTaskSection />
-          <BannersSlider />
           <UsefulWebsitesSlider />
         </div>
       </div>

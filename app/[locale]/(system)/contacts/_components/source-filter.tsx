@@ -27,7 +27,7 @@ export function SourceFilter() {
             setSource(value === "all" ? null : value)
           }}
         >
-          <SelectTrigger className="h-10 min-w-[180px] bg-white">
+          <SelectTrigger className="h-10 bg-white lg:min-w-45">
             <SelectValue>
               {source === "" || source === "all"
                 ? t("contacts.sourceFilter.all")
