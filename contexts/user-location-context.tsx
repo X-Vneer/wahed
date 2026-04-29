@@ -53,6 +53,8 @@ export type UserLocationValue = {
   latitude: number
   longitude: number
   locationLoaded: boolean
+  isRefreshingLocation: boolean
+  refreshLocation: () => void
 }
 
 const UserLocationContext = createContext<UserLocationValue | null>(null)
@@ -66,6 +68,7 @@ export function UserLocationProvider({ children }: { children: ReactNode }) {
   const [longitude, setLongitude] = useState<number>(DEFAULT_LONGITUDE)
   const [locationLoaded, setLocationLoaded] = useState(false)
   const [showLocationPrompt, setShowLocationPrompt] = useState(false)
+  const [isRefreshingLocation, setIsRefreshingLocation] = useState(false)
   const locationResolved = useRef(false)
 
   const saveLocationMutation = useMutation({
@@ -112,6 +115,37 @@ export function UserLocationProvider({ children }: { children: ReactNode }) {
     },
     [userData?.id, saveLocationMutation]
   )
+
+  const refreshLocation = useCallback(() => {
+    if (!("geolocation" in navigator) || isRefreshingLocation) return
+
+    setIsRefreshingLocation(true)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude
+        const lng = position.coords.longitude
+        setLatitude(lat)
+        setLongitude(lng)
+        setLocationLoaded(true)
+        if (userData?.id) {
+          saveLocationMutation.mutate(
+            { latitude: lat, longitude: lng },
+            { onSettled: () => setIsRefreshingLocation(false) }
+          )
+        } else {
+          setIsRefreshingLocation(false)
+        }
+      },
+      () => {
+        setIsRefreshingLocation(false)
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    )
+  }, [userData?.id, saveLocationMutation, isRefreshingLocation])
 
   const declineLocation = useCallback((doNotShowAgain: boolean) => {
     if (doNotShowAgain) setDoNotShowAgainStorage(true)
@@ -169,6 +203,8 @@ export function UserLocationProvider({ children }: { children: ReactNode }) {
     latitude,
     longitude,
     locationLoaded,
+    isRefreshingLocation,
+    refreshLocation,
   }
 
   return (

@@ -3,12 +3,30 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { useWeather } from "@/hooks/use-weather"
+import { useUserLocation } from "@/hooks/use-user-location"
 import { useTranslations } from "next-intl"
 import { OPEN_WEATHER_ICON_BASE } from "@/config"
+import { RefreshCw } from "lucide-react"
 
 export function WeatherStatus({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("weather")
   const { data: weather, isLoading, isError, error } = useWeather()
+  const { refreshLocation, isRefreshingLocation } = useUserLocation()
+
+  const refreshButton = (
+    <button
+      type="button"
+      onClick={refreshLocation}
+      disabled={isRefreshingLocation}
+      aria-label={t("updateLocation")}
+      title={t("updateLocation")}
+      className="text-primary hover:text-primary/80 inline-flex size-7 cursor-pointer items-center justify-center rounded-md transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <RefreshCw
+        className={cn("size-4", isRefreshingLocation && "animate-spin")}
+      />
+    </button>
+  )
 
   if (isLoading) {
     return (
@@ -19,8 +37,17 @@ export function WeatherStatus({ compact = false }: { compact?: boolean }) {
         )}
       >
         <CardContent className="px-3 py-3 md:px-6 md:py-6">
-          <div className="text-primary text-lg font-medium md:text-2xl">—</div>
-          <div className="text-xs text-white md:text-sm">{t("loading")}</div>
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <div className="text-primary text-lg font-medium md:text-2xl">
+                —
+              </div>
+              <div className="text-xs text-white md:text-sm">
+                {t("loading")}
+              </div>
+            </div>
+            {refreshButton}
+          </div>
         </CardContent>
       </Card>
     )
@@ -35,9 +62,16 @@ export function WeatherStatus({ compact = false }: { compact?: boolean }) {
         )}
       >
         <CardContent className="px-3 py-3 md:px-6 md:py-6">
-          <div className="text-primary text-lg font-medium md:text-2xl">—</div>
-          <div className="text-xs text-white md:text-sm">
-            {error instanceof Error ? error.message : t("unavailable")}
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <div className="text-primary text-lg font-medium md:text-2xl">
+                —
+              </div>
+              <div className="text-xs text-white md:text-sm">
+                {error instanceof Error ? error.message : t("unavailable")}
+              </div>
+            </div>
+            {refreshButton}
           </div>
         </CardContent>
       </Card>
@@ -64,13 +98,16 @@ export function WeatherStatus({ compact = false }: { compact?: boolean }) {
           <div>
             {/* Left: Location and condition */}
             <div className="flex flex-col items-start gap-2 md:gap-4">
-              <div className="flex flex-col items-start">
-                <span className="text-primary text-lg leading-tight font-semibold md:text-2xl md:leading-normal md:font-medium">
-                  {location || "—"}
-                </span>
-                <span className="text-xs text-white md:text-base">
-                  {t("feelsLike", { temp: feelsLike })}
-                </span>
+              <div className="flex w-full items-start justify-between gap-2">
+                <div className="flex flex-col items-start">
+                  <span className="text-primary text-lg leading-tight font-semibold md:text-2xl md:leading-normal md:font-medium">
+                    {location || "—"}
+                  </span>
+                  <span className="text-xs text-white md:text-base">
+                    {t("feelsLike", { temp: feelsLike })}
+                  </span>
+                </div>
+                {refreshButton}
               </div>
               <div className="bg-border h-px w-full" />
               <div className="flex justify-between">

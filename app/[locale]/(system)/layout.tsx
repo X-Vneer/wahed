@@ -69,8 +69,8 @@ export default async function SystemLayout({
     console.error("Failed to fetch staff page settings:", error)
     staffPageSettings = {
       heroBackgroundImageUrl: null,
-      attendanceLink: "/attendance",
-      accountingLink: "/accounting",
+      attendanceLink: "",
+      accountingLink: "",
     }
   }
 

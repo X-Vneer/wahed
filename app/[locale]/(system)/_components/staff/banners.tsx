@@ -96,7 +96,7 @@ export function BannersSlider({ className }: BannersSliderProps) {
                   />
 
                   <div className="relative flex items-end justify-between gap-6 p-6 md:p-10">
-                    <div className="flex h-full min-h-[120px] flex-col justify-between gap-3 md:col-span-2">
+                    <div className="flex h-full min-h-30 flex-col justify-between gap-3 md:col-span-2">
                       <h2 className="text-primary-foreground line-clamp-2 text-2xl leading-snug font-semibold text-balance md:text-3xl">
                         {title}
                       </h2>

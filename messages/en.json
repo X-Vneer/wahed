@@ -1206,6 +1206,7 @@
     "humidity": "Humidity",
     "wind": "Wind",
     "windSpeed": "{speed} m/s",
+    "updateLocation": "Update location",
     "errors": {
       "api_key_not_configured": "OPEN_WEATHER_API_KEY is not configured",
       "missing_params": "Missing lat or lon query parameters",

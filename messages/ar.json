@@ -1206,6 +1206,7 @@
     "humidity": "الرطوبة",
     "wind": "الرياح",
     "windSpeed": "{speed} م/ث",
+    "updateLocation": "تحديث الموقع",
     "errors": {
       "api_key_not_configured": "مفتاح OPEN_WEATHER_API_KEY غير مُعد",
       "missing_params": "معلمات lat أو lon مفقودة",
