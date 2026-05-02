@@ -226,7 +226,7 @@ export function NotificationBell() {
           )}
         </div>
 
-        <ScrollArea viewportRef={setViewportEl} className="h-50">
+        <ScrollArea viewportRef={setViewportEl} className="h-100">
           {notifications.length === 0 ? (
             <div className="text-muted-foreground flex flex-col items-center justify-center py-12 text-sm">
               <Bell className="text-muted-foreground/50 mb-2 size-8" />
