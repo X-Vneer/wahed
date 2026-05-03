@@ -24,7 +24,7 @@ pnpm db:test             # tsx scripts/test-database.ts (smoke test DB connectio
 pnpm email:test          # tsx scripts/test-email.ts
 ```
 
-Required env (see `.env.example`): `DATABASE_URL`, `JWT_SECRET`, `UPLOADTHING_TOKEN`, `OPEN_WEATHER_API_KEY`, `CRON_SECRET`, `PUBLIC_WEBSITE_URL`.
+Required env (see `.env.example`): `DATABASE_URL`, `JWT_SECRET`, `UPLOADTHING_TOKEN`, `OPEN_WEATHER_API_KEY`, `CRON_SECRET`, `PUBLIC_WEBSITE_URL`. Optional: `SMTP_APP_PASSWORD` (only used by `scripts/test-email.ts` against Office 365 SMTP — no production email path wired up yet).
 
 Prisma is configured via `prisma.config.ts` (loads `DATABASE_URL` from `dotenv`); the `datasource` block in `schema.prisma` intentionally has no `url` field.
 
@@ -130,3 +130,4 @@ Built as a Docker image, pushed to `ghcr.io/x-vneer/internal-system:latest` by `
 - Bilingual fields on Prisma models follow `nameAr`/`nameEn`, `titleAr`/`titleEn`, etc. — when adding new bilingual fields keep this naming.
 - After editing `prisma/schema.prisma` always run `pnpm db:generate`. The generated client is checked in at `lib/generated/prisma`, so type errors elsewhere often mean a stale generate.
 - Path alias `@/*` maps to repo root.
+- No test framework configured — there is no jest/vitest setup. `db:test` and `email:test` are smoke scripts, not unit tests.

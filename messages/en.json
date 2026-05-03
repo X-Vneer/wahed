@@ -1688,6 +1688,38 @@
           "saveFailed": "Failed to save contact section"
         },
         "save": "Save Contact Section"
+      },
+      "projectsSection": {
+        "title": "Projects Section",
+        "description": "Manage the projects section heading and intro on the homepage.",
+        "fields": {
+          "isActive": "Section visibility",
+          "eyebrowTitleAr": "Eyebrow title (Arabic)",
+          "eyebrowTitleEn": "Eyebrow title (English)",
+          "titleAr": "Title (Arabic)",
+          "titleEn": "Title (English)",
+          "contentAr": "Content (Arabic)",
+          "contentEn": "Content (English)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بلورة الإبداع",
+          "eyebrowTitleEn": "Crystallizing Creativity",
+          "titleAr": "مشاريعنا",
+          "titleEn": "Our Projects",
+          "contentAr": "اكتب وصفًا تعريفيًا لقسم المشاريع باللغة العربية",
+          "contentEn": "Write the projects intro content in English"
+        },
+        "ui": {
+          "isActiveHint": "Enable to show this section on the homepage. Disable to hide it.",
+          "bilingualHint": "Fill Arabic and English fields so this section appears in both languages."
+        },
+        "success": {
+          "saved": "Projects section saved successfully"
+        },
+        "errors": {
+          "saveFailed": "Failed to save projects section"
+        },
+        "save": "Save Projects Section"
       }
     },
     "projects": {
@@ -2356,7 +2388,8 @@
         "facebook": "Facebook",
         "instagram": "Instagram",
         "youtube": "YouTube",
-        "x": "X (Twitter)"
+        "x": "X (Twitter)",
+        "whatsapp": "WhatsApp"
       },
       "footer": {
         "title": "Footer",

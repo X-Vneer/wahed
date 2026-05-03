@@ -1688,6 +1688,38 @@
           "saveFailed": "فشل حفظ قسم التواصل"
         },
         "save": "حفظ قسم التواصل"
+      },
+      "projectsSection": {
+        "title": "قسم المشاريع",
+        "description": "إدارة عنوان قسم المشاريع ومقدمته على الصفحة الرئيسية.",
+        "fields": {
+          "isActive": "ظهور القسم",
+          "eyebrowTitleAr": "العنوان التمهيدي (عربي)",
+          "eyebrowTitleEn": "العنوان التمهيدي (إنجليزي)",
+          "titleAr": "العنوان (عربي)",
+          "titleEn": "العنوان (إنجليزي)",
+          "contentAr": "المحتوى (عربي)",
+          "contentEn": "المحتوى (إنجليزي)"
+        },
+        "placeholders": {
+          "eyebrowTitleAr": "بلورة الإبداع",
+          "eyebrowTitleEn": "Crystallizing Creativity",
+          "titleAr": "مشاريعنا",
+          "titleEn": "Our Projects",
+          "contentAr": "اكتب وصفًا تعريفيًا لقسم المشاريع باللغة العربية",
+          "contentEn": "Write the projects intro content in English"
+        },
+        "ui": {
+          "isActiveHint": "فعّل هذا الخيار لإظهار القسم في الصفحة الرئيسية، أو عطّله لإخفائه.",
+          "bilingualHint": "قم بتعبئة الحقول العربية والإنجليزية لعرض القسم باللغتين."
+        },
+        "success": {
+          "saved": "تم حفظ قسم المشاريع بنجاح"
+        },
+        "errors": {
+          "saveFailed": "فشل حفظ قسم المشاريع"
+        },
+        "save": "حفظ قسم المشاريع"
       }
     },
     "projects": {
@@ -2356,7 +2388,8 @@
         "facebook": "فيسبوك",
         "instagram": "إنستغرام",
         "youtube": "يوتيوب",
-        "x": "إكس (تويتر)"
+        "x": "إكس (تويتر)",
+        "whatsapp": "واتساب"
       },
       "footer": {
         "title": "التذييل",

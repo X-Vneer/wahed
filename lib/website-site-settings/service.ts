@@ -77,6 +77,7 @@ export type WebsiteSiteSettingsAdminDto = {
   instagramUrl: string | null
   youtubeUrl: string | null
   xUrl: string | null
+  whatsappUrl: string | null
 
   footerDescriptionAr: string | null
   footerDescriptionEn: string | null
@@ -114,6 +115,7 @@ function rowToAdminDto(row: WebsiteSiteSettings): WebsiteSiteSettingsAdminDto {
     instagramUrl: row.instagramUrl,
     youtubeUrl: row.youtubeUrl,
     xUrl: row.xUrl,
+    whatsappUrl: row.whatsappUrl,
 
     footerDescriptionAr: row.footerDescriptionAr,
     footerDescriptionEn: row.footerDescriptionEn,
@@ -172,6 +174,7 @@ export async function patchWebsiteSiteSettings(
     instagramUrl: emptyToNull(input.instagramUrl),
     youtubeUrl: emptyToNull(input.youtubeUrl),
     xUrl: emptyToNull(input.xUrl),
+    whatsappUrl: emptyToNull(input.whatsappUrl),
     footerDescriptionAr: emptyToNull(input.footerDescriptionAr),
     footerDescriptionEn: emptyToNull(input.footerDescriptionEn),
   }
@@ -247,6 +250,7 @@ export function toPublicWebsiteSettings(
       instagram: row.instagramUrl,
       youtube: row.youtubeUrl,
       x: row.xUrl,
+      whatsapp: row.whatsappUrl,
     },
     footer: {
       description:

@@ -38,6 +38,7 @@ export function valuesFromSettings(
     instagramUrl: s.instagramUrl ?? "",
     youtubeUrl: s.youtubeUrl ?? "",
     xUrl: s.xUrl ?? "",
+    whatsappUrl: s.whatsappUrl ?? "",
     footerDescriptionAr: s.footerDescriptionAr ?? "",
     footerDescriptionEn: s.footerDescriptionEn ?? "",
   }
@@ -72,6 +73,7 @@ export const emptyValues: WebsiteSiteSettingsFormValues = {
   instagramUrl: "",
   youtubeUrl: "",
   xUrl: "",
+  whatsappUrl: "",
   footerDescriptionAr: "",
   footerDescriptionEn: "",
 }

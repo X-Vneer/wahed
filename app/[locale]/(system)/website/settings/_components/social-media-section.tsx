@@ -20,7 +20,13 @@ import type { UseFormReturnType } from "@mantine/form"
 import { Mail, Phone } from "lucide-react"
 import { useTranslations } from "next-intl"
 import type { FormModel } from "./form-model"
-import { FacebookIcon, InstagramIcon, XIcon, YoutubeIcon } from "./social-icons"
+import {
+  FacebookIcon,
+  InstagramIcon,
+  WhatsAppIcon,
+  XIcon,
+  YoutubeIcon,
+} from "./social-icons"
 
 type Props = {
   form: UseFormReturnType<FormModel>
@@ -175,6 +181,28 @@ export function SocialMediaSection({ form, isLoading }: Props) {
                 />
                 {form.errors.xUrl ? (
                   <FieldError>{String(form.errors.xUrl)}</FieldError>
+                ) : null}
+              </FieldContent>
+            </Field>
+            <Field data-invalid={!!form.errors.whatsappUrl}>
+              <FieldLabel htmlFor="ws-whatsapp">
+                <span className="flex items-center gap-1.5">
+                  <WhatsAppIcon className="size-4" />
+                  {t("social.whatsapp")}
+                </span>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="ws-whatsapp"
+                  dir="ltr"
+                  key={form.key("whatsappUrl")}
+                  {...form.getInputProps("whatsappUrl")}
+                  placeholder="https://wa.me/9665XXXXXXXX"
+                  disabled={isLoading}
+                  aria-invalid={!!form.errors.whatsappUrl}
+                />
+                {form.errors.whatsappUrl ? (
+                  <FieldError>{String(form.errors.whatsappUrl)}</FieldError>
                 ) : null}
               </FieldContent>
             </Field>

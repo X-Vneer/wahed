@@ -43,6 +43,7 @@ export const websiteSiteSettingsFormSchema = z.object({
   instagramUrl: urlOrEmpty,
   youtubeUrl: urlOrEmpty,
   xUrl: urlOrEmpty,
+  whatsappUrl: urlOrEmpty,
 
   footerDescriptionAr: z.string().max(1000),
   footerDescriptionEn: z.string().max(1000),

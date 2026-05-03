@@ -22,6 +22,10 @@ import {
   PartnersSectionForm,
   PartnersSectionValues,
 } from "./_components/partners-section-form"
+import {
+  ProjectsSectionForm,
+  ProjectsSectionValues,
+} from "./_components/projects-section-form"
 import apiClient from "@/services"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
@@ -39,6 +43,7 @@ type BilingualHomeContent = {
     partnersSection?: Record<string, unknown>
     contactSection?: Record<string, unknown>
     ctaSection?: Record<string, unknown>
+    projectsSection?: Record<string, unknown>
   }
   en?: {
     heroSection?: Record<string, unknown>
@@ -48,6 +53,7 @@ type BilingualHomeContent = {
     partnersSection?: Record<string, unknown>
     contactSection?: Record<string, unknown>
     ctaSection?: Record<string, unknown>
+    projectsSection?: Record<string, unknown>
   }
 }
 
@@ -57,6 +63,7 @@ type HomeEditorData = {
   aboutSection: AboutSectionValues
   statsSection: StatsSectionValues
   partnersSection: PartnersSectionValues
+  projectsSection: ProjectsSectionValues
   contactSection: ContactSectionValues
   rawContent: BilingualHomeContent
 }
@@ -74,6 +81,8 @@ function extractHomeEditorData(content: BilingualHomeContent): HomeEditorData {
   const enBrief = content.en?.briefSection ?? content.en?.aboutSection
   const arPartners = content.ar?.partnersSection
   const enPartners = content.en?.partnersSection
+  const arProjects = content.ar?.projectsSection
+  const enProjects = content.en?.projectsSection
   const arContact = content.ar?.contactSection ?? content.ar?.ctaSection
   const enContact = content.en?.contactSection ?? content.en?.ctaSection
 
@@ -138,6 +147,15 @@ function extractHomeEditorData(content: BilingualHomeContent): HomeEditorData {
       ctaLabelAr: getString(arContact?.ctaLabel),
       ctaLabelEn: getString(enContact?.ctaLabel),
     },
+    projectsSection: {
+      isActive: getBoolean(arProjects?.isActive),
+      eyebrowTitleAr: getString(arProjects?.eyebrowTitle),
+      eyebrowTitleEn: getString(enProjects?.eyebrowTitle),
+      titleAr: getString(arProjects?.title),
+      titleEn: getString(enProjects?.title),
+      contentAr: getString(arProjects?.content ?? arProjects?.description),
+      contentEn: getString(enProjects?.content ?? enProjects?.description),
+    },
     rawContent: content,
   }
 }
@@ -166,6 +184,7 @@ export default function WebsiteHomePage() {
       | "aboutSection"
       | "statsSection"
       | "partnersSection"
+      | "projectsSection"
       | "contactSection"
   }) => {
     const currentAr = data?.rawContent?.ar ?? {}
@@ -305,6 +324,30 @@ export default function WebsiteHomePage() {
     })
   }
 
+  const handleProjectsSectionSubmit = async ({
+    values,
+  }: {
+    values: ProjectsSectionValues
+  }) => {
+    await saveSection({
+      key: "projectsSection",
+      ar: {
+        isActive: values.isActive,
+        eyebrowTitle: values.eyebrowTitleAr,
+        title: values.titleAr,
+        content: values.contentAr,
+        description: values.contentAr,
+      },
+      en: {
+        isActive: values.isActive,
+        eyebrowTitle: values.eyebrowTitleEn,
+        title: values.titleEn,
+        content: values.contentEn,
+        description: values.contentEn,
+      },
+    })
+  }
+
   const handleContactSectionSubmit = async ({
     values,
   }: {
@@ -383,6 +426,12 @@ export default function WebsiteHomePage() {
         slug="home"
         initialValues={data?.partnersSection}
         onSubmit={handlePartnersSectionSubmit}
+      />
+
+      <ProjectsSectionForm
+        slug="home"
+        initialValues={data?.projectsSection}
+        onSubmit={handleProjectsSectionSubmit}
       />
 
       <ContactSectionForm

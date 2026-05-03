@@ -61,6 +61,13 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
           "نؤمن بأن التواصل هو بداية بناء الثقة، ونسعد بالإجابة على استفساراتكم وتقديم الدعم اللازم، لنكون شركاءكم في تحقيق تطلعاتكم وتقديم تجربة ترتقي لتوقعاتكم دائماً.",
         ctaLabel: "اضغط هنا",
       },
+      projectsSection: {
+        isActive: true,
+        eyebrowTitle: "بلورة الإبداع",
+        title: "مشاريعنا",
+        description:
+          "مشاريعنا هي بلورة الإبداع والفخامة تجمع بين التصميم العصري وجودة التنفيذ لتقديم قيمة استثنائية ومستدامة تلبي تطلعات المستقبل وتعزز ثقة عملائنا دائما.",
+      },
     },
     en: {
       heroSection: {
@@ -107,6 +114,13 @@ export const WEBSITE_CONTENT_DEFAULTS: Record<
         description:
           "We believe communication is the beginning of trust. We are pleased to answer your inquiries and provide the support you need, to be your partners in achieving your aspirations and delivering an experience that always meets your expectations.",
         ctaLabel: "Click here",
+      },
+      projectsSection: {
+        isActive: true,
+        eyebrowTitle: "Crystallizing Creativity",
+        title: "Our Projects",
+        description:
+          "Our projects are the crystallization of creativity and elegance — combining modern design with execution excellence to deliver exceptional, sustainable value that meets future aspirations and strengthens our clients' trust.",
       },
     },
   },
