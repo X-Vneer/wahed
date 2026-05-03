@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select"
 import { useCities } from "@/hooks/use-cities"
 import { useRegions } from "@/hooks/use-regions"
-import { useProjectStatuses } from "@/hooks/use-project-statuses"
+import { usePublicProjectStatuses } from "@/hooks/use-public-project-statuses"
 import { useTranslations } from "next-intl"
 import { usePublicProjectFormContext } from "../public-project-form-context"
 import { usePublicProjectFieldErr } from "../use-public-project-field-err"
@@ -31,7 +31,7 @@ export function PublicProjectFormStepLocationDetails() {
   const regions = regionsRes?.data?.data ?? []
   const { data: citiesRes } = useCities(form.getValues().regionId || null)
   const cities = citiesRes?.data?.data ?? []
-  const { data: projectStatusesRes } = useProjectStatuses()
+  const { data: projectStatusesRes } = usePublicProjectStatuses()
   const projectStatuses = projectStatusesRes?.data?.data ?? []
   const selectedStatusName = projectStatuses.find(
     (s) => s.id === form.getValues().statusId

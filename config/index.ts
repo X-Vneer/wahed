@@ -25,6 +25,16 @@ export const PROJECT_STATUS_ID_ON_HOLD = "project-status-on-hold"
 export const PROJECT_STATUS_ID_COMPLETED = "project-status-completed"
 export const PROJECT_STATUS_ID_CANCELLED = "project-status-cancelled"
 
+/** Fixed system public project status IDs. Labels editable in lists/public-project-status, cannot be deleted. */
+export const PUBLIC_PROJECT_STATUS_ID_PLANNING = "public-project-status-planning"
+export const PUBLIC_PROJECT_STATUS_ID_IN_PROGRESS =
+  "public-project-status-in-progress"
+export const PUBLIC_PROJECT_STATUS_ID_ON_HOLD = "public-project-status-on-hold"
+export const PUBLIC_PROJECT_STATUS_ID_COMPLETED =
+  "public-project-status-completed"
+export const PUBLIC_PROJECT_STATUS_ID_CANCELLED =
+  "public-project-status-cancelled"
+
 // Re-export permissions constants for convenience
 export {
   PERMISSIONS,

@@ -67,6 +67,7 @@
     "listsCities": "Cities",
     "listsTaskStatuses": "Task Statuses",
     "listsProjectStatuses": "Project Statuses",
+    "listsPublicProjectStatuses": "Public Project Statuses",
     "listsTaskTypes": "Task Types",
     "usersPermissions": "Users & Permissions",
     "website": "Website",
@@ -105,6 +106,9 @@
     },
     "projectStatus": {
       "title": "Project Statuses"
+    },
+    "publicProjectStatus": {
+      "title": "Public Project Statuses"
     },
     "taskCategory": {
       "title": "Task Categories"
@@ -597,6 +601,56 @@
     },
     "deleteConfirm": {
       "title": "Delete Project Status",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
+    }
+  },
+  "publicProjectStatus": {
+    "createTitle": "Create Public Project Status",
+    "editTitle": "Edit Public Project Status",
+    "create": "Create",
+    "update": "Update",
+    "type": {
+      "system": "System",
+      "custom": "Custom"
+    },
+    "systemStatusNote": "This is a fixed system status. You can edit its labels (Arabic/English) and color, but it cannot be deleted.",
+    "form": {
+      "type": "Type",
+      "nameAr": "Name (Arabic)",
+      "nameArPlaceholder": "Enter name in Arabic",
+      "nameEn": "Name (English)",
+      "nameEnPlaceholder": "Enter name in English",
+      "color": "Color",
+      "colorPlaceholder": "Enter color code",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "actions": "Actions"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "Arabic name is required"
+      },
+      "nameEn": {
+        "required": "English name is required"
+      },
+      "color": {
+        "required": "Color is required"
+      },
+      "not_found": "Public project status not found",
+      "cannot_delete_system": "System statuses (Planning, In Progress, On Hold, Completed, Cancelled) cannot be deleted. You can edit their labels and color.",
+      "create_failed": "Failed to create public project status",
+      "update_failed": "Failed to update public project status"
+    },
+    "success": {
+      "created": "Public project status created successfully",
+      "updated": "Public project status updated successfully",
+      "deleted": "Public project status deleted successfully"
+    },
+    "deleteConfirm": {
+      "title": "Delete Public Project Status",
       "description": "Are you sure you want to delete {name}? This action cannot be undone.",
       "delete": "Delete",
       "deleting": "Deleting...",

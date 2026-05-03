@@ -72,7 +72,12 @@ export async function GET(
       area: project.area ?? null,
       deedNumber: project.deedNumber ?? null,
       googleMapsAddress: project.googleMapsAddress ?? null,
-      statusId: project.statusId ?? null,
+      // Internal Project.statusId points to ProjectStatus; PublicProject uses
+      // PublicProjectStatus. Translate the system-row id; custom internal
+      // statuses have no public counterpart, so leave null.
+      statusId: project.statusId?.startsWith("project-status-")
+        ? `public-${project.statusId}`
+        : null,
       categoryIds: project.categories.map((c) => c.id),
       images: project.image ? [project.image] : [],
       attachments: project.attachments.map((a) => ({

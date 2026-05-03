@@ -181,7 +181,18 @@ model ProjectStatus {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  projects       Project[]
+  projects Project[]
+}
+
+model PublicProjectStatus {
+  id        String   @id @default(cuid())
+  nameAr    String
+  nameEn    String
+  color     String
+  isSystem  Boolean  @default(false) // Fixed statuses (Planning, In Progress, On Hold, Completed, Cancelled) - editable labels, cannot delete
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   publicProjects PublicProject[]
 }
 
@@ -619,7 +630,7 @@ model PublicProject {
   deedNumber         String?
   googleMapsAddress  String?
   statusId           String?
-  status             ProjectStatus?            @relation(fields: [statusId], references: [id], onDelete: SetNull)
+  status             PublicProjectStatus?      @relation(fields: [statusId], references: [id], onDelete: SetNull)
   cityId             String
   city               City                      @relation(fields: [cityId], references: [id], onDelete: Cascade)
   categories         ProjectCategory[]

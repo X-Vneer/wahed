@@ -67,6 +67,7 @@
     "listsCities": "المدن",
     "listsTaskStatuses": "حالات المهام",
     "listsProjectStatuses": "حالات المشاريع",
+    "listsPublicProjectStatuses": "حالات مشاريع الموقع",
     "listsTaskTypes": "انواع المهام",
     "usersPermissions": "المستخدمين وصلاحيات",
     "website": "الموقع الالكتروني ",
@@ -105,6 +106,9 @@
     },
     "projectStatus": {
       "title": "حالات المشاريع"
+    },
+    "publicProjectStatus": {
+      "title": "حالات مشاريع الموقع"
     },
     "taskCategory": {
       "title": "فئات المهام"
@@ -598,6 +602,56 @@
     },
     "deleteConfirm": {
       "title": "حذف حالة المشروع",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    }
+  },
+  "publicProjectStatus": {
+    "createTitle": "إنشاء حالة مشروع موقع",
+    "editTitle": "تعديل حالة مشروع موقع",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "type": {
+      "system": "نظام",
+      "custom": "مخصص"
+    },
+    "systemStatusNote": "هذه حالة نظام ثابتة. يمكنك تعديل التسميات (عربي/إنجليزي) واللون، لكن لا يمكن حذفها.",
+    "form": {
+      "type": "النوع",
+      "nameAr": "الاسم (عربي)",
+      "nameArPlaceholder": "أدخل الاسم بالعربية",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+      "color": "اللون",
+      "colorPlaceholder": "أدخل كود اللون",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث",
+      "actions": "إجراءات"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم بالعربية مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم بالإنجليزية مطلوب"
+      },
+      "color": {
+        "required": "اللون مطلوب"
+      },
+      "not_found": "حالة مشروع الموقع غير موجودة",
+      "cannot_delete_system": "حالات النظام الثابتة (التخطيط، قيد التنفيذ، متوقف، منتهي، ملغي) لا يمكن حذفها. يمكنك تعديل تسمياتها واللون.",
+      "create_failed": "فشل في إنشاء حالة مشروع الموقع",
+      "update_failed": "فشل في تحديث حالة مشروع الموقع"
+    },
+    "success": {
+      "created": "تم إنشاء حالة مشروع الموقع بنجاح",
+      "updated": "تم تحديث حالة مشروع الموقع بنجاح",
+      "deleted": "تم حذف حالة مشروع الموقع بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف حالة مشروع الموقع",
       "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
       "delete": "حذف",
       "deleting": "جاري الحذف...",

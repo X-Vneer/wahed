@@ -1,4 +1,4 @@
-import { PERMISSIONS, PROJECT_STATUS_ID_PLANNING } from "@/config"
+import { PERMISSIONS, PUBLIC_PROJECT_STATUS_ID_PLANNING } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
 import {
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
           area: data.area ?? null,
           deedNumber: emptyToNull(data.deedNumber ?? undefined),
           googleMapsAddress: emptyToNull(data.googleMapsAddress ?? undefined),
-          statusId: data.statusId ?? PROJECT_STATUS_ID_PLANNING,
+          statusId: data.statusId ?? PUBLIC_PROJECT_STATUS_ID_PLANNING,
           cityId: data.cityId,
           startingPrice: data.startingPrice ?? null,
           endingPrice: data.endingPrice ?? null,
