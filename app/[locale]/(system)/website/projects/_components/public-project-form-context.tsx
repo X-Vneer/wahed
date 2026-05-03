@@ -6,9 +6,6 @@ import type {
   PublicProjectFeatureInput,
 } from "@/lib/schemas/public-project"
 import { createFormContext } from "@mantine/form"
-import type { PROJECT_STATUSES } from "./public-project-form-constants"
-
-export type PublicProjectFormStatus = "" | (typeof PROJECT_STATUSES)[number]
 
 export type PublicProjectFormBadge = PublicProjectBadgeInput
 export type PublicProjectFormFeature = PublicProjectFeatureInput
@@ -32,7 +29,7 @@ export type PublicProjectFormValues = {
   area: string | number
   deedNumber: string
   googleMapsAddress: string
-  status: PublicProjectFormStatus
+  statusId: string
   cityId: string
   categoryIds: string[]
   badges: PublicProjectFormBadge[]
@@ -67,7 +64,7 @@ export function getPublicProjectFormInitialValues(
     area: "",
     deedNumber: "",
     googleMapsAddress: "",
-    status: "",
+    statusId: "",
     cityId: "",
     categoryIds: [],
     badges: [],

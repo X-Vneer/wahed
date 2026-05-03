@@ -11,28 +11,10 @@ import {
 } from "@/components/ui/select"
 import { useCities } from "@/hooks/use-cities"
 import { useProjectCategories } from "@/hooks/use-project-categories"
+import { useProjectStatuses } from "@/hooks/use-project-statuses"
 import { useRegions } from "@/hooks/use-regions"
 import { useTranslations } from "next-intl"
 import { useProjectFormContext } from "./project-form-context"
-
-const PROJECT_STATUSES = [
-  "PLANNING",
-  "IN_PROGRESS",
-  "ON_HOLD",
-  "COMPLETED",
-  "CANCELLED",
-] as const
-
-const PROJECT_STATUS_LABEL_KEYS: Record<
-  (typeof PROJECT_STATUSES)[number],
-  "projects.status.planning" | "projects.status.inProgress" | "projects.status.onHold" | "projects.status.completed" | "projects.status.cancelled"
-> = {
-  PLANNING: "projects.status.planning",
-  IN_PROGRESS: "projects.status.inProgress",
-  ON_HOLD: "projects.status.onHold",
-  COMPLETED: "projects.status.completed",
-  CANCELLED: "projects.status.cancelled",
-}
 
 export function ProjectDetailsSection() {
   const t = useTranslations()
@@ -41,10 +23,15 @@ export function ProjectDetailsSection() {
   const { data: categoriesData } = useProjectCategories()
   const { data: regionsData } = useRegions()
   const { data: citiesData } = useCities(form.values.regionId || null)
+  const { data: projectStatusesRes } = useProjectStatuses()
 
   const categories = categoriesData?.data?.data ?? []
   const regions = regionsData?.data?.data ?? []
   const cities = citiesData?.data?.data || []
+  const projectStatuses = projectStatusesRes?.data?.data ?? []
+  const selectedStatus = projectStatuses.find(
+    (s) => s.id === form.values.statusId
+  )
 
   return (
     <>
@@ -273,43 +260,54 @@ export function ProjectDetailsSection() {
         </Field>
 
         {/* status */}
-        <Field data-invalid={!!form.errors.status}>
-          <FieldLabel htmlFor="status">
+        <Field data-invalid={!!form.errors.statusId}>
+          <FieldLabel htmlFor="statusId">
             {t("projects.form.status")}
           </FieldLabel>
           <Select
-            value={form.values.status || ""}
+            value={form.values.statusId || ""}
             onValueChange={(value) => {
-              form.setFieldValue(
-                "status",
-                value ? (value as (typeof form.values)["status"]) : undefined
-              )
+              form.setFieldValue("statusId", value || undefined)
             }}
           >
             <SelectTrigger
-              id="status"
+              id="statusId"
               className="w-full"
-              aria-invalid={!!form.errors.status}
+              aria-invalid={!!form.errors.statusId}
             >
               <SelectValue>
-                {form.values.status
-                  ? t(PROJECT_STATUS_LABEL_KEYS[form.values.status])
-                  : t("projects.form.statusPlaceholder")}
+                {selectedStatus ? (
+                  <span className="flex items-center gap-2">
+                    <span
+                      className="size-2.5 rounded-full"
+                      style={{ backgroundColor: selectedStatus.color }}
+                    />
+                    {selectedStatus.name}
+                  </span>
+                ) : (
+                  t("projects.form.statusPlaceholder")
+                )}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="">
                 {t("projects.form.statusPlaceholder")}
               </SelectItem>
-              {PROJECT_STATUSES.map((status) => (
-                <SelectItem key={status} value={status}>
-                  {t(PROJECT_STATUS_LABEL_KEYS[status])}
+              {projectStatuses.map((status) => (
+                <SelectItem key={status.id} value={status.id}>
+                  <span className="flex items-center gap-2">
+                    <span
+                      className="size-2.5 rounded-full"
+                      style={{ backgroundColor: status.color }}
+                    />
+                    {status.name}
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {form.errors.status && (
-            <FieldError errors={[{ message: String(form.errors.status) }]} />
+          {form.errors.statusId && (
+            <FieldError errors={[{ message: String(form.errors.statusId) }]} />
           )}
         </Field>
       </div>

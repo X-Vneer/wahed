@@ -2,12 +2,16 @@ import "dotenv/config"
 import { UserRole } from "../lib/generated/prisma/client"
 import {
   PermissionKey,
-  ProjectStatus,
   EventColor,
   TaskPriority,
 } from "../lib/generated/prisma/enums"
 import db from "../lib/db"
 import bcrypt from "bcryptjs"
+import {
+  PROJECT_STATUS_ID_PLANNING,
+  PROJECT_STATUS_ID_IN_PROGRESS,
+  PROJECT_STATUS_ID_COMPLETED,
+} from "../config"
 
 const saudiRegions = [
   {
@@ -676,6 +680,60 @@ async function main() {
 
   console.log("✅ Seeded task statuses")
 
+  // Seed 5 fixed system project statuses (labels editable, cannot be deleted)
+  const systemProjectStatuses = [
+    {
+      id: "project-status-planning",
+      nameAr: "التخطيط",
+      nameEn: "Planning",
+      color: "#F59E0B",
+      isSystem: true,
+    },
+    {
+      id: "project-status-in-progress",
+      nameAr: "قيد التنفيذ",
+      nameEn: "In Progress",
+      color: "#3B82F6",
+      isSystem: true,
+    },
+    {
+      id: "project-status-on-hold",
+      nameAr: "متوقف",
+      nameEn: "On Hold",
+      color: "#F97316",
+      isSystem: true,
+    },
+    {
+      id: "project-status-completed",
+      nameAr: "منتهي",
+      nameEn: "Completed",
+      color: "#8B5CF6",
+      isSystem: true,
+    },
+    {
+      id: "project-status-cancelled",
+      nameAr: "ملغي",
+      nameEn: "Cancelled",
+      color: "#EF4444",
+      isSystem: true,
+    },
+  ]
+
+  for (const status of systemProjectStatuses) {
+    await db.projectStatus.upsert({
+      where: { id: status.id },
+      update: {
+        nameAr: status.nameAr,
+        nameEn: status.nameEn,
+        color: status.color,
+        isSystem: status.isSystem,
+      },
+      create: status,
+    })
+  }
+
+  console.log("✅ Seeded project statuses")
+
   // Seed task categories
   const taskCategories = [
     {
@@ -981,7 +1039,7 @@ async function main() {
         numberOfFloors: 5,
         deedNumber: "DEED-2024-001",
         workDuration: 24,
-        status: ProjectStatus.IN_PROGRESS,
+        statusId: PROJECT_STATUS_ID_IN_PROGRESS,
         cityId: riyadhCity.id,
         categoryIds: [residentialCategory.id],
       },
@@ -999,7 +1057,7 @@ async function main() {
         numberOfFloors: 7,
         deedNumber: "DEED-2024-002",
         workDuration: 30,
-        status: ProjectStatus.PLANNING,
+        statusId: PROJECT_STATUS_ID_PLANNING,
         cityId: riyadhCity.id,
         categoryIds: [residentialCategory.id],
       },
@@ -1017,7 +1075,7 @@ async function main() {
         numberOfFloors: 4,
         deedNumber: "DEED-2024-003",
         workDuration: 18,
-        status: ProjectStatus.IN_PROGRESS,
+        statusId: PROJECT_STATUS_ID_IN_PROGRESS,
         cityId: riyadhCity.id,
         categoryIds: [residentialCategory.id],
       },
@@ -1138,7 +1196,7 @@ async function main() {
           "Luxury residential towers with panoramic views in Al Yasmin district",
         images: [sampleImage, sampleImage2, sampleImage, sampleImage2, sampleImage],
         isActive: true,
-        status: ProjectStatus.IN_PROGRESS,
+        statusId: PROJECT_STATUS_ID_IN_PROGRESS,
         cityId: publicProjectCities[0]!.id,
         categoryId: publicProjectCategories[0]!.id,
         area: 12500.0,
@@ -1183,7 +1241,7 @@ async function main() {
           "Modern commercial complex on Jeddah Corniche with sea views",
         images: [sampleImage2, sampleImage, sampleImage2, sampleImage, sampleImage2],
         isActive: true,
-        status: ProjectStatus.PLANNING,
+        statusId: PROJECT_STATUS_ID_PLANNING,
         cityId: publicProjectCities[1]!.id,
         categoryId: publicProjectCategories[1]!.id,
         area: 8700.0,
@@ -1227,7 +1285,7 @@ async function main() {
           "Luxury tourism resort on the Gulf coast in Dammam",
         images: [sampleImage, sampleImage, sampleImage2, sampleImage, sampleImage2],
         isActive: false,
-        status: ProjectStatus.PLANNING,
+        statusId: PROJECT_STATUS_ID_PLANNING,
         cityId: publicProjectCities[2]!.id,
         categoryId: publicProjectCategories[2]!.id,
         area: 35000.0,
@@ -1279,7 +1337,7 @@ async function main() {
           "Family residential compound with expansive gardens in East Riyadh",
         images: [sampleImage2, sampleImage2, sampleImage, sampleImage2, sampleImage],
         isActive: true,
-        status: ProjectStatus.COMPLETED,
+        statusId: PROJECT_STATUS_ID_COMPLETED,
         cityId: publicProjectCities[3]!.id,
         categoryId: publicProjectCategories[3]!.id,
         area: 45000.0,

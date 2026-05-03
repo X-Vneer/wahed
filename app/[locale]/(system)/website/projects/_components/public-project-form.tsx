@@ -59,7 +59,7 @@ function editDataToFormValues(
     area: data.area,
     deedNumber: data.deedNumber,
     googleMapsAddress: data.googleMapsAddress,
-    status: data.status as PublicProjectFormValues["status"],
+    statusId: data.statusId ?? "",
     cityId: data.cityId,
     categoryIds: data.categoryIds,
     badges: data.badges,
@@ -130,7 +130,7 @@ export function PublicProjectForm({
       area: p.area ?? "",
       deedNumber: p.deedNumber ?? "",
       googleMapsAddress: p.googleMapsAddress ?? "",
-      status: p.status,
+      statusId: p.statusId ?? "",
       categoryIds: [...p.categoryIds],
       images: p.images.length > 0 ? p.images : prev.images,
       linkedAttachmentCandidates:
@@ -244,7 +244,7 @@ export function PublicProjectForm({
       const payload = {
         ...rest,
         attachments: [...fromLinked, ...newAttachments],
-        status: values.status || undefined,
+        statusId: values.statusId || undefined,
         projectId: values.projectId?.trim() || undefined,
         projectGuide: values.projectGuide?.trim() || undefined,
       }

@@ -1,15 +1,6 @@
 import * as z from "zod/v4"
 import { attachmentSchema } from "./attachment"
 
-// Project status enum values
-export const ProjectStatusEnum = z.enum([
-  "PLANNING",
-  "IN_PROGRESS",
-  "ON_HOLD",
-  "COMPLETED",
-  "CANCELLED",
-])
-
 // Project form schema - matches the frontend form validation
 // Error messages are translation keys that should be translated when displaying errors
 export const createProjectSchema = z.object({
@@ -32,7 +23,11 @@ export const createProjectSchema = z.object({
   categoryIds: z
     .array(z.string())
     .min(1, { error: "projects.errors.categoryIds.required" }),
-  status: ProjectStatusEnum.optional(),
+  statusId: z
+    .string()
+    .min(1)
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
   isActive: z.boolean().optional(),
   attachments: z.array(attachmentSchema).optional().default([]),
   additionalFields: z

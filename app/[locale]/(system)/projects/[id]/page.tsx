@@ -59,25 +59,8 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
 
   // Transform project for display
   const transformedProject = transformProject(project, locale)
-
-  // Map project status enum to translated label
-  const getProjectStatusLabel = (status: string | null) => {
-    if (!status) return null
-
-    const statusMap: Record<string, string> = {
-      COMPLETED: t("projects.status.completed"),
-      IN_PROGRESS: t("projects.status.inProgress"),
-      PLANNING: t("projects.status.planning"),
-      ON_HOLD: t("projects.status.onHold"),
-      CANCELLED: t("projects.status.cancelled"),
-    }
-
-    return statusMap[status] ?? status
-  }
-
-  const projectStatusLabel = getProjectStatusLabel(
-    (transformedProject.status as string | null) ?? null
-  )
+  const projectStatusLabel = transformedProject.status?.name ?? null
+  const projectStatusColor = transformedProject.status?.color ?? null
 
   return (
     <div className="flex h-full flex-col gap-6">
@@ -300,7 +283,15 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
                   <span className="text-muted-foreground">
                     {t("common.status")}
                   </span>
-                  <span className="font-medium">{projectStatusLabel}</span>
+                  <span className="flex items-center gap-2 font-medium">
+                    {projectStatusColor ? (
+                      <span
+                        className="size-2.5 rounded-full"
+                        style={{ backgroundColor: projectStatusColor }}
+                      />
+                    ) : null}
+                    {projectStatusLabel}
+                  </span>
                 </div>
               )}
 

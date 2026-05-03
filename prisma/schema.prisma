@@ -19,14 +19,6 @@ enum UserRole {
   STAFF
 }
 
-enum ProjectStatus {
-  PLANNING
-  IN_PROGRESS
-  ON_HOLD
-  COMPLETED
-  CANCELLED
-}
-
 enum PermissionKey {
   PROJECT_CREATE
   PROJECT_UPDATE
@@ -180,6 +172,19 @@ model TaskStatus {
   taskTemplates TaskTemplate[]
 }
 
+model ProjectStatus {
+  id        String   @id @default(cuid())
+  nameAr    String
+  nameEn    String
+  color     String
+  isSystem  Boolean  @default(false) // Fixed statuses (Planning, In Progress, On Hold, Completed, Cancelled) - editable labels, cannot delete
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects       Project[]
+  publicProjects PublicProject[]
+}
+
 model TaskCategory {
   id            String         @id @default(cuid())
   nameAr        String
@@ -204,8 +209,9 @@ model Project {
   workDuration      Int?
   googleMapsAddress String?
 
-  status     ProjectStatus @default(PLANNING)
-  isActive   Boolean       @default(true)
+  statusId   String?
+  status     ProjectStatus? @relation(fields: [statusId], references: [id], onDelete: SetNull)
+  isActive   Boolean        @default(true)
   archivedAt DateTime?
 
   cityId String
@@ -612,7 +618,8 @@ model PublicProject {
   area               Float?
   deedNumber         String?
   googleMapsAddress  String?
-  status             ProjectStatus             @default(PLANNING)
+  statusId           String?
+  status             ProjectStatus?            @relation(fields: [statusId], references: [id], onDelete: SetNull)
   cityId             String
   city               City                      @relation(fields: [cityId], references: [id], onDelete: Cascade)
   categories         ProjectCategory[]

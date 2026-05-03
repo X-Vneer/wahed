@@ -81,7 +81,8 @@ Returns global theme, fonts, logos, site name, default SEO, contact info, social
     "facebook": "https://facebook.com/yourpage",
     "instagram": "https://instagram.com/yourpage",
     "youtube": "https://youtube.com/@yourchannel",
-    "x": "https://x.com/yourhandle"
+    "x": "https://x.com/yourhandle",
+    "whatsapp": "https://wa.me/9665XXXXXXXX"
   },
   "faviconUrl": "https://...",
   "googleAnalyticsMeasurementId": "G-XXXXXXXXXX"
@@ -299,11 +300,17 @@ Page content is managed in the CMS admin and stored as flexible JSON per page pe
     "title": "بداية الحوار",
     "description": "...",
     "ctaLabel": "اضغط هنا"
+  },
+  "projectsSection": {
+    "isActive": true,
+    "eyebrowTitle": "بلورة الإبداع",
+    "title": "مشاريعنا",
+    "description": "مشاريعنا هي بلورة الإبداع والفخامة..."
   }
 }
 ```
 
-**Important:** Check `isActive` on `statsSection` and `partnersSection` — only render these sections when `isActive` is `true`.
+**Important:** Check `isActive` on `statsSection`, `partnersSection`, and `projectsSection` — only render these sections when `isActive` is `true`. The `projectsSection` is the heading + intro shown above the homepage projects carousel; the actual project cards come from `PublicProject` records (see Public Projects below).
 
 #### `about` — About Page
 
@@ -426,7 +433,7 @@ Each public project contains:
 | `shortDescription` | string \| null | Card/preview description |
 | `images` | string[] | Array of image URLs |
 | `isActive` | boolean | Whether visible on the public site |
-| `status` | enum | `PLANNING`, `IN_PROGRESS`, `ON_HOLD`, `COMPLETED`, `CANCELLED` |
+| `status` | object \| null | `{ id, name, color }` — locale-resolved name and hex color from the configurable `ProjectStatus` table. System rows have stable IDs: `project-status-planning`, `project-status-in-progress`, `project-status-on-hold`, `project-status-completed`, `project-status-cancelled`. Custom statuses use CUIDs. |
 | `location` | string \| null | Locale-resolved location text |
 | `area` | number \| null | Area in square meters |
 | `deedNumber` | string \| null | Property deed number |
@@ -467,15 +474,17 @@ Only projects with `isActive: true` should be displayed on the public website. F
 
 ### Project Status Display
 
-Map the status enum to user-friendly labels:
+`status` is returned as a locale-resolved object — render `status.name` for the label and `status.color` for the badge. The five system rows ship with these defaults (admins can rename/recolor them and add custom statuses via the internal panel):
 
-| Enum Value | Arabic | English |
-|------------|--------|---------|
-| `PLANNING` | مخطط | Planning |
-| `IN_PROGRESS` | قيد التنفيذ | In Progress |
-| `ON_HOLD` | متوقف | On Hold |
-| `COMPLETED` | مكتمل | Completed |
-| `CANCELLED` | ملغي | Cancelled |
+| Stable ID | Arabic | English | Default color |
+|-----------|--------|---------|---------------|
+| `project-status-planning` | التخطيط | Planning | `#F59E0B` |
+| `project-status-in-progress` | قيد التنفيذ | In Progress | `#3B82F6` |
+| `project-status-on-hold` | متوقف | On Hold | `#F97316` |
+| `project-status-completed` | منتهي | Completed | `#8B5CF6` |
+| `project-status-cancelled` | ملغي | Cancelled | `#EF4444` |
+
+When you need to act on a specific system bucket (e.g. show only "In Progress" projects), compare `status.id === "project-status-in-progress"`. Custom statuses created in the admin will appear with CUID ids and a name/color the admin chose.
 
 ---
 

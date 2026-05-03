@@ -18,6 +18,13 @@ export const TASK_STATUS_ID_COMPLETED = "task-status-completed"
 export const TASK_STATUS_ID_CANCELLED = "task-status-cancelled"
 export const TASK_STATUS_ID_PENDING = "task-status-pending"
 
+/** Fixed system project status IDs. Labels editable in lists/project-status, cannot be deleted. */
+export const PROJECT_STATUS_ID_PLANNING = "project-status-planning"
+export const PROJECT_STATUS_ID_IN_PROGRESS = "project-status-in-progress"
+export const PROJECT_STATUS_ID_ON_HOLD = "project-status-on-hold"
+export const PROJECT_STATUS_ID_COMPLETED = "project-status-completed"
+export const PROJECT_STATUS_ID_CANCELLED = "project-status-cancelled"
+
 // Re-export permissions constants for convenience
 export {
   PERMISSIONS,

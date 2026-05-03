@@ -177,7 +177,7 @@ export async function PUT(
             area: data.area ?? null,
             deedNumber: emptyToNull(data.deedNumber ?? undefined),
             googleMapsAddress: emptyToNull(data.googleMapsAddress ?? undefined),
-            status: data.status ?? undefined,
+            ...(data.statusId ? { statusId: data.statusId } : {}),
             cityId: data.cityId,
             startingPrice: data.startingPrice ?? null,
             endingPrice: data.endingPrice ?? null,

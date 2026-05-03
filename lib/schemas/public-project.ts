@@ -1,6 +1,5 @@
 import * as z from "zod/v4"
 import { attachmentSchema } from "@/lib/schemas/attachment"
-import { ProjectStatusEnum } from "@/lib/schemas/project"
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -61,9 +60,9 @@ export const createPublicProjectSchema = z.object({
   area: optionalNumber(),
   deedNumber: z.string().optional(),
   googleMapsAddress: z.string().optional(),
-  status: z.preprocess(
-    (v) => (v === "" || v === null || v === undefined ? undefined : v),
-    ProjectStatusEnum.optional()
+  statusId: z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : String(v)),
+    z.string().min(1).optional()
   ),
   cityId: z.string().min(1, { error: "cityIdRequired" }),
   categoryIds: z.array(z.string()).default([]),
@@ -116,7 +115,7 @@ export const publicProjectFormStepSchemas = [
     googleMapsAddress: true,
     area: true,
     deedNumber: true,
-    status: true,
+    statusId: true,
   }),
   publicProjectFormSchema.pick({
     categoryIds: true,

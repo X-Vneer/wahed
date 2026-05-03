@@ -35,39 +35,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
   const t = useTranslations()
   const [isOpen, setIsOpen] = useState(false)
 
-  // Get status badge text and color
-  const getStatusBadge = (status: string) => {
-    const statusMap: Record<string, { text: string; className: string }> = {
-      COMPLETED: {
-        text: t("projects.status.completed"),
-        className: "bg-purple-100 text-purple-700 border-purple-200",
-      },
-      IN_PROGRESS: {
-        text: t("projects.status.inProgress"),
-        className: "bg-blue-100 text-blue-700 border-blue-200",
-      },
-      PLANNING: {
-        text: t("projects.status.planning"),
-        className: "bg-yellow-100 text-yellow-700 border-yellow-200",
-      },
-      ON_HOLD: {
-        text: t("projects.status.onHold"),
-        className: "bg-orange-100 text-orange-700 border-orange-200",
-      },
-      CANCELLED: {
-        text: t("projects.status.cancelled"),
-        className: "bg-red-100 text-red-700 border-red-200",
-      },
-    }
-    return (
-      statusMap[status] || {
-        text: status,
-        className: "bg-gray-100 text-gray-700 border-gray-200",
-      }
-    )
-  }
-
-  const statusBadge = getStatusBadge(project.status)
+  const status = project.status
 
   // Get project type (first category or default)
   const projectType = project.categories?.[0] || t("projects.type.residential")
@@ -117,14 +85,18 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                       total: taskCount,
                     })}
                   </Badge>
-                  <Badge
-                    className={cn(
-                      "inline-b rounded-sm p-3 text-xs font-medium lg:px-5",
-                      statusBadge.className
-                    )}
-                  >
-                    {statusBadge.text}
-                  </Badge>
+                  {status ? (
+                    <Badge
+                      className="inline-b rounded-sm p-3 text-xs font-medium lg:px-5"
+                      style={{
+                        backgroundColor: `${status.color}1A`,
+                        color: status.color,
+                        borderColor: `${status.color}4D`,
+                      }}
+                    >
+                      {status.name}
+                    </Badge>
+                  ) : null}
                 </div>
 
                 <div className="space-y-2">

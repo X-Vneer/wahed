@@ -2,10 +2,9 @@ import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { createProjectSchema } from "@/lib/schemas/project"
 import { type NextRequest, NextResponse } from "next/server"
-import { PERMISSIONS_GROUPED } from "@/config"
+import { PERMISSIONS_GROUPED, PROJECT_STATUS_ID_PLANNING } from "@/config"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import { projectInclude } from "@/prisma/projects"
-import { ProjectStatus } from "@/lib/generated/prisma/enums"
 import { transformProject } from "@/prisma/projects"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { Prisma } from "@/lib/generated/prisma/client"
@@ -92,21 +91,21 @@ export async function GET(request: NextRequest) {
 
   try {
     const searchParams = request.nextUrl.searchParams
-    const status = searchParams.get("status")
+    const statusId = searchParams.get("statusId")
     const isActive = searchParams.get("archived")
 
     const [total, archived, totalTasks] = await Promise.all([
       db.project.count({
         where: {
           archivedAt: null,
-          ...(status ? { status: status as ProjectStatus } : {}),
+          ...(statusId ? { statusId } : {}),
         },
       }),
 
       db.project.count({
         where: {
           archivedAt: { not: null },
-          ...(status ? { status: status as ProjectStatus } : {}),
+          ...(statusId ? { statusId } : {}),
         },
       }),
       db.task.count(),
@@ -116,7 +115,7 @@ export async function GET(request: NextRequest) {
       include: projectInclude,
       where: {
         archivedAt: isActive == "true" ? { not: null } : null,
-        ...(status ? { status: status as ProjectStatus } : {}),
+        ...(statusId ? { statusId } : {}),
       },
     })
 
@@ -211,7 +210,7 @@ export async function POST(request: NextRequest) {
         workDuration: data.workDuration || null,
         googleMapsAddress: data.googleMapsAddress || null,
         cityId: data.cityId,
-        ...(data.status ? { status: data.status } : {}),
+        statusId: data.statusId ?? PROJECT_STATUS_ID_PLANNING,
         ...(data.isActive !== undefined ? { isActive: data.isActive } : {}),
         categories:
           data.categoryIds && data.categoryIds.length > 0

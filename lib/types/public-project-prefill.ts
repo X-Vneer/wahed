@@ -1,5 +1,3 @@
-import type { ProjectStatus } from "@/lib/generated/prisma/enums"
-
 export type PublicProjectPrefillResponse = {
   projectId: string
   titleAr: string
@@ -13,7 +11,7 @@ export type PublicProjectPrefillResponse = {
   area: number | null
   deedNumber: string | null
   googleMapsAddress: string | null
-  status: ProjectStatus
+  statusId: string | null
   categoryIds: string[]
   images: string[]
   attachments: Array<{

@@ -5,6 +5,14 @@ export const publicProjectInclude = {
   features: true,
   categories: true,
   attachments: true,
+  status: {
+    select: {
+      id: true,
+      nameAr: true,
+      nameEn: true,
+      color: true,
+    },
+  },
   city: {
     include: {
       region: true,
@@ -46,7 +54,14 @@ export const transformPublicProject = (
     isActive: project.isActive,
     isFeatured: project.isFeatured,
     projectGuide: project.projectGuide,
-    status: project.status,
+    status: project.status
+      ? {
+          id: project.status.id,
+          name:
+            locale === "ar" ? project.status.nameAr : project.status.nameEn,
+          color: project.status.color,
+        }
+      : null,
     location: localized(project.locationAr, project.locationEn, locale),
     area: project.area,
     deedNumber: project.deedNumber,
@@ -117,7 +132,7 @@ export const transformPublicProjectForEdit = (
     isActive: project.isActive,
     isFeatured: project.isFeatured,
     projectGuide: project.projectGuide,
-    status: project.status,
+    statusId: project.statusId ?? "",
     projectId: project.projectId ?? "",
     locationAr: project.locationAr ?? "",
     locationEn: project.locationEn ?? "",

@@ -17,15 +17,9 @@ import {
 } from "@/components/ui/select"
 import { useCities } from "@/hooks/use-cities"
 import { useRegions } from "@/hooks/use-regions"
+import { useProjectStatuses } from "@/hooks/use-project-statuses"
 import { useTranslations } from "next-intl"
-import {
-  PROJECT_STATUSES,
-  STATUS_LABEL_KEYS,
-} from "../public-project-form-constants"
-import {
-  usePublicProjectFormContext,
-  type PublicProjectFormValues,
-} from "../public-project-form-context"
+import { usePublicProjectFormContext } from "../public-project-form-context"
 import { usePublicProjectFieldErr } from "../use-public-project-field-err"
 
 export function PublicProjectFormStepLocationDetails() {
@@ -37,6 +31,11 @@ export function PublicProjectFormStepLocationDetails() {
   const regions = regionsRes?.data?.data ?? []
   const { data: citiesRes } = useCities(form.getValues().regionId || null)
   const cities = citiesRes?.data?.data ?? []
+  const { data: projectStatusesRes } = useProjectStatuses()
+  const projectStatuses = projectStatusesRes?.data?.data ?? []
+  const selectedStatusName = projectStatuses.find(
+    (s) => s.id === form.getValues().statusId
+  )?.name
 
   return (
     <div className="space-y-8">
@@ -219,21 +218,17 @@ export function PublicProjectFormStepLocationDetails() {
             {t("websiteCms.projects.publicProjectForm.fields.status")}
           </FieldLabel>
           <Select
-            value={form.getValues().status || ""}
+            value={form.getValues().statusId || ""}
             onValueChange={(value) =>
-              form.setFieldValue(
-                "status",
-                (value || "") as PublicProjectFormValues["status"]
-              )
+              form.setFieldValue("statusId", value || "")
             }
           >
             <SelectTrigger id="pp-status">
               <SelectValue>
-                {form.getValues().status
-                  ? t(STATUS_LABEL_KEYS[form.getValues().status as keyof typeof STATUS_LABEL_KEYS])
-                  : t(
-                      "websiteCms.projects.publicProjectForm.placeholders.status"
-                    )}
+                {selectedStatusName ||
+                  t(
+                    "websiteCms.projects.publicProjectForm.placeholders.status"
+                  )}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -242,9 +237,15 @@ export function PublicProjectFormStepLocationDetails() {
                   "websiteCms.projects.publicProjectForm.placeholders.status"
                 )}
               </SelectItem>
-              {PROJECT_STATUSES.map((st) => (
-                <SelectItem key={st} value={st}>
-                  {t(STATUS_LABEL_KEYS[st])}
+              {projectStatuses.map((st) => (
+                <SelectItem key={st.id} value={st.id}>
+                  <span className="flex items-center gap-2">
+                    <span
+                      className="size-2.5 rounded-full"
+                      style={{ backgroundColor: st.color }}
+                    />
+                    {st.name}
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>

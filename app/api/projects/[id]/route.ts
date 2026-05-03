@@ -251,7 +251,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
         workDuration: data.workDuration || null,
         googleMapsAddress: data.googleMapsAddress || null,
         cityId: data.cityId,
-        ...(data.status ? { status: data.status } : {}),
+        ...(data.statusId ? { statusId: data.statusId } : {}),
         ...(data.isActive !== undefined ? { isActive: data.isActive } : {}),
         categories:
           data.categoryIds && data.categoryIds.length > 0

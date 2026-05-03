@@ -124,7 +124,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
     regionId: project.city?.regionId || "",
     cityId: project.cityId || "",
     categoryIds: project.categories?.map((cat) => cat.id) || [],
-    status: project.status || undefined,
+    statusId: project.statusId || undefined,
     isActive: project.isActive ?? true,
     attachments:
       project.attachments?.map((att) => ({

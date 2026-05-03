@@ -72,7 +72,7 @@ export async function GET(
       area: project.area ?? null,
       deedNumber: project.deedNumber ?? null,
       googleMapsAddress: project.googleMapsAddress ?? null,
-      status: project.status,
+      statusId: project.statusId ?? null,
       categoryIds: project.categories.map((c) => c.id),
       images: project.image ? [project.image] : [],
       attachments: project.attachments.map((a) => ({

@@ -4,6 +4,14 @@ export const projectInclude = {
   additionalData: true,
   attachments: true,
   categories: true,
+  status: {
+    select: {
+      id: true,
+      nameAr: true,
+      nameEn: true,
+      color: true,
+    },
+  },
   city: {
     include: {
       region: true,
@@ -88,7 +96,14 @@ export const transformProject = (project: ProjectInclude, locale: string) => {
     googleMapsAddress: project.googleMapsAddress
       ? project.googleMapsAddress
       : null,
-    status: project.status,
+    status: project.status
+      ? {
+          id: project.status.id,
+          name:
+            locale === "ar" ? project.status.nameAr : project.status.nameEn,
+          color: project.status.color,
+        }
+      : null,
     isActive: project.isActive ? project.isActive : null,
     archivedAt: project.archivedAt ? project.archivedAt : null,
     createdAt: project.createdAt ? project.createdAt : null,

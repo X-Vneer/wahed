@@ -36,49 +36,6 @@ export function CreateWebsiteProjectModal({
   onOpenChange,
 }: CreateWebsiteProjectModalProps) {
   const t = useTranslations()
-  const getStatusBadge = (status?: string | null) => {
-    const fallback = t(
-      "websiteCms.projects.createModal.existing.statusNotAvailable"
-    )
-
-    if (!status) {
-      return {
-        text: fallback,
-        className: "bg-gray-100 text-gray-700 border-gray-200",
-      }
-    }
-
-    const statusMap: Record<string, { text: string; className: string }> = {
-      COMPLETED: {
-        text: t("projects.status.completed"),
-        className: "bg-purple-100 text-purple-700 border-purple-200",
-      },
-      IN_PROGRESS: {
-        text: t("projects.status.inProgress"),
-        className: "bg-blue-100 text-blue-700 border-blue-200",
-      },
-      PLANNING: {
-        text: t("projects.status.planning"),
-        className: "bg-yellow-100 text-yellow-700 border-yellow-200",
-      },
-      ON_HOLD: {
-        text: t("projects.status.onHold"),
-        className: "bg-orange-100 text-orange-700 border-orange-200",
-      },
-      CANCELLED: {
-        text: t("projects.status.cancelled"),
-        className: "bg-red-100 text-red-700 border-red-200",
-      },
-    }
-
-    return (
-      statusMap[status] || {
-        text: status,
-        className: "bg-gray-100 text-gray-700 border-gray-200",
-      }
-    )
-  }
-
   const router = useRouter()
   const [step, setStep] = useState<Step>("source")
   const { data: projectsData, isLoading } = useProjects()
@@ -193,7 +150,7 @@ export function CreateWebsiteProjectModal({
             ) : !isLoading ? (
               <ScrollArea className="h-[50svh]">
                 {projects.map((project) => {
-                  const statusBadge = getStatusBadge(project.status)
+                  const status = project.status
 
                   return (
                     <button
@@ -213,14 +170,24 @@ export function CreateWebsiteProjectModal({
                                 "websiteCms.projects.createModal.existing.noDescription"
                               )}
                           </CardDescription>
-                          <Badge
-                            className={cn(
-                              "w-fit rounded-sm px-3 py-1 text-xs font-medium",
-                              statusBadge.className
-                            )}
-                          >
-                            {statusBadge.text}
-                          </Badge>
+                          {status ? (
+                            <Badge
+                              className="w-fit rounded-sm px-3 py-1 text-xs font-medium"
+                              style={{
+                                backgroundColor: `${status.color}1A`,
+                                color: status.color,
+                                borderColor: `${status.color}4D`,
+                              }}
+                            >
+                              {status.name}
+                            </Badge>
+                          ) : (
+                            <Badge className="w-fit rounded-sm border-gray-200 bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                              {t(
+                                "websiteCms.projects.createModal.existing.statusNotAvailable"
+                              )}
+                            </Badge>
+                          )}
                         </CardHeader>
                       </Card>
                     </button>

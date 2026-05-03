@@ -250,6 +250,60 @@ async function main() {
   }
 
   console.log("✅ Seeded task statuses")
+
+  // Seed 5 fixed system project statuses (labels editable, cannot be deleted)
+  const systemProjectStatuses = [
+    {
+      id: "project-status-planning",
+      nameAr: "التخطيط",
+      nameEn: "Planning",
+      color: "#F59E0B",
+      isSystem: true,
+    },
+    {
+      id: "project-status-in-progress",
+      nameAr: "قيد التنفيذ",
+      nameEn: "In Progress",
+      color: "#3B82F6",
+      isSystem: true,
+    },
+    {
+      id: "project-status-on-hold",
+      nameAr: "متوقف",
+      nameEn: "On Hold",
+      color: "#F97316",
+      isSystem: true,
+    },
+    {
+      id: "project-status-completed",
+      nameAr: "منتهي",
+      nameEn: "Completed",
+      color: "#8B5CF6",
+      isSystem: true,
+    },
+    {
+      id: "project-status-cancelled",
+      nameAr: "ملغي",
+      nameEn: "Cancelled",
+      color: "#EF4444",
+      isSystem: true,
+    },
+  ]
+
+  for (const status of systemProjectStatuses) {
+    await db.projectStatus.upsert({
+      where: { id: status.id },
+      update: {
+        nameAr: status.nameAr,
+        nameEn: status.nameEn,
+        color: status.color,
+        isSystem: status.isSystem,
+      },
+      create: status,
+    })
+  }
+
+  console.log("✅ Seeded project statuses")
 }
 
 main()

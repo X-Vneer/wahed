@@ -66,6 +66,7 @@
     "listsJobTitles": "مسمات الوظيفية",
     "listsCities": "المدن",
     "listsTaskStatuses": "حالات المهام",
+    "listsProjectStatuses": "حالات المشاريع",
     "listsTaskTypes": "انواع المهام",
     "usersPermissions": "المستخدمين وصلاحيات",
     "website": "الموقع الالكتروني ",
@@ -101,6 +102,9 @@
     },
     "taskStatus": {
       "title": "حالات المهام"
+    },
+    "projectStatus": {
+      "title": "حالات المشاريع"
     },
     "taskCategory": {
       "title": "فئات المهام"
@@ -550,6 +554,56 @@
       "cancel": "إلغاء"
     }
   },
+  "projectStatus": {
+    "createTitle": "إنشاء حالة مشروع",
+    "editTitle": "تعديل حالة مشروع",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "type": {
+      "system": "نظام",
+      "custom": "مخصص"
+    },
+    "systemStatusNote": "هذه حالة نظام ثابتة. يمكنك تعديل التسميات (عربي/إنجليزي) واللون، لكن لا يمكن حذفها.",
+    "form": {
+      "type": "النوع",
+      "nameAr": "الاسم (عربي)",
+      "nameArPlaceholder": "أدخل الاسم بالعربية",
+      "nameEn": "الاسم (إنجليزي)",
+      "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+      "color": "اللون",
+      "colorPlaceholder": "أدخل كود اللون",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث",
+      "actions": "إجراءات"
+    },
+    "errors": {
+      "nameAr": {
+        "required": "الاسم بالعربية مطلوب"
+      },
+      "nameEn": {
+        "required": "الاسم بالإنجليزية مطلوب"
+      },
+      "color": {
+        "required": "اللون مطلوب"
+      },
+      "not_found": "حالة المشروع غير موجودة",
+      "cannot_delete_system": "حالات النظام الثابتة (التخطيط، قيد التنفيذ، متوقف، منتهي، ملغي) لا يمكن حذفها. يمكنك تعديل تسمياتها واللون.",
+      "create_failed": "فشل في إنشاء حالة المشروع",
+      "update_failed": "فشل في تحديث حالة المشروع"
+    },
+    "success": {
+      "created": "تم إنشاء حالة المشروع بنجاح",
+      "updated": "تم تحديث حالة المشروع بنجاح",
+      "deleted": "تم حذف حالة المشروع بنجاح"
+    },
+    "deleteConfirm": {
+      "title": "حذف حالة المشروع",
+      "description": "هل أنت متأكد أنك تريد حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "deleting": "جاري الحذف...",
+      "cancel": "إلغاء"
+    }
+  },
   "taskCategory": {
     "createTitle": "إنشاء فئة مهمة",
     "editTitle": "تعديل فئة مهمة",
@@ -857,13 +911,6 @@
       "delete": "حذف",
       "deleting": "جاري الحذف...",
       "cancel": "إلغاء"
-    },
-    "status": {
-      "completed": "مكتمل",
-      "inProgress": "قيد التنفيذ",
-      "planning": "قيد التخطيط",
-      "onHold": "متوقف",
-      "cancelled": "ملغي"
     },
     "daysRemaining": "{count, plural, =0 {لا توجد أيام متبقية} =1 {يوم واحد متبقي} other {# أيام متبقية}}",
     "stage": "المهمة {current} من {total}",

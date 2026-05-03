@@ -48,47 +48,6 @@ type WebsiteProjectCardProps = {
   className?: string
 }
 
-const statusConfig: Record<
-  string,
-  { key: string; dot: string; bg: string; text: string; border: string }
-> = {
-  COMPLETED: {
-    key: "completed",
-    dot: "bg-purple-500",
-    bg: "bg-purple-50",
-    text: "text-purple-700",
-    border: "border-purple-200",
-  },
-  IN_PROGRESS: {
-    key: "inProgress",
-    dot: "bg-blue-500",
-    bg: "bg-blue-50",
-    text: "text-blue-700",
-    border: "border-blue-200",
-  },
-  PLANNING: {
-    key: "planning",
-    dot: "bg-yellow-500",
-    bg: "bg-yellow-50",
-    text: "text-yellow-700",
-    border: "border-yellow-200",
-  },
-  ON_HOLD: {
-    key: "onHold",
-    dot: "bg-orange-500",
-    bg: "bg-orange-50",
-    text: "text-orange-700",
-    border: "border-orange-200",
-  },
-  CANCELLED: {
-    key: "cancelled",
-    dot: "bg-red-500",
-    bg: "bg-red-50",
-    text: "text-red-700",
-    border: "border-red-200",
-  },
-}
-
 export function WebsiteProjectCard({
   project,
   className,
@@ -101,8 +60,7 @@ export function WebsiteProjectCard({
   const queryClient = useQueryClient()
   const queryKey = ["website", "public-projects"]
 
-  const config = statusConfig[project.status] ?? statusConfig.PLANNING
-  const statusLabel = t(`projects.status.${config.key}`)
+  const status = project.status
 
   const featuredMutation = useMutation({
     mutationFn: (isFeatured: boolean) =>
@@ -246,23 +204,23 @@ export function WebsiteProjectCard({
                 {/* Top: status + visibility + badges */}
                 <div className="mb-2 flex flex-wrap items-center gap-2 lg:justify-end">
                   {/* Status badge with dot indicator */}
-                  <Badge
-                    variant="outline"
-                    className={cn(
-                      "h-6 gap-1.5 rounded-sm border px-3 py-2 text-xs font-medium",
-                      config.bg,
-                      config.text,
-                      config.border
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "size-1.5 shrink-0 rounded-full",
-                        config.dot
-                      )}
-                    />
-                    {statusLabel}
-                  </Badge>
+                  {status ? (
+                    <Badge
+                      variant="outline"
+                      className="h-6 gap-1.5 rounded-sm border px-3 py-2 text-xs font-medium"
+                      style={{
+                        backgroundColor: `${status.color}10`,
+                        color: status.color,
+                        borderColor: `${status.color}30`,
+                      }}
+                    >
+                      <span
+                        className="size-1.5 shrink-0 rounded-full"
+                        style={{ backgroundColor: status.color }}
+                      />
+                      {status.name}
+                    </Badge>
+                  ) : null}
 
                   {/* Visibility toggle */}
                   <div className="flex items-center gap-1.5">
