@@ -28,6 +28,12 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Spinner } from "@/components/ui/spinner"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import UsersSelect from "@/components/users-select"
 import { useTaskStatuses } from "@/hooks/use-task-status"
 import { useTaskCategories } from "@/hooks/use-task-category"
@@ -42,10 +48,12 @@ import apiClient from "@/services"
 import { useForm } from "@mantine/form"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useQueryClient } from "@tanstack/react-query"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
+import { format } from "date-fns"
+import { ar, enUS } from "date-fns/locale"
 import axios from "axios"
-import { useEffect } from "react"
-import { Plus, Trash2 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Calendar as CalendarIcon, Plus, Trash2, X } from "lucide-react"
 import { toast } from "sonner"
 
 type TaskDialogProps = {
@@ -58,11 +66,17 @@ type TaskDialogProps = {
 type SubTaskFormValue = {
   title: string
   description?: string
+  startedAt: Date | null
+  estimatedWorkingDays?: number
 }
 
-type TaskFormValues = Omit<CreateTaskInput, "subTasks" | "projectId"> & {
+type TaskFormValues = Omit<
+  CreateTaskInput,
+  "subTasks" | "projectId" | "startedAt"
+> & {
   projectId: string | null
   subTasks: SubTaskFormValue[]
+  startedAt: Date | null
 }
 
 const PRIORITY_OPTIONS: {
@@ -82,7 +96,12 @@ export function TaskDialog({
 }: TaskDialogProps) {
   const isEditMode = !!taskToEdit
   const t = useTranslations()
+  const locale = useLocale()
   const queryClient = useQueryClient()
+  const [datePickerOpen, setDatePickerOpen] = useState(false)
+  const [subTaskDatePickerIndex, setSubTaskDatePickerIndex] = useState<
+    number | null
+  >(null)
 
   const { data: statusRes } = useTaskStatuses()
   const { data: categoryRes } = useTaskCategories()
@@ -103,6 +122,7 @@ export function TaskDialog({
       assignedToIds: [],
       subTasks: [],
       saveAsTemplate: false,
+      startedAt: null,
     },
     validate: zod4Resolver(
       createTaskSchema.extend({
@@ -128,8 +148,11 @@ export function TaskDialog({
           taskToEdit.subTasks?.map((s) => ({
             title: s.title,
             description: s.description ?? undefined,
+            startedAt: s.startedAt ? new Date(s.startedAt) : null,
+            estimatedWorkingDays: s.estimatedWorkingDays ?? undefined,
           })) ?? [],
         saveAsTemplate: false,
+        startedAt: taskToEdit.startedAt ? new Date(taskToEdit.startedAt) : null,
       })
     } else {
       form.setValues({
@@ -143,6 +166,7 @@ export function TaskDialog({
         assignedToIds: [],
         subTasks: [],
         saveAsTemplate: false,
+        startedAt: null,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,6 +186,7 @@ export function TaskDialog({
               : undefined,
           priority: values.priority ?? "MEDIUM",
           assignedToIds: values.assignedToIds ?? [],
+          startedAt: values.startedAt ?? null,
         }
 
         await apiClient.patch(`/api/tasks/${taskToEdit.id}`, payload)
@@ -204,9 +229,15 @@ export function TaskDialog({
                 .map((s) => ({
                   title: s.title.trim(),
                   description: s.description?.trim() || undefined,
+                  startedAt: s.startedAt ?? null,
+                  estimatedWorkingDays:
+                    s.estimatedWorkingDays != null
+                      ? Number(s.estimatedWorkingDays)
+                      : null,
                 }))
             : [],
         saveAsTemplate: values.saveAsTemplate ?? false,
+        startedAt: values.startedAt ?? null,
       }
 
       await apiClient.post("/api/tasks", payload)
@@ -248,7 +279,12 @@ export function TaskDialog({
   }
 
   const addSubTask = () => {
-    form.insertListItem("subTasks", { title: "", description: "" })
+    form.insertListItem("subTasks", {
+      title: "",
+      description: "",
+      startedAt: null,
+      estimatedWorkingDays: undefined,
+    })
   }
 
   const removeSubTask = (index: number) => {
@@ -439,6 +475,76 @@ export function TaskDialog({
                   </Field>
                 </div>
 
+                <Field data-invalid={!!form.errors.startedAt}>
+                  <FieldLabel htmlFor="startedAt">
+                    {t("tasks.form.startedAt")}
+                  </FieldLabel>
+                  <Popover
+                    open={datePickerOpen}
+                    onOpenChange={setDatePickerOpen}
+                  >
+                    <PopoverTrigger
+                      render={(props) => (
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start bg-white text-start font-normal"
+                          type="button"
+                          id="startedAt"
+                          {...props}
+                        >
+                          <CalendarIcon className="me-2 h-4 w-4" />
+                          {form.values.startedAt ? (
+                            format(form.values.startedAt, "PPP", {
+                              locale: locale === "ar" ? ar : enUS,
+                            })
+                          ) : (
+                            <span className="text-muted-foreground">
+                              {t("tasks.form.startedAtPlaceholder")}
+                            </span>
+                          )}
+                          {form.values.startedAt && (
+                            <span
+                              role="button"
+                              tabIndex={0}
+                              aria-label={t("tasks.form.clear")}
+                              className="hover:bg-muted ms-auto inline-flex size-5 items-center justify-center rounded"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                form.setFieldValue("startedAt", null)
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  form.setFieldValue("startedAt", null)
+                                }
+                              }}
+                            >
+                              <X className="size-3.5" />
+                            </span>
+                          )}
+                        </Button>
+                      )}
+                    />
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={form.values.startedAt || undefined}
+                        onSelect={(date) => {
+                          form.setFieldValue("startedAt", date || null)
+                          setDatePickerOpen(false)
+                        }}
+                        locale={locale === "ar" ? ar : enUS}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {form.errors.startedAt && (
+                    <FieldError
+                      errors={[{ message: String(form.errors.startedAt) }]}
+                    />
+                  )}
+                </Field>
+
                 <Field data-invalid={!!form.errors.categoryIds}>
                   <FieldLabel htmlFor="categoryIds">
                     {t("tasks.form.categories")}
@@ -579,6 +685,110 @@ export function TaskDialog({
                             )}
                           />
                         </Field>
+
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                          <Field>
+                            <FieldLabel className="text-xs">
+                              {t("tasks.form.startedAt")}
+                            </FieldLabel>
+                            <Popover
+                              open={subTaskDatePickerIndex === index}
+                              onOpenChange={(open) =>
+                                setSubTaskDatePickerIndex(open ? index : null)
+                              }
+                            >
+                              <PopoverTrigger
+                                render={(props) => (
+                                  <Button
+                                    variant="outline"
+                                    type="button"
+                                    className="h-9 w-full justify-start bg-white text-start font-normal"
+                                    {...props}
+                                  >
+                                    <CalendarIcon className="me-2 h-3.5 w-3.5" />
+                                    {form.values.subTasks[index]?.startedAt ? (
+                                      format(
+                                        form.values.subTasks[index]!
+                                          .startedAt as Date,
+                                        "PPP",
+                                        { locale: locale === "ar" ? ar : enUS }
+                                      )
+                                    ) : (
+                                      <span className="text-muted-foreground">
+                                        {t("tasks.form.startedAtPlaceholder")}
+                                      </span>
+                                    )}
+                                    {form.values.subTasks[index]?.startedAt && (
+                                      <span
+                                        role="button"
+                                        tabIndex={0}
+                                        aria-label={t("tasks.form.clear")}
+                                        className="hover:bg-muted ms-auto inline-flex size-5 items-center justify-center rounded"
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          form.setFieldValue(
+                                            `subTasks.${index}.startedAt`,
+                                            null
+                                          )
+                                        }}
+                                        onKeyDown={(e) => {
+                                          if (
+                                            e.key === "Enter" ||
+                                            e.key === " "
+                                          ) {
+                                            e.preventDefault()
+                                            e.stopPropagation()
+                                            form.setFieldValue(
+                                              `subTasks.${index}.startedAt`,
+                                              null
+                                            )
+                                          }
+                                        }}
+                                      >
+                                        <X className="size-3.5" />
+                                      </span>
+                                    )}
+                                  </Button>
+                                )}
+                              />
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
+                                <Calendar
+                                  mode="single"
+                                  selected={
+                                    (form.values.subTasks[index]
+                                      ?.startedAt as Date | null) ?? undefined
+                                  }
+                                  onSelect={(date) => {
+                                    form.setFieldValue(
+                                      `subTasks.${index}.startedAt`,
+                                      date || null
+                                    )
+                                    setSubTaskDatePickerIndex(null)
+                                  }}
+                                  locale={locale === "ar" ? ar : enUS}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </Field>
+                          <Field>
+                            <FieldLabel className="text-xs">
+                              {t("tasks.form.estimatedWorkingDays")}
+                            </FieldLabel>
+                            <Input
+                              type="number"
+                              min={0}
+                              {...form.getInputProps(
+                                `subTasks.${index}.estimatedWorkingDays`
+                              )}
+                              placeholder={t(
+                                "tasks.form.estimatedWorkingDaysPlaceholder"
+                              )}
+                            />
+                          </Field>
+                        </div>
                       </div>
                     ))}
                   </div>

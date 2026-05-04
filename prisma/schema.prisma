@@ -218,6 +218,7 @@ model Project {
   numberOfFloors    Int?
   deedNumber        String?
   workDuration      Int?
+  startDate         DateTime?
   googleMapsAddress String?
 
   statusId   String?
@@ -408,17 +409,19 @@ model TaskAttachment {
 }
 
 model SubTasks {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  taskId      String
-  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  done        Boolean   @default(false)
-  doneAt      DateTime?
-  createdById String
-  createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                   String    @id @default(cuid())
+  title                String
+  description          String?
+  taskId               String
+  task                 Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  done                 Boolean   @default(false)
+  doneAt               DateTime?
+  startedAt            DateTime?
+  estimatedWorkingDays Int?
+  createdById          String
+  createdBy            User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 }
 
 // Reusable task definitions stored at system level; can be added to any project later
@@ -439,14 +442,16 @@ model TaskTemplate {
 
 // Subtask definitions for a task template; created as SubTasks when template is added to a project
 model TaskTemplateSubItem {
-  id             String       @id @default(cuid())
-  title          String
-  description    String?
-  order          Int          @default(0)
-  taskTemplateId String
-  taskTemplate   TaskTemplate @relation(fields: [taskTemplateId], references: [id], onDelete: Cascade)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id                   String       @id @default(cuid())
+  title                String
+  description          String?
+  order                Int          @default(0)
+  startedAt            DateTime?
+  estimatedWorkingDays Int?
+  taskTemplateId       String
+  taskTemplate         TaskTemplate @relation(fields: [taskTemplateId], references: [id], onDelete: Cascade)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
 }
 
 // Global/system files not related to a specific project or task

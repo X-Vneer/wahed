@@ -50,6 +50,8 @@ export async function POST(
       data: {
         title: data.title,
         description: data.description ?? null,
+        startedAt: data.startedAt ?? null,
+        estimatedWorkingDays: data.estimatedWorkingDays ?? null,
         taskId,
         createdById: payload.userId,
       },

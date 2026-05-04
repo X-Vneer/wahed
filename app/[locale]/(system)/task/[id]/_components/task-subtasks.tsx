@@ -24,8 +24,17 @@ import { SubTasks } from "@/lib/generated/prisma/client"
 import { cn } from "@/lib/utils"
 import type { TaskDetail } from "@/prisma/tasks"
 import { useQueryClient } from "@tanstack/react-query"
-import { MoreVertical, Pencil, Plus, Trash2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { format } from "date-fns"
+import { ar, enUS } from "date-fns/locale"
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  MoreVertical,
+  Pencil,
+  Plus,
+  Trash2,
+} from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
 import { useState } from "react"
 import { SubtaskDialog } from "./subtask-dialog"
 
@@ -36,6 +45,8 @@ type TaskSubtasksProps = {
 
 export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
   const t = useTranslations()
+  const locale = useLocale()
+  const localeDate = locale === "ar" ? ar : enUS
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -131,6 +142,29 @@ export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
                   {subtask.description}
                 </p>
               ) : null}
+              {(subtask.startedAt ||
+                (subtask.estimatedWorkingDays != null &&
+                  subtask.estimatedWorkingDays > 0)) && (
+                <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-3 text-xs">
+                  {subtask.startedAt && (
+                    <span className="inline-flex items-center gap-1">
+                      <CalendarIcon className="size-3.5" />
+                      {format(new Date(subtask.startedAt), "d - MMM - yyyy", {
+                        locale: localeDate,
+                      })}
+                    </span>
+                  )}
+                  {subtask.estimatedWorkingDays != null &&
+                    subtask.estimatedWorkingDays > 0 && (
+                      <span className="inline-flex items-center gap-1">
+                        <Clock className="size-3.5" />
+                        {t("tasks.estimatedWorkingDaysShort", {
+                          count: subtask.estimatedWorkingDays,
+                        })}
+                      </span>
+                    )}
+                </div>
+              )}
             </div>
 
             <DropdownMenu>

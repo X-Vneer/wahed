@@ -5,12 +5,12 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress, ProgressValue } from "@/components/ui/progress"
-import { TASK_STATUS_ID_IN_PROGRESS, TASK_STATUS_ID_PENDING } from "@/config"
 import { useToggleTaskDone } from "@/hooks/use-toggle-task-done"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { Task } from "@/prisma/tasks"
-import { addDays, format, formatDistanceToNow } from "date-fns"
+import { addWorkingDays } from "@/lib/working-days"
+import { format, formatDistanceToNow } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import {
   AlertCircle,
@@ -29,8 +29,48 @@ type TaskCardProps = {
   className?: string
 }
 
+type Translator = ReturnType<typeof useTranslations>
+type DateFnsLocale = typeof ar
+
 const dateFnsLocale = (locale: string) => (locale === "ar" ? ar : enUS)
 const dateFormat = "d - MMM - yyyy"
+
+function getTimeLabel(args: {
+  startedAt: Date | null
+  estimatedDueDate: Date | null
+  doneAt: Task["doneAt"]
+  isOverdue: boolean
+  now: Date
+  t: Translator
+  localeDate: DateFnsLocale
+}): { text: string; overdue: boolean } | null {
+  const { startedAt, estimatedDueDate, doneAt, isOverdue, now, t, localeDate } =
+    args
+  if (doneAt) return null
+  if (startedAt == null) return { text: t("notStarted"), overdue: false }
+  if (startedAt > now) {
+    return {
+      text: t("startsIn", {
+        distance: formatDistanceToNow(startedAt, {
+          addSuffix: true,
+          locale: localeDate,
+        }),
+      }),
+      overdue: false,
+    }
+  }
+  if (estimatedDueDate != null) {
+    const distance = formatDistanceToNow(estimatedDueDate, {
+      addSuffix: true,
+      locale: localeDate,
+    })
+    return {
+      text: isOverdue ? t("overdue", { distance }) : t("dueIn", { distance }),
+      overdue: isOverdue,
+    }
+  }
+  return { text: t("notStarted"), overdue: false }
+}
 
 export function TaskCard({ task, className }: TaskCardProps) {
   const t = useTranslations("tasks")
@@ -61,27 +101,31 @@ export function TaskCard({ task, className }: TaskCardProps) {
         : 0
   const priority = task.priority ?? "MEDIUM"
 
-  const startStr = task.startedAt
-    ? format(task.startedAt, dateFormat, { locale: localeDate })
+  const startedAtDate = task.startedAt ? new Date(task.startedAt) : null
+  const startStr = startedAtDate
+    ? format(startedAtDate, dateFormat, { locale: localeDate })
     : null
   const workingDays = task.estimatedWorkingDays ?? null
   const estimatedDueDate =
-    task.startedAt != null && workingDays != null && workingDays > 0
-      ? addDays(task.startedAt, workingDays)
+    startedAtDate != null && workingDays != null && workingDays > 0
+      ? addWorkingDays(startedAtDate, workingDays)
       : null
   const estimatedDueStr =
     estimatedDueDate &&
     formatDistanceToNow(estimatedDueDate, { locale: localeDate })
   const now = new Date()
-  const dueDistance =
-    estimatedDueDate != null
-      ? formatDistanceToNow(estimatedDueDate, {
-          addSuffix: true,
-          locale: localeDate,
-        })
-      : null
   const isOverdue =
     estimatedDueDate != null && estimatedDueDate < now && !task.doneAt
+
+  const timeLabel = getTimeLabel({
+    startedAt: startedAtDate,
+    estimatedDueDate,
+    doneAt: task.doneAt,
+    isOverdue,
+    now,
+    t,
+    localeDate,
+  })
 
   return (
     <Card
@@ -92,8 +136,6 @@ export function TaskCard({ task, className }: TaskCardProps) {
     >
       <CardContent className="flex flex-1 flex-col gap-2 px-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          {/* Title block: urgent + title + circle — appears on right in RTL */}
-          {/* <div className="flex min-w-0 flex-1 flex-col gap-1 text-start sm:flex-row sm:items-start sm:justify-between sm:gap-2"> */}
           <div className="flex min-w-0 items-center gap-2">
             <button
               type="button"
@@ -137,9 +179,7 @@ export function TaskCard({ task, className }: TaskCardProps) {
               </Badge>
             )}
           </div>
-          {/* </div> */}
 
-          {/* Metadata: comments, remaining, status, chevron — appears on left in RTL */}
           <div className="flex flex-wrap items-center gap-2">
             <Badge
               variant="secondary"
@@ -148,27 +188,19 @@ export function TaskCard({ task, className }: TaskCardProps) {
               <MessageCircle className="size-3.5" />
               {t("commentsCount", { count: task.comments.length })}
             </Badge>
-            {task.status.id === TASK_STATUS_ID_IN_PROGRESS &&
-            dueDistance != null ? (
+            {timeLabel && (
               <span
                 className={cn(
                   "flex items-center gap-1 text-sm",
-                  isOverdue
+                  timeLabel.overdue
                     ? "text-destructive font-medium"
                     : "text-muted-foreground"
                 )}
               >
                 <Clock className="size-3.5 shrink-0" />
-                {isOverdue
-                  ? t("overdue", { distance: dueDistance })
-                  : t("dueIn", { distance: dueDistance })}
+                {timeLabel.text}
               </span>
-            ) : task.status.id === TASK_STATUS_ID_PENDING ? (
-              <span className="text-muted-foreground flex items-center gap-1 text-sm">
-                <Clock className="size-3.5" />
-                {t("notStarted")}
-              </span>
-            ) : null}
+            )}
             <TaskStatusDropdown task={task} />
             <Button
               nativeButton={false}
@@ -181,12 +213,10 @@ export function TaskCard({ task, className }: TaskCardProps) {
           </div>
         </div>
 
-        {/* Project name (may be absent for general/non-project tasks) */}
         {task.project?.name && (
           <p className="text-muted-foreground text-sm">{task.project.name}</p>
         )}
 
-        {/* Start date, estimated working days, estimated due + assignee */}
         <div className="flex flex-wrap items-center gap-3 text-sm">
           {startStr != null && (
             <span className="text-muted-foreground">
@@ -223,22 +253,19 @@ export function TaskCard({ task, className }: TaskCardProps) {
           )}
         </div>
 
-        {/* Progress bar */}
-        {progressPercent != null && (
-          <Progress
-            value={Math.min(100, Math.max(0, progressPercent))}
-            className="flex min-w-0 flex-1 flex-nowrap items-center gap-2 **:data-[slot=progress-track]:h-2.5"
-            style={
-              task.status.color
-                ? {
-                    ["--progress-indicator-color" as string]: task.status.color,
-                  }
-                : undefined
-            }
-          >
-            <ProgressValue className="order-1 shrink-0" />
-          </Progress>
-        )}
+        <Progress
+          value={Math.min(100, Math.max(0, progressPercent))}
+          className="flex min-w-0 flex-1 flex-nowrap items-center gap-2 **:data-[slot=progress-track]:h-2.5"
+          style={
+            task.status.color
+              ? {
+                  ["--progress-indicator-color" as string]: task.status.color,
+                }
+              : undefined
+          }
+        >
+          <ProgressValue className="order-1 shrink-0" />
+        </Progress>
       </CardContent>
     </Card>
   )

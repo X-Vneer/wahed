@@ -120,6 +120,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
     numberOfFloors: project.numberOfFloors || 0,
     deedNumber: project.deedNumber || undefined,
     workDuration: project.workDuration || undefined,
+    startDate: project.startDate ? new Date(project.startDate) : undefined,
     googleMapsAddress: project.googleMapsAddress || "",
     regionId: project.city?.regionId || "",
     cityId: project.cityId || "",

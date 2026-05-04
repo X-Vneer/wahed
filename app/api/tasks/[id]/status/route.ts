@@ -34,7 +34,7 @@ export async function PATCH(
     const [existing, status] = await Promise.all([
       db.task.findUnique({
         where: { id },
-        select: { id: true },
+        select: { id: true, startedAt: true },
       }),
       db.taskStatus.findUnique({
         where: { id: statusId },
@@ -60,9 +60,10 @@ export async function PATCH(
       where: { id },
       data: {
         statusId,
-        ...(statusId === TASK_STATUS_ID_IN_PROGRESS && {
-          startedAt: new Date(),
-        }),
+        ...(statusId === TASK_STATUS_ID_IN_PROGRESS &&
+          existing.startedAt == null && {
+            startedAt: new Date(),
+          }),
       },
       include: taskInclude,
     })

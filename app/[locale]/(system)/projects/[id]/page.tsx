@@ -306,6 +306,16 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
                 </span>
               </div>
 
+              {/* Total working days (sum of task workdays) */}
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t("projects.totalWorkingDays")}
+                </span>
+                <span className="font-medium">
+                  {transformedProject.totalWorkingDays}
+                </span>
+              </div>
+
               {/* Remaining days */}
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">
@@ -314,6 +324,20 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
                   })}
                 </span>
               </div>
+
+              {/* Start date */}
+              {transformedProject.startDate && (
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">
+                    {t("projects.form.startDate")}
+                  </span>
+                  <span className="font-medium">
+                    {new Date(transformedProject.startDate).toLocaleDateString(
+                      locale
+                    )}
+                  </span>
+                </div>
+              )}
 
               {/* Created / Updated */}
               {transformedProject.createdAt && (

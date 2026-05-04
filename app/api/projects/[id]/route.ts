@@ -249,6 +249,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
         numberOfFloors: data.numberOfFloors || null,
         deedNumber: data.deedNumber || null,
         workDuration: data.workDuration || null,
+        startDate: data.startDate ?? null,
         googleMapsAddress: data.googleMapsAddress || null,
         cityId: data.cityId,
         ...(data.statusId ? { statusId: data.statusId } : {}),

@@ -70,7 +70,7 @@ export async function PATCH(
 
     const existing = await db.task.findUnique({
       where: { id },
-      select: { id: true, projectId: true },
+      select: { id: true, projectId: true, startedAt: true },
     })
 
     if (!existing) {
@@ -142,9 +142,16 @@ export async function PATCH(
       updateData.description = data.description
     if (data.statusId !== undefined) {
       updateData.statusId = data.statusId
-      if (data.statusId === TASK_STATUS_ID_IN_PROGRESS) {
+      if (
+        data.statusId === TASK_STATUS_ID_IN_PROGRESS &&
+        existing.startedAt == null &&
+        data.startedAt === undefined
+      ) {
         updateData.startedAt = new Date()
       }
+    }
+    if (data.startedAt !== undefined) {
+      updateData.startedAt = data.startedAt
     }
     if (data.estimatedWorkingDays !== undefined)
       updateData.estimatedWorkingDays = data.estimatedWorkingDays

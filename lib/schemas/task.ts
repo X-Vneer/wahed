@@ -14,6 +14,8 @@ export type CreateTaskCommentInput = z.infer<typeof createTaskCommentSchema>
 export const createSubTaskSchema = z.object({
   title: z.string().min(1, { message: "tasks.errors.subtask_title_required" }),
   description: z.string().optional(),
+  startedAt: z.coerce.date().optional().nullable(),
+  estimatedWorkingDays: z.coerce.number().int().nonnegative().optional().nullable(),
 })
 
 export type CreateSubTaskInput = z.infer<typeof createSubTaskSchema>
@@ -25,6 +27,8 @@ export const updateSubTaskSchema = z.object({
     .optional(),
   description: z.string().optional().nullable(),
   done: z.boolean().optional(),
+  startedAt: z.coerce.date().optional().nullable(),
+  estimatedWorkingDays: z.coerce.number().int().nonnegative().optional().nullable(),
 })
 
 export type UpdateSubTaskInput = z.infer<typeof updateSubTaskSchema>
@@ -44,6 +48,7 @@ export const createTaskSchema = z.object({
   assignedToIds: z.array(z.string().min(1)).optional().default([]),
   subTasks: z.array(createSubTaskSchema).optional().default([]),
   saveAsTemplate: z.boolean().optional().default(false),
+  startedAt: z.coerce.date().optional().nullable(),
 })
 
 export type CreateTaskInput = z.infer<typeof createTaskSchema>
@@ -62,6 +67,7 @@ export const updateTaskSchema = z.object({
   estimatedWorkingDays: z.number().int().nonnegative().optional().nullable(),
   priority: TaskPriorityEnum.optional(),
   assignedToIds: z.array(z.string().min(1)).optional(),
+  startedAt: z.coerce.date().optional().nullable(),
 })
 
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>

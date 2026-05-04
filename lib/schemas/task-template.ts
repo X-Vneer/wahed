@@ -8,6 +8,8 @@ const taskTemplateSubItemSchema = z.object({
     .min(1, { message: "taskTemplate.errors.subItemTitle.required" }),
   description: z.string().optional(),
   order: z.number().int().min(0).default(0),
+  startedAt: z.coerce.date().optional().nullable(),
+  estimatedWorkingDays: z.coerce.number().int().nonnegative().optional().nullable(),
 })
 
 export const createTaskTemplateSchema = z.object({

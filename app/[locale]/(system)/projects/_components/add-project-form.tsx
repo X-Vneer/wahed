@@ -112,6 +112,7 @@ export function AddProjectForm() {
       numberOfFloors: 0,
       deedNumber: undefined,
       workDuration: undefined,
+      startDate: undefined,
       googleMapsAddress: "",
       regionId: "",
       cityId: "",

@@ -17,6 +17,10 @@ export const createProjectSchema = z.object({
   numberOfFloors: z.coerce.number().int().positive().optional(),
   deedNumber: z.string().optional(),
   workDuration: z.coerce.number().positive().optional(),
+  startDate: z.preprocess(
+    (v) => (v === "" || v == null ? undefined : v),
+    z.coerce.date().optional()
+  ),
   googleMapsAddress: z.string().optional(),
   regionId: z.string().min(1, { error: "projects.errors.regionId.required" }),
   cityId: z.string().min(1, { error: "projects.errors.cityId.required" }),

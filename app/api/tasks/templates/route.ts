@@ -106,6 +106,8 @@ export async function POST(request: NextRequest) {
                   title: item.title,
                   description: item.description,
                   order: item.order,
+                  startedAt: item.startedAt ?? null,
+                  estimatedWorkingDays: item.estimatedWorkingDays ?? null,
                 })),
               }
             : undefined,

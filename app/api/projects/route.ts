@@ -208,6 +208,7 @@ export async function POST(request: NextRequest) {
         numberOfFloors: data.numberOfFloors || null,
         deedNumber: data.deedNumber || null,
         workDuration: data.workDuration || null,
+        startDate: data.startDate ?? null,
         googleMapsAddress: data.googleMapsAddress || null,
         cityId: data.cityId,
         statusId: data.statusId ?? PROJECT_STATUS_ID_PLANNING,

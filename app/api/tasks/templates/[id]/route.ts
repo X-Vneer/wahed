@@ -93,6 +93,8 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
           title: item.title,
           description: item.description,
           order: item.order,
+          startedAt: item.startedAt ?? null,
+          estimatedWorkingDays: item.estimatedWorkingDays ?? null,
         })),
       }
     }

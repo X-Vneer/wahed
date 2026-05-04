@@ -24,6 +24,7 @@ import {
   ExternalLink,
   Eye,
   FileText,
+  ListChecks,
   MapPin,
 } from "lucide-react"
 import MiniTaskCard from "./mini-task-card"
@@ -46,6 +47,7 @@ function ProjectCard({ project }: { project: TransformedProject }) {
   const taskCount = project.taskCount ?? 0
   const doneTaskCount = project.doneTaskCount ?? 0
   const remainingDays = project.remainingDays ?? 0
+  const totalWorkingDays = project.totalWorkingDays ?? 0
   const currentTask =
     project.tasks?.find(
       (task) => task.status.id === TASK_STATUS_ID_IN_PROGRESS
@@ -68,6 +70,13 @@ function ProjectCard({ project }: { project: TransformedProject }) {
               <div className="flex flex-1 flex-col justify-between">
                 {/* Status Badges - Top Left */}
                 <div className="mb-2 flex items-center gap-2 lg:justify-end">
+                  <Badge
+                    variant="outline"
+                    className="rounded-sm py-3 text-xs font-medium text-gray-700 lg:px-5"
+                  >
+                    <Clock className="size-3" />
+                    {t("projects.totalWorkingDays")}: {totalWorkingDays}
+                  </Badge>
                   <Badge
                     variant="outline"
                     className="rounded-sm py-3 text-xs font-medium text-gray-700 lg:px-5"
@@ -162,6 +171,21 @@ function ProjectCard({ project }: { project: TransformedProject }) {
                         >
                           <Eye className="size-4" />
                           {t("projects.viewProject")}
+                        </Link>
+                      }
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-primary border-primary hover:text-primary hover:bg-primary/5 bg-white text-sm max-md:h-10 max-md:w-full"
+                      nativeButton={false}
+                      render={
+                        <Link
+                          href={`/tasks/${project.id}`}
+                          className="flex items-center"
+                        >
+                          <ListChecks className="size-4" />
+                          {t("projects.viewTasks")}
                         </Link>
                       }
                     />

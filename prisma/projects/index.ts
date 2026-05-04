@@ -63,11 +63,18 @@ export const transformProject = (project: ProjectInclude, locale: string) => {
     .filter((t) => t.doneAt == null)
     .reduce((sum, t) => sum + (t.estimatedWorkingDays ?? 0), 0)
 
+  const totalWorkingDays = tasks.reduce(
+    (sum, t) => sum + (t.estimatedWorkingDays ?? 0),
+    0
+  )
+
   return {
     id: project.id,
     taskCount: tasks.length,
     doneTaskCount,
     remainingDays,
+    totalWorkingDays,
+    startDate: project.startDate,
     tasks: tasks.map((task) => {
       return {
         id: task.id,
@@ -99,8 +106,7 @@ export const transformProject = (project: ProjectInclude, locale: string) => {
     status: project.status
       ? {
           id: project.status.id,
-          name:
-            locale === "ar" ? project.status.nameAr : project.status.nameEn,
+          name: locale === "ar" ? project.status.nameAr : project.status.nameEn,
           color: project.status.color,
         }
       : null,

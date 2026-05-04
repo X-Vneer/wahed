@@ -4,7 +4,7 @@ import { TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import { Link } from "@/lib/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { type TransformedProject } from "@/prisma/projects"
-import { addDays } from "date-fns"
+import { addWorkingDays } from "@/lib/working-days"
 import { formatDistanceToNow } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import { Clock, Play } from "lucide-react"
@@ -27,7 +27,7 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
   const taskWorkingDays = task.estimatedWorkingDays ?? null
   const taskEstimatedDueDate =
     taskStartedAt != null && taskWorkingDays != null && taskWorkingDays > 0
-      ? addDays(taskStartedAt, taskWorkingDays)
+      ? addWorkingDays(taskStartedAt, taskWorkingDays)
       : null
   const taskDueDistance =
     taskEstimatedDueDate != null
@@ -41,6 +41,14 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
     taskEstimatedDueDate < new Date() &&
     !task.doneAt
   const taskIsInProgress = task.status.id === TASK_STATUS_ID_IN_PROGRESS
+  const taskStartInFuture =
+    taskStartedAt != null && taskStartedAt > new Date()
+  const taskStartDistance = taskStartInFuture
+    ? formatDistanceToNow(taskStartedAt!, {
+        addSuffix: true,
+        locale: localeDate,
+      })
+    : null
 
   return (
     <div className="flex items-center justify-between gap-4 rounded-lg bg-[#F7F7F7] px-3 py-2 max-md:w-full lg:gap-8">
@@ -82,7 +90,9 @@ function MiniTaskCard({ task }: { task: ProjectTask | null }) {
                       count: task.estimatedWorkingDays,
                     })
                   : t("tasks.notStarted")
-              : t("tasks.notStarted")}
+              : taskStartDistance != null
+                ? t("tasks.startsIn", { distance: taskStartDistance })
+                : t("tasks.notStarted")}
         </span>
         <div
           style={{

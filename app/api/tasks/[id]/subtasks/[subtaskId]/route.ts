@@ -45,6 +45,9 @@ export async function PATCH(
       updateData.done = data.done
       updateData.doneAt = data.done ? new Date() : null
     }
+    if (data.startedAt !== undefined) updateData.startedAt = data.startedAt
+    if (data.estimatedWorkingDays !== undefined)
+      updateData.estimatedWorkingDays = data.estimatedWorkingDays
 
     const subtask = await db.subTasks.update({
       where: { id: subtaskId },

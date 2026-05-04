@@ -1,7 +1,14 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -13,12 +20,24 @@ import { useCities } from "@/hooks/use-cities"
 import { useProjectCategories } from "@/hooks/use-project-categories"
 import { useProjectStatuses } from "@/hooks/use-project-statuses"
 import { useRegions } from "@/hooks/use-regions"
-import { useTranslations } from "next-intl"
+import { format } from "date-fns"
+import { ar, enUS } from "date-fns/locale"
+import { Calendar as CalendarIcon, X } from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
+import { useState } from "react"
 import { useProjectFormContext } from "./project-form-context"
+
+const dateFnsLocale = (l: string) => (l === "ar" ? ar : enUS)
+const dateFormat = "d - MMM - yyyy"
 
 export function ProjectDetailsSection() {
   const t = useTranslations()
+  const locale = useLocale()
+  const localeDate = dateFnsLocale(locale)
   const form = useProjectFormContext()
+  const [startDateOpen, setStartDateOpen] = useState(false)
+  const startDateRaw = form.values.startDate as Date | string | undefined
+  const startDateValue = startDateRaw ? new Date(startDateRaw) : null
 
   const { data: categoriesData } = useProjectCategories()
   const { data: regionsData } = useRegions()
@@ -255,6 +274,74 @@ export function ProjectDetailsSection() {
           {form.errors.workDuration && (
             <FieldError
               errors={[{ message: String(form.errors.workDuration) }]}
+            />
+          )}
+        </Field>
+
+        {/* Start Date (optional) */}
+        <Field data-invalid={!!form.errors.startDate}>
+          <FieldLabel htmlFor="startDate">
+            {t("projects.form.startDate")}
+          </FieldLabel>
+          <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
+            <PopoverTrigger
+              render={(props) => (
+                <Button
+                  id="startDate"
+                  variant="outline"
+                  type="button"
+                  className="h-9 w-full justify-start bg-white px-3 font-normal"
+                  aria-invalid={!!form.errors.startDate}
+                  {...props}
+                >
+                  <CalendarIcon className="me-2 size-3.5" />
+                  {startDateValue ? (
+                    format(startDateValue, dateFormat, { locale: localeDate })
+                  ) : (
+                    <span className="text-muted-foreground">
+                      {t("projects.form.startDatePlaceholder")}
+                    </span>
+                  )}
+                  {startDateValue && (
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      aria-label={t("common.remove")}
+                      className="hover:bg-muted ms-auto inline-flex size-4 items-center justify-center rounded"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        form.setFieldValue("startDate", undefined)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          form.setFieldValue("startDate", undefined)
+                        }
+                      }}
+                    >
+                      <X className="size-3" />
+                    </span>
+                  )}
+                </Button>
+              )}
+            />
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={startDateValue ?? undefined}
+                onSelect={(d) => {
+                  setStartDateOpen(false)
+                  form.setFieldValue("startDate", d ?? undefined)
+                }}
+                locale={localeDate}
+              />
+            </PopoverContent>
+          </Popover>
+          {form.errors.startDate && (
+            <FieldError
+              errors={[{ message: String(form.errors.startDate) }]}
             />
           )}
         </Field>

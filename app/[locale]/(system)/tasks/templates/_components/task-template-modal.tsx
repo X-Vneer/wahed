@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Field,
   FieldError,
@@ -8,6 +9,11 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -38,11 +44,13 @@ import apiClient from "@/services"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
+import { format } from "date-fns"
+import { ar, enUS } from "date-fns/locale"
 import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useLocale, useTranslations } from "next-intl"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
-import { Plus, Trash2 } from "lucide-react"
+import { Calendar as CalendarIcon, Plus, Trash2, X } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 
@@ -62,6 +70,8 @@ const emptySubItem = (): TaskTemplateSubItemInput => ({
   title: "",
   description: "",
   order: 0,
+  startedAt: null,
+  estimatedWorkingDays: null,
 })
 
 export function TaskTemplateModal({
@@ -71,7 +81,11 @@ export function TaskTemplateModal({
 }: TaskTemplateModalProps) {
   const t = useTranslations()
   const locale = useLocale()
+  const localeDate = locale === "ar" ? ar : enUS
   const queryClient = useQueryClient()
+  const [subItemDatePickerIndex, setSubItemDatePickerIndex] = useState<
+    number | null
+  >(null)
 
   const schema = selectedTemplate?.id
     ? updateTaskTemplateSchema
@@ -114,6 +128,8 @@ export function TaskTemplateModal({
                 title: s.title,
                 description: s.description ?? "",
                 order: s.order ?? 0,
+                startedAt: s.startedAt ? new Date(s.startedAt) : null,
+                estimatedWorkingDays: s.estimatedWorkingDays ?? null,
               }))
             : [emptySubItem()],
         isActive: selectedTemplate.isActive ?? true,
@@ -151,6 +167,11 @@ export function TaskTemplateModal({
             title: s.title.trim(),
             description: s.description?.trim() || undefined,
             order: i,
+            startedAt: s.startedAt ?? null,
+            estimatedWorkingDays:
+              s.estimatedWorkingDays != null
+                ? Number(s.estimatedWorkingDays)
+                : null,
           })),
         isActive: values.isActive,
       }
@@ -500,6 +521,111 @@ export function TaskTemplateModal({
                           )}
                         />
                       </Field>
+
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <Field>
+                          <FieldLabel className="text-xs">
+                            {t("tasks.form.startedAt")}
+                          </FieldLabel>
+                          <Popover
+                            open={subItemDatePickerIndex === index}
+                            onOpenChange={(open) =>
+                              setSubItemDatePickerIndex(open ? index : null)
+                            }
+                          >
+                            <PopoverTrigger
+                              render={(props) => (
+                                <Button
+                                  variant="outline"
+                                  type="button"
+                                  className="h-9 w-full justify-start bg-white text-start font-normal"
+                                  {...props}
+                                >
+                                  <CalendarIcon className="me-2 h-3.5 w-3.5" />
+                                  {form.values.subItems[index]?.startedAt ? (
+                                    format(
+                                      form.values.subItems[index]!
+                                        .startedAt as Date,
+                                      "PPP",
+                                      { locale: localeDate }
+                                    )
+                                  ) : (
+                                    <span className="text-muted-foreground">
+                                      {t("tasks.form.startedAtPlaceholder")}
+                                    </span>
+                                  )}
+                                  {form.values.subItems[index]?.startedAt && (
+                                    <span
+                                      role="button"
+                                      tabIndex={0}
+                                      aria-label={t("tasks.form.clear")}
+                                      className="hover:bg-muted ms-auto inline-flex size-5 items-center justify-center rounded"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        form.setFieldValue(
+                                          `subItems.${index}.startedAt`,
+                                          null
+                                        )
+                                      }}
+                                      onKeyDown={(e) => {
+                                        if (
+                                          e.key === "Enter" ||
+                                          e.key === " "
+                                        ) {
+                                          e.preventDefault()
+                                          e.stopPropagation()
+                                          form.setFieldValue(
+                                            `subItems.${index}.startedAt`,
+                                            null
+                                          )
+                                        }
+                                      }}
+                                    >
+                                      <X className="size-3.5" />
+                                    </span>
+                                  )}
+                                </Button>
+                              )}
+                            />
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={
+                                  (form.values.subItems[index]?.startedAt as
+                                    | Date
+                                    | null) ?? undefined
+                                }
+                                onSelect={(date) => {
+                                  form.setFieldValue(
+                                    `subItems.${index}.startedAt`,
+                                    date || null
+                                  )
+                                  setSubItemDatePickerIndex(null)
+                                }}
+                                locale={localeDate}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </Field>
+                        <Field>
+                          <FieldLabel className="text-xs">
+                            {t("tasks.form.estimatedWorkingDays")}
+                          </FieldLabel>
+                          <Input
+                            type="number"
+                            min={0}
+                            {...form.getInputProps(
+                              `subItems.${index}.estimatedWorkingDays`
+                            )}
+                            placeholder={t(
+                              "tasks.form.estimatedWorkingDaysPlaceholder"
+                            )}
+                          />
+                        </Field>
+                      </div>
                     </div>
                   ))}
                 </div>

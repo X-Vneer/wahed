@@ -102,9 +102,9 @@ export async function POST(request: NextRequest) {
         description: data.description ?? null,
         projectId: data.projectId ?? null,
         statusId: data.statusId,
-        ...(data.statusId === TASK_STATUS_ID_IN_PROGRESS && {
-          startedAt: new Date(),
-        }),
+        startedAt:
+          data.startedAt ??
+          (data.statusId === TASK_STATUS_ID_IN_PROGRESS ? new Date() : null),
         estimatedWorkingDays: data.estimatedWorkingDays ?? null,
         priority: data.priority as TaskPriority,
         order,
@@ -123,6 +123,8 @@ export async function POST(request: NextRequest) {
                 create: data.subTasks.map((st) => ({
                   title: st.title,
                   description: st.description ?? null,
+                  startedAt: st.startedAt ?? null,
+                  estimatedWorkingDays: st.estimatedWorkingDays ?? null,
                   createdById: payload.userId,
                 })),
               }
@@ -182,6 +184,8 @@ export async function POST(request: NextRequest) {
                     create: data.subTasks.map((st, index) => ({
                       title: st.title,
                       description: st.description ?? undefined,
+                      startedAt: st.startedAt ?? null,
+                      estimatedWorkingDays: st.estimatedWorkingDays ?? null,
                       order: index,
                     })),
                   }
