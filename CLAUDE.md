@@ -104,9 +104,15 @@ The admin app is the CMS for an external website; that website pulls content via
 
 Notifications are **i18n-deferred**: `title` stores a translation key (e.g. `"TASK_CREATED"`), `message` stores `JSON.stringify(messageParams)`. The frontend translates at display time using the user's current locale. Do not store already-translated strings. `createNotifications` is fire-and-forget (errors are logged, never thrown).
 
-### Task system
+### Task & project status systems
 
-Four **system task statuses** (`isSystem: true`) have hard-coded IDs in `config/index.ts`: `TASK_STATUS_ID_PENDING`, `TASK_STATUS_ID_IN_PROGRESS`, `TASK_STATUS_ID_COMPLETED`, `TASK_STATUS_ID_CANCELLED`. Setting a task to `IN_PROGRESS` should set `startedAt`; `COMPLETED` sets `doneAt`. Their labels can be edited but they cannot be deleted. `TaskTemplate` + `TaskTemplateSubItem` define reusable task definitions cloned into projects on demand.
+Three parallel status models follow the same convention — fixed `isSystem: true` rows with hard-coded IDs in `config/index.ts`. Labels editable, cannot be deleted, do not duplicate-seed.
+
+- **`TaskStatus`** — `TASK_STATUS_ID_PENDING`, `TASK_STATUS_ID_IN_PROGRESS`, `TASK_STATUS_ID_COMPLETED`, `TASK_STATUS_ID_CANCELLED`. Setting a task to `IN_PROGRESS` should set `startedAt`; `COMPLETED` sets `doneAt`.
+- **`ProjectStatus`** — `PROJECT_STATUS_ID_{PLANNING,IN_PROGRESS,ON_HOLD,COMPLETED,CANCELLED}`. Used by internal `Project` rows.
+- **`PublicProjectStatus`** — `PUBLIC_PROJECT_STATUS_ID_{PLANNING,IN_PROGRESS,ON_HOLD,COMPLETED,CANCELLED}`. Used by `PublicProject` (marketing site cards). Separate model from `ProjectStatus` — do not share rows.
+
+`Project.startDate` (nullable `DateTime`) is the project kickoff. `SubTasks` mirror Task scheduling fields (`startedAt`, `doneAt`, `estimatedWorkingDays`) so subtasks can be scheduled independently. `TaskTemplate` + `TaskTemplateSubItem` define reusable task definitions cloned into projects on demand.
 
 ### Client data layer
 

@@ -129,6 +129,14 @@ export async function GET(request: NextRequest, context: DynamicRouteContext) {
   if (permError) return permError
 
   try {
+    const payload = await getAccessTokenPayload()
+    if (!payload) {
+      return NextResponse.json(
+        { error: t("errors.unauthorized") },
+        { status: 401 }
+      )
+    }
+
     const { id } = await context.params
 
     // Fetch project with all relations
@@ -145,7 +153,8 @@ export async function GET(request: NextRequest, context: DynamicRouteContext) {
     }
 
     const locale = getLocaleFromRequest(request)
-    const transformedProject = transformProject(project, locale)
+    const currentUser = { userId: payload.userId, role: payload.role }
+    const transformedProject = transformProject(project, locale, currentUser)
 
     return NextResponse.json(transformedProject)
   } catch (error) {

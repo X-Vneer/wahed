@@ -5,7 +5,9 @@ import { type NextRequest, NextResponse } from "next/server"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { transformTask } from "@/prisma/tasks"
 import {
+  buildVisibleTaskFilter,
   initLocale,
+  requireAuth,
   requirePermission,
   type DynamicRouteContext,
 } from "@/lib/helpers"
@@ -15,6 +17,10 @@ export async function GET(request: NextRequest, context: DynamicRouteContext) {
 
   const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.VIEW)
   if (permError) return permError
+
+  const auth = await requireAuth(t)
+  if (auth.error) return auth.error
+  const { payload } = auth
 
   try {
     const { id: projectId } = await context.params
@@ -32,7 +38,13 @@ export async function GET(request: NextRequest, context: DynamicRouteContext) {
     }
 
     const tasks = await db.task.findMany({
-      where: { projectId },
+      where: {
+        projectId,
+        ...buildVisibleTaskFilter({
+          userId: payload.userId,
+          role: payload.role,
+        }),
+      },
       include: taskInclude,
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
     })

@@ -1,6 +1,11 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
-import { initLocale, requirePermission } from "@/lib/helpers"
+import {
+  buildVisibleTaskFilter,
+  initLocale,
+  requireAuth,
+  requirePermission,
+} from "@/lib/helpers"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
@@ -11,8 +16,18 @@ export async function GET(request: NextRequest) {
     const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.VIEW)
     if (permError) return permError
 
+    const auth = await requireAuth(t)
+    if (auth.error) return auth.error
+    const { payload } = auth
+
     const tasks = await db.task.findMany({
-      where: { projectId: null },
+      where: {
+        projectId: null,
+        ...buildVisibleTaskFilter({
+          userId: payload.userId,
+          role: payload.role,
+        }),
+      },
       include: taskInclude,
       orderBy: [{ createdAt: "desc" }],
     })

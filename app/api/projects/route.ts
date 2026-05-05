@@ -90,6 +90,14 @@ export async function GET(request: NextRequest) {
   if (permError) return permError
 
   try {
+    const payload = await getAccessTokenPayload()
+    if (!payload) {
+      return NextResponse.json(
+        { error: t("errors.unauthorized") },
+        { status: 401 }
+      )
+    }
+
     const searchParams = request.nextUrl.searchParams
     const statusId = searchParams.get("statusId")
     const isActive = searchParams.get("archived")
@@ -120,8 +128,9 @@ export async function GET(request: NextRequest) {
     })
 
     const locale = getLocaleFromRequest(request)
+    const currentUser = { userId: payload.userId, role: payload.role }
     const transformedProjects = projects.map((project) =>
-      transformProject(project, locale)
+      transformProject(project, locale, currentUser)
     )
     return NextResponse.json({
       projects: transformedProjects,

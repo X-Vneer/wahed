@@ -1,4 +1,8 @@
 import { Prisma } from "@/lib/generated/prisma/client"
+import {
+  isTaskVisibleToUser,
+  type TaskVisibilityUser,
+} from "@/lib/helpers/task-visibility"
 
 export const projectInclude = {
   additionalData: true,
@@ -56,7 +60,11 @@ export type ProjectInclude = Prisma.ProjectGetPayload<{
   include: typeof projectInclude
 }>
 
-export const transformProject = (project: ProjectInclude, locale: string) => {
+export const transformProject = (
+  project: ProjectInclude,
+  locale: string,
+  currentUser?: TaskVisibilityUser
+) => {
   const tasks = project.tasks
   const doneTaskCount = tasks.filter((t) => t.doneAt != null).length
   const remainingDays = tasks
@@ -68,6 +76,10 @@ export const transformProject = (project: ProjectInclude, locale: string) => {
     0
   )
 
+  const visibleTasks = currentUser
+    ? tasks.filter((t) => isTaskVisibleToUser(t, currentUser))
+    : tasks
+
   return {
     id: project.id,
     taskCount: tasks.length,
@@ -75,7 +87,7 @@ export const transformProject = (project: ProjectInclude, locale: string) => {
     remainingDays,
     totalWorkingDays,
     startDate: project.startDate,
-    tasks: tasks.map((task) => {
+    tasks: visibleTasks.map((task) => {
       return {
         id: task.id,
         title: task.title,
