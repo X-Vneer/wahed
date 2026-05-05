@@ -48,6 +48,7 @@ export const projectInclude = {
           email: true,
         },
       },
+      taskAttachments: true,
       doneAt: true,
       startedAt: true,
       estimatedWorkingDays: true,
@@ -79,6 +80,35 @@ export const transformProject = (
   const visibleTasks = currentUser
     ? tasks.filter((t) => isTaskVisibleToUser(t, currentUser))
     : tasks
+
+  const mergedAttachments = [
+    ...project.attachments.map((a) => ({
+      id: a.id,
+      fileUrl: a.fileUrl,
+      fileName: a.fileName,
+      fileType: a.fileType,
+      fileSize: a.fileSize,
+      additionalInfo: a.additionalInfo,
+      createdAt: a.createdAt,
+      updatedAt: a.updatedAt,
+      projectId: a.projectId,
+      taskId: null as string | null,
+    })),
+    ...visibleTasks.flatMap((t) =>
+      t.taskAttachments.map((a) => ({
+        id: a.id,
+        fileUrl: a.fileUrl,
+        fileName: a.fileName,
+        fileType: a.fileType,
+        fileSize: a.fileSize,
+        additionalInfo: a.additionalInfo,
+        createdAt: a.createdAt,
+        updatedAt: a.updatedAt,
+        projectId: project.id,
+        taskId: a.taskId as string | null,
+      }))
+    ),
+  ]
 
   return {
     id: project.id,
@@ -137,7 +167,7 @@ export const transformProject = (
     categories: project.categories.map((category) =>
       locale === "ar" ? category.nameAr : category.nameEn
     ),
-    attachments: project.attachments,
+    attachments: mergedAttachments,
     additionalData: project.additionalData,
   }
 }
