@@ -22,9 +22,11 @@ pnpm db:seed:production  # tsx scripts/production-seed.ts
 pnpm db:reset
 pnpm db:test             # tsx scripts/test-database.ts (smoke test DB connection)
 pnpm email:test          # tsx scripts/test-email.ts
+pnpm email:test:templates # tsx scripts/test-email-templates.ts (render + send all React Email templates)
+pnpm email:dev           # react-email preview server on :3030 (loads emails/*.tsx)
 ```
 
-Required env (see `.env.example`): `DATABASE_URL`, `JWT_SECRET`, `UPLOADTHING_TOKEN`, `OPEN_WEATHER_API_KEY`, `CRON_SECRET`, `PUBLIC_WEBSITE_URL`. Optional: `SMTP_APP_PASSWORD` (only used by `scripts/test-email.ts` against Office 365 SMTP — no production email path wired up yet).
+Required env (see `.env.example`): `DATABASE_URL`, `JWT_SECRET`, `UPLOADTHING_TOKEN`, `CRON_SECRET`. Recommended: `OPEN_WEATHER_API_KEY` (prayer/weather widget), `PUBLIC_WEBSITE_URL` (CORS allow-list for `/api/public/*`), `APP_URL` (used in email CTA links). **SMTP** (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`) enables outbound email — `SMTP_FROM` is optional and falls back to `SMTP_USER`. `SMTP_APP_PASSWORD` is read by `scripts/test-email.ts` as a fallback for `SMTP_PASSWORD`.
 
 Prisma is configured via `prisma.config.ts` (loads `DATABASE_URL` from `dotenv`); the `datasource` block in `schema.prisma` intentionally has no `url` field.
 
@@ -104,6 +106,13 @@ The admin app is the CMS for an external website; that website pulls content via
 
 Notifications are **i18n-deferred**: `title` stores a translation key (e.g. `"TASK_CREATED"`), `message` stores `JSON.stringify(messageParams)`. The frontend translates at display time using the user's current locale. Do not store already-translated strings. `createNotifications` is fire-and-forget (errors are logged, never thrown).
 
+### Email (`lib/mailer/`)
+
+- Outbound dispatch is **opt-in via SMTP env vars** (see Commands above). When SMTP is unconfigured `getMailerConfig()` returns `null` and `lib/notifications` skips the email channel; no errors thrown.
+- Templates are React Email (`@react-email/components`) — `lib/mailer/templates/react/notification-email.tsx` is the shared shell. Per-category preview files live in `emails/*.tsx` (rendered by `pnpm email:dev` on :3030).
+- `renderEmail()` in `lib/mailer/templates/index.ts` pulls strings from `messages/{locale}.json` under `emails.*` (subject/preheader/greeting/body/cta) plus `emails.highlights.*` for the eyebrow value, and merges branding from `SystemSiteSettings` (60s in-memory cache) for systemName/logo/primaryColor/accentColor.
+- Per-user channel gating: `User.notificationChannelPreferences` (JSON `{ [NotificationCategory]: { inApp, email } }`). `lib/notifications` checks the email flag *and* SMTP availability before queueing a send. Defaults are in `config/notifications.ts`.
+
 ### Task & project status systems
 
 Three parallel status models follow the same convention — fixed `isSystem: true` rows with hard-coded IDs in `config/index.ts`. Labels editable, cannot be deleted, do not duplicate-seed.
@@ -118,7 +127,7 @@ Three parallel status models follow the same convention — fixed `isSystem: tru
 
 - TanStack Query throughout (`lib/tanstack-query`, hooks under `hooks/`). Server components prefetch + dehydrate into `HydrationBoundary` (see `(system)/layout.tsx` for the user-data prefetch pattern).
 - `nuqs` for URL-state-as-query-params.
-- `react-hook-form` + Mantine form (`@mantine/form` + `mantine-form-zod-resolver`) — schemas in `lib/schemas/`.
+- `react-hook-form` + Mantine form (`@mantine/form` + `mantine-form-zod-resolver`) — Zod schemas in `schemas/` (top-level, not under `lib/`). Shared client/server utilities live in `utils/` (`cn.ts`, `working-days.ts`, `recurrence.ts`, `handle-form-errors.ts`, `transform-errors.ts`, `has-permission.ts`, `has-client-permission.ts`).
 - Zustand for cross-tree client state.
 
 ### UI
