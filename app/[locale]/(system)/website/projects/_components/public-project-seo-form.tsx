@@ -22,11 +22,11 @@ import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import Uploader from "@/components/uploader"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   type WebsitePageSeoValues,
   websitePageSeoSchema,
-} from "@/lib/schemas/website-page-seo"
+} from "@/schemas/website-page-seo"
 import apiClient from "@/services"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Search, X } from "lucide-react"

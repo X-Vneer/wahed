@@ -7,7 +7,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { createRegionSchema } from "@/lib/schemas/regions"
+import { createRegionSchema } from "@/schemas/regions"
 import { transformRegion } from "@/prisma/regions"
 import { type NextRequest, NextResponse } from "next/server"
 

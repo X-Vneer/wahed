@@ -1,7 +1,7 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
-import { updateStaffPageSettingsSchema } from "@/lib/schemas/staff-page-settings"
+import { updateStaffPageSettingsSchema } from "@/schemas/staff-page-settings"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { getTranslations } from "next-intl/server"
 import { type NextRequest, NextResponse } from "next/server"
@@ -50,17 +50,13 @@ export async function PATCH(request: NextRequest) {
     if (permError) return permError
 
     const body = await request.json()
-    const validation = validateRequest(
-      updateStaffPageSettingsSchema,
-      body,
-      t
-    )
+    const validation = validateRequest(updateStaffPageSettingsSchema, body, t)
     if (validation.error) return validation.error
     const data = validation.data
     const heroUrl =
       data.heroBackgroundImageUrl === "" || data.heroBackgroundImageUrl == null
         ? null
-        : data.heroBackgroundImageUrl ?? undefined
+        : (data.heroBackgroundImageUrl ?? undefined)
 
     const existing = await db.staffPageSettings.findFirst({
       orderBy: { createdAt: "asc" },

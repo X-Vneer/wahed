@@ -37,7 +37,7 @@ import {
   useNotificationPreferences,
   useUpdateNotificationPreferences,
 } from "@/hooks/use-notification-preferences"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 const GROUP_ORDER: NotificationGroup[] = [
   "TASKS",
@@ -79,10 +79,7 @@ export function NotificationsPreferencesCard() {
   }, [data, overrides])
 
   const grouped = useMemo(() => {
-    const map = new Map<
-      NotificationGroup,
-      typeof NOTIFICATION_CATEGORIES
-    >()
+    const map = new Map<NotificationGroup, typeof NOTIFICATION_CATEGORIES>()
     for (const g of GROUP_ORDER) map.set(g, [])
     for (const c of NOTIFICATION_CATEGORIES) {
       const arr = map.get(c.group)
@@ -183,7 +180,9 @@ export function NotificationsPreferencesCard() {
                         value={undefined}
                         onChange={(ch) => setGroup(group, ch)}
                         labels={CHANNEL_LABELS(t)}
-                        placeholder={t("settings.notifications.bulkPlaceholder")}
+                        placeholder={t(
+                          "settings.notifications.bulkPlaceholder"
+                        )}
                         ariaLabel={t("settings.notifications.bulkLabel")}
                       />
                     </div>
@@ -293,7 +292,7 @@ function ChannelSegmented({
               "relative flex items-center gap-1.5 rounded-full font-medium transition-all",
               compact ? "px-2.5 py-1" : "px-3 py-1.5",
               active
-                ? "bg-card text-foreground shadow-xs ring-border ring-1"
+                ? "bg-card text-foreground ring-border shadow-xs ring-1"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >

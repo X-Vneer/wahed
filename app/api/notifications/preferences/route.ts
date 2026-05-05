@@ -1,13 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-import { NOTIFICATION_CATEGORIES, getDefaultChannel } from "@/config/notifications"
+import {
+  NOTIFICATION_CATEGORIES,
+  getDefaultChannel,
+} from "@/config/notifications"
 import db from "@/lib/db"
 import {
   NotificationCategory,
   NotificationChannel,
 } from "@/lib/generated/prisma/enums"
 import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
-import { updateNotificationPreferencesSchema } from "@/lib/schemas/notification-preferences"
+import { updateNotificationPreferencesSchema } from "@/schemas/notification-preferences"
 
 export async function GET(request: NextRequest) {
   const { t } = await initLocale(request)

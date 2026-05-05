@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
 import type { WebsiteSiteSettings } from "@/lib/generated/prisma/client"
 import { initLocale, type DynamicRouteContext } from "@/lib/helpers"
-import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
-import type { WebsitePageSeoValues } from "@/lib/schemas/website-page-seo"
-import { transformZodError } from "@/lib/transform-errors"
+import { websiteContentLocaleSchema } from "@/schemas/website-content"
+import type { WebsitePageSeoValues } from "@/schemas/website-page-seo"
+import { transformZodError } from "@/utils/transform-errors"
 
 function projectSeoSlug(projectSlug: string) {
   return `project/${projectSlug}`
@@ -55,10 +55,7 @@ function buildFallbackValues(
   }
 }
 
-function pickByLocale(
-  values: WebsitePageSeoValues,
-  locale: "ar" | "en"
-) {
+function pickByLocale(values: WebsitePageSeoValues, locale: "ar" | "en") {
   return {
     metaTitle: locale === "ar" ? values.metaTitleAr : values.metaTitleEn,
     metaDescription:
@@ -87,10 +84,7 @@ export async function GET(
     })
 
     if (!project) {
-      return NextResponse.json(
-        { error: "Not found" },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
     }
 
     const localeParam = request.nextUrl.searchParams.get("locale")

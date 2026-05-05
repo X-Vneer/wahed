@@ -19,7 +19,7 @@ import { useTranslations } from "next-intl"
 import { useEffect } from "react"
 import { useForm } from "@mantine/form"
 import { zod4Resolver } from "mantine-form-zod-resolver"
-import { updateStaffPageSettingsSchema } from "@/lib/schemas/staff-page-settings"
+import { updateStaffPageSettingsSchema } from "@/schemas/staff-page-settings"
 
 export function StaffPageSettingsForm() {
   const t = useTranslations("staffPageSettings")

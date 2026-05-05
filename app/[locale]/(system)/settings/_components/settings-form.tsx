@@ -26,8 +26,8 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import Uploader from "@/components/uploader"
 import { Gender } from "@/lib/generated/prisma/enums"
-import { handleFormErrors } from "@/lib/handle-form-errors"
-import { updateUserSettingsSchema } from "@/lib/schemas/user"
+import { handleFormErrors } from "@/utils/handle-form-errors"
+import { updateUserSettingsSchema } from "@/schemas/user"
 import type { User } from "@/prisma/users/select"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"
@@ -380,11 +380,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
           >
             {t("settings.discard")}
           </Button>
-          <Button
-            type="submit"
-            disabled={form.submitting}
-            className="min-w-32"
-          >
+          <Button type="submit" disabled={form.submitting} className="min-w-32">
             {form.submitting && <Spinner className="me-2 size-4" />}
             {t("settings.update")}
           </Button>

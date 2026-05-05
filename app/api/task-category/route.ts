@@ -7,7 +7,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { createTaskCategorySchema } from "@/lib/schemas/task-category"
+import { createTaskCategorySchema } from "@/schemas/task-category"
 import { transformTaskCategory } from "@/prisma/task-categories"
 import { type NextRequest, NextResponse } from "next/server"
 

@@ -32,12 +32,12 @@ import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import type { TaskTemplate } from "@/prisma/task-templates"
-import type { TaskTemplateSubItemInput } from "@/lib/schemas/task-template"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import type { TaskTemplateSubItemInput } from "@/schemas/task-template"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   createTaskTemplateSchema,
   updateTaskTemplateSchema,
-} from "@/lib/schemas/task-template"
+} from "@/schemas/task-template"
 import { useTaskCategories } from "@/hooks/use-task-category"
 import { useTaskStatuses } from "@/hooks/use-task-status"
 import apiClient from "@/services"
@@ -594,9 +594,8 @@ export function TaskTemplateModal({
                               <Calendar
                                 mode="single"
                                 selected={
-                                  (form.values.subItems[index]?.startedAt as
-                                    | Date
-                                    | null) ?? undefined
+                                  (form.values.subItems[index]
+                                    ?.startedAt as Date | null) ?? undefined
                                 }
                                 onSelect={(date) => {
                                   form.setFieldValue(

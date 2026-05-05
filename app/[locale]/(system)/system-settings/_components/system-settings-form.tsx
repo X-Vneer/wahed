@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button"
 import { Field, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   type SystemSiteSettingsFormValues,
   systemSiteSettingsFormSchema,
-} from "@/lib/schemas/system-site-settings"
+} from "@/schemas/system-site-settings"
 import type { SystemSiteSettingsAdminDto } from "@/lib/system-site-settings/service"
 import { useForm } from "@mantine/form"
 import axios from "axios"
@@ -15,11 +15,7 @@ import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
-import {
-  type FormModel,
-  emptyValues,
-  valuesFromSettings,
-} from "./form-model"
+import { type FormModel, emptyValues, valuesFromSettings } from "./form-model"
 import { IdentitySection } from "./identity-section"
 import { LoginSection } from "./login-section"
 import { LogosSection } from "./logos-section"

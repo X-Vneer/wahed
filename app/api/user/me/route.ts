@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
 import db from "@/lib/db"
 import { transformUser, userSelect } from "@/prisma/users/select"
-import { updateUserSettingsSchema } from "@/lib/schemas/user"
+import { updateUserSettingsSchema } from "@/schemas/user"
 import { Gender } from "@/lib/generated/prisma/enums"
 
 export async function GET(request: NextRequest) {

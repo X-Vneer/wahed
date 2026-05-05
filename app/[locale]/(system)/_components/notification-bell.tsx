@@ -20,7 +20,7 @@ import { formatDistanceToNow } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import { useLocale } from "next-intl"
 import { useEffect, useMemo, useState } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 const typeIconColors: Record<string, string> = {
   TASK_CREATED: "text-blue-500",

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useChangeTaskStatus } from "@/hooks/use-change-task-status"
 import { useTaskStatuses } from "@/hooks/use-task-status"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { Check, ChevronDown, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import type { TaskCardData } from "./task-card"

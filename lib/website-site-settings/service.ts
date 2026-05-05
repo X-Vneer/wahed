@@ -4,7 +4,7 @@ import {
   type WebsiteSiteSettings,
 } from "@/lib/generated/prisma/client"
 import { emptyToNull } from "@/lib/helpers"
-import type { UpdateWebsiteSiteSettingsInput } from "@/lib/schemas/website-site-settings"
+import type { UpdateWebsiteSiteSettingsInput } from "@/schemas/website-site-settings"
 
 const DEFAULT_CREATE: Prisma.WebsiteSiteSettingsCreateInput = {
   primaryColor: "#0f172a" as string | null,

@@ -6,13 +6,10 @@ import {
   validateRequest,
   type DynamicRouteContext,
 } from "@/lib/helpers"
-import { updateCitySchema } from "@/lib/schemas/cities"
+import { updateCitySchema } from "@/schemas/cities"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function PUT(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function PUT(request: NextRequest, context: DynamicRouteContext) {
   const { id } = await context.params
   const { t } = await initLocale(request)
 

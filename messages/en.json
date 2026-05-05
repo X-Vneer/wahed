@@ -2740,6 +2740,15 @@
   },
   "emails": {
     "greeting": "Hi {name},",
+    "highlights": {
+      "task": "Task",
+      "project": "Project",
+      "event": "Event",
+      "subtask": "Subtask",
+      "comment": "Comment",
+      "from": "From",
+      "imported": "Tasks created"
+    },
     "task_created": {
       "subject": "New task: {taskTitle}",
       "preheader": "A task was just created.",

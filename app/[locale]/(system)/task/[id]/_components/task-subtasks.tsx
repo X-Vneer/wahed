@@ -21,7 +21,7 @@ import {
 import { useDeleteSubtask } from "@/hooks/use-delete-subtask"
 import { useToggleSubtaskDone } from "@/hooks/use-toggle-subtask-done"
 import { SubTasks } from "@/lib/generated/prisma/client"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import type { TaskDetail } from "@/prisma/tasks"
 import { useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
@@ -126,74 +126,78 @@ export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
           const showStart = !!subtask.startedAt
           const showEstimate = (subtask.estimatedWorkingDays ?? 0) > 0
           return (
-          <li
-            key={subtask.id}
-            className="bg-card flex items-center gap-3 rounded-lg border px-3 py-1.5"
-          >
-            <Checkbox
-              checked={!!subtask.done}
-              onCheckedChange={() => handleToggle(subtask)}
-              className="shrink-0"
-            />
-            <div className="min-w-0 flex-1">
-              <p className={cn("text-sm", subtask.done && "line-through")}>
-                {subtask.title}
-              </p>
-              {subtask.description ? (
-                <p className="text-muted-foreground text-xs">
-                  {subtask.description}
-                </p>
-              ) : null}
-              {(showStart || showEstimate) && (
-                <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-3 text-xs">
-                  {showStart && (
-                    <span className="inline-flex items-center gap-1">
-                      <CalendarIcon className="size-3.5" />
-                      {format(new Date(subtask.startedAt!), "d - MMM - yyyy", {
-                        locale: localeDate,
-                      })}
-                    </span>
-                  )}
-                  {showEstimate && (
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="size-3.5" />
-                      {t("tasks.estimatedWorkingDaysShort", {
-                        count: subtask.estimatedWorkingDays!,
-                      })}
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    className="text-muted-foreground hover:text-foreground shrink-0"
-                    aria-label={t("taskPage.subTaskOptions")}
-                  >
-                    <MoreVertical className="size-4" />
-                  </Button>
-                }
+            <li
+              key={subtask.id}
+              className="bg-card flex items-center gap-3 rounded-lg border px-3 py-1.5"
+            >
+              <Checkbox
+                checked={!!subtask.done}
+                onCheckedChange={() => handleToggle(subtask)}
+                className="shrink-0"
               />
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => openEdit(subtask)}>
-                  <Pencil className="size-4" />
-                  {t("taskPage.editSubTask")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => setSubtaskToDelete(subtask.id)}
-                >
-                  <Trash2 className="size-4" />
-                  {t("common.delete")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </li>
+              <div className="min-w-0 flex-1">
+                <p className={cn("text-sm", subtask.done && "line-through")}>
+                  {subtask.title}
+                </p>
+                {subtask.description ? (
+                  <p className="text-muted-foreground text-xs">
+                    {subtask.description}
+                  </p>
+                ) : null}
+                {(showStart || showEstimate) && (
+                  <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-3 text-xs">
+                    {showStart && (
+                      <span className="inline-flex items-center gap-1">
+                        <CalendarIcon className="size-3.5" />
+                        {format(
+                          new Date(subtask.startedAt!),
+                          "d - MMM - yyyy",
+                          {
+                            locale: localeDate,
+                          }
+                        )}
+                      </span>
+                    )}
+                    {showEstimate && (
+                      <span className="inline-flex items-center gap-1">
+                        <Clock className="size-3.5" />
+                        {t("tasks.estimatedWorkingDaysShort", {
+                          count: subtask.estimatedWorkingDays!,
+                        })}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="text-muted-foreground hover:text-foreground shrink-0"
+                      aria-label={t("taskPage.subTaskOptions")}
+                    >
+                      <MoreVertical className="size-4" />
+                    </Button>
+                  }
+                />
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onClick={() => openEdit(subtask)}>
+                    <Pencil className="size-4" />
+                    {t("taskPage.editSubTask")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => setSubtaskToDelete(subtask.id)}
+                  >
+                    <Trash2 className="size-4" />
+                    {t("common.delete")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </li>
           )
         })}
       </ul>

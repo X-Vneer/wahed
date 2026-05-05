@@ -16,12 +16,13 @@ export function getMailerConfig(): MailerConfig | null {
   const portStr = process.env.SMTP_PORT
   const user = process.env.SMTP_USER
   const password = process.env.SMTP_PASSWORD || process.env.SMTP_APP_PASSWORD
-  const from = process.env.SMTP_FROM
 
-  if (!host || !portStr || !user || !password || !from) return null
+  if (!host || !portStr || !user || !password) return null
 
   const port = Number(portStr)
   if (Number.isNaN(port)) return null
+
+  const from = process.env.SMTP_FROM || user
 
   return { host, port, user, password, from }
 }

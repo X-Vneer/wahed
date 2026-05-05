@@ -27,7 +27,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 export type UploadedFileAttachment = {
   id?: string
@@ -322,8 +322,7 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
             className="w-full gap-2"
             onClick={() => fileInputRef.current?.click()}
             disabled={
-              maxFiles != null &&
-              pendingFiles.length >= maxFiles - value.length
+              maxFiles != null && pendingFiles.length >= maxFiles - value.length
             }
           >
             <Upload className="size-4" />
@@ -336,9 +335,7 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
             </p>
           ) : (
             <div className="space-y-2">
-              <p className="text-muted-foreground text-xs">
-                {t("renameHint")}
-              </p>
+              <p className="text-muted-foreground text-xs">{t("renameHint")}</p>
               <ul className="max-h-[240px] space-y-2 overflow-y-auto">
                 {pendingFiles.map((item) => (
                   <PendingFileRow
@@ -438,7 +435,10 @@ function PendingFileRow({
             <span className="line-clamp-1">
               {item.displayName || item.file.name}
             </span>
-            <Pencil className="text-muted-foreground size-3.5 shrink-0" aria-hidden />
+            <Pencil
+              className="text-muted-foreground size-3.5 shrink-0"
+              aria-hidden
+            />
           </button>
         )}
       </div>

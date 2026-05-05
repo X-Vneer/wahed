@@ -2740,6 +2740,15 @@
   },
   "emails": {
     "greeting": "مرحباً {name}،",
+    "highlights": {
+      "task": "المهمة",
+      "project": "المشروع",
+      "event": "الفعالية",
+      "subtask": "المهمة الفرعية",
+      "comment": "التعليق",
+      "from": "من",
+      "imported": "المهام المُنشأة"
+    },
     "task_created": {
       "subject": "مهمة جديدة: {taskTitle}",
       "preheader": "تم إنشاء مهمة جديدة.",

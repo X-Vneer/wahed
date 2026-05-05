@@ -7,7 +7,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { createCitySchema } from "@/lib/schemas/cities"
+import { createCitySchema } from "@/schemas/cities"
 import { transformCity } from "@/prisma/cities"
 import { type NextRequest, NextResponse } from "next/server"
 

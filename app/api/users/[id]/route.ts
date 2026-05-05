@@ -4,7 +4,7 @@ import {
   type PermissionKey,
   Gender,
 } from "@/lib/generated/prisma/enums"
-import { updateUserSchema } from "@/lib/schemas/user"
+import { updateUserSchema } from "@/schemas/user"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import bcrypt from "bcryptjs"
@@ -55,7 +55,10 @@ export async function PUT(
     const payload = await getAccessTokenPayload()
     const currentRole = payload?.role
 
-    if (existingUser.role === UserRole.ADMIN && currentRole !== UserRole.ADMIN) {
+    if (
+      existingUser.role === UserRole.ADMIN &&
+      currentRole !== UserRole.ADMIN
+    ) {
       return NextResponse.json(
         {
           error: t("employees.errors.cannot_edit_admin"),
@@ -121,10 +124,7 @@ export async function PUT(
     }
 
     // Prevent deactivating the first admin user
-    if (
-      existingUser.role === UserRole.ADMIN &&
-      data.isActive === false
-    ) {
+    if (existingUser.role === UserRole.ADMIN && data.isActive === false) {
       const firstAdmin = await db.user.findFirst({
         where: { role: UserRole.ADMIN },
         orderBy: { createdAt: "asc" },
@@ -254,7 +254,11 @@ export async function PATCH(
     const body = await request.json()
     const { password } = body as { password?: string }
 
-    if (!password || typeof password !== "string" || password.trim().length < 8) {
+    if (
+      !password ||
+      typeof password !== "string" ||
+      password.trim().length < 8
+    ) {
       return NextResponse.json(
         {
           error: t("employees.errors.password.minLength"),

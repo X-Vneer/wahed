@@ -8,17 +8,11 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import {
-  createNotifications,
-  getTaskStakeholderIds,
-} from "@/lib/notifications"
-import { createTaskCommentSchema } from "@/lib/schemas/task"
+import { createNotifications, getTaskStakeholderIds } from "@/lib/notifications"
+import { createTaskCommentSchema } from "@/schemas/task"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function POST(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function POST(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)
   try {
     const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
@@ -69,7 +63,10 @@ export async function POST(
         createNotifications({
           userIds: notifyIds,
           category: NotificationCategory.TASK_COMMENTED,
-          messageParams: { userName: comment.createdBy.name, comment: data.content.substring(0, 100) },
+          messageParams: {
+            userName: comment.createdBy.name,
+            comment: data.content.substring(0, 100),
+          },
           relatedId: taskId,
           relatedType: "task",
         })
@@ -123,5 +120,3 @@ export async function GET(request: NextRequest, context: DynamicRouteContext) {
     )
   }
 }
-
-

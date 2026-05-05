@@ -4,7 +4,7 @@ import type { UploadedFileAttachment } from "@/components/form-file-upload"
 import type {
   PublicProjectBadgeInput,
   PublicProjectFeatureInput,
-} from "@/lib/schemas/public-project"
+} from "@/schemas/public-project"
 import { createFormContext } from "@mantine/form"
 
 export type PublicProjectFormBadge = PublicProjectBadgeInput

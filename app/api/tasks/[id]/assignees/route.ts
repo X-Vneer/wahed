@@ -9,7 +9,7 @@ import {
   validateRequest,
 } from "@/lib/helpers"
 import { createNotifications } from "@/lib/notifications"
-import { updateTaskAssigneesSchema } from "@/lib/schemas/task"
+import { updateTaskAssigneesSchema } from "@/schemas/task"
 import { taskDetailInclude, transformTaskDetail } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -79,8 +79,7 @@ export async function PATCH(
     // Notify newly assigned users
     const currentUser = await getAccessTokenPayload()
     const newAssignees = assignedToIds.filter(
-      (uid) =>
-        !previousAssigneeIds.includes(uid) && uid !== currentUser?.userId
+      (uid) => !previousAssigneeIds.includes(uid) && uid !== currentUser?.userId
     )
     if (newAssignees.length > 0) {
       createNotifications({

@@ -1,5 +1,5 @@
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { parseAsString, useQueryState } from "nuqs"
 import React, { useState } from "react"
 import { useTranslations } from "next-intl"

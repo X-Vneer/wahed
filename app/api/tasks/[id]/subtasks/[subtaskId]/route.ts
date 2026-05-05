@@ -6,7 +6,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { updateSubTaskSchema } from "@/lib/schemas/task"
+import { updateSubTaskSchema } from "@/schemas/task"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function PATCH(

@@ -16,11 +16,11 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { Spinner } from "@/components/ui/spinner"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   createTaskStatusSchema,
   updateTaskStatusSchema,
-} from "@/lib/schemas/task-status"
+} from "@/schemas/task-status"
 import type { TaskStatus } from "@/prisma/task-statuses"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"

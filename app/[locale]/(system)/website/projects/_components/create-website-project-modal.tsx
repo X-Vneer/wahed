@@ -19,7 +19,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useProjects } from "@/hooks/use-projects"
 import { useRouter } from "@/lib/i18n/navigation"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { ArrowLeft, FolderOpen, Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useState } from "react"

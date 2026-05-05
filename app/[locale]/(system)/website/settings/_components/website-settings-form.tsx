@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button"
 import { Field, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   type WebsiteSiteSettingsFormValues,
   websiteSiteSettingsFormSchema,
-} from "@/lib/schemas/website-site-settings"
+} from "@/schemas/website-site-settings"
 import type { WebsiteSiteSettingsAdminDto } from "@/lib/website-site-settings/service"
 import { useForm } from "@mantine/form"
 import axios from "axios"
@@ -17,11 +17,7 @@ import { toast } from "sonner"
 
 import { AnalyticsSection } from "./analytics-section"
 import { FooterSection } from "./footer-section"
-import {
-  type FormModel,
-  emptyValues,
-  valuesFromSettings,
-} from "./form-model"
+import { type FormModel, emptyValues, valuesFromSettings } from "./form-model"
 import { LogosSection } from "./logos-section"
 import { SeoSection } from "./seo-section"
 import { SocialMediaSection } from "./social-media-section"

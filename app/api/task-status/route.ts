@@ -7,7 +7,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { createTaskStatusSchema } from "@/lib/schemas/task-status"
+import { createTaskStatusSchema } from "@/schemas/task-status"
 import { transformTaskStatus } from "@/prisma/task-statuses"
 import { type NextRequest, NextResponse } from "next/server"
 

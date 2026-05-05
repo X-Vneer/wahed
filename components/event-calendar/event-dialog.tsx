@@ -61,8 +61,8 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { useEvent } from "@/hooks/use-events"
 import { useUsersList } from "@/hooks/use-users"
-import { extractOriginalEventId } from "@/lib/recurrence"
-import { cn } from "@/lib/utils"
+import { extractOriginalEventId } from "@/utils/recurrence"
+import { cn } from "@/utils/cn"
 import { ScrollArea } from "../ui/scroll-area"
 import UsersSelect from "../users-select"
 

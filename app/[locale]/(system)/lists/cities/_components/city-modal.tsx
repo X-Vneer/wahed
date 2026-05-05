@@ -23,8 +23,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { Spinner } from "@/components/ui/spinner"
-import { handleFormErrors } from "@/lib/handle-form-errors"
-import { createCitySchema, updateCitySchema } from "@/lib/schemas/cities"
+import { handleFormErrors } from "@/utils/handle-form-errors"
+import { createCitySchema, updateCitySchema } from "@/schemas/cities"
 import type { City } from "@/prisma/cities"
 import type { Region } from "@/prisma/regions"
 import { useRegions } from "@/hooks/use-regions"

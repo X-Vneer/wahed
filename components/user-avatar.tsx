@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 interface UserAvatarProps {
   name: string

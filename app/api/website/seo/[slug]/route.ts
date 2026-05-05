@@ -6,7 +6,7 @@ import {
   validateRequest,
   type DynamicRouteContext,
 } from "@/lib/helpers"
-import { websitePageSeoSchema } from "@/lib/schemas/website-page-seo"
+import { websitePageSeoSchema } from "@/schemas/website-page-seo"
 import {
   getPageSeoForEditor,
   upsertPageSeo,

@@ -1,5 +1,5 @@
 import db from "@/lib/db"
-import { createEventSchema } from "@/lib/schemas/event"
+import { createEventSchema } from "@/schemas/event"
 import { type NextRequest, NextResponse } from "next/server"
 import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
 import {
@@ -13,7 +13,7 @@ import {
   transformEvent,
   type EventInclude,
 } from "@/prisma/events"
-import { expandRecurringEvents } from "@/lib/recurrence"
+import { expandRecurringEvents } from "@/utils/recurrence"
 import type { CalendarEvent } from "@/components/event-calendar"
 import { Prisma } from "@/lib/generated/prisma/client"
 

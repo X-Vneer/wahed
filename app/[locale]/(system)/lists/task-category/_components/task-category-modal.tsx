@@ -17,11 +17,11 @@ import {
 } from "@/components/ui/sheet"
 import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   createTaskCategorySchema,
   updateTaskCategorySchema,
-} from "@/lib/schemas/task-category"
+} from "@/schemas/task-category"
 import type { TaskCategory } from "@/prisma/task-categories"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"

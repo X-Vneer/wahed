@@ -5,8 +5,8 @@ import {
   initLocale,
   requirePermission,
 } from "@/lib/helpers"
-import { updateTaskTemplateSchema } from "@/lib/schemas/task-template"
-import { transformZodError } from "@/lib/transform-errors"
+import { updateTaskTemplateSchema } from "@/schemas/task-template"
+import { transformZodError } from "@/utils/transform-errors"
 import { tasksTemplateInclude } from "@/prisma/task-templates"
 import { type NextRequest, NextResponse } from "next/server"
 

@@ -8,7 +8,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { createPublicProjectSchema } from "@/lib/schemas/public-project"
+import { createPublicProjectSchema } from "@/schemas/public-project"
 import {
   publicProjectInclude,
   transformPublicProject,

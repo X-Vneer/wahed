@@ -29,7 +29,7 @@ import {
   type UploadedFileAttachment,
 } from "@/components/form-file-upload"
 import { Link } from "@/lib/i18n/navigation"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import {
   Download,
   File as FileIcon,
@@ -93,7 +93,10 @@ const FolderFilesPage = () => {
           const data = await res.json().catch(() => ({}))
           throw new Error(data?.error ?? "Failed to delete file")
         }
-      } else if (file.source === "PROJECT" && selectedFolder.type === "PROJECT") {
+      } else if (
+        file.source === "PROJECT" &&
+        selectedFolder.type === "PROJECT"
+      ) {
         const projectAttachments = selectedFolder.files
           .filter((f) => f.source === "PROJECT" && f.id !== file.id)
           .map((f) => ({
@@ -133,7 +136,9 @@ const FolderFilesPage = () => {
       setFileToDelete(null)
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : t("projects.form.attachments.uploadError")
+        err instanceof Error
+          ? err.message
+          : t("projects.form.attachments.uploadError")
       )
     } finally {
       setDeletingId(null)
@@ -161,7 +166,7 @@ const FolderFilesPage = () => {
             <AlertDialogDescription>
               {t("projects.form.attachments.confirmRemoveFile")}
               {fileToDelete && (
-                <span className="mt-1 block font-medium text-foreground">
+                <span className="text-foreground mt-1 block font-medium">
                   {fileToDelete.fileName || t("attachmentPreview.file")}
                 </span>
               )}
@@ -174,7 +179,7 @@ const FolderFilesPage = () => {
             <AlertDialogAction
               onClick={() => fileToDelete && performDelete(fileToDelete)}
               disabled={deletingId !== null}
-              className="bg-destructive text-white hover:bg-destructive/90"
+              className="bg-destructive hover:bg-destructive/90 text-white"
             >
               {deletingId !== null
                 ? t("projects.form.attachments.removing")

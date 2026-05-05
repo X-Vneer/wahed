@@ -9,11 +9,8 @@ import {
   validateRequest,
 } from "@/lib/helpers"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
-import {
-  createNotifications,
-  getTaskStakeholderIds,
-} from "@/lib/notifications"
-import { changeTaskStatusSchema } from "@/lib/schemas/task"
+import { createNotifications, getTaskStakeholderIds } from "@/lib/notifications"
+import { changeTaskStatusSchema } from "@/schemas/task"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -84,7 +81,10 @@ export async function PATCH(
         createNotifications({
           userIds: notifyIds,
           category: NotificationCategory.TASK_STATUS_CHANGED,
-          messageParams: { taskTitle: task.title, statusName: statusName?.nameEn ?? "" },
+          messageParams: {
+            taskTitle: task.title,
+            statusName: statusName?.nameEn ?? "",
+          },
           relatedId: id,
           relatedType: "task",
         })

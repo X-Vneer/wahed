@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { useSystemBranding } from "@/contexts/system-branding-context"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import { useForm } from "@mantine/form"
 import axios from "axios"
 import { zod4Resolver } from "mantine-form-zod-resolver"

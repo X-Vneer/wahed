@@ -1,6 +1,6 @@
 import { PERMISSIONS } from "@/config"
 import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
-import { updateWebsiteSiteSettingsSchema } from "@/lib/schemas/website-site-settings"
+import { updateWebsiteSiteSettingsSchema } from "@/schemas/website-site-settings"
 import {
   getWebsiteSiteSettingsAdmin,
   patchWebsiteSiteSettings,
@@ -33,11 +33,7 @@ export async function PATCH(request: NextRequest) {
     if (permError) return permError
 
     const body = await request.json()
-    const validation = validateRequest(
-      updateWebsiteSiteSettingsSchema,
-      body,
-      t
-    )
+    const validation = validateRequest(updateWebsiteSiteSettingsSchema, body, t)
     if (validation.error) return validation.error
 
     const settings = await patchWebsiteSiteSettings(validation.data)

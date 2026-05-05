@@ -2,7 +2,7 @@
 
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 function Progress({
   className,
@@ -29,7 +29,7 @@ function ProgressTrack({ className, ...props }: ProgressPrimitive.Track.Props) {
   return (
     <ProgressPrimitive.Track
       className={cn(
-        "bg-muted h-1.5 rounded-full relative flex w-full items-center overflow-x-hidden",
+        "bg-muted relative flex h-1.5 w-full items-center overflow-x-hidden rounded-full",
         className
       )}
       data-slot="progress-track"
@@ -46,7 +46,7 @@ function ProgressIndicator({
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
       className={cn(
-        "h-full transition-all bg-[var(--progress-indicator-color,var(--primary))]",
+        "h-full bg-[var(--progress-indicator-color,var(--primary))] transition-all",
         className
       )}
       {...props}
@@ -67,7 +67,10 @@ function ProgressLabel({ className, ...props }: ProgressPrimitive.Label.Props) {
 function ProgressValue({ className, ...props }: ProgressPrimitive.Value.Props) {
   return (
     <ProgressPrimitive.Value
-      className={cn("text-muted-foreground ms-auto text-sm tabular-nums", className)}
+      className={cn(
+        "text-muted-foreground ms-auto text-sm tabular-nums",
+        className
+      )}
       data-slot="progress-value"
       {...props}
     />

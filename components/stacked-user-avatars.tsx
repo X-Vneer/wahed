@@ -15,7 +15,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 export type StackedUserAvatarsUser = {
   id: string
@@ -55,18 +55,14 @@ export function StackedUserAvatars({
   const overflowCount = users.length - maxVisible
 
   const avatarSizeClass =
-    size === "sm"
-      ? "size-6"
-      : size === "lg"
-        ? "size-10"
-        : "size-8"
+    size === "sm" ? "size-6" : size === "lg" ? "size-10" : "size-8"
 
   return (
     <Popover>
       <PopoverTrigger
         type="button"
         className={cn(
-          "focus-visible:ring-ring inline-flex cursor-pointer items-center rounded-full focus-visible:outline-none focus-visible:ring-2",
+          "focus-visible:ring-ring inline-flex cursor-pointer items-center rounded-full focus-visible:ring-2 focus-visible:outline-none",
           className
         )}
         aria-label={
@@ -75,38 +71,38 @@ export function StackedUserAvatars({
             : `Assigned to ${users.length} people`
         }
       >
-        <AvatarGroup className="*:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background">
-            {visible.map((user) => (
-              <Avatar
-                key={user.id}
-                size={size}
-                className={cn(avatarSizeClass, "ring-2 ring-background")}
-              >
-                {user.image ? (
-                  <AvatarImage src={user.image} alt={user.name} />
-                ) : null}
-                <AvatarFallback className="text-xs">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-            ))}
-            {overflowCount > 0 && (
-              <AvatarGroupCount
-                className={cn(
-                  "ring-2 ring-background text-xs font-medium",
-                  size === "sm" && "size-6",
-                  size === "lg" && "size-10"
-                )}
-              >
-                +{overflowCount}
-              </AvatarGroupCount>
-            )}
-          </AvatarGroup>
+        <AvatarGroup className="*:data-[slot=avatar]:ring-background *:data-[slot=avatar]:ring-2">
+          {visible.map((user) => (
+            <Avatar
+              key={user.id}
+              size={size}
+              className={cn(avatarSizeClass, "ring-background ring-2")}
+            >
+              {user.image ? (
+                <AvatarImage src={user.image} alt={user.name} />
+              ) : null}
+              <AvatarFallback className="text-xs">
+                {getInitials(user.name)}
+              </AvatarFallback>
+            </Avatar>
+          ))}
+          {overflowCount > 0 && (
+            <AvatarGroupCount
+              className={cn(
+                "ring-background text-xs font-medium ring-2",
+                size === "sm" && "size-6",
+                size === "lg" && "size-10"
+              )}
+            >
+              +{overflowCount}
+            </AvatarGroupCount>
+          )}
+        </AvatarGroup>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 p-0" sideOffset={8}>
         {popoverTitle && (
           <PopoverHeader className="border-b px-3 py-2">
-            <PopoverTitle className="text-xs font-medium text-muted-foreground">
+            <PopoverTitle className="text-muted-foreground text-xs font-medium">
               {popoverTitle}
             </PopoverTitle>
           </PopoverHeader>
@@ -115,7 +111,7 @@ export function StackedUserAvatars({
           {users.map((user) => (
             <li
               key={user.id}
-              className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-muted/50"
+              className="hover:bg-muted/50 flex items-center gap-3 px-3 py-2 text-sm"
             >
               <Avatar size="sm" className="size-8 shrink-0">
                 {user.image ? (

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import type { User } from "@/prisma/users/select"
 import apiClient from "@/services"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { useQueryClient } from "@tanstack/react-query"
 
 const OPTIONS = [
@@ -23,8 +23,8 @@ type LocaleValue = (typeof OPTIONS)[number]["value"]
 export function LocalePreferencesCard({ user }: { user: User }) {
   const t = useTranslations()
   const queryClient = useQueryClient()
-  const initial = ((user as unknown as { locale?: string }).locale ?? "ar") as
-    | LocaleValue
+  const initial = ((user as unknown as { locale?: string }).locale ??
+    "ar") as LocaleValue
   const [selected, setSelected] = useState<LocaleValue>(initial)
   const [saving, setSaving] = useState(false)
 
@@ -96,7 +96,9 @@ export function LocalePreferencesCard({ user }: { user: User }) {
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground"
                   )}
-                  style={{ fontFamily: opt.value === "ar" ? "serif" : undefined }}
+                  style={{
+                    fontFamily: opt.value === "ar" ? "serif" : undefined,
+                  }}
                 >
                   {opt.flag}
                 </div>

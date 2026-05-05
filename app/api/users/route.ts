@@ -1,14 +1,10 @@
 import db from "@/lib/db"
 import { UserRole, type PermissionKey } from "@/lib/generated/prisma/enums"
-import { createUserSchema } from "@/lib/schemas/user"
+import { createUserSchema } from "@/schemas/user"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import bcrypt from "bcryptjs"
 import { type NextRequest, NextResponse } from "next/server"
-import {
-  initLocale,
-  requirePermission,
-  validateRequest,
-} from "@/lib/helpers"
+import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 

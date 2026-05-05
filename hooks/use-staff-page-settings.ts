@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query"
 import apiClient from "@/services"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
-import type { UpdateStaffPageSettingsInput } from "@/lib/schemas/staff-page-settings"
+import type { UpdateStaffPageSettingsInput } from "@/schemas/staff-page-settings"
 import type { StaffPageSettings } from "@/lib/get-staff-page-settings"
 import { useStaffPageSettingsContext } from "@/contexts/staff-page-settings-context"
 

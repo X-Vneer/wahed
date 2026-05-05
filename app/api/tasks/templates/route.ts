@@ -1,14 +1,10 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
-import {
-  initLocale,
-  parsePagination,
-  requirePermission,
-} from "@/lib/helpers"
+import { initLocale, parsePagination, requirePermission } from "@/lib/helpers"
 import { tasksTemplateInclude } from "@/prisma/task-templates"
-import { createTaskTemplateSchema } from "@/lib/schemas/task-template"
-import { transformZodError } from "@/lib/transform-errors"
+import { createTaskTemplateSchema } from "@/schemas/task-template"
+import { transformZodError } from "@/utils/transform-errors"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {

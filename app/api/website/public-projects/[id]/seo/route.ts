@@ -12,7 +12,7 @@ import {
 import {
   websitePageSeoSchema,
   type WebsitePageSeoValues,
-} from "@/lib/schemas/website-page-seo"
+} from "@/schemas/website-page-seo"
 
 /** Convention: per-project SEO rows use slug = `project/{publicProject.slug}` */
 function projectSeoSlug(projectSlug: string) {
@@ -82,10 +82,7 @@ export async function GET(
     })
 
     if (!project) {
-      return NextResponse.json(
-        { error: "Not found" },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
     }
 
     const seoSlug = projectSeoSlug(project.slug)
@@ -128,10 +125,7 @@ export async function PUT(
     })
 
     if (!project) {
-      return NextResponse.json(
-        { error: "Not found" },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
     }
 
     const body = await request.json()

@@ -1,6 +1,4 @@
-import {
-  type WebsiteSiteSettingsFormValues,
-} from "@/lib/schemas/website-site-settings"
+import { type WebsiteSiteSettingsFormValues } from "@/schemas/website-site-settings"
 import type { WebsiteSiteSettingsAdminDto } from "@/lib/website-site-settings/service"
 
 export type FormModel = WebsiteSiteSettingsFormValues & { root?: string }

@@ -16,11 +16,11 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { Spinner } from "@/components/ui/spinner"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   createProjectStatusSchema,
   updateProjectStatusSchema,
-} from "@/lib/schemas/project-status"
+} from "@/schemas/project-status"
 import type { ProjectStatus } from "@/prisma/project-statuses"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"

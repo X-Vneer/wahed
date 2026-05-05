@@ -1,6 +1,6 @@
 import { PERMISSIONS } from "@/config"
 import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
-import { updateSystemSiteSettingsSchema } from "@/lib/schemas/system-site-settings"
+import { updateSystemSiteSettingsSchema } from "@/schemas/system-site-settings"
 import {
   getSystemSiteSettingsAdmin,
   patchSystemSiteSettings,

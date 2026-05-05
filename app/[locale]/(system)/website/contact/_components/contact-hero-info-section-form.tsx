@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 
 export type ContactHeroInfoSectionValues = {
   eyebrowTitleAr: string

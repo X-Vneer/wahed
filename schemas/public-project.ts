@@ -1,5 +1,5 @@
 import * as z from "zod/v4"
-import { attachmentSchema } from "@/lib/schemas/attachment"
+import { attachmentSchema } from "@/schemas/attachment"
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 

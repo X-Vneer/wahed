@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { useWeather } from "@/hooks/use-weather"
 import { useUserLocation } from "@/hooks/use-user-location"
 import { useTranslations } from "next-intl"

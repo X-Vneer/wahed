@@ -37,12 +37,12 @@ import {
 import UsersSelect from "@/components/users-select"
 import { useTaskStatuses } from "@/hooks/use-task-status"
 import { useTaskCategories } from "@/hooks/use-task-category"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   createTaskSchema,
   type CreateTaskInput,
   type UpdateTaskInput,
-} from "@/lib/schemas/task"
+} from "@/schemas/task"
 import type { Task } from "@/prisma/tasks"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"
@@ -639,159 +639,171 @@ export function TaskDialog({
                     </div>
 
                     {form.values.subTasks?.length > 0 && (
-                  <div className="space-y-3">
-                    {form.values.subTasks.map((_, index) => (
-                      <div
-                        key={index}
-                        className="bg-muted/30 space-y-2 rounded-lg border p-3"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-muted-foreground text-xs font-medium">
-                            #{index + 1}
-                          </span>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => removeSubTask(index)}
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      <div className="space-y-3">
+                        {form.values.subTasks.map((_, index) => (
+                          <div
+                            key={index}
+                            className="bg-muted/30 space-y-2 rounded-lg border p-3"
                           >
-                            <Trash2 className="size-4" />
-                          </Button>
-                        </div>
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-muted-foreground text-xs font-medium">
+                                #{index + 1}
+                              </span>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => removeSubTask(index)}
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              >
+                                <Trash2 className="size-4" />
+                              </Button>
+                            </div>
 
-                        <Field>
-                          <FieldLabel className="text-xs">
-                            {t("tasks.form.subTaskTitle")}
-                          </FieldLabel>
-                          <Input
-                            {...form.getInputProps(`subTasks.${index}.title`)}
-                            placeholder={t(
-                              "tasks.form.subTaskTitlePlaceholder"
-                            )}
-                          />
-                        </Field>
-
-                        <Field>
-                          <FieldLabel className="text-xs">
-                            {t("tasks.form.subTaskDescription")}
-                          </FieldLabel>
-                          <Input
-                            {...form.getInputProps(
-                              `subTasks.${index}.description`
-                            )}
-                            placeholder={t(
-                              "tasks.form.subTaskDescriptionPlaceholder"
-                            )}
-                          />
-                        </Field>
-
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                          <Field>
-                            <FieldLabel className="text-xs">
-                              {t("tasks.form.startedAt")}
-                            </FieldLabel>
-                            <Popover
-                              open={subTaskDatePickerIndex === index}
-                              onOpenChange={(open) =>
-                                setSubTaskDatePickerIndex(open ? index : null)
-                              }
-                            >
-                              <PopoverTrigger
-                                render={(props) => (
-                                  <Button
-                                    variant="outline"
-                                    type="button"
-                                    className="h-9 w-full justify-start bg-white text-start font-normal"
-                                    {...props}
-                                  >
-                                    <CalendarIcon className="me-2 h-3.5 w-3.5" />
-                                    {form.values.subTasks[index]?.startedAt ? (
-                                      format(
-                                        form.values.subTasks[index]!
-                                          .startedAt as Date,
-                                        "PPP",
-                                        { locale: locale === "ar" ? ar : enUS }
-                                      )
-                                    ) : (
-                                      <span className="text-muted-foreground">
-                                        {t("tasks.form.startedAtPlaceholder")}
-                                      </span>
-                                    )}
-                                    {form.values.subTasks[index]?.startedAt && (
-                                      <span
-                                        role="button"
-                                        tabIndex={0}
-                                        aria-label={t("tasks.form.clear")}
-                                        className="hover:bg-muted ms-auto inline-flex size-5 items-center justify-center rounded"
-                                        onClick={(e) => {
-                                          e.stopPropagation()
-                                          form.setFieldValue(
-                                            `subTasks.${index}.startedAt`,
-                                            null
-                                          )
-                                        }}
-                                        onKeyDown={(e) => {
-                                          if (
-                                            e.key === "Enter" ||
-                                            e.key === " "
-                                          ) {
-                                            e.preventDefault()
-                                            e.stopPropagation()
-                                            form.setFieldValue(
-                                              `subTasks.${index}.startedAt`,
-                                              null
-                                            )
-                                          }
-                                        }}
-                                      >
-                                        <X className="size-3.5" />
-                                      </span>
-                                    )}
-                                  </Button>
+                            <Field>
+                              <FieldLabel className="text-xs">
+                                {t("tasks.form.subTaskTitle")}
+                              </FieldLabel>
+                              <Input
+                                {...form.getInputProps(
+                                  `subTasks.${index}.title`
+                                )}
+                                placeholder={t(
+                                  "tasks.form.subTaskTitlePlaceholder"
                                 )}
                               />
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                  mode="single"
-                                  selected={
-                                    (form.values.subTasks[index]
-                                      ?.startedAt as Date | null) ?? undefined
-                                  }
-                                  onSelect={(date) => {
-                                    form.setFieldValue(
-                                      `subTasks.${index}.startedAt`,
-                                      date || null
+                            </Field>
+
+                            <Field>
+                              <FieldLabel className="text-xs">
+                                {t("tasks.form.subTaskDescription")}
+                              </FieldLabel>
+                              <Input
+                                {...form.getInputProps(
+                                  `subTasks.${index}.description`
+                                )}
+                                placeholder={t(
+                                  "tasks.form.subTaskDescriptionPlaceholder"
+                                )}
+                              />
+                            </Field>
+
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                              <Field>
+                                <FieldLabel className="text-xs">
+                                  {t("tasks.form.startedAt")}
+                                </FieldLabel>
+                                <Popover
+                                  open={subTaskDatePickerIndex === index}
+                                  onOpenChange={(open) =>
+                                    setSubTaskDatePickerIndex(
+                                      open ? index : null
                                     )
-                                    setSubTaskDatePickerIndex(null)
-                                  }}
-                                  locale={locale === "ar" ? ar : enUS}
+                                  }
+                                >
+                                  <PopoverTrigger
+                                    render={(props) => (
+                                      <Button
+                                        variant="outline"
+                                        type="button"
+                                        className="h-9 w-full justify-start bg-white text-start font-normal"
+                                        {...props}
+                                      >
+                                        <CalendarIcon className="me-2 h-3.5 w-3.5" />
+                                        {form.values.subTasks[index]
+                                          ?.startedAt ? (
+                                          format(
+                                            form.values.subTasks[index]!
+                                              .startedAt as Date,
+                                            "PPP",
+                                            {
+                                              locale:
+                                                locale === "ar" ? ar : enUS,
+                                            }
+                                          )
+                                        ) : (
+                                          <span className="text-muted-foreground">
+                                            {t(
+                                              "tasks.form.startedAtPlaceholder"
+                                            )}
+                                          </span>
+                                        )}
+                                        {form.values.subTasks[index]
+                                          ?.startedAt && (
+                                          <span
+                                            role="button"
+                                            tabIndex={0}
+                                            aria-label={t("tasks.form.clear")}
+                                            className="hover:bg-muted ms-auto inline-flex size-5 items-center justify-center rounded"
+                                            onClick={(e) => {
+                                              e.stopPropagation()
+                                              form.setFieldValue(
+                                                `subTasks.${index}.startedAt`,
+                                                null
+                                              )
+                                            }}
+                                            onKeyDown={(e) => {
+                                              if (
+                                                e.key === "Enter" ||
+                                                e.key === " "
+                                              ) {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                form.setFieldValue(
+                                                  `subTasks.${index}.startedAt`,
+                                                  null
+                                                )
+                                              }
+                                            }}
+                                          >
+                                            <X className="size-3.5" />
+                                          </span>
+                                        )}
+                                      </Button>
+                                    )}
+                                  />
+                                  <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                  >
+                                    <Calendar
+                                      mode="single"
+                                      selected={
+                                        (form.values.subTasks[index]
+                                          ?.startedAt as Date | null) ??
+                                        undefined
+                                      }
+                                      onSelect={(date) => {
+                                        form.setFieldValue(
+                                          `subTasks.${index}.startedAt`,
+                                          date || null
+                                        )
+                                        setSubTaskDatePickerIndex(null)
+                                      }}
+                                      locale={locale === "ar" ? ar : enUS}
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                              </Field>
+                              <Field>
+                                <FieldLabel className="text-xs">
+                                  {t("tasks.form.estimatedWorkingDays")}
+                                </FieldLabel>
+                                <Input
+                                  type="number"
+                                  min={0}
+                                  {...form.getInputProps(
+                                    `subTasks.${index}.estimatedWorkingDays`
+                                  )}
+                                  placeholder={t(
+                                    "tasks.form.estimatedWorkingDaysPlaceholder"
+                                  )}
                                 />
-                              </PopoverContent>
-                            </Popover>
-                          </Field>
-                          <Field>
-                            <FieldLabel className="text-xs">
-                              {t("tasks.form.estimatedWorkingDays")}
-                            </FieldLabel>
-                            <Input
-                              type="number"
-                              min={0}
-                              {...form.getInputProps(
-                                `subTasks.${index}.estimatedWorkingDays`
-                              )}
-                              placeholder={t(
-                                "tasks.form.estimatedWorkingDaysPlaceholder"
-                              )}
-                            />
-                          </Field>
-                        </div>
+                              </Field>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
                     )}
                   </div>
                 </>

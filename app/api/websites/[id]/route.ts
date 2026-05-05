@@ -8,7 +8,7 @@ import {
   type DynamicRouteContext,
 } from "@/lib/helpers"
 import { transformWebsite } from "@/prisma/websites"
-import { updateWebsiteSchema } from "@/lib/schemas/website"
+import { updateWebsiteSchema } from "@/schemas/website"
 
 export async function PUT(
   request: NextRequest,

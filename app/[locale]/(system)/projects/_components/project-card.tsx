@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/collapsible"
 import { TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import { Link } from "@/lib/i18n/navigation"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { type TransformedProject } from "@/prisma/projects"
 import {
   Building2,

@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Link, usePathname } from "@/lib/i18n/navigation"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import {
   CircleHelp,
   FolderKanban,

@@ -6,13 +6,10 @@ import {
   validateRequest,
   type DynamicRouteContext,
 } from "@/lib/helpers"
-import { updatePublicProjectStatusSchema } from "@/lib/schemas/public-project-status"
+import { updatePublicProjectStatusSchema } from "@/schemas/public-project-status"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function GET(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)
   try {
     const { id } = await context.params
@@ -36,10 +33,7 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function PUT(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)
   try {
     const { id } = await context.params

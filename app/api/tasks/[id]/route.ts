@@ -7,12 +7,12 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { NotificationCategory, TaskPriority } from "@/lib/generated/prisma/enums"
 import {
-  createNotifications,
-  getTaskStakeholderIds,
-} from "@/lib/notifications"
-import { updateTaskSchema } from "@/lib/schemas/task"
+  NotificationCategory,
+  TaskPriority,
+} from "@/lib/generated/prisma/enums"
+import { createNotifications, getTaskStakeholderIds } from "@/lib/notifications"
+import { updateTaskSchema } from "@/schemas/task"
 import {
   taskDetailInclude,
   transformTask,
@@ -20,10 +20,7 @@ import {
 } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function GET(request: NextRequest, context: DynamicRouteContext) {
   const { locale, t } = await initLocale(request)
   try {
     const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.VIEW)

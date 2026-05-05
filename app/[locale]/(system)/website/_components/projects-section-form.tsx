@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl"
 import { useEffect } from "react"
 import { toast } from "sonner"
 
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import { Button } from "@/components/ui/button"
 import {
   Card,

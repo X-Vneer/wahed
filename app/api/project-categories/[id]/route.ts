@@ -4,13 +4,10 @@ import {
   validateRequest,
   type DynamicRouteContext,
 } from "@/lib/helpers"
-import { updateProjectCategorySchema } from "@/lib/schemas/project-categories"
+import { updateProjectCategorySchema } from "@/schemas/project-categories"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function GET(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)
   try {
     const { id } = await context.params
@@ -36,10 +33,7 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function PUT(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)
   try {
     const { id } = await context.params

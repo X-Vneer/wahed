@@ -3,7 +3,7 @@
 import React, { useMemo, useRef, useEffect } from "react"
 import { useDroppable } from "@dnd-kit/core"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { useCalendarDndActiveEvent } from "@/components/event-calendar"
 
 interface DroppableCellProps {

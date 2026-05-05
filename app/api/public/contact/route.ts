@@ -2,7 +2,7 @@ import db from "@/lib/db"
 import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import { initLocale, validateRequest } from "@/lib/helpers"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
-import { createContactMessageSchema } from "@/lib/schemas/contact"
+import { createContactMessageSchema } from "@/schemas/contact"
 import { type NextRequest, NextResponse } from "next/server"
 
 /**
@@ -36,7 +36,10 @@ export async function POST(request: NextRequest) {
         createNotifications({
           userIds: adminIds,
           category: NotificationCategory.CONTACT_RECEIVED,
-          messageParams: { senderName: `${data.firstName} ${data.lastName}`, messagePreview: data.message.substring(0, 100) },
+          messageParams: {
+            senderName: `${data.firstName} ${data.lastName}`,
+            messagePreview: data.message.substring(0, 100),
+          },
           relatedId: contact.id,
           relatedType: "contact",
         })

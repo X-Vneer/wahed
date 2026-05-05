@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useSystemSiteSettings } from "@/hooks/use-system-site-settings"
-import type { SystemSiteSettingsFormValues } from "@/lib/schemas/system-site-settings"
+import type { SystemSiteSettingsFormValues } from "@/schemas/system-site-settings"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { SystemSettingsForm } from "./_components/system-settings-form"

@@ -7,7 +7,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { createPublicProjectStatusSchema } from "@/lib/schemas/public-project-status"
+import { createPublicProjectStatusSchema } from "@/schemas/public-project-status"
 import { transformPublicProjectStatus } from "@/prisma/public-project-statuses"
 import { type NextRequest, NextResponse } from "next/server"
 

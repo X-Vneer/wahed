@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import Countdown from "react-countdown"
 import { useTranslations, useLocale } from "next-intl"
 import { Card, CardContent } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import {
   addDays,
   isAfter,

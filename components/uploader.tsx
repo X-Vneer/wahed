@@ -4,7 +4,7 @@ import { UploadButton, UploadDropzone } from "@/lib/uploadthing"
 import { CloudUpload } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { ComponentProps } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 type UploaderProps = ComponentProps<typeof UploadDropzone> & {
   variant?: "default" | "circular" | "button"
@@ -18,7 +18,13 @@ export default function Uploader({
   const isCircular = variant === "circular"
 
   if (variant === "button") {
-    const { endpoint, onClientUploadComplete, onUploadError, onUploadBegin, onBeforeUploadBegin } = props
+    const {
+      endpoint,
+      onClientUploadComplete,
+      onUploadError,
+      onUploadBegin,
+      onBeforeUploadBegin,
+    } = props
     return (
       <UploadButton
         endpoint={endpoint}

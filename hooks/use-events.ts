@@ -10,11 +10,11 @@ import {
 import apiClient from "@/services"
 import { format, startOfMonth, endOfMonth } from "date-fns"
 import { Event } from "@/prisma/events"
-import { CreateEventInput, UpdateEventInput } from "@/lib/schemas/event"
+import { CreateEventInput, UpdateEventInput } from "@/schemas/event"
 import { EventColor } from "@/lib/generated/prisma/enums"
 import { toast } from "sonner"
 import { useLocale, useTranslations } from "next-intl"
-import { extractOriginalEventId } from "@/lib/recurrence"
+import { extractOriginalEventId } from "@/utils/recurrence"
 import { ar, enUS } from "date-fns/locale"
 
 // API event response type (includes extra fields we don't need)

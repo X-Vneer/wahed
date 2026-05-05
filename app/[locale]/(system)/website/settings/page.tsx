@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useWebsiteSiteSettings } from "@/hooks/use-website-site-settings"
-import type { WebsiteSiteSettingsFormValues } from "@/lib/schemas/website-site-settings"
+import type { WebsiteSiteSettingsFormValues } from "@/schemas/website-site-settings"
 import { useTranslations } from "next-intl"
 
 export default function WebsiteSettingsPage() {

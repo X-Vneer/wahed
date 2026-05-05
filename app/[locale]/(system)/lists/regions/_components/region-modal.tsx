@@ -16,8 +16,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { Spinner } from "@/components/ui/spinner"
-import { handleFormErrors } from "@/lib/handle-form-errors"
-import { createRegionSchema, updateRegionSchema } from "@/lib/schemas/regions"
+import { handleFormErrors } from "@/utils/handle-form-errors"
+import { createRegionSchema, updateRegionSchema } from "@/schemas/regions"
 import type { Region } from "@/prisma/regions"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"

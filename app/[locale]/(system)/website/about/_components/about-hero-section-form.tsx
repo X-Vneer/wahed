@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import Uploader from "@/components/uploader"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 
 export type AboutHeroSectionValues = {
   backgroundImage: string

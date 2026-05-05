@@ -17,11 +17,11 @@ import {
   SheetTitle,
   SheetFooter,
 } from "@/components/ui/sheet"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   createProjectCategorySchema,
   updateProjectCategorySchema,
-} from "@/lib/schemas/project-categories"
+} from "@/schemas/project-categories"
 import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
 import apiClient from "@/services"

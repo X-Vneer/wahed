@@ -6,7 +6,7 @@ import type { Permission } from "@/config"
 import { Prisma } from "@/lib/generated/prisma/client"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import type { JWTPayload } from "@/lib/jwt"
-import { transformZodError } from "@/lib/transform-errors"
+import { transformZodError } from "@/utils/transform-errors"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { hasPermission } from "@/utils/has-permission"
 
@@ -32,7 +32,9 @@ export async function requirePermission(
 ): Promise<NextResponse | null> {
   const check = await hasPermission(permission)
   if (!check.hasPermission) {
-    return check.error ?? NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    return (
+      check.error ?? NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    )
   }
   return null
 }

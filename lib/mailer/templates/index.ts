@@ -1,9 +1,73 @@
-import { getTranslations } from "next-intl/server"
+import { render } from "@react-email/render"
+import { createTranslator } from "next-intl"
+import * as React from "react"
 
 import { NOTIFICATION_CATEGORY_BY_KEY } from "@/config/notifications"
+import db from "@/lib/db"
 import { NotificationCategory } from "@/lib/generated/prisma/enums"
 
-import { renderBaseEmail, type EmailLocale } from "./base"
+import {
+  NotificationEmail,
+  type EmailLocale,
+} from "./react/notification-email"
+
+const messageCache = new Map<EmailLocale, Record<string, unknown>>()
+
+async function loadMessages(
+  locale: EmailLocale
+): Promise<Record<string, unknown>> {
+  const cached = messageCache.get(locale)
+  if (cached) return cached
+  const mod = await import(`../../../messages/${locale}.json`)
+  const messages = (mod.default ?? mod) as Record<string, unknown>
+  messageCache.set(locale, messages)
+  return messages
+}
+
+type Branding = {
+  systemName: string
+  logoUrl: string | null
+  primaryColor: string
+  accentColor: string
+}
+
+let cachedBranding: { value: Branding; at: number; locale: EmailLocale } | null =
+  null
+const BRANDING_TTL_MS = 60_000
+const DEFAULT_NAME_AR = "وهد"
+const DEFAULT_NAME_EN = "Wahd"
+
+async function loadBranding(locale: EmailLocale): Promise<Branding> {
+  const now = Date.now()
+  if (
+    cachedBranding &&
+    cachedBranding.locale === locale &&
+    now - cachedBranding.at < BRANDING_TTL_MS
+  ) {
+    return cachedBranding.value
+  }
+  const fallbackName = locale === "ar" ? DEFAULT_NAME_AR : DEFAULT_NAME_EN
+  try {
+    const row = await db.systemSiteSettings.findFirst()
+    const value: Branding = {
+      systemName:
+        (locale === "ar" ? row?.systemNameAr : row?.systemNameEn) ||
+        fallbackName,
+      logoUrl: row?.logoSquareUrl ?? null,
+      primaryColor: row?.primaryColor || "#0B1220",
+      accentColor: row?.accentColor || "#C9A961",
+    }
+    cachedBranding = { value, at: now, locale }
+    return value
+  } catch {
+    return {
+      systemName: fallbackName,
+      logoUrl: null,
+      primaryColor: "#0B1220",
+      accentColor: "#C9A961",
+    }
+  }
+}
 
 export type RenderedEmail = {
   subject: string
@@ -19,10 +83,48 @@ export type RenderEmailParams = {
   ctaUrl?: string
 }
 
-/**
- * Render an email for the given notification category.
- * Pulls subject + body strings from messages/{locale}.json under `emails.{emailKey}`.
- */
+const HIGHLIGHT_KEY: Partial<
+  Record<NotificationCategory, { labelKey: string; valueParam: string }>
+> = {
+  TASK_CREATED: { labelKey: "task", valueParam: "taskTitle" },
+  TASK_UPDATED: { labelKey: "task", valueParam: "taskTitle" },
+  TASK_ASSIGNED: { labelKey: "task", valueParam: "taskTitle" },
+  TASK_UNASSIGNED: { labelKey: "task", valueParam: "taskTitle" },
+  TASK_STATUS_CHANGED: { labelKey: "task", valueParam: "taskTitle" },
+  TASK_COMPLETED: { labelKey: "task", valueParam: "taskTitle" },
+  TASK_REOPENED: { labelKey: "task", valueParam: "taskTitle" },
+  TASK_COMMENTED: { labelKey: "comment", valueParam: "comment" },
+  TASK_ATTACHMENTS_UPDATED: { labelKey: "task", valueParam: "taskTitle" },
+  TASKS_IMPORTED: { labelKey: "imported", valueParam: "count" },
+  SUBTASK_ADDED: { labelKey: "subtask", valueParam: "subtaskTitle" },
+  PROJECT_CREATED: { labelKey: "project", valueParam: "projectName" },
+  PROJECT_UPDATED: { labelKey: "project", valueParam: "projectName" },
+  PROJECT_ATTACHMENTS_UPDATED: {
+    labelKey: "project",
+    valueParam: "projectName",
+  },
+  PROJECT_ARCHIVED: { labelKey: "project", valueParam: "projectName" },
+  PROJECT_UNARCHIVED: { labelKey: "project", valueParam: "projectName" },
+  EVENT_CREATED: { labelKey: "event", valueParam: "eventTitle" },
+  EVENT_UPDATED: { labelKey: "event", valueParam: "eventTitle" },
+  EVENT_DELETED: { labelKey: "event", valueParam: "eventTitle" },
+  EVENT_INVITED: { labelKey: "event", valueParam: "eventTitle" },
+  CONTACT_RECEIVED: { labelKey: "from", valueParam: "senderName" },
+}
+
+function i18nFooter(locale: EmailLocale) {
+  if (locale === "ar") {
+    return {
+      prefsHint: "للتحكم في إشعارات البريد:",
+      prefsLink: "إدارة التفضيلات",
+    }
+  }
+  return {
+    prefsHint: "Manage email notification preferences:",
+    prefsLink: "notification settings",
+  }
+}
+
 export async function renderEmail({
   category,
   locale,
@@ -33,7 +135,22 @@ export async function renderEmail({
   const config = NOTIFICATION_CATEGORY_BY_KEY[category]
   if (!config) throw new Error(`No config for category ${category}`)
 
-  const t = await getTranslations({ locale, namespace: "emails" })
+  const messages = await loadMessages(locale)
+  const t = createTranslator({
+    locale,
+    messages: messages as Parameters<typeof createTranslator>[0]["messages"],
+    namespace: "emails",
+  })
+  const groupT = createTranslator({
+    locale,
+    messages: messages as Parameters<typeof createTranslator>[0]["messages"],
+    namespace: "settings.notifications.groups",
+  })
+  const highlightT = createTranslator({
+    locale,
+    messages: messages as Parameters<typeof createTranslator>[0]["messages"],
+    namespace: "emails.highlights",
+  })
   const key = config.emailKey
 
   const subject = safeT(t, `${key}.subject`, params)
@@ -43,25 +160,46 @@ export async function renderEmail({
   const body = safeT(t, `${key}.body`, params)
   const cta = ctaUrl ? safeT(t, `${key}.cta`, params) : undefined
   const preheader = safeT(t, `${key}.preheader`, params)
+  const eyebrow = safeT(groupT, config.group, {})
 
-  const bodyHtml = `${greeting ? `<p style="margin:0 0 12px 0;">${escape(greeting)}</p>` : ""}<p style="margin:0;">${escape(body)}</p>`
-  const bodyText = `${greeting ? `${greeting}\n\n` : ""}${body}`
+  const highlight = HIGHLIGHT_KEY[category]
+  const highlightValue = highlight
+    ? String(params[highlight.valueParam] ?? "")
+    : ""
+  const highlightLabel = highlight
+    ? safeT(highlightT, highlight.labelKey, {})
+    : ""
 
-  const { html, text } = await renderBaseEmail({
+  const branding = await loadBranding(locale)
+  const appUrl = process.env.APP_URL || ""
+  const prefsUrl = `${appUrl}/${locale}/settings#notifications`
+  const footer = i18nFooter(locale)
+
+  const element = React.createElement(NotificationEmail, {
     locale,
-    title: subject,
     preheader,
-    bodyHtml,
-    bodyText,
+    eyebrow,
+    title: subject,
+    greeting,
+    body,
+    highlightLabel: highlightValue ? highlightLabel : undefined,
+    highlightValue: highlightValue || undefined,
     ctaLabel: cta,
     ctaUrl,
+    branding,
+    prefsUrl,
+    prefsHint: footer.prefsHint,
+    prefsLink: footer.prefsLink,
   })
+
+  const html = await render(element, { pretty: false })
+  const text = await render(element, { plainText: true })
 
   return { subject, html, text }
 }
 
 function safeT(
-  t: Awaited<ReturnType<typeof getTranslations>>,
+  t: ReturnType<typeof createTranslator>,
   key: string,
   values: Record<string, string | number>
 ): string {
@@ -74,13 +212,4 @@ function safeT(
       return ""
     }
   }
-}
-
-function escape(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
 }

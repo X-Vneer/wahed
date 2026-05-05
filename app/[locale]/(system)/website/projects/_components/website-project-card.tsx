@@ -23,7 +23,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Link } from "@/lib/i18n/navigation"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import type { TransformedPublicProject } from "@/prisma/public-projects"
 import apiClient from "@/services"
 import axios from "axios"
@@ -64,10 +64,9 @@ export function WebsiteProjectCard({
 
   const featuredMutation = useMutation({
     mutationFn: (isFeatured: boolean) =>
-      apiClient.patch(
-        `/api/website/public-projects/${project.id}/featured`,
-        { isFeatured }
-      ),
+      apiClient.patch(`/api/website/public-projects/${project.id}/featured`, {
+        isFeatured,
+      }),
     onMutate: async (isFeatured) => {
       await queryClient.cancelQueries({ queryKey })
       const previous = queryClient.getQueryData<{
@@ -112,10 +111,9 @@ export function WebsiteProjectCard({
 
   const visibilityMutation = useMutation({
     mutationFn: (isActive: boolean) =>
-      apiClient.patch(
-        `/api/website/public-projects/${project.id}/visibility`,
-        { isActive }
-      ),
+      apiClient.patch(`/api/website/public-projects/${project.id}/visibility`, {
+        isActive,
+      }),
     onMutate: async (isActive) => {
       await queryClient.cancelQueries({ queryKey })
       const previous = queryClient.getQueryData<{

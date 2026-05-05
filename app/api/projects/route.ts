@@ -1,6 +1,6 @@
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
-import { createProjectSchema } from "@/lib/schemas/project"
+import { createProjectSchema } from "@/schemas/project"
 import { type NextRequest, NextResponse } from "next/server"
 import { PERMISSIONS_GROUPED, PROJECT_STATUS_ID_PLANNING } from "@/config"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"

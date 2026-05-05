@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { initLocale, type DynamicRouteContext } from "@/lib/helpers"
-import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
-import { transformZodError } from "@/lib/transform-errors"
+import { websiteContentLocaleSchema } from "@/schemas/website-content"
+import { transformZodError } from "@/utils/transform-errors"
 import {
   getPageContent,
   isWebsitePageSlug,

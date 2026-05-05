@@ -1,6 +1,6 @@
 "use client"
 
-import type { UpdateSystemSiteSettingsInput } from "@/lib/schemas/system-site-settings"
+import type { UpdateSystemSiteSettingsInput } from "@/schemas/system-site-settings"
 import type { SystemSiteSettingsAdminDto } from "@/lib/system-site-settings/service"
 import apiClient from "@/services"
 import {

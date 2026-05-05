@@ -5,11 +5,8 @@ import {
   NotificationCategory,
   UserRole,
 } from "@/lib/generated/prisma/enums"
-import {
-  createNotifications,
-  getEventAttendeeIds,
-} from "@/lib/notifications"
-import { updateEventSchema } from "@/lib/schemas/event"
+import { createNotifications, getEventAttendeeIds } from "@/lib/notifications"
+import { updateEventSchema } from "@/schemas/event"
 import {
   eventInclude,
   transformEvent,
@@ -233,7 +230,10 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: DynamicRouteContext) {
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
   const { t } = await initLocale(request)
   try {
     // Get current user

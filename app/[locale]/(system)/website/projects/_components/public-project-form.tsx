@@ -1,13 +1,13 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import { Link, useRouter } from "@/lib/i18n/navigation"
 import {
   PUBLIC_PROJECT_FORM_STEP_COUNT,
   publicProjectFormSchema,
   publicProjectFormStepSchemas,
-} from "@/lib/schemas/public-project"
+} from "@/schemas/public-project"
 import { usePublicProjectPrefill } from "@/hooks/use-public-project-prefill"
 import type { PublicProjectPrefillResponse } from "@/lib/types/public-project-prefill"
 import type { PublicProjectEditData } from "@/prisma/public-projects"
@@ -361,12 +361,8 @@ export function PublicProjectForm({
                 {form.submitting
                   ? t("websiteCms.projects.publicProjectForm.actions.saving")
                   : isEdit
-                    ? t(
-                        "websiteCms.projects.publicProjectForm.actions.update"
-                      )
-                    : t(
-                        "websiteCms.projects.publicProjectForm.actions.save"
-                      )}
+                    ? t("websiteCms.projects.publicProjectForm.actions.update")
+                    : t("websiteCms.projects.publicProjectForm.actions.save")}
               </Button>
             ) : null}
           </div>

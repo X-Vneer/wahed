@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/carousel"
 import { Spinner } from "@/components/ui/spinner"
 import { useBanners } from "@/hooks/use-banners"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import type { BannerInclude } from "@/prisma/banners"
 import Autoplay from "embla-carousel-autoplay"
 import { useLocale, useTranslations } from "next-intl"

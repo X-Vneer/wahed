@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import Uploader from "@/components/uploader"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 
 export type ProjectsHeroSectionValues = {
   backgroundImage: string
@@ -97,9 +97,7 @@ export function ProjectsHeroSectionForm({ onSubmit, initialValues }: Props) {
         >
           <FieldGroup className="flex flex-col gap-6">
             <Field>
-              <FieldLabel>
-                {t("heroSection.fields.backgroundImage")}
-              </FieldLabel>
+              <FieldLabel>{t("heroSection.fields.backgroundImage")}</FieldLabel>
               <FieldDescription>
                 {t("heroSection.ui.backgroundImageHint")}
               </FieldDescription>

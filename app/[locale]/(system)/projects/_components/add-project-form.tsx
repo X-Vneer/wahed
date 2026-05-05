@@ -2,8 +2,8 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
-import { handleFormErrors } from "@/lib/handle-form-errors"
-import { createProjectSchema } from "@/lib/schemas/project"
+import { handleFormErrors } from "@/utils/handle-form-errors"
+import { createProjectSchema } from "@/schemas/project"
 import {
   ProjectFormProvider,
   useProjectForm,

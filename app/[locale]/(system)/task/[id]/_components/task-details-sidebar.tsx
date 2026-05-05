@@ -15,7 +15,7 @@ import { usePermission } from "@/hooks/use-permission"
 import type { Task, TaskDetail } from "@/prisma/tasks"
 import apiClient from "@/services"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { addWorkingDays } from "@/lib/working-days"
+import { addWorkingDays } from "@/utils/working-days"
 import { format } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import { Calendar as CalendarIcon, X } from "lucide-react"
@@ -45,8 +45,7 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
   const priorityMeta = {
     HIGH: {
       label: tTasks("priority.high"),
-      className:
-        "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200",
+      className: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200",
     },
     LOW: {
       label: tTasks("priority.low"),
@@ -73,10 +72,9 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
 
   const updateStartedAt = useMutation({
     mutationFn: async (startedAt: Date | null) => {
-      const { data } = await apiClient.patch<Task>(
-        `/api/tasks/${task.id}`,
-        { startedAt }
-      )
+      const { data } = await apiClient.patch<Task>(`/api/tasks/${task.id}`, {
+        startedAt,
+      })
       return data
     },
     onSuccess: () => {
@@ -164,16 +162,11 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
             </div>
           )}
           <div className="flex items-center gap-2">
-            <dt className="text-muted-foreground min-w-30">
-              {t("startDate")}
-            </dt>
+            <dt className="text-muted-foreground min-w-30">{t("startDate")}</dt>
             :{" "}
             <dd className="text-foreground flex-1">
               {canEdit ? (
-                <Popover
-                  open={datePickerOpen}
-                  onOpenChange={setDatePickerOpen}
-                >
+                <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                   <PopoverTrigger
                     render={(props) => (
                       <Button

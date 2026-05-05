@@ -1,4 +1,4 @@
-import type { SystemSiteSettingsFormValues } from "@/lib/schemas/system-site-settings"
+import type { SystemSiteSettingsFormValues } from "@/schemas/system-site-settings"
 import type { SystemSiteSettingsAdminDto } from "@/lib/system-site-settings/service"
 
 export type FormModel = SystemSiteSettingsFormValues & { root?: string }

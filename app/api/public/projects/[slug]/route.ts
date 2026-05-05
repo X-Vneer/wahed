@@ -5,8 +5,8 @@ import {
   publicProjectInclude,
   transformPublicProject,
 } from "@/prisma/public-projects"
-import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
-import { transformZodError } from "@/lib/transform-errors"
+import { websiteContentLocaleSchema } from "@/schemas/website-content"
+import { transformZodError } from "@/utils/transform-errors"
 
 /**
  * Public read-only endpoint to get a single active public project by slug.
@@ -43,10 +43,7 @@ export async function GET(
     })
 
     if (!project) {
-      return NextResponse.json(
-        { error: "Not found" },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
     }
 
     return NextResponse.json(

@@ -10,7 +10,7 @@ import apiClient from "@/services"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
 import { BannerInclude } from "@/prisma/banners"
-import { UpdateBannerInput } from "@/lib/schemas/banner"
+import { UpdateBannerInput } from "@/schemas/banner"
 
 export const useBanners = (
   params?: { q?: string; status?: string },

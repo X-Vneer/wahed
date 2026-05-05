@@ -7,12 +7,12 @@ import {
   validateRequest,
 } from "@/lib/helpers"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
-import { createTaskSchema } from "@/lib/schemas/task"
-import { NotificationCategory, TaskPriority } from "@/lib/generated/prisma/enums"
+import { createTaskSchema } from "@/schemas/task"
 import {
-  createNotifications,
-  getAdminUserIds,
-} from "@/lib/notifications"
+  NotificationCategory,
+  TaskPriority,
+} from "@/lib/generated/prisma/enums"
+import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
 

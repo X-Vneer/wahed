@@ -22,11 +22,11 @@ import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import Uploader from "@/components/uploader"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   type WebsitePageSeoValues,
   websitePageSeoSchema,
-} from "@/lib/schemas/website-page-seo"
+} from "@/schemas/website-page-seo"
 import type { WebsitePageSlug } from "@/lib/website-content/default-content"
 import apiClient from "@/services"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -67,7 +67,9 @@ export function PageSeoForm({ slug }: Props) {
   const { data, isLoading } = useQuery<SeoResponse, Error>({
     queryKey: ["website-page-seo", slug],
     queryFn: async () => {
-      const response = await apiClient.get<SeoResponse>(`/api/website/seo/${slug}`)
+      const response = await apiClient.get<SeoResponse>(
+        `/api/website/seo/${slug}`
+      )
       return response.data
     },
   })
@@ -108,7 +110,10 @@ export function PageSeoForm({ slug }: Props) {
         <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={form.onSubmit(handleSubmit)} className="flex flex-col gap-5">
+        <form
+          onSubmit={form.onSubmit(handleSubmit)}
+          className="flex flex-col gap-5"
+        >
           <FieldGroup className="grid gap-5 md:grid-cols-2">
             <Field data-invalid={!!form.errors.metaTitleAr}>
               <FieldLabel htmlFor={`${slug}-meta-title-ar`}>
@@ -149,7 +154,10 @@ export function PageSeoForm({ slug }: Props) {
                 ) : null}
               </FieldContent>
             </Field>
-            <Field className="md:col-span-2" data-invalid={!!form.errors.metaDescriptionAr}>
+            <Field
+              className="md:col-span-2"
+              data-invalid={!!form.errors.metaDescriptionAr}
+            >
               <FieldLabel htmlFor={`${slug}-meta-description-ar`}>
                 {t("fields.metaDescriptionAr")}
               </FieldLabel>
@@ -166,11 +174,16 @@ export function PageSeoForm({ slug }: Props) {
                   aria-invalid={!!form.errors.metaDescriptionAr}
                 />
                 {form.errors.metaDescriptionAr ? (
-                  <FieldError>{String(form.errors.metaDescriptionAr)}</FieldError>
+                  <FieldError>
+                    {String(form.errors.metaDescriptionAr)}
+                  </FieldError>
                 ) : null}
               </FieldContent>
             </Field>
-            <Field className="md:col-span-2" data-invalid={!!form.errors.metaDescriptionEn}>
+            <Field
+              className="md:col-span-2"
+              data-invalid={!!form.errors.metaDescriptionEn}
+            >
               <FieldLabel htmlFor={`${slug}-meta-description-en`}>
                 {t("fields.metaDescriptionEn")}
               </FieldLabel>
@@ -186,7 +199,9 @@ export function PageSeoForm({ slug }: Props) {
                   aria-invalid={!!form.errors.metaDescriptionEn}
                 />
                 {form.errors.metaDescriptionEn ? (
-                  <FieldError>{String(form.errors.metaDescriptionEn)}</FieldError>
+                  <FieldError>
+                    {String(form.errors.metaDescriptionEn)}
+                  </FieldError>
                 ) : null}
               </FieldContent>
             </Field>

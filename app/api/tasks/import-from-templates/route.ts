@@ -11,8 +11,11 @@ import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import {
   importTasksFromTemplatesSchema,
   type ImportTasksFromTemplatesInput,
-} from "@/lib/schemas/task"
-import { NotificationCategory, TaskPriority } from "@/lib/generated/prisma/enums"
+} from "@/schemas/task"
+import {
+  NotificationCategory,
+  TaskPriority,
+} from "@/lib/generated/prisma/enums"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -27,11 +30,7 @@ export async function POST(request: NextRequest) {
     const { payload } = auth
 
     const body = (await request.json()) as ImportTasksFromTemplatesInput
-    const validation = validateRequest(
-      importTasksFromTemplatesSchema,
-      body,
-      t
-    )
+    const validation = validateRequest(importTasksFromTemplatesSchema, body, t)
     if (validation.error) return validation.error
     const data = validation.data
 
@@ -115,7 +114,8 @@ export async function POST(request: NextRequest) {
               }),
               estimatedWorkingDays: template.estimatedWorkingDays ?? null,
               priority:
-                (template.priority as TaskPriority | null) ?? TaskPriority.MEDIUM,
+                (template.priority as TaskPriority | null) ??
+                TaskPriority.MEDIUM,
               order: currentOrder++,
               createdById: payload.userId,
               category:

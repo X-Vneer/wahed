@@ -8,17 +8,11 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import {
-  createNotifications,
-  getTaskStakeholderIds,
-} from "@/lib/notifications"
-import { createSubTaskSchema } from "@/lib/schemas/task"
+import { createNotifications, getTaskStakeholderIds } from "@/lib/notifications"
+import { createSubTaskSchema } from "@/schemas/task"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function POST(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function POST(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)
   try {
     const permError = await requirePermission(PERMISSIONS_GROUPED.TASK.UPDATE)
@@ -72,7 +66,10 @@ export async function POST(
         createNotifications({
           userIds: notifyIds,
           category: NotificationCategory.SUBTASK_ADDED,
-          messageParams: { subtaskTitle: data.title, taskTitle: parentTask?.title ?? "" },
+          messageParams: {
+            subtaskTitle: data.title,
+            taskTitle: parentTask?.title ?? "",
+          },
           relatedId: taskId,
           relatedType: "task",
         })

@@ -1,5 +1,5 @@
 import db from "@/lib/db"
-import { createBannerSchema } from "@/lib/schemas/banner"
+import { createBannerSchema } from "@/schemas/banner"
 import { type NextRequest, NextResponse } from "next/server"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"

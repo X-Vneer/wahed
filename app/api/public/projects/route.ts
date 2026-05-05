@@ -5,8 +5,8 @@ import {
   publicProjectInclude,
   transformPublicProject,
 } from "@/prisma/public-projects"
-import { websiteContentLocaleSchema } from "@/lib/schemas/website-content"
-import { transformZodError } from "@/lib/transform-errors"
+import { websiteContentLocaleSchema } from "@/schemas/website-content"
+import { transformZodError } from "@/utils/transform-errors"
 
 /**
  * Public read-only endpoint to list active public projects.

@@ -4,7 +4,7 @@ import db from "@/lib/db"
 import {
   updateUserLocationSchema,
   type UpdateUserLocationInput,
-} from "@/lib/schemas/user"
+} from "@/schemas/user"
 import { transformUser, userSelect } from "@/prisma/users/select"
 
 export async function PATCH(request: NextRequest) {

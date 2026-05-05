@@ -6,7 +6,7 @@ import {
   isBefore,
   isAfter,
 } from "date-fns"
-import type { RecurrenceRule } from "@/lib/schemas/event"
+import type { RecurrenceRule } from "@/schemas/event"
 import type { CalendarEvent } from "@/components/event-calendar"
 
 /**

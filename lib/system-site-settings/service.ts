@@ -4,7 +4,7 @@ import {
   type SystemSiteSettings,
 } from "@/lib/generated/prisma/client"
 import { emptyToNull } from "@/lib/helpers"
-import type { UpdateSystemSiteSettingsInput } from "@/lib/schemas/system-site-settings"
+import type { UpdateSystemSiteSettingsInput } from "@/schemas/system-site-settings"
 
 const DEFAULT_CREATE: Prisma.SystemSiteSettingsCreateInput = {
   systemNameAr: "وحد",
@@ -141,8 +141,7 @@ export async function getSystemBranding(
     row.systemNameAr ??
     "Wahd"
 
-  const sidebarVariant =
-    row.sidebarVariant === "dark" ? "dark" : "light"
+  const sidebarVariant = row.sidebarVariant === "dark" ? "dark" : "light"
 
   return {
     systemName: nameLocalized,
@@ -158,8 +157,7 @@ export async function getSystemBranding(
     loginBackgroundUrl: row.loginBackgroundUrl,
     loginWelcomeTitle:
       locale === "ar" ? row.loginWelcomeTitleAr : row.loginWelcomeTitleEn,
-    loginSubtitle:
-      locale === "ar" ? row.loginSubtitleAr : row.loginSubtitleEn,
+    loginSubtitle: locale === "ar" ? row.loginSubtitleAr : row.loginSubtitleEn,
     supportEmail: row.supportEmail,
     supportPhone: row.supportPhone,
   }

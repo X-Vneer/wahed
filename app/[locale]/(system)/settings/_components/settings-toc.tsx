@@ -1,16 +1,10 @@
 "use client"
 
-import {
-  Bell,
-  Globe,
-  LogOut,
-  UserCircle2,
-  type LucideIcon,
-} from "lucide-react"
+import { Bell, Globe, LogOut, UserCircle2, type LucideIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 type Section = {
   id: string

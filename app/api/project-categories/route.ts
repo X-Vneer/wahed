@@ -7,7 +7,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { createProjectCategorySchema } from "@/lib/schemas/project-categories"
+import { createProjectCategorySchema } from "@/schemas/project-categories"
 import { transformProjectCategory } from "@/prisma/project-categories"
 import { type NextRequest, NextResponse } from "next/server"
 

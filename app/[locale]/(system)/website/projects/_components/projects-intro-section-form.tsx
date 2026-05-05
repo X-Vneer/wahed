@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 
 export type ProjectsIntroSectionValues = {
   contentAr: string

@@ -4,7 +4,7 @@ import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { ChevronRight, Check } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />
@@ -161,7 +161,7 @@ function DropdownMenuCheckboxItem({
     <MenuPrimitive.CheckboxItem
       data-slot="dropdown-menu-checkbox-item"
       className={cn(
-        "focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground relative flex cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground relative flex cursor-default items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       checked={checked}
@@ -198,7 +198,7 @@ function DropdownMenuRadioItem({
     <MenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
       className={cn(
-        "focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground relative flex cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground relative flex cursor-default items-center gap-1.5 rounded-md py-1 ps-1.5 pe-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}

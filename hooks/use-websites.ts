@@ -10,7 +10,7 @@ import apiClient from "@/services"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
 import type { Website } from "@/lib/generated/prisma/client"
-import { CreateWebsiteInput, UpdateWebsiteInput } from "@/lib/schemas/website"
+import { CreateWebsiteInput, UpdateWebsiteInput } from "@/schemas/website"
 
 export type WebsiteWithLocale = Website & {
   name: string

@@ -17,11 +17,11 @@ import {
 } from "@/components/ui/sheet"
 import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
-import { handleFormErrors } from "@/lib/handle-form-errors"
+import { handleFormErrors } from "@/utils/handle-form-errors"
 import {
   createProjectCategorySchema,
   updateProjectCategorySchema,
-} from "@/lib/schemas/project-categories"
+} from "@/schemas/project-categories"
 import type { ProjectCategory } from "@/prisma/project-categories"
 import apiClient from "@/services"
 import { useForm } from "@mantine/form"

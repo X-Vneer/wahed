@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 function Switch({
   className,
@@ -21,7 +21,7 @@ function Switch({
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
         className={cn(
-          "bg-background pointer-events-none block h-4 w-4 rounded-full shadow-lg ring-0 transition-transform data-checked:translate-x-4 rtl:data-checked:-translate-x-4 data-unchecked:translate-x-0 rtl:data-unchecked:-translate-x-0 rtl:data-checked:-translate-x-4"
+          "bg-background pointer-events-none block h-4 w-4 rounded-full shadow-lg ring-0 transition-transform data-checked:translate-x-4 data-unchecked:translate-x-0 rtl:data-checked:-translate-x-4 rtl:data-unchecked:-translate-x-0"
         )}
       />
     </SwitchPrimitive.Root>

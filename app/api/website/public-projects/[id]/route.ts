@@ -9,7 +9,7 @@ import {
   validateRequest,
   type DynamicRouteContext,
 } from "@/lib/helpers"
-import { createPublicProjectSchema } from "@/lib/schemas/public-project"
+import { createPublicProjectSchema } from "@/schemas/public-project"
 import {
   publicProjectEditInclude,
   transformPublicProjectForEdit,

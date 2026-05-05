@@ -20,7 +20,7 @@ import {
 import { ar, enUS } from "date-fns/locale"
 import { useLocale, useTranslations } from "next-intl"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import {
   DraggableEvent,
   DroppableCell,
