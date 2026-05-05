@@ -118,7 +118,7 @@ export default function StaffPage() {
           <div className="relative col-span-2 flex flex-col items-center gap-6 px-4 py-12 text-center">
             {/* Page Title */}
             <h1 className="text-xl font-bold text-white md:text-2xl">
-              {getGreeting()}, {user?.name || t("title")}
+              {getGreeting()}, {user?.name.trim().split(" ")[0] || t("title")}
             </h1>
 
             {/* Profile Picture */}

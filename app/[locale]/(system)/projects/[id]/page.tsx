@@ -101,7 +101,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
               <h1 className="text-2xl font-bold">{transformedProject.name}</h1>
 
               {/* Main Image */}
-              <div className="relative h-[300px] w-full overflow-hidden rounded-lg">
+              <div className="relative h-75 w-full overflow-hidden rounded-lg">
                 <img
                   src={transformedProject.image || loginBg.src}
                   alt={transformedProject.name}
