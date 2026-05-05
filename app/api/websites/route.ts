@@ -1,7 +1,7 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import { db } from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
-import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
+import { initLocale, requirePermission, validateRequest } from "@/utils"
 import { createWebsiteSchema } from "@/schemas/website"
 import { transformWebsite } from "@/prisma/websites"
 import { NextRequest, NextResponse } from "next/server"

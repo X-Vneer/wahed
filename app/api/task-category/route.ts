@@ -6,7 +6,7 @@ import {
   parsePagination,
   requirePermission,
   validateRequest,
-} from "@/lib/helpers"
+} from "@/utils"
 import { createTaskCategorySchema } from "@/schemas/task-category"
 import { transformTaskCategory } from "@/prisma/task-categories"
 import { type NextRequest, NextResponse } from "next/server"

@@ -1,5 +1,5 @@
 import { PERMISSIONS } from "@/config"
-import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
+import { initLocale, requirePermission, validateRequest } from "@/utils"
 import { updateSystemSiteSettingsSchema } from "@/schemas/system-site-settings"
 import {
   getSystemSiteSettingsAdmin,

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { NextRequest, NextResponse } from "next/server"
-import { initLocale } from "@/lib/helpers"
+import { initLocale } from "@/utils"
 
 const OPEN_WEATHER_BASE = "https://api.openweathermap.org/data/2.5/weather"
 

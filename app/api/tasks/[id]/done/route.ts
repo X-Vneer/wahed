@@ -2,15 +2,8 @@ import { PERMISSIONS_GROUPED, TASK_STATUS_ID_COMPLETED } from "@/config"
 import db from "@/lib/db"
 import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
-import {
-  DynamicRouteContext,
-  initLocale,
-  requirePermission,
-} from "@/lib/helpers"
-import {
-  createNotifications,
-  getTaskStakeholderIds,
-} from "@/lib/notifications"
+import { DynamicRouteContext, initLocale, requirePermission } from "@/utils"
+import { createNotifications, getTaskStakeholderIds } from "@/lib/notifications"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
 

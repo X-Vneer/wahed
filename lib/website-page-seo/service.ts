@@ -1,6 +1,6 @@
 import db from "@/lib/db"
 import type { WebsiteSiteSettings } from "@/lib/generated/prisma/client"
-import { emptyToNull } from "@/lib/helpers"
+import { emptyToNull } from "@/utils"
 import type { WebsitePageSeoValues } from "@/schemas/website-page-seo"
 import {
   type WebsiteLocale,

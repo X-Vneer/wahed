@@ -1,9 +1,5 @@
 import db from "@/lib/db"
-import {
-  initLocale,
-  validateRequest,
-  type DynamicRouteContext,
-} from "@/lib/helpers"
+import { initLocale, validateRequest, type DynamicRouteContext } from "@/utils"
 import { updateProjectCategorySchema } from "@/schemas/project-categories"
 import { type NextRequest, NextResponse } from "next/server"
 

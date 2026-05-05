@@ -1,6 +1,6 @@
 import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
-import { requirePermission } from "@/lib/helpers"
+import { requirePermission } from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 
 /**

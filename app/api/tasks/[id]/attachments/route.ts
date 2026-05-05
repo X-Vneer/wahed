@@ -3,15 +3,8 @@ import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { Prisma } from "@/lib/generated/prisma/client"
 import { NotificationCategory } from "@/lib/generated/prisma/enums"
-import {
-  DynamicRouteContext,
-  initLocale,
-  requirePermission,
-} from "@/lib/helpers"
-import {
-  createNotifications,
-  getTaskStakeholderIds,
-} from "@/lib/notifications"
+import { DynamicRouteContext, initLocale, requirePermission } from "@/utils"
+import { createNotifications, getTaskStakeholderIds } from "@/lib/notifications"
 import { type NextRequest, NextResponse } from "next/server"
 
 type AttachmentInput = {
@@ -24,10 +17,7 @@ type AttachmentInput = {
   isFinal?: boolean
 }
 
-export async function POST(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function POST(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)
 
   try {
@@ -137,4 +127,3 @@ export async function POST(
     )
   }
 }
-

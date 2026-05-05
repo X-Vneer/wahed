@@ -1,6 +1,6 @@
 import { TASK_STATUS_ID_IN_PROGRESS, TASK_STATUS_ID_PENDING } from "@/config"
 import db from "@/lib/db"
-import { initLocale, requireAuth } from "@/lib/helpers"
+import { initLocale, requireAuth } from "@/utils"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
 

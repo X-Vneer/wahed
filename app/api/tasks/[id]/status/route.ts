@@ -7,7 +7,7 @@ import {
   initLocale,
   requirePermission,
   validateRequest,
-} from "@/lib/helpers"
+} from "@/utils"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { createNotifications, getTaskStakeholderIds } from "@/lib/notifications"
 import { changeTaskStatusSchema } from "@/schemas/task"

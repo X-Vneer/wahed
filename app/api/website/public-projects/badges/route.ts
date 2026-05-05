@@ -1,6 +1,6 @@
 import { PERMISSIONS } from "@/config"
 import db from "@/lib/db"
-import { initLocale, requirePermission } from "@/lib/helpers"
+import { initLocale, requirePermission } from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(_request: NextRequest) {

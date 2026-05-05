@@ -2,7 +2,7 @@ import { Prisma } from "@/lib/generated/prisma/client"
 import {
   isTaskVisibleToUser,
   type TaskVisibilityUser,
-} from "@/lib/helpers/task-visibility"
+} from "@/utils/task-visibility"
 
 export const projectInclude = {
   additionalData: true,

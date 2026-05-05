@@ -1,7 +1,7 @@
 import db from "@/lib/db"
 import { createEventSchema } from "@/schemas/event"
 import { type NextRequest, NextResponse } from "next/server"
-import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
+import { initLocale, requireAuth, validateRequest } from "@/utils"
 import {
   EventColor,
   NotificationCategory,

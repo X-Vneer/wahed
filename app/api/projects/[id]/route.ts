@@ -17,7 +17,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 
 type AttachmentWithOptionalId = {
   id?: string

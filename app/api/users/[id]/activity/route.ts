@@ -4,7 +4,7 @@ import {
   initLocale,
   requirePermission,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import { getAccessTokenPayload } from "@/lib/get-access-token"

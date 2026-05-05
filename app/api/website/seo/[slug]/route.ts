@@ -5,7 +5,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { websitePageSeoSchema } from "@/schemas/website-page-seo"
 import {
   getPageSeoForEditor,

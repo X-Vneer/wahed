@@ -6,7 +6,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { transformWebsite } from "@/prisma/websites"
 import { updateWebsiteSchema } from "@/schemas/website"
 

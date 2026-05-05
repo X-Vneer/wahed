@@ -4,7 +4,7 @@ import {
   initLocale,
   requirePermission,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 import * as z from "zod/v4"
 

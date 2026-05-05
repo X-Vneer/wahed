@@ -1,5 +1,5 @@
 import db from "@/lib/db"
-import { initLocale } from "@/lib/helpers"
+import { initLocale } from "@/utils"
 import { userListSelect } from "@/prisma/users/select"
 import { NextResponse, type NextRequest } from "next/server"
 

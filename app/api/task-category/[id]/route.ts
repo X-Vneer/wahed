@@ -5,7 +5,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { updateTaskCategorySchema } from "@/schemas/task-category"
 import { type NextRequest, NextResponse } from "next/server"
 

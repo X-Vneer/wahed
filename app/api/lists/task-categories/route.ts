@@ -1,5 +1,5 @@
 import db from "@/lib/db"
-import { initLocale } from "@/lib/helpers"
+import { initLocale } from "@/utils"
 import { transformTaskCategory } from "@/prisma/task-categories"
 import { NextRequest, NextResponse } from "next/server"
 

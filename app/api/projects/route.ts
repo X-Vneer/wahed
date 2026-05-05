@@ -14,7 +14,7 @@ import {
   initLocale,
   requirePermission,
   validateRequest,
-} from "@/lib/helpers"
+} from "@/utils"
 
 // Helper function to build attachments for create
 function buildAttachmentsForCreate(

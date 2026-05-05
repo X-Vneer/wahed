@@ -5,7 +5,7 @@ import {
   requireAuth,
   requirePermission,
   validateRequest,
-} from "@/lib/helpers"
+} from "@/utils"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import {

@@ -6,7 +6,7 @@ import {
   parsePagination,
   requirePermission,
   validateRequest,
-} from "@/lib/helpers"
+} from "@/utils"
 import { createCitySchema } from "@/schemas/cities"
 import { transformCity } from "@/prisma/cities"
 import { type NextRequest, NextResponse } from "next/server"

@@ -1,10 +1,6 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
-import {
-  DynamicRouteContext,
-  initLocale,
-  requirePermission,
-} from "@/lib/helpers"
+import { DynamicRouteContext, initLocale, requirePermission } from "@/utils"
 import { updateTaskTemplateSchema } from "@/schemas/task-template"
 import { transformZodError } from "@/utils/transform-errors"
 import { tasksTemplateInclude } from "@/prisma/task-templates"

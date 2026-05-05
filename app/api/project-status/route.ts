@@ -6,7 +6,7 @@ import {
   parsePagination,
   requirePermission,
   validateRequest,
-} from "@/lib/helpers"
+} from "@/utils"
 import { createProjectStatusSchema } from "@/schemas/project-status"
 import { transformProjectStatus } from "@/prisma/project-statuses"
 import { type NextRequest, NextResponse } from "next/server"

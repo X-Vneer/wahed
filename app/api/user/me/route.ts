@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
+import { initLocale, requireAuth, validateRequest } from "@/utils"
 import db from "@/lib/db"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import { updateUserSettingsSchema } from "@/schemas/user"

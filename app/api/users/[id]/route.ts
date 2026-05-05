@@ -14,7 +14,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { PERMISSIONS_GROUPED } from "@/config"
 
 export async function PUT(

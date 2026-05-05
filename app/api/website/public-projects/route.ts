@@ -7,7 +7,7 @@ import {
   initLocale,
   requirePermission,
   validateRequest,
-} from "@/lib/helpers"
+} from "@/utils"
 import { createPublicProjectSchema } from "@/schemas/public-project"
 import {
   publicProjectInclude,

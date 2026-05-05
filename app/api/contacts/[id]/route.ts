@@ -4,7 +4,7 @@ import {
   initLocale,
   requirePermission,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(

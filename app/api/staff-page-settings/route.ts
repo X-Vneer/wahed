@@ -1,6 +1,6 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
-import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
+import { initLocale, requirePermission, validateRequest } from "@/utils"
 import { updateStaffPageSettingsSchema } from "@/schemas/staff-page-settings"
 import { getReqLocale } from "@/utils/get-req-locale"
 import { getTranslations } from "next-intl/server"

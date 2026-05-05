@@ -3,7 +3,7 @@ import {
   type Prisma,
   type SystemSiteSettings,
 } from "@/lib/generated/prisma/client"
-import { emptyToNull } from "@/lib/helpers"
+import { emptyToNull } from "@/utils"
 import type { UpdateSystemSiteSettingsInput } from "@/schemas/system-site-settings"
 
 const DEFAULT_CREATE: Prisma.SystemSiteSettingsCreateInput = {

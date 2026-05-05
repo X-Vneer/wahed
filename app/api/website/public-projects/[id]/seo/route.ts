@@ -8,7 +8,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import {
   websitePageSeoSchema,
   type WebsitePageSeoValues,

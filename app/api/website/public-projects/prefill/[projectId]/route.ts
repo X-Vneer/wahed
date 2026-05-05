@@ -4,7 +4,7 @@ import {
   initLocale,
   requirePermission,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import type { PublicProjectPrefillResponse } from "@/lib/types/public-project-prefill"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -51,7 +51,11 @@ export async function GET(
 
     if (!project) {
       return NextResponse.json(
-        { error: t("websiteCms.projects.publicProjectForm.errors.prefillProjectNotFound") },
+        {
+          error: t(
+            "websiteCms.projects.publicProjectForm.errors.prefillProjectNotFound"
+          ),
+        },
         { status: 404 }
       )
     }

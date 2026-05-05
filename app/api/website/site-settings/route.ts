@@ -1,5 +1,5 @@
 import { PERMISSIONS } from "@/config"
-import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
+import { initLocale, requirePermission, validateRequest } from "@/utils"
 import { updateWebsiteSiteSettingsSchema } from "@/schemas/website-site-settings"
 import {
   getWebsiteSiteSettingsAdmin,

@@ -5,7 +5,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { websiteContentLocaleSchema } from "@/schemas/website-content"
 import { transformZodError } from "@/utils/transform-errors"
 import {

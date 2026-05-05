@@ -9,7 +9,7 @@ import {
   NotificationCategory,
   NotificationChannel,
 } from "@/lib/generated/prisma/enums"
-import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
+import { initLocale, requireAuth, validateRequest } from "@/utils"
 import { updateNotificationPreferencesSchema } from "@/schemas/notification-preferences"
 
 export async function GET(request: NextRequest) {

@@ -1,6 +1,6 @@
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
-import { initLocale, requirePermission } from "@/lib/helpers"
+import { initLocale, requirePermission } from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { z } from "zod"

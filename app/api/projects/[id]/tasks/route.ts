@@ -10,7 +10,7 @@ import {
   requireAuth,
   requirePermission,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 
 export async function GET(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)

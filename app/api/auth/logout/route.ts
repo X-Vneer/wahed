@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { cookies } from "next/headers"
 import { SESSION_COOKIE_NAME } from "@/config"
-import { initLocale } from "@/lib/helpers"
+import { initLocale } from "@/utils"
 
 /** Logout never returns 401; it always clears the session cookie and returns 200. */
 export async function POST(request: NextRequest) {

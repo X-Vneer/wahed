@@ -2,7 +2,7 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import type { FileItem, FilesFolder, FilesResponse } from "@/@types/files"
-import { initLocale, requirePermission } from "@/lib/helpers"
+import { initLocale, requirePermission } from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {

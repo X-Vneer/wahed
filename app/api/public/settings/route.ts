@@ -1,4 +1,4 @@
-import { initLocale } from "@/lib/helpers"
+import { initLocale } from "@/utils"
 import { websiteContentLocaleSchema } from "@/schemas/website-content"
 import { transformZodError } from "@/utils/transform-errors"
 import {

@@ -4,7 +4,7 @@ import { createUserSchema } from "@/schemas/user"
 import { transformUser, userSelect } from "@/prisma/users/select"
 import bcrypt from "bcryptjs"
 import { type NextRequest, NextResponse } from "next/server"
-import { initLocale, requirePermission, validateRequest } from "@/lib/helpers"
+import { initLocale, requirePermission, validateRequest } from "@/utils"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 

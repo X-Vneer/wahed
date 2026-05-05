@@ -1,5 +1,5 @@
 import db from "@/lib/db"
-import { initLocale } from "@/lib/helpers"
+import { initLocale } from "@/utils"
 import { transformPublicProjectStatus } from "@/prisma/public-project-statuses"
 import { NextRequest, NextResponse } from "next/server"
 

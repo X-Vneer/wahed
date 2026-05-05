@@ -11,7 +11,7 @@ import {
   initLocale,
   requirePermission,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 
 export async function PATCH(
   request: NextRequest,
@@ -75,7 +75,9 @@ export async function PATCH(
           category: shouldArchive
             ? NotificationCategory.PROJECT_ARCHIVED
             : NotificationCategory.PROJECT_UNARCHIVED,
-          messageParams: { projectName: projectInfo?.nameEn || projectInfo?.nameAr || "" },
+          messageParams: {
+            projectName: projectInfo?.nameEn || projectInfo?.nameAr || "",
+          },
           relatedId: id,
           relatedType: "project",
         })

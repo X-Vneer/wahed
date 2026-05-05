@@ -5,7 +5,7 @@ import {
   initLocale,
   requireAuth,
   requirePermission,
-} from "@/lib/helpers"
+} from "@/utils"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"

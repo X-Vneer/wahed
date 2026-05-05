@@ -5,7 +5,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { updateRegionSchema } from "@/schemas/regions"
 import { type NextRequest, NextResponse } from "next/server"
 

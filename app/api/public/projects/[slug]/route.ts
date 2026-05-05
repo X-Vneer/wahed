@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
-import { initLocale, type DynamicRouteContext } from "@/lib/helpers"
+import { initLocale, type DynamicRouteContext } from "@/utils"
 import {
   publicProjectInclude,
   transformPublicProject,

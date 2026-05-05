@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
 import type { WebsiteSiteSettings } from "@/lib/generated/prisma/client"
-import { initLocale, type DynamicRouteContext } from "@/lib/helpers"
+import { initLocale, type DynamicRouteContext } from "@/utils"
 import { websiteContentLocaleSchema } from "@/schemas/website-content"
 import type { WebsitePageSeoValues } from "@/schemas/website-page-seo"
 import { transformZodError } from "@/utils/transform-errors"

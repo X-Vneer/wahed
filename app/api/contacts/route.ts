@@ -2,7 +2,7 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
 import { transformContact } from "@/prisma/contacts"
-import { initLocale, parsePagination, requirePermission } from "@/lib/helpers"
+import { initLocale, parsePagination, requirePermission } from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {

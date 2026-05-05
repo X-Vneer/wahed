@@ -7,7 +7,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { bannerInclude } from "@/prisma/banners"
 import { transformBanner } from "@/prisma/banners"
 

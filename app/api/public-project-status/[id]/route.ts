@@ -5,7 +5,7 @@ import {
   requirePermission,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { updatePublicProjectStatusSchema } from "@/schemas/public-project-status"
 import { type NextRequest, NextResponse } from "next/server"
 

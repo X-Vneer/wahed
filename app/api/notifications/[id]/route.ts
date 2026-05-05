@@ -1,9 +1,5 @@
 import db from "@/lib/db"
-import {
-  initLocale,
-  requireAuth,
-  type DynamicRouteContext,
-} from "@/lib/helpers"
+import { initLocale, requireAuth, type DynamicRouteContext } from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function PATCH(

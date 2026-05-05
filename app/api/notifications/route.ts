@@ -1,5 +1,5 @@
 import db from "@/lib/db"
-import { initLocale, parsePagination, requireAuth } from "@/lib/helpers"
+import { initLocale, parsePagination, requireAuth } from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {

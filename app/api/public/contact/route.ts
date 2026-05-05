@@ -1,6 +1,6 @@
 import db from "@/lib/db"
 import { NotificationCategory } from "@/lib/generated/prisma/enums"
-import { initLocale, validateRequest } from "@/lib/helpers"
+import { initLocale, validateRequest } from "@/utils"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import { createContactMessageSchema } from "@/schemas/contact"
 import { type NextRequest, NextResponse } from "next/server"

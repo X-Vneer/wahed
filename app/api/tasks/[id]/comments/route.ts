@@ -7,7 +7,7 @@ import {
   requireAuth,
   requirePermission,
   validateRequest,
-} from "@/lib/helpers"
+} from "@/utils"
 import { createNotifications, getTaskStakeholderIds } from "@/lib/notifications"
 import { createTaskCommentSchema } from "@/schemas/task"
 import { type NextRequest, NextResponse } from "next/server"

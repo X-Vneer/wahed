@@ -1,10 +1,6 @@
 import db from "@/lib/db"
 import { type NextRequest, NextResponse } from "next/server"
-import {
-  initLocale,
-  requireAuth,
-  type DynamicRouteContext,
-} from "@/lib/helpers"
+import { initLocale, requireAuth, type DynamicRouteContext } from "@/utils"
 import { createNotifications } from "@/lib/notifications"
 import { NotificationCategory, UserRole } from "@/lib/generated/prisma/enums"
 import { z } from "zod/v4"
@@ -145,7 +141,10 @@ export async function POST(request: NextRequest, context: DynamicRouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, context: DynamicRouteContext) {
+export async function DELETE(
+  request: NextRequest,
+  context: DynamicRouteContext
+) {
   const { t } = await initLocale(request)
 
   try {

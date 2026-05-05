@@ -12,12 +12,9 @@ import {
   initLocale,
   requirePermission,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 
-export async function POST(
-  request: NextRequest,
-  context: DynamicRouteContext
-) {
+export async function POST(request: NextRequest, context: DynamicRouteContext) {
   const { t } = await initLocale(request)
 
   // Check permission

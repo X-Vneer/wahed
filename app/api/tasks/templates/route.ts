@@ -1,7 +1,7 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
-import { initLocale, parsePagination, requirePermission } from "@/lib/helpers"
+import { initLocale, parsePagination, requirePermission } from "@/utils"
 import { tasksTemplateInclude } from "@/prisma/task-templates"
 import { createTaskTemplateSchema } from "@/schemas/task-template"
 import { transformZodError } from "@/utils/transform-errors"

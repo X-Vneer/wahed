@@ -17,7 +17,7 @@ import {
   requireAuth,
   validateRequest,
   type DynamicRouteContext,
-} from "@/lib/helpers"
+} from "@/utils"
 import { NextResponse, type NextRequest } from "next/server"
 
 export async function GET(request: NextRequest, context: DynamicRouteContext) {

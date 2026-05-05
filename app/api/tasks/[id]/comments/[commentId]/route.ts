@@ -1,10 +1,6 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
-import {
-  DynamicRouteContext,
-  initLocale,
-  requirePermission,
-} from "@/lib/helpers"
+import { DynamicRouteContext, initLocale, requirePermission } from "@/utils"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function DELETE(
@@ -43,4 +39,3 @@ export async function DELETE(
     )
   }
 }
-

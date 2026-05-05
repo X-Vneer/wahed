@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
-import { initLocale } from "@/lib/helpers"
+import { initLocale } from "@/utils"
 import {
   publicProjectInclude,
   transformPublicProject,
