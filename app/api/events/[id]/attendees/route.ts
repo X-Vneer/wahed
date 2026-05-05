@@ -6,7 +6,7 @@ import {
   type DynamicRouteContext,
 } from "@/lib/helpers"
 import { createNotifications } from "@/lib/notifications"
-import { UserRole } from "@/lib/generated/prisma/enums"
+import { NotificationCategory, UserRole } from "@/lib/generated/prisma/enums"
 import { z } from "zod/v4"
 
 const addAttendeeSchema = z.object({
@@ -121,8 +121,7 @@ export async function POST(request: NextRequest, context: DynamicRouteContext) {
     if (attendeeId !== userId) {
       await createNotifications({
         userIds: [attendeeId],
-        type: "EVENT_INVITED",
-        contentKey: "event_invited",
+        category: NotificationCategory.EVENT_INVITED,
         messageParams: { eventTitle: event.title },
         relatedId: eventId,
         relatedType: "event",

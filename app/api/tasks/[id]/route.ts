@@ -7,7 +7,7 @@ import {
   requirePermission,
   validateRequest,
 } from "@/lib/helpers"
-import { TaskPriority } from "@/lib/generated/prisma/enums"
+import { NotificationCategory, TaskPriority } from "@/lib/generated/prisma/enums"
 import {
   createNotifications,
   getTaskStakeholderIds,
@@ -186,8 +186,7 @@ export async function PATCH(
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "TASK_UPDATED",
-          contentKey: "task_updated",
+          category: NotificationCategory.TASK_UPDATED,
           messageParams: { taskTitle: task.title },
           relatedId: id,
           relatedType: "task",
@@ -203,8 +202,7 @@ export async function PATCH(
       if (newAssignees.length > 0) {
         createNotifications({
           userIds: newAssignees,
-          type: "TASK_ASSIGNED",
-          contentKey: "task_assigned",
+          category: NotificationCategory.TASK_ASSIGNED,
           messageParams: { taskTitle: task.title },
           relatedId: id,
           relatedType: "task",

@@ -7,6 +7,7 @@ import {
 import { type NextRequest, NextResponse } from "next/server"
 import { PERMISSIONS_GROUPED } from "@/config"
 import { Prisma } from "@/lib/generated/prisma/client"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import {
   initLocale,
   requirePermission,
@@ -95,8 +96,7 @@ export async function POST(
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "PROJECT_UPDATED",
-          contentKey: "project_attachments_updated",
+          category: NotificationCategory.PROJECT_ATTACHMENTS_UPDATED,
           messageParams: { projectName: project.nameEn || project.nameAr },
           relatedId: id,
           relatedType: "project",

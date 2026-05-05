@@ -10,6 +10,7 @@ import {
 import { projectInclude, transformProject } from "@/prisma/projects"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { Prisma } from "@/lib/generated/prisma/client"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import {
   convertToPrismaJsonValue,
   initLocale,
@@ -287,8 +288,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "PROJECT_UPDATED",
-          contentKey: "project_updated",
+          category: NotificationCategory.PROJECT_UPDATED,
           messageParams: { projectName: data.nameEn || data.nameAr },
           relatedId: id,
           relatedType: "project",

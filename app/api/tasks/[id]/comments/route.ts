@@ -1,5 +1,6 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import {
   DynamicRouteContext,
   initLocale,
@@ -67,8 +68,7 @@ export async function POST(
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "TASK_COMMENTED",
-          contentKey: "task_commented",
+          category: NotificationCategory.TASK_COMMENTED,
           messageParams: { userName: comment.createdBy.name, comment: data.content.substring(0, 100) },
           relatedId: taskId,
           relatedType: "task",

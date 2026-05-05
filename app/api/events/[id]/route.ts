@@ -1,6 +1,10 @@
 import db from "@/lib/db"
 import { Prisma } from "@/lib/generated/prisma/client"
-import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
+import {
+  EventColor,
+  NotificationCategory,
+  UserRole,
+} from "@/lib/generated/prisma/enums"
 import {
   createNotifications,
   getEventAttendeeIds,
@@ -202,8 +206,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
     if (newlyInvitedIds.length > 0) {
       await createNotifications({
         userIds: newlyInvitedIds,
-        type: "EVENT_INVITED",
-        contentKey: "event_invited",
+        category: NotificationCategory.EVENT_INVITED,
         messageParams: { eventTitle: event.title },
         relatedId: event.id,
         relatedType: "event",
@@ -213,8 +216,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
     if (stillAttendingIds.length > 0) {
       await createNotifications({
         userIds: stillAttendingIds,
-        type: "EVENT_UPDATED",
-        contentKey: "event_updated",
+        category: NotificationCategory.EVENT_UPDATED,
         messageParams: { eventTitle: event.title },
         relatedId: event.id,
         relatedType: "event",
@@ -284,8 +286,7 @@ export async function DELETE(request: NextRequest, context: DynamicRouteContext)
     if (notifyIds.length > 0) {
       await createNotifications({
         userIds: notifyIds,
-        type: "EVENT_DELETED",
-        contentKey: "event_deleted",
+        category: NotificationCategory.EVENT_DELETED,
         messageParams: { eventTitle: existingEvent.title },
       })
     }

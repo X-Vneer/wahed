@@ -66,6 +66,37 @@ enum TaskPriority {
   HIGH
 }
 
+enum NotificationChannel {
+  NONE
+  IN_APP
+  EMAIL
+  BOTH
+}
+
+enum NotificationCategory {
+  TASK_CREATED
+  TASK_UPDATED
+  TASK_ASSIGNED
+  TASK_UNASSIGNED
+  TASK_STATUS_CHANGED
+  TASK_COMPLETED
+  TASK_REOPENED
+  TASK_COMMENTED
+  TASK_ATTACHMENTS_UPDATED
+  TASKS_IMPORTED
+  SUBTASK_ADDED
+  PROJECT_CREATED
+  PROJECT_UPDATED
+  PROJECT_ATTACHMENTS_UPDATED
+  PROJECT_ARCHIVED
+  PROJECT_UNARCHIVED
+  EVENT_CREATED
+  EVENT_UPDATED
+  EVENT_DELETED
+  EVENT_INVITED
+  CONTACT_RECEIVED
+}
+
 model User {
   id          String    @id @default(cuid())
   name        String
@@ -93,12 +124,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  banners       Banner[]
-  tasks         Task[]        @relation("createdTasks")
-  assignedTasks Task[]        @relation("assignedTasks")
-  taskComments  TaskComment[]
-  subTasks      SubTasks[]
-  notifications Notification[]
+  locale String @default("ar")
+
+  banners                 Banner[]
+  tasks                   Task[]                   @relation("createdTasks")
+  assignedTasks           Task[]                   @relation("assignedTasks")
+  taskComments            TaskComment[]
+  subTasks                SubTasks[]
+  notifications           Notification[]
+  notificationPreferences NotificationPreference[]
 }
 
 model Permission {
@@ -583,11 +617,12 @@ model Notification {
   id          String  @id @default(cuid())
   userId      String
   user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type        String // TASK_CREATED, TASK_UPDATED, TASK_ASSIGNED, TASK_COMMENTED, PROJECT_CREATED, PROJECT_UPDATED, CONTACT_RECEIVED
-  title       String
-  message     String
-  relatedId   String? // ID of the related entity (task, project, contact)
-  relatedType String? // "task", "project", "contact"
+  type        String // legacy bucket: TASK_CREATED, TASK_UPDATED, etc
+  category    NotificationCategory?
+  title       String // i18n key (e.g. "task_completed")
+  message     String // JSON-encoded params
+  relatedId   String?
+  relatedType String? // "task" | "project" | "contact" | "event"
   isRead      Boolean @default(false)
 
   createdAt DateTime @default(now())
@@ -595,6 +630,34 @@ model Notification {
 
   @@index([userId, isRead])
   @@index([userId, createdAt(sort: Desc)])
+}
+
+model NotificationPreference {
+  id       String               @id @default(cuid())
+  userId   String
+  user     User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category NotificationCategory
+  channel  NotificationChannel  @default(BOTH)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, category])
+  @@index([userId])
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  category  NotificationCategory?
+  relatedId String?
+  subject   String
+  status    String // "sent" | "failed"
+  error     String?
+  sentAt    DateTime @default(now())
+
+  @@index([sentAt(sort: Desc)])
+  @@index([to])
 }
 
 model ContactMessage {

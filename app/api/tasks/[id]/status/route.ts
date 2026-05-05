@@ -1,5 +1,6 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_IN_PROGRESS } from "@/config"
 import db from "@/lib/db"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import {
   DynamicRouteContext,
@@ -82,8 +83,7 @@ export async function PATCH(
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "TASK_UPDATED",
-          contentKey: "task_status_changed",
+          category: NotificationCategory.TASK_STATUS_CHANGED,
           messageParams: { taskTitle: task.title, statusName: statusName?.nameEn ?? "" },
           relatedId: id,
           relatedType: "task",

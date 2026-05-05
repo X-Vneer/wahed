@@ -8,7 +8,7 @@ import {
 } from "@/lib/helpers"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { createTaskSchema } from "@/lib/schemas/task"
-import { TaskPriority } from "@/lib/generated/prisma/enums"
+import { NotificationCategory, TaskPriority } from "@/lib/generated/prisma/enums"
 import {
   createNotifications,
   getAdminUserIds,
@@ -140,8 +140,7 @@ export async function POST(request: NextRequest) {
     if (notifyUserIds.length > 0) {
       createNotifications({
         userIds: notifyUserIds,
-        type: "TASK_ASSIGNED",
-        contentKey: "new_task_assigned",
+        category: NotificationCategory.TASK_ASSIGNED,
         messageParams: { taskTitle: data.title },
         relatedId: task.id,
         relatedType: "task",
@@ -154,8 +153,7 @@ export async function POST(request: NextRequest) {
       if (ids.length > 0) {
         createNotifications({
           userIds: ids,
-          type: "TASK_CREATED",
-          contentKey: "task_created",
+          category: NotificationCategory.TASK_CREATED,
           messageParams: { taskTitle: data.title },
           relatedId: task.id,
           relatedType: "task",

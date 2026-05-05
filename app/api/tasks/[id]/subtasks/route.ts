@@ -1,5 +1,6 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import {
   DynamicRouteContext,
   initLocale,
@@ -70,8 +71,7 @@ export async function POST(
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "TASK_UPDATED",
-          contentKey: "subtask_added",
+          category: NotificationCategory.SUBTASK_ADDED,
           messageParams: { subtaskTitle: data.title, taskTitle: parentTask?.title ?? "" },
           relatedId: taskId,
           relatedType: "task",

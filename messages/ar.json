@@ -1323,9 +1323,83 @@
   },
   "settings": {
     "profile": "الملف الشخصي",
-    "update": "تحديث",
+    "update": "حفظ التغييرات",
+    "discard": "تجاهل",
     "success": {
       "profile_updated": "تم تحديث الملف الشخصي بنجاح"
+    },
+    "hero": {
+      "eyebrow": "الحساب",
+      "roleAdmin": "مدير النظام",
+      "roleStaff": "موظف"
+    },
+    "toc": {
+      "heading": "في هذه الصفحة",
+      "profile": "الملف الشخصي",
+      "language": "اللغة",
+      "notifications": "الإشعارات",
+      "account": "الحساب"
+    },
+    "sections": {
+      "profile": {
+        "eyebrow": "الملف الشخصي",
+        "title": "المعلومات الشخصية",
+        "description": "اسمك ووسائل التواصل وهويتك المستخدمة في جميع أنحاء النظام.",
+        "photoLabel": "صورة الملف الشخصي",
+        "photoHint": "الصور المربعة هي الأفضل. JPG أو PNG أو WebP حتى 4 ميجابايت.",
+        "removePhoto": "إزالة الصورة",
+        "footerHint": "يتم حفظ التغييرات على حسابك مباشرة."
+      },
+      "locale": {
+        "eyebrow": "اللغة والتوطين",
+        "title": "تفضيل اللغة",
+        "description": "تُستخدم في إشعارات البريد وكلغة افتراضية للواجهة.",
+        "options": {
+          "ar": "العربية",
+          "en": "الإنجليزية"
+        },
+        "hints": {
+          "ar": "العربية — تخطيط من اليمين إلى اليسار",
+          "en": "English — تخطيط من اليسار إلى اليمين"
+        },
+        "footerHint": "ستُرسل إشعارات البريد الإلكتروني بهذه اللغة.",
+        "saved": "تم حفظ تفضيل اللغة"
+      },
+      "notifications": {
+        "eyebrow": "الإشعارات",
+        "description": "اختر طريقة استقبال الإشعارات لكل نوع من الأنشطة.",
+        "footerHint": "تُطبق القيم الافتراضية على العناصر غير المحددة."
+      },
+      "account": {
+        "eyebrow": "الحساب",
+        "title": "الجلسة",
+        "description": "إدارة تسجيل الدخول إلى النظام.",
+        "signOut": {
+          "title": "تسجيل الخروج من هذا الجهاز",
+          "description": "إنهاء الجلسة والعودة إلى شاشة تسجيل الدخول.",
+          "button": "تسجيل الخروج"
+        }
+      }
+    },
+    "notifications": {
+      "title": "تفضيلات الإشعارات",
+      "save": "حفظ التفضيلات",
+      "saved": "تم حفظ تفضيلات الإشعارات",
+      "bulkLabel": "تعيين الكل إلى:",
+      "bulkPlaceholder": "اختر القناة",
+      "groupCount": "{count} {count, plural, zero {فئة} one {فئة} two {فئتان} few {فئات} many {فئة} other {فئة}}",
+      "groups": {
+        "TASKS": "المهام",
+        "PROJECTS": "المشاريع",
+        "EVENTS": "الفعاليات",
+        "CONTACTS": "رسائل التواصل"
+      },
+      "channels": {
+        "NONE": "لا شيء",
+        "IN_APP": "داخل التطبيق فقط",
+        "EMAIL": "البريد فقط",
+        "BOTH": "كلاهما"
+      }
     }
   },
   "staffPageSettings": {
@@ -2639,6 +2713,158 @@
         "title": "دعوة إلى حدث",
         "message": "تمت دعوتك إلى الحدث: {eventTitle}"
       }
+    },
+    "categories": {
+      "TASK_CREATED": "إنشاء مهمة جديدة",
+      "TASK_UPDATED": "تحديث مهمة",
+      "TASK_ASSIGNED": "إسناد مهمة لي",
+      "TASK_UNASSIGNED": "إلغاء إسناد مهمة",
+      "TASK_STATUS_CHANGED": "تغيير حالة مهمة",
+      "TASK_COMPLETED": "إنجاز مهمة",
+      "TASK_REOPENED": "إعادة فتح مهمة",
+      "TASK_COMMENTED": "تعليق جديد على مهمة",
+      "TASK_ATTACHMENTS_UPDATED": "تحديث مرفقات مهمة",
+      "TASKS_IMPORTED": "استيراد مهام من القوالب",
+      "SUBTASK_ADDED": "إضافة مهمة فرعية",
+      "PROJECT_CREATED": "إنشاء مشروع جديد",
+      "PROJECT_UPDATED": "تحديث مشروع",
+      "PROJECT_ATTACHMENTS_UPDATED": "تحديث مرفقات مشروع",
+      "PROJECT_ARCHIVED": "أرشفة مشروع",
+      "PROJECT_UNARCHIVED": "إلغاء أرشفة مشروع",
+      "EVENT_CREATED": "إنشاء حدث جديد",
+      "EVENT_UPDATED": "تحديث حدث",
+      "EVENT_DELETED": "إلغاء حدث",
+      "EVENT_INVITED": "دعوة إلى حدث",
+      "CONTACT_RECEIVED": "رسالة تواصل جديدة"
+    }
+  },
+  "emails": {
+    "greeting": "مرحباً {name}،",
+    "task_created": {
+      "subject": "مهمة جديدة: {taskTitle}",
+      "preheader": "تم إنشاء مهمة جديدة.",
+      "body": "تم إنشاء مهمة جديدة \"{taskTitle}\".",
+      "cta": "عرض المهمة"
+    },
+    "task_updated": {
+      "subject": "تم تحديث المهمة: {taskTitle}",
+      "preheader": "تم تحديث مهمة تتابعها.",
+      "body": "تم تحديث المهمة \"{taskTitle}\".",
+      "cta": "عرض المهمة"
+    },
+    "task_assigned": {
+      "subject": "تم إسناد مهمة لك: {taskTitle}",
+      "preheader": "لديك مهمة جديدة مسندة إليك.",
+      "body": "تم إسناد المهمة \"{taskTitle}\" إليك.",
+      "cta": "فتح المهمة"
+    },
+    "task_unassigned": {
+      "subject": "تم إزالتك من المهمة: {taskTitle}",
+      "preheader": "تم إزالتك من مهمة.",
+      "body": "تمت إزالتك من المهمة \"{taskTitle}\".",
+      "cta": "عرض المهمة"
+    },
+    "task_status_changed": {
+      "subject": "تغيرت حالة المهمة: {taskTitle}",
+      "preheader": "تم تحديث حالة مهمة.",
+      "body": "تغيرت حالة المهمة \"{taskTitle}\" إلى {statusName}.",
+      "cta": "عرض المهمة"
+    },
+    "task_completed": {
+      "subject": "اكتملت المهمة: {taskTitle}",
+      "preheader": "تم وضع علامة منجز على مهمة.",
+      "body": "تم وضع علامة منجز على المهمة \"{taskTitle}\".",
+      "cta": "عرض المهمة"
+    },
+    "task_reopened": {
+      "subject": "أعيد فتح المهمة: {taskTitle}",
+      "preheader": "تمت إعادة فتح مهمة مكتملة.",
+      "body": "تمت إعادة فتح المهمة \"{taskTitle}\".",
+      "cta": "عرض المهمة"
+    },
+    "task_commented": {
+      "subject": "تعليق جديد على {taskTitle}",
+      "preheader": "علّق شخص ما على مهمة.",
+      "body": "علّق {userName}: {comment}",
+      "cta": "عرض المهمة"
+    },
+    "task_attachments_updated": {
+      "subject": "تم تحديث المرفقات: {taskTitle}",
+      "preheader": "تغيرت مرفقات المهمة.",
+      "body": "تم تحديث مرفقات المهمة \"{taskTitle}\".",
+      "cta": "عرض المهمة"
+    },
+    "tasks_imported": {
+      "subject": "تم استيراد {count} من المهام",
+      "preheader": "تم استيراد مهام من القوالب.",
+      "body": "تم إنشاء {count} مهمة من القوالب.",
+      "cta": "عرض المهام"
+    },
+    "subtask_added": {
+      "subject": "مهمة فرعية جديدة: {subtaskTitle}",
+      "preheader": "تمت إضافة مهمة فرعية.",
+      "body": "أُضيفت المهمة الفرعية \"{subtaskTitle}\" إلى المهمة \"{taskTitle}\".",
+      "cta": "عرض المهمة"
+    },
+    "project_created": {
+      "subject": "مشروع جديد: {projectName}",
+      "preheader": "تم إنشاء مشروع جديد.",
+      "body": "تم إنشاء المشروع \"{projectName}\".",
+      "cta": "عرض المشروع"
+    },
+    "project_updated": {
+      "subject": "تم تحديث المشروع: {projectName}",
+      "preheader": "تم تحديث مشروع تتابعه.",
+      "body": "تم تحديث المشروع \"{projectName}\".",
+      "cta": "عرض المشروع"
+    },
+    "project_attachments_updated": {
+      "subject": "تم تحديث مرفقات المشروع: {projectName}",
+      "preheader": "تغيرت مرفقات المشروع.",
+      "body": "تم تحديث مرفقات المشروع \"{projectName}\".",
+      "cta": "عرض المشروع"
+    },
+    "project_archived": {
+      "subject": "تمت أرشفة المشروع: {projectName}",
+      "preheader": "تمت أرشفة مشروع.",
+      "body": "تمت أرشفة المشروع \"{projectName}\".",
+      "cta": "عرض المشروع"
+    },
+    "project_unarchived": {
+      "subject": "تم إلغاء أرشفة المشروع: {projectName}",
+      "preheader": "تم إلغاء أرشفة مشروع.",
+      "body": "تم إلغاء أرشفة المشروع \"{projectName}\".",
+      "cta": "عرض المشروع"
+    },
+    "event_created": {
+      "subject": "حدث جديد: {eventTitle}",
+      "preheader": "تم إنشاء حدث جديد.",
+      "body": "تم إنشاء الحدث \"{eventTitle}\".",
+      "cta": "فتح التقويم"
+    },
+    "event_updated": {
+      "subject": "تم تحديث الحدث: {eventTitle}",
+      "preheader": "تم تحديث حدث.",
+      "body": "تم تحديث الحدث \"{eventTitle}\".",
+      "cta": "فتح التقويم"
+    },
+    "event_deleted": {
+      "subject": "تم إلغاء الحدث: {eventTitle}",
+      "preheader": "تم إلغاء حدث.",
+      "body": "تم إلغاء الحدث \"{eventTitle}\".",
+      "cta": "فتح التقويم"
+    },
+    "event_invited": {
+      "subject": "دعوة: {eventTitle}",
+      "preheader": "أنت مدعو إلى حدث.",
+      "body": "تمت دعوتك إلى الحدث \"{eventTitle}\".",
+      "cta": "فتح التقويم"
+    },
+    "contact_received": {
+      "subject": "رسالة جديدة من {senderName}",
+      "preheader": "تم استلام رسالة جديدة عبر نموذج التواصل.",
+      "body": "أرسل {senderName} رسالة: {messagePreview}",
+      "cta": "عرض الرسائل"
     }
   },
   "contacts": {

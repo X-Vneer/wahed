@@ -12,7 +12,7 @@ import {
   importTasksFromTemplatesSchema,
   type ImportTasksFromTemplatesInput,
 } from "@/lib/schemas/task"
-import { TaskPriority } from "@/lib/generated/prisma/enums"
+import { NotificationCategory, TaskPriority } from "@/lib/generated/prisma/enums"
 import { taskInclude, transformTask } from "@/prisma/tasks"
 import { type NextRequest, NextResponse } from "next/server"
 
@@ -156,8 +156,7 @@ export async function POST(request: NextRequest) {
       if (ids.length > 0) {
         createNotifications({
           userIds: ids,
-          type: "TASK_CREATED",
-          contentKey: "tasks_imported",
+          category: NotificationCategory.TASKS_IMPORTED,
           messageParams: { count: createdTasks.length },
           relatedId: data.projectId ?? createdTasks[0]?.id,
           relatedType: data.projectId ? "project" : "task",

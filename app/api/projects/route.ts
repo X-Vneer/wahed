@@ -8,6 +8,7 @@ import { projectInclude } from "@/prisma/projects"
 import { transformProject } from "@/prisma/projects"
 import { getLocaleFromRequest } from "@/lib/i18n/utils"
 import { Prisma } from "@/lib/generated/prisma/client"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import {
   convertToPrismaJsonValue,
   initLocale,
@@ -242,8 +243,7 @@ export async function POST(request: NextRequest) {
       if (ids.length > 0) {
         createNotifications({
           userIds: ids,
-          type: "PROJECT_CREATED",
-          contentKey: "project_created",
+          category: NotificationCategory.PROJECT_CREATED,
           messageParams: { projectName: data.nameEn || data.nameAr },
           relatedId: project.id,
           relatedType: "project",

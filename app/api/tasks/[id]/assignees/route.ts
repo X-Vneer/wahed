@@ -1,5 +1,6 @@
 import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import {
   DynamicRouteContext,
@@ -84,8 +85,7 @@ export async function PATCH(
     if (newAssignees.length > 0) {
       createNotifications({
         userIds: newAssignees,
-        type: "TASK_ASSIGNED",
-        contentKey: "task_assigned",
+        category: NotificationCategory.TASK_ASSIGNED,
         messageParams: { taskTitle: previousTask?.title ?? task.title },
         relatedId: id,
         relatedType: "task",
@@ -99,8 +99,7 @@ export async function PATCH(
     if (removedAssignees.length > 0) {
       createNotifications({
         userIds: removedAssignees,
-        type: "TASK_UPDATED",
-        contentKey: "task_unassigned",
+        category: NotificationCategory.TASK_UNASSIGNED,
         messageParams: { taskTitle: previousTask?.title ?? task.title },
         relatedId: id,
         relatedType: "task",

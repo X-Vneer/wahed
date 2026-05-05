@@ -46,3 +46,13 @@ export {
   type Permission,
   type PermissionKey,
 } from "./permissions"
+
+export {
+  NOTIFICATION_CATEGORIES,
+  NOTIFICATION_CATEGORY_BY_KEY,
+  NOTIFICATION_GROUPS,
+  NOTIFICATION_CHANNELS,
+  getDefaultChannel,
+  type NotificationCategoryConfig,
+  type NotificationGroup,
+} from "./notifications"

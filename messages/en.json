@@ -1323,9 +1323,83 @@
   },
   "settings": {
     "profile": "Profile",
-    "update": "Update",
+    "update": "Save changes",
+    "discard": "Discard",
     "success": {
       "profile_updated": "Profile updated successfully "
+    },
+    "hero": {
+      "eyebrow": "Account",
+      "roleAdmin": "Administrator",
+      "roleStaff": "Staff"
+    },
+    "toc": {
+      "heading": "On this page",
+      "profile": "Profile",
+      "language": "Language",
+      "notifications": "Notifications",
+      "account": "Account"
+    },
+    "sections": {
+      "profile": {
+        "eyebrow": "Profile",
+        "title": "Personal information",
+        "description": "Your name, contact details, and identity used across the system.",
+        "photoLabel": "Profile photo",
+        "photoHint": "Square images work best. JPG, PNG, or WebP up to 4 MB.",
+        "removePhoto": "Remove photo",
+        "footerHint": "Changes are saved to your account immediately."
+      },
+      "locale": {
+        "eyebrow": "Localization",
+        "title": "Language preference",
+        "description": "Used for email notifications and as your default UI language.",
+        "options": {
+          "ar": "Arabic",
+          "en": "English"
+        },
+        "hints": {
+          "ar": "العربية — RTL layout",
+          "en": "English — LTR layout"
+        },
+        "footerHint": "Email notifications will be rendered in this language.",
+        "saved": "Language preference saved"
+      },
+      "notifications": {
+        "eyebrow": "Notifications",
+        "description": "Choose how you want to be notified for each type of activity.",
+        "footerHint": "Defaults are applied to any unset items."
+      },
+      "account": {
+        "eyebrow": "Account",
+        "title": "Session",
+        "description": "Manage how you sign in to the system.",
+        "signOut": {
+          "title": "Sign out of this device",
+          "description": "End your session and return to the login screen.",
+          "button": "Sign out"
+        }
+      }
+    },
+    "notifications": {
+      "title": "Notification preferences",
+      "save": "Save preferences",
+      "saved": "Notification preferences saved",
+      "bulkLabel": "Set all to:",
+      "bulkPlaceholder": "Choose channel",
+      "groupCount": "{count} {count, plural, one {category} other {categories}}",
+      "groups": {
+        "TASKS": "Tasks",
+        "PROJECTS": "Projects",
+        "EVENTS": "Events",
+        "CONTACTS": "Contact messages"
+      },
+      "channels": {
+        "NONE": "None",
+        "IN_APP": "In-app only",
+        "EMAIL": "Email only",
+        "BOTH": "Both"
+      }
     }
   },
   "staffPageSettings": {
@@ -2639,6 +2713,158 @@
         "title": "Event Invitation",
         "message": "You have been invited to event: {eventTitle}"
       }
+    },
+    "categories": {
+      "TASK_CREATED": "New task created",
+      "TASK_UPDATED": "Task updated",
+      "TASK_ASSIGNED": "Task assigned to me",
+      "TASK_UNASSIGNED": "Task unassigned from me",
+      "TASK_STATUS_CHANGED": "Task status changed",
+      "TASK_COMPLETED": "Task completed",
+      "TASK_REOPENED": "Task reopened",
+      "TASK_COMMENTED": "New comment on task",
+      "TASK_ATTACHMENTS_UPDATED": "Task attachments updated",
+      "TASKS_IMPORTED": "Tasks imported from templates",
+      "SUBTASK_ADDED": "New subtask added",
+      "PROJECT_CREATED": "New project created",
+      "PROJECT_UPDATED": "Project updated",
+      "PROJECT_ATTACHMENTS_UPDATED": "Project attachments updated",
+      "PROJECT_ARCHIVED": "Project archived",
+      "PROJECT_UNARCHIVED": "Project unarchived",
+      "EVENT_CREATED": "New event created",
+      "EVENT_UPDATED": "Event updated",
+      "EVENT_DELETED": "Event cancelled",
+      "EVENT_INVITED": "Event invitation",
+      "CONTACT_RECEIVED": "New contact message"
+    }
+  },
+  "emails": {
+    "greeting": "Hi {name},",
+    "task_created": {
+      "subject": "New task: {taskTitle}",
+      "preheader": "A task was just created.",
+      "body": "A new task \"{taskTitle}\" has been created.",
+      "cta": "View task"
+    },
+    "task_updated": {
+      "subject": "Task updated: {taskTitle}",
+      "preheader": "A task you follow was updated.",
+      "body": "Task \"{taskTitle}\" has been updated.",
+      "cta": "View task"
+    },
+    "task_assigned": {
+      "subject": "You've been assigned: {taskTitle}",
+      "preheader": "You have a new task assignment.",
+      "body": "You have been assigned to task \"{taskTitle}\".",
+      "cta": "Open task"
+    },
+    "task_unassigned": {
+      "subject": "Removed from task: {taskTitle}",
+      "preheader": "You were removed from a task.",
+      "body": "You have been removed from task \"{taskTitle}\".",
+      "cta": "View task"
+    },
+    "task_status_changed": {
+      "subject": "Task status changed: {taskTitle}",
+      "preheader": "A task's status was updated.",
+      "body": "Task \"{taskTitle}\" status changed to {statusName}.",
+      "cta": "View task"
+    },
+    "task_completed": {
+      "subject": "Task completed: {taskTitle}",
+      "preheader": "A task was marked done.",
+      "body": "Task \"{taskTitle}\" has been marked as done.",
+      "cta": "View task"
+    },
+    "task_reopened": {
+      "subject": "Task reopened: {taskTitle}",
+      "preheader": "A completed task was reopened.",
+      "body": "Task \"{taskTitle}\" has been reopened.",
+      "cta": "View task"
+    },
+    "task_commented": {
+      "subject": "New comment on {taskTitle}",
+      "preheader": "Someone commented on a task.",
+      "body": "{userName} commented: {comment}",
+      "cta": "View task"
+    },
+    "task_attachments_updated": {
+      "subject": "Attachments updated: {taskTitle}",
+      "preheader": "Task attachments changed.",
+      "body": "Attachments for task \"{taskTitle}\" have been updated.",
+      "cta": "View task"
+    },
+    "tasks_imported": {
+      "subject": "{count} tasks imported",
+      "preheader": "Tasks were imported from templates.",
+      "body": "{count} task(s) created from templates.",
+      "cta": "View tasks"
+    },
+    "subtask_added": {
+      "subject": "New subtask: {subtaskTitle}",
+      "preheader": "A subtask was added.",
+      "body": "Subtask \"{subtaskTitle}\" added to task \"{taskTitle}\".",
+      "cta": "View task"
+    },
+    "project_created": {
+      "subject": "New project: {projectName}",
+      "preheader": "A new project was created.",
+      "body": "Project \"{projectName}\" has been created.",
+      "cta": "View project"
+    },
+    "project_updated": {
+      "subject": "Project updated: {projectName}",
+      "preheader": "A project you follow was updated.",
+      "body": "Project \"{projectName}\" has been updated.",
+      "cta": "View project"
+    },
+    "project_attachments_updated": {
+      "subject": "Project attachments updated: {projectName}",
+      "preheader": "Project attachments changed.",
+      "body": "Attachments for project \"{projectName}\" have been updated.",
+      "cta": "View project"
+    },
+    "project_archived": {
+      "subject": "Project archived: {projectName}",
+      "preheader": "A project was archived.",
+      "body": "Project \"{projectName}\" has been archived.",
+      "cta": "View project"
+    },
+    "project_unarchived": {
+      "subject": "Project unarchived: {projectName}",
+      "preheader": "A project was unarchived.",
+      "body": "Project \"{projectName}\" has been unarchived.",
+      "cta": "View project"
+    },
+    "event_created": {
+      "subject": "New event: {eventTitle}",
+      "preheader": "A new event was created.",
+      "body": "Event \"{eventTitle}\" has been created.",
+      "cta": "Open calendar"
+    },
+    "event_updated": {
+      "subject": "Event updated: {eventTitle}",
+      "preheader": "An event was updated.",
+      "body": "Event \"{eventTitle}\" has been updated.",
+      "cta": "Open calendar"
+    },
+    "event_deleted": {
+      "subject": "Event cancelled: {eventTitle}",
+      "preheader": "An event was cancelled.",
+      "body": "Event \"{eventTitle}\" has been cancelled.",
+      "cta": "Open calendar"
+    },
+    "event_invited": {
+      "subject": "Invitation: {eventTitle}",
+      "preheader": "You're invited to an event.",
+      "body": "You have been invited to event \"{eventTitle}\".",
+      "cta": "Open calendar"
+    },
+    "contact_received": {
+      "subject": "New contact message from {senderName}",
+      "preheader": "A new contact form was submitted.",
+      "body": "{senderName} sent a message: {messagePreview}",
+      "cta": "View messages"
     }
   },
   "contacts": {

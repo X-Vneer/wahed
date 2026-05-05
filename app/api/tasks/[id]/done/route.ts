@@ -1,5 +1,6 @@
 import { PERMISSIONS_GROUPED, TASK_STATUS_ID_COMPLETED } from "@/config"
 import db from "@/lib/db"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import {
   DynamicRouteContext,
@@ -67,8 +68,9 @@ export async function PATCH(
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "TASK_UPDATED",
-          contentKey: done ? "task_completed" : "task_reopened",
+          category: done
+            ? NotificationCategory.TASK_COMPLETED
+            : NotificationCategory.TASK_REOPENED,
           messageParams: { taskTitle: task.title },
           relatedId: id,
           relatedType: "task",

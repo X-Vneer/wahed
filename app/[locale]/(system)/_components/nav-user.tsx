@@ -7,8 +7,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useUserData } from "@/hooks/use-user-data"
-import { LogOut, User } from "lucide-react"
-import { useRouter } from "@/lib/i18n/navigation"
+import { LogOut, Settings, User } from "lucide-react"
+import { useRouter, Link } from "@/lib/i18n/navigation"
 import { useTranslations } from "next-intl"
 import apiClient from "@/services"
 
@@ -75,17 +75,36 @@ export function NavUser() {
         <SidebarMenuButton
           size="lg"
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-        >
-          <div className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-            <User className="size-4" />
-          </div>
-          <div className="grid flex-1 text-start text-sm leading-tight">
-            <span className="truncate font-semibold">
-              {user.name || t("user")}
-            </span>
-            <span className="truncate text-xs">{user.email || ""}</span>
-          </div>
-        </SidebarMenuButton>
+          render={
+            <Link
+              href="/settings"
+              onClick={() => isMobile && setOpenMobile(false)}
+            >
+              <div className="bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                <User className="size-4" />
+              </div>
+              <div className="grid flex-1 text-start text-sm leading-tight">
+                <span className="truncate font-semibold">
+                  {user.name || t("user")}
+                </span>
+                <span className="truncate text-xs">{user.email || ""}</span>
+              </div>
+            </Link>
+          }
+        />
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          render={
+            <Link
+              href="/settings"
+              onClick={() => isMobile && setOpenMobile(false)}
+            >
+              <Settings className="size-4" />
+              <span>{t("settings")}</span>
+            </Link>
+          }
+        />
       </SidebarMenuItem>
       <SidebarMenuItem>
         <SidebarMenuButton

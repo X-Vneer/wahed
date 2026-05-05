@@ -2,6 +2,7 @@ import { PERMISSIONS_GROUPED } from "@/config"
 import db from "@/lib/db"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import { Prisma } from "@/lib/generated/prisma/client"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import {
   DynamicRouteContext,
   initLocale,
@@ -113,8 +114,7 @@ export async function POST(
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "TASK_UPDATED",
-          contentKey: "task_attachments_updated",
+          category: NotificationCategory.TASK_ATTACHMENTS_UPDATED,
           messageParams: { taskTitle: taskInfo?.title ?? "" },
           relatedId: taskId,
           relatedType: "task",

@@ -1,4 +1,5 @@
 import db from "@/lib/db"
+import { NotificationCategory } from "@/lib/generated/prisma/enums"
 import { getAccessTokenPayload } from "@/lib/get-access-token"
 import {
   createNotifications,
@@ -71,8 +72,9 @@ export async function PATCH(
       if (notifyIds.length > 0) {
         createNotifications({
           userIds: notifyIds,
-          type: "PROJECT_UPDATED",
-          contentKey: shouldArchive ? "project_archived" : "project_unarchived",
+          category: shouldArchive
+            ? NotificationCategory.PROJECT_ARCHIVED
+            : NotificationCategory.PROJECT_UNARCHIVED,
           messageParams: { projectName: projectInfo?.nameEn || projectInfo?.nameAr || "" },
           relatedId: id,
           relatedType: "project",

@@ -109,6 +109,7 @@ export const updateUserSettingsSchema = z.object({
   city: z.string().optional().nullable(),
   country: z.string().optional().nullable(),
   image: z.string().optional().nullable(),
+  locale: z.enum(["ar", "en"]).optional(),
 })
 
 export const updateUserLocationSchema = z.object({

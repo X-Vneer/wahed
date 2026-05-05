@@ -104,6 +104,7 @@ export async function PUT(request: NextRequest) {
       city: string | null
       country: string | null
       image: string | null
+      locale?: string
     } = {
       name: data.name,
       email: data.email,
@@ -119,6 +120,9 @@ export async function PUT(request: NextRequest) {
     // Set gender if provided
     if (data.gender !== undefined) {
       updateData.gender = data.gender
+    }
+    if (data.locale !== undefined) {
+      updateData.locale = data.locale
     }
 
     // Update user (without permissions or password)

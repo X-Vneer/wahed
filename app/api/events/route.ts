@@ -2,7 +2,11 @@ import db from "@/lib/db"
 import { createEventSchema } from "@/lib/schemas/event"
 import { type NextRequest, NextResponse } from "next/server"
 import { initLocale, requireAuth, validateRequest } from "@/lib/helpers"
-import { EventColor, UserRole } from "@/lib/generated/prisma/enums"
+import {
+  EventColor,
+  NotificationCategory,
+  UserRole,
+} from "@/lib/generated/prisma/enums"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
 import {
   eventInclude,
@@ -201,8 +205,7 @@ export async function POST(request: NextRequest) {
     if (inviteeIds.length > 0) {
       await createNotifications({
         userIds: inviteeIds,
-        type: "EVENT_INVITED",
-        contentKey: "event_invited",
+        category: NotificationCategory.EVENT_INVITED,
         messageParams: { eventTitle: event.title },
         relatedId: event.id,
         relatedType: "event",
@@ -216,8 +219,7 @@ export async function POST(request: NextRequest) {
     if (adminIds.length > 0) {
       await createNotifications({
         userIds: adminIds,
-        type: "EVENT_CREATED",
-        contentKey: "event_created",
+        category: NotificationCategory.EVENT_CREATED,
         messageParams: { eventTitle: event.title },
         relatedId: event.id,
         relatedType: "event",

@@ -1,63 +1,149 @@
+import {
+  NOTIFICATION_CATEGORY_BY_KEY,
+  getDefaultChannel,
+} from "@/config/notifications"
 import db from "@/lib/db"
-import { UserRole } from "@/lib/generated/prisma/enums"
+import {
+  NotificationCategory,
+  NotificationChannel,
+  UserRole,
+} from "@/lib/generated/prisma/enums"
+import { sendMail } from "@/lib/mailer/send"
+import { renderEmail } from "@/lib/mailer/templates"
 
-export type NotificationType =
-  | "TASK_CREATED"
-  | "TASK_UPDATED"
-  | "TASK_ASSIGNED"
-  | "TASK_COMMENTED"
-  | "PROJECT_CREATED"
-  | "PROJECT_UPDATED"
-  | "CONTACT_RECEIVED"
-  | "EVENT_CREATED"
-  | "EVENT_UPDATED"
-  | "EVENT_DELETED"
-  | "EVENT_INVITED"
+export type { NotificationCategory } from "@/lib/generated/prisma/enums"
 
 interface CreateNotificationParams {
   userIds: string[]
-  type: NotificationType
-  contentKey: string
+  category: NotificationCategory
   messageParams?: Record<string, string | number>
   relatedId?: string
   relatedType?: "task" | "project" | "contact" | "event"
+  /** Override CTA url; falls back to category-default deep link. */
+  ctaUrl?: string
 }
 
 /**
- * Create notifications for multiple users.
- * Stores the contentKey in `title` and JSON-encoded messageParams in `message`.
- * The frontend translates using these keys at display time.
- * Non-blocking — errors are logged but never thrown.
+ * Dispatch notifications across in-app + email channels respecting per-user
+ * NotificationPreference. Non-blocking — errors are logged, never thrown.
  */
 export async function createNotifications({
   userIds,
-  type,
-  contentKey,
+  category,
   messageParams,
   relatedId,
   relatedType,
+  ctaUrl,
 }: CreateNotificationParams) {
   if (userIds.length === 0) return
 
+  const config = NOTIFICATION_CATEGORY_BY_KEY[category]
+  if (!config) {
+    console.error("Unknown notification category:", category)
+    return
+  }
+
+  const uniqueIds = [...new Set(userIds)]
+  const resolvedRelatedType = relatedType ?? config.relatedType
+
   try {
-    const uniqueIds = [...new Set(userIds)]
-    await db.notification.createMany({
-      data: uniqueIds.map((userId) => ({
-        userId,
-        type,
-        title: contentKey,
-        message: JSON.stringify(messageParams ?? {}),
-        relatedId: relatedId ?? null,
-        relatedType: relatedType ?? null,
-      })),
+    const prefs = await db.notificationPreference.findMany({
+      where: { userId: { in: uniqueIds }, category },
+      select: { userId: true, channel: true },
     })
+    const prefByUser = new Map(prefs.map((p) => [p.userId, p.channel]))
+    const defaultChannel = getDefaultChannel(category)
+
+    const inAppIds: string[] = []
+    const emailIds: string[] = []
+    for (const uid of uniqueIds) {
+      const ch = prefByUser.get(uid) ?? defaultChannel
+      if (ch === NotificationChannel.IN_APP || ch === NotificationChannel.BOTH) {
+        inAppIds.push(uid)
+      }
+      if (ch === NotificationChannel.EMAIL || ch === NotificationChannel.BOTH) {
+        emailIds.push(uid)
+      }
+    }
+
+    if (inAppIds.length > 0) {
+      await db.notification.createMany({
+        data: inAppIds.map((userId) => ({
+          userId,
+          type: category,
+          category,
+          title: config.contentKey,
+          message: JSON.stringify(messageParams ?? {}),
+          relatedId: relatedId ?? null,
+          relatedType: resolvedRelatedType ?? null,
+        })),
+      })
+    }
+
+    if (emailIds.length > 0) {
+      void dispatchEmails({
+        userIds: emailIds,
+        category,
+        messageParams: messageParams ?? {},
+        relatedId,
+        ctaUrl,
+      })
+    }
   } catch (error) {
     console.error("Failed to create notifications:", error)
   }
 }
 
+async function dispatchEmails({
+  userIds,
+  category,
+  messageParams,
+  relatedId,
+  ctaUrl,
+}: {
+  userIds: string[]
+  category: NotificationCategory
+  messageParams: Record<string, string | number>
+  relatedId?: string
+  ctaUrl?: string
+}) {
+  try {
+    const users = await db.user.findMany({
+      where: { id: { in: userIds }, isActive: true },
+      select: { id: true, email: true, name: true, locale: true },
+    })
+
+    await Promise.allSettled(
+      users.map(async (user) => {
+        const locale = (user.locale as "ar" | "en") || "ar"
+        try {
+          const { subject, html, text } = await renderEmail({
+            category,
+            locale,
+            recipientName: user.name,
+            params: messageParams,
+            ctaUrl,
+          })
+          await sendMail({
+            to: user.email,
+            subject,
+            html,
+            text,
+            category,
+            relatedId: relatedId ?? null,
+          })
+        } catch (err) {
+          console.error("[notifications] email render/send failed:", err)
+        }
+      })
+    )
+  } catch (error) {
+    console.error("[notifications] dispatchEmails failed:", error)
+  }
+}
+
 /**
- * Get all admin user IDs. Cached per request cycle.
+ * Get all admin user IDs.
  */
 export async function getAdminUserIds(): Promise<string[]> {
   const admins = await db.user.findMany({
