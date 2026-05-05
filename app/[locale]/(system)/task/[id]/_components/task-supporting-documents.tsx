@@ -28,28 +28,13 @@ function isFinalAttachment(att: AttachmentItem) {
   return (additionalInfo as { isFinal?: boolean }).isFinal === true
 }
 
-function toApiAttachment(att: AttachmentItem) {
-  const additionalInfo = (att as unknown as { additionalInfo?: unknown })
-    .additionalInfo
-
-  const isFinal =
-    additionalInfo && typeof additionalInfo === "object"
-      ? (additionalInfo as { isFinal?: boolean }).isFinal === true
-      : false
-
+function toView(att: AttachmentItem): UploadedFileAttachment {
   return {
     id: att.id,
     fileUrl: att.fileUrl,
-    fileName: att.fileName ?? undefined,
+    fileName: att.fileName ?? "",
     fileType: att.fileType ?? undefined,
     fileSize: att.fileSize ?? undefined,
-    additionalInfo: {
-      ...(additionalInfo && typeof additionalInfo === "object"
-        ? (additionalInfo as Record<string, unknown>)
-        : {}),
-      isFinal,
-    },
-    isFinal,
   }
 }
 
@@ -61,114 +46,55 @@ export function TaskSupportingDocuments({
   const queryClient = useQueryClient()
   const [isSaving, setIsSaving] = useState(false)
 
-  const syncAttachments = async (
-    payload: Array<{
-      id?: string
-      fileUrl: string
-      fileName?: string
-      fileType?: string
-      fileSize?: number
-      additionalInfo?: unknown
-      isFinal?: boolean
-    }>
+  const finalAttachments = attachments.filter(isFinalAttachment)
+  const otherAttachments = attachments.filter((att) => !isFinalAttachment(att))
+
+  const supportingValue = otherAttachments.map(toView)
+  const finalValue = finalAttachments.map(toView)
+
+  const postNew = async (
+    files: UploadedFileAttachment[],
+    isFinal: boolean
   ) => {
     setIsSaving(true)
     try {
       await apiClient.post(`/api/tasks/${taskId}/attachments`, {
-        attachments: payload,
+        attachments: files.map((f) => ({
+          fileUrl: f.fileUrl,
+          fileName: f.fileName,
+          fileType: f.fileType,
+          fileSize: f.fileSize,
+          additionalInfo: { isFinal },
+          isFinal,
+        })),
       })
       await queryClient.invalidateQueries({ queryKey: ["task", taskId] })
       toast.success(t("tasks.success.attachments_updated"))
     } catch (err) {
-      console.error("Error syncing task attachments:", err)
+      console.error("Error adding task attachments:", err)
       toast.error(t("errors.internal_server_error"))
     } finally {
       setIsSaving(false)
     }
   }
 
-  const finalAttachments = attachments.filter(isFinalAttachment)
-  const otherAttachments = attachments.filter((att) => !isFinalAttachment(att))
-
-  const supportingValue: UploadedFileAttachment[] = otherAttachments.map(
-    (att) => ({
-      fileUrl: att.fileUrl,
-      fileName: att.fileName ?? "",
-      fileType: att.fileType ?? undefined,
-      fileSize: att.fileSize ?? undefined,
-    })
-  )
-
-  const finalValue: UploadedFileAttachment[] = finalAttachments.map((att) => ({
-    fileUrl: att.fileUrl,
-    fileName: att.fileName ?? "",
-    fileType: att.fileType ?? undefined,
-    fileSize: att.fileSize ?? undefined,
-  }))
-
-  const handleSupportingChange = (files: UploadedFileAttachment[]) => {
-    const supportingPayload = files.map((f) => {
-      const existing = otherAttachments.find(
-        (a) =>
-          a.fileUrl === f.fileUrl && (a.fileName ?? "") === f.fileName
-      )
-      const additionalInfo = (
-        (existing as unknown as { additionalInfo?: unknown })?.additionalInfo
-      ) as Record<string, unknown> | undefined
-      return {
-        id: existing?.id,
-        fileUrl: f.fileUrl,
-        fileName: f.fileName,
-        fileType: f.fileType,
-        fileSize: f.fileSize,
-        additionalInfo: {
-          ...(additionalInfo && typeof additionalInfo === "object"
-            ? additionalInfo
-            : {}),
-          isFinal: false,
-        },
-        isFinal: false,
-      }
-    })
-    syncAttachments([
-      ...supportingPayload,
-      ...finalAttachments.map((att) => toApiAttachment(att)),
-    ])
-  }
-
-  const handleFinalChange = (files: UploadedFileAttachment[]) => {
-    const finalPayload = files.map((f) => {
-      const existing = finalAttachments.find(
-        (a) =>
-          a.fileUrl === f.fileUrl && (a.fileName ?? "") === f.fileName
-      )
-      const additionalInfo = (
-        (existing as unknown as { additionalInfo?: unknown })?.additionalInfo
-      ) as Record<string, unknown> | undefined
-      return {
-        id: existing?.id,
-        fileUrl: f.fileUrl,
-        fileName: f.fileName,
-        fileType: f.fileType,
-        fileSize: f.fileSize,
-        additionalInfo: {
-          ...(additionalInfo && typeof additionalInfo === "object"
-            ? additionalInfo
-            : {}),
-          isFinal: true,
-        },
-        isFinal: true,
-      }
-    })
-    syncAttachments([
-      ...otherAttachments.map((att) => toApiAttachment(att)),
-      ...finalPayload,
-    ])
+  const removeOne = async (file: UploadedFileAttachment) => {
+    if (!file.id) return
+    setIsSaving(true)
+    try {
+      await apiClient.delete(`/api/tasks/${taskId}/attachments/${file.id}`)
+      await queryClient.invalidateQueries({ queryKey: ["task", taskId] })
+      toast.success(t("tasks.success.attachments_updated"))
+    } catch (err) {
+      console.error("Error deleting task attachment:", err)
+      toast.error(t("errors.internal_server_error"))
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Supporting documents */}
       <Card>
         <CardContent>
           <div className="mb-4">
@@ -179,7 +105,9 @@ export function TaskSupportingDocuments({
           <FormFileUpload
             endpoint="taskAttachmentsUploader"
             value={supportingValue}
-            onChange={handleSupportingChange}
+            onChange={() => {}}
+            onAdd={(files) => postNew(files, false)}
+            onRemove={removeOne}
             triggerLabel={t("taskPage.addDocuments")}
             multiple
             disabled={isSaving}
@@ -187,7 +115,6 @@ export function TaskSupportingDocuments({
         </CardContent>
       </Card>
 
-      {/* Final files */}
       <Card>
         <CardContent>
           <div className="mb-4">
@@ -198,7 +125,9 @@ export function TaskSupportingDocuments({
           <FormFileUpload
             endpoint="taskAttachmentsUploader"
             value={finalValue}
-            onChange={handleFinalChange}
+            onChange={() => {}}
+            onAdd={(files) => postNew(files, true)}
+            onRemove={removeOne}
             triggerLabel={t("taskPage.addFinalFiles")}
             multiple
             disabled={isSaving}

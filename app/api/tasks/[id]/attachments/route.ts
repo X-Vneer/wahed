@@ -58,119 +58,44 @@ export async function POST(
       )
     }
 
-    // Get all existing attachments for this task
-    const existingAttachments = await db.taskAttachment.findMany({
-      where: { taskId },
-      select: { id: true },
-    })
-
-    // Separate new attachments (without IDs) from existing ones (with IDs)
+    // Append-only: only create rows without ids; never delete here.
+    // Removals go through DELETE /api/tasks/{id}/attachments/{attachmentId},
+    // which also clears Task.finalFileId when needed.
     const newAttachments = attachments.filter(
       (attachment) => !attachment.id
     ) as AttachmentInput[]
 
-    const existingAttachmentIds = attachments
-      .filter((attachment): attachment is Required<Pick<AttachmentInput, "id">> &
-        AttachmentInput => !!attachment.id)
-      .map((attachment) => attachment.id)
-
-    // Find attachments to delete (existing ones not in the new list)
-    const attachmentsToDelete = existingAttachments.filter(
-      (existing) => !existingAttachmentIds.includes(existing.id)
-    )
-
-    let shouldClearFinalFile = false
-
-    if (
-      task.finalFileId &&
-      attachmentsToDelete.some((a) => a.id === task.finalFileId)
-    ) {
-      shouldClearFinalFile = true
+    if (newAttachments.length === 0) {
+      return NextResponse.json(
+        { message: t("tasks.success.attachments_updated"), attachments: [] },
+        { status: 201 }
+      )
     }
 
-    // Delete removed attachments
-    if (attachmentsToDelete.length > 0) {
-      await db.taskAttachment.deleteMany({
-        where: {
-          id: { in: attachmentsToDelete.map((a) => a.id) },
-        },
-      })
-    }
-
-    // Create new attachments (ones without IDs)
-    if (newAttachments.length > 0) {
-      await db.taskAttachment.createMany({
-        data: newAttachments.map((attachment) => ({
-          taskId,
-          fileUrl: attachment.fileUrl,
-          fileName: attachment.fileName || null,
-          fileType: attachment.fileType || null,
-          fileSize: attachment.fileSize || null,
-          additionalInfo:
-            attachment.additionalInfo !== undefined &&
-            attachment.additionalInfo !== null
-              ? (attachment.additionalInfo as Prisma.InputJsonValue)
-              : Prisma.JsonNull,
-        })),
-      })
-    }
-
-    // Fetch all attachments for the task to return in response
-    const createdAttachments = await db.taskAttachment.findMany({
-      where: { taskId },
+    const createdAttachments = await db.taskAttachment.createManyAndReturn({
+      data: newAttachments.map((attachment) => ({
+        taskId,
+        fileUrl: attachment.fileUrl,
+        fileName: attachment.fileName || null,
+        fileType: attachment.fileType || null,
+        fileSize: attachment.fileSize || null,
+        additionalInfo:
+          attachment.additionalInfo !== undefined &&
+          attachment.additionalInfo !== null
+            ? (attachment.additionalInfo as Prisma.InputJsonValue)
+            : Prisma.JsonNull,
+      })),
     })
 
-    // Determine final file (if any).
-    // We now allow multiple attachments to be flagged as "final" in the payload.
-    // For backward compatibility, we still keep a single `finalFileId` on the task
-    // and use the *first* valid final candidate (if any) as the canonical final file.
-    const finalCandidates = attachments.filter(
+    // Set Task.finalFileId from first newly-flagged final, but only when
+    // the task has no final yet — never clobber an existing final here.
+    const firstFinalIndex = newAttachments.findIndex(
       (attachment) => attachment.isFinal === true
     )
-
-    let finalFileId: string | null | undefined = undefined
-
-    if (finalCandidates.length >= 1) {
-      const candidate = finalCandidates[0]
-
-      if (candidate.id) {
-        const exists = createdAttachments.some(
-          (attachment) => attachment.id === candidate.id
-        )
-
-        if (!exists) {
-          return NextResponse.json(
-            { error: t("tasks.errors.invalid_final_file") },
-            { status: 400 }
-          )
-        }
-
-        finalFileId = candidate.id
-      } else {
-        const match = createdAttachments.find(
-          (attachment) =>
-            attachment.fileUrl === candidate.fileUrl &&
-            (attachment.fileName ?? null) === (candidate.fileName ?? null)
-        )
-
-        if (!match) {
-          return NextResponse.json(
-            { error: t("tasks.errors.invalid_final_file") },
-            { status: 400 }
-          )
-        }
-
-        finalFileId = match.id
-      }
-    } else if (shouldClearFinalFile) {
-      // No final candidate but the previous final file was removed
-      finalFileId = null
-    }
-
-    if (finalFileId !== undefined) {
+    if (firstFinalIndex !== -1 && !task.finalFileId) {
       await db.task.update({
         where: { id: taskId },
-        data: { finalFileId },
+        data: { finalFileId: createdAttachments[firstFinalIndex].id },
       })
     }
 

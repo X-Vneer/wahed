@@ -12,7 +12,7 @@ import {
 import UserAvatar from "@/components/user-avatar"
 import { PERMISSIONS_GROUPED } from "@/config/permissions"
 import { usePermission } from "@/hooks/use-permission"
-import type { TaskDetail } from "@/prisma/tasks"
+import type { Task, TaskDetail } from "@/prisma/tasks"
 import apiClient from "@/services"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { addWorkingDays } from "@/lib/working-days"
@@ -42,12 +42,22 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
   const canEdit = checkPermission(PERMISSIONS_GROUPED.TASK.UPDATE)
   const [datePickerOpen, setDatePickerOpen] = useState(false)
 
-  const priorityLabel =
-    task.priority === "HIGH"
-      ? tTasks("priority.high")
-      : task.priority === "LOW"
-        ? tTasks("priority.low")
-        : t("normal")
+  const priorityMeta = {
+    HIGH: {
+      label: tTasks("priority.high"),
+      className:
+        "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200",
+    },
+    LOW: {
+      label: tTasks("priority.low"),
+      className: "bg-muted text-muted-foreground",
+    },
+    MEDIUM: {
+      label: t("normal"),
+      className:
+        "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200",
+    },
+  }[task.priority]
 
   const startedAtDate = task.startedAt ? new Date(task.startedAt) : null
   const startStr = startedAtDate
@@ -60,12 +70,10 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
   const endStr = endDate
     ? format(endDate, dateFormat, { locale: localeDate })
     : null
-  const estimatedWorkingDays = task.estimatedWorkingDays
-  const createdByName = task.createdBy?.name ?? null
 
   const updateStartedAt = useMutation({
     mutationFn: async (startedAt: Date | null) => {
-      const { data } = await apiClient.patch<TaskDetail>(
+      const { data } = await apiClient.patch<Task>(
         `/api/tasks/${task.id}`,
         { startedAt }
       )
@@ -104,17 +112,8 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
             </dt>{" "}
             :{" "}
             <dd>
-              <Badge
-                variant="secondary"
-                className={
-                  task.priority === "HIGH"
-                    ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200"
-                    : task.priority === "LOW"
-                      ? "bg-muted text-muted-foreground"
-                      : "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200"
-                }
-              >
-                {priorityLabel}
+              <Badge variant="secondary" className={priorityMeta.className}>
+                {priorityMeta.label}
               </Badge>
             </dd>
           </div>
@@ -151,7 +150,7 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
               </Badge>
             </dd>
           </div>
-          {estimatedWorkingDays != null && (
+          {task.estimatedWorkingDays != null && (
             <div className="flex items-center gap-2">
               <dt className="text-muted-foreground min-w-30">
                 {tTasks("form.estimatedWorkingDays")}
@@ -159,7 +158,7 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
               :{" "}
               <dd className="text-foreground">
                 {t("estimatedWorkingDaysShort", {
-                  count: estimatedWorkingDays,
+                  count: task.estimatedWorkingDays,
                 })}
               </dd>
             </div>
@@ -230,17 +229,20 @@ export function TaskDetailsSidebar({ task }: TaskDetailsSidebarProps) {
               : <dd className="text-foreground">{endStr}</dd>
             </div>
           )}
-          {createdByName && (
-            <dd>
+          {task.createdBy?.name && (
+            <div className="flex items-center gap-2">
               <dt className="text-muted-foreground min-w-30">
                 {t("createdBy")}
               </dt>
-              <UserAvatar
-                name={createdByName}
-                email={task.createdBy?.email ?? ""}
-                image={task.createdBy?.image ?? undefined}
-              />
-            </dd>
+              :{" "}
+              <dd>
+                <UserAvatar
+                  name={task.createdBy.name}
+                  email={task.createdBy.email ?? ""}
+                  image={task.createdBy.image ?? undefined}
+                />
+              </dd>
+            </div>
           )}
         </dl>
       </CardContent>

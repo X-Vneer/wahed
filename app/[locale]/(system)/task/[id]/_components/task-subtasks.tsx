@@ -54,6 +54,7 @@ export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
 
   const deleteSubtaskMutation = useDeleteSubtask()
   const toggleSubtaskDoneMutation = useToggleSubtaskDone()
+  const queryClient = useQueryClient()
 
   const total = subTasks.length
   const done = subTasks.filter((s) => s.done).length
@@ -87,7 +88,6 @@ export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
     if (!open) setEditingId(null)
   }
 
-  const queryClient = useQueryClient()
   const handleDelete = (subtaskId: string) => {
     deleteSubtaskMutation.mutate(
       { taskId, subtaskId },
@@ -102,11 +102,10 @@ export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
 
   return (
     <div>
-      {/* Header: counter + Add button on left, title on right (matching design) */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-xs text-[#2B3445]">{t("taskPage.subTasks")}</h3>
+        <h3 className="text-foreground text-xs">{t("taskPage.subTasks")}</h3>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-[#2B3445]">
+          <span className="text-foreground text-xs">
             {t("taskPage.completedSubTasks", { done, total })}
           </span>
           <Button
@@ -123,7 +122,10 @@ export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
       </div>
 
       <ul className="flex flex-col gap-3">
-        {subTasks.map((subtask) => (
+        {subTasks.map((subtask) => {
+          const showStart = !!subtask.startedAt
+          const showEstimate = (subtask.estimatedWorkingDays ?? 0) > 0
+          return (
           <li
             key={subtask.id}
             className="bg-card flex items-center gap-3 rounded-lg border px-3 py-1.5"
@@ -142,27 +144,24 @@ export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
                   {subtask.description}
                 </p>
               ) : null}
-              {(subtask.startedAt ||
-                (subtask.estimatedWorkingDays != null &&
-                  subtask.estimatedWorkingDays > 0)) && (
+              {(showStart || showEstimate) && (
                 <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-3 text-xs">
-                  {subtask.startedAt && (
+                  {showStart && (
                     <span className="inline-flex items-center gap-1">
                       <CalendarIcon className="size-3.5" />
-                      {format(new Date(subtask.startedAt), "d - MMM - yyyy", {
+                      {format(new Date(subtask.startedAt!), "d - MMM - yyyy", {
                         locale: localeDate,
                       })}
                     </span>
                   )}
-                  {subtask.estimatedWorkingDays != null &&
-                    subtask.estimatedWorkingDays > 0 && (
-                      <span className="inline-flex items-center gap-1">
-                        <Clock className="size-3.5" />
-                        {t("tasks.estimatedWorkingDaysShort", {
-                          count: subtask.estimatedWorkingDays,
-                        })}
-                      </span>
-                    )}
+                  {showEstimate && (
+                    <span className="inline-flex items-center gap-1">
+                      <Clock className="size-3.5" />
+                      {t("tasks.estimatedWorkingDaysShort", {
+                        count: subtask.estimatedWorkingDays!,
+                      })}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
@@ -195,7 +194,8 @@ export function TaskSubtasks({ taskId, subTasks }: TaskSubtasksProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           </li>
-        ))}
+          )
+        })}
       </ul>
 
       {/* Delete confirmation (controlled, outside dropdown so it stays open) */}

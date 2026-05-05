@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -10,12 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
+import { FieldGroup } from "@/components/ui/field"
+import { Spinner } from "@/components/ui/spinner"
 import UserAvatar from "@/components/user-avatar"
 import UsersSelect from "@/components/users-select"
 import { PERMISSIONS_GROUPED } from "@/config/permissions"
@@ -23,13 +18,12 @@ import { usePermission } from "@/hooks/use-permission"
 import { useUsersList } from "@/hooks/use-users"
 import type { TaskDetail } from "@/prisma/tasks"
 import apiClient from "@/services"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@mantine/form"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { UserPlus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
-import { Spinner } from "@/components/ui/spinner"
-import { UserPlus, UserMinus } from "lucide-react"
 
 type TaskAssigneesProps = {
   taskId: string

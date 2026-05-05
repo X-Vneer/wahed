@@ -125,7 +125,7 @@ export function SubtaskDialog({
           startedAt,
           estimatedWorkingDays,
         })
-        toast.success(t("tasks.success.updated"))
+        toast.success(t("tasks.success.created"))
       }
       queryClient.invalidateQueries({ queryKey: ["task", taskId] })
       closeDialog()
@@ -155,7 +155,7 @@ export function SubtaskDialog({
         if (!open) form.reset()
       }}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="bg-white sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
             {isEdit
@@ -202,10 +202,7 @@ export function SubtaskDialog({
                 <FieldLabel htmlFor="subtask-startedAt">
                   {t("tasks.form.startedAt")}
                 </FieldLabel>
-                <Popover
-                  open={datePickerOpen}
-                  onOpenChange={setDatePickerOpen}
-                >
+                <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                   <PopoverTrigger
                     render={(props) => (
                       <Button
@@ -217,7 +214,7 @@ export function SubtaskDialog({
                       >
                         <CalendarIcon className="me-2 h-4 w-4" />
                         {form.values.startedAt ? (
-                          format(form.values.startedAt, "PPP", {
+                          format(form.values.startedAt, "d - MMM - yyyy", {
                             locale: localeDate,
                           })
                         ) : (
@@ -233,6 +230,7 @@ export function SubtaskDialog({
                             className="hover:bg-muted ms-auto inline-flex size-5 items-center justify-center rounded"
                             onClick={(e) => {
                               e.stopPropagation()
+                              e.preventDefault()
                               form.setFieldValue("startedAt", null)
                             }}
                             onKeyDown={(e) => {

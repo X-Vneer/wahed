@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
 export type UploadedFileAttachment = {
+  id?: string
   fileUrl: string
   fileName: string
   fileType?: string
@@ -68,6 +69,10 @@ type FormFileUploadProps<E extends keyof OurFileRouter> = {
   endpoint: E
   value: UploadedFileAttachment[]
   onChange: (files: UploadedFileAttachment[]) => void
+  /** Append-only callback: invoked with ONLY the newly-uploaded files. When provided, `onChange` is not called on upload-complete. */
+  onAdd?: (files: UploadedFileAttachment[]) => void
+  /** Per-row removal callback: invoked when the X is clicked on an already-uploaded row. When provided, `onChange` is not called on remove. */
+  onRemove?: (file: UploadedFileAttachment, index: number) => void
   /** Button label when no files. When multiple, "Add files" makes sense. */
   triggerLabel?: React.ReactNode
   /** For single-file mode, use "Select file" / one file only. Default true = multiple. */
@@ -82,6 +87,8 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
   endpoint,
   value,
   onChange,
+  onAdd,
+  onRemove,
   triggerLabel,
   multiple = true,
   disabled = false,
@@ -105,11 +112,15 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
         fileType: file.type,
         fileSize: file.size,
       }))
-      onChange([...value, ...newAttachments])
+      if (onAdd) {
+        onAdd(newAttachments)
+      } else {
+        onChange([...value, ...newAttachments])
+      }
       setPendingFiles([])
       displayNamesRef.current = {}
     },
-    [value, onChange]
+    [value, onChange, onAdd]
   )
 
   const { startUpload, routeConfig } = useUploadThing(endpoint, {
@@ -264,8 +275,12 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
               key={`${att.fileUrl}-${i}`}
               attachment={att}
               onRemove={() => {
-                const next = value.filter((_, idx) => idx !== i)
-                onChange(next)
+                if (onRemove) {
+                  onRemove(att, i)
+                } else {
+                  const next = value.filter((_, idx) => idx !== i)
+                  onChange(next)
+                }
               }}
               removeLabel={t("removeFile")}
             />
