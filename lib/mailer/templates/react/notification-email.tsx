@@ -2,7 +2,6 @@ import {
   Body,
   Container,
   Head,
-  Hr,
   Html,
   Img,
   Link,
@@ -39,17 +38,41 @@ export type NotificationEmailProps = {
 const FONT_AR =
   "'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif"
 const FONT_EN =
-  "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+  "'Helvetica Neue', Helvetica, Arial, sans-serif"
 const FONT_SERIF_EN =
-  "'Iowan Old Style', 'Apple Garamond', 'Baskerville', 'Times New Roman', serif"
+  "'Iowan Old Style', 'Apple Garamond', 'Baskerville', Garamond, 'Times New Roman', serif"
+const FONT_MONO =
+  "'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace"
 
-const BG = "#f6f5f0"
-const CARD_BG = "#ffffff"
-const BORDER = "#e8e6df"
-const TEXT_PRIMARY = "#0b1220"
-const TEXT_BODY = "#3f4856"
-const TEXT_MUTED = "#94a3b8"
-const TEXT_FAINT = "#cbd5e1"
+const PAPER = "#F1EDE4"
+const CARD = "#FFFFFF"
+const HAIRLINE = "#E2DDD1"
+const RULE_STRONG = "#1A1A1A"
+const INK = "#111111"
+const BODY_INK = "#3A3A3A"
+const MUTED = "#8A847A"
+const FAINT = "#BDB7AC"
+const INSERT_BG = "#F8F5EE"
+
+function formatDate(locale: EmailLocale): string {
+  try {
+    const fmt = new Intl.DateTimeFormat(
+      locale === "ar" ? "ar" : "en-GB",
+      { day: "2-digit", month: "short", year: "numeric" }
+    )
+    return fmt.format(new Date()).toUpperCase()
+  } catch {
+    return ""
+  }
+}
+
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return "•"
+  const first = Array.from(parts[0])[0] ?? ""
+  const second = parts[1] ? Array.from(parts[1])[0] ?? "" : ""
+  return (first + second).toUpperCase()
+}
 
 export function NotificationEmail(props: NotificationEmailProps) {
   const {
@@ -69,10 +92,16 @@ export function NotificationEmail(props: NotificationEmailProps) {
     prefsLink,
   } = props
 
-  const dir = locale === "ar" ? "rtl" : "ltr"
-  const font = locale === "ar" ? FONT_AR : FONT_EN
-  const titleFont = locale === "ar" ? FONT_AR : FONT_SERIF_EN
-  const arrow = locale === "ar" ? "←" : "→"
+  const isAr = locale === "ar"
+  const dir = isAr ? "rtl" : "ltr"
+  const align: "left" | "right" = isAr ? "right" : "left"
+  const opp: "left" | "right" = isAr ? "left" : "right"
+  const font = isAr ? FONT_AR : FONT_EN
+  const titleFont = isAr ? FONT_AR : FONT_SERIF_EN
+  const arrow = isAr ? "←" : "→"
+  const date = formatDate(locale)
+
+  const tagline = isAr ? "العمرانية" : "Urban"
 
   return (
     <Html lang={locale} dir={dir}>
@@ -85,235 +114,393 @@ export function NotificationEmail(props: NotificationEmailProps) {
         style={{
           margin: 0,
           padding: 0,
-          backgroundColor: BG,
+          backgroundColor: PAPER,
           fontFamily: font,
           WebkitFontSmoothing: "antialiased",
         }}
       >
         <Container
           style={{
-            maxWidth: 580,
+            maxWidth: 600,
             width: "100%",
             margin: "0 auto",
-            padding: "40px 16px",
+            padding: "48px 20px 56px 20px",
           }}
         >
-          {/* External wordmark */}
-          <Section style={{ paddingBottom: 22 }} dir={dir}>
+          {/* Masthead */}
+          <Section dir={dir} style={{ paddingBottom: 18 }}>
             <table
               role="presentation"
               cellPadding={0}
               cellSpacing={0}
               border={0}
+              width="100%"
+              style={{ width: "100%" }}
             >
               <tr>
                 <td
+                  align={align}
                   style={{
                     verticalAlign: "middle",
-                    paddingRight: locale === "ar" ? 0 : 12,
-                    paddingLeft: locale === "ar" ? 12 : 0,
+                    width: "60%",
                   }}
                 >
-                  {branding.logoUrl ? (
-                    <Img
-                      src={branding.logoUrl}
-                      alt={branding.systemName}
-                      width="40"
-                      height="40"
-                      style={{
-                        display: "block",
-                        borderRadius: 10,
-                        objectFit: "contain",
-                      }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 10,
-                        backgroundColor: branding.primaryColor,
-                        color: "#ffffff",
-                        textAlign: "center",
-                        lineHeight: "40px",
-                        fontWeight: 700,
-                        fontSize: 16,
-                        fontFamily: font,
-                      }}
-                    >
-                      {initials(branding.systemName)}
-                    </div>
-                  )}
+                  <table
+                    role="presentation"
+                    cellPadding={0}
+                    cellSpacing={0}
+                    border={0}
+                  >
+                    <tr>
+                      <td
+                        style={{
+                          verticalAlign: "middle",
+                          paddingRight: isAr ? 0 : 14,
+                          paddingLeft: isAr ? 14 : 0,
+                        }}
+                      >
+                        {branding.logoUrl ? (
+                          <Img
+                            src={branding.logoUrl}
+                            alt={branding.systemName}
+                            width="92"
+                            height="52"
+                            style={{
+                              display: "block",
+                              border: 0,
+                              outline: "none",
+                              textDecoration: "none",
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: 44,
+                              height: 44,
+                              borderRadius: 2,
+                              backgroundColor: branding.primaryColor,
+                              color: "#FFFFFF",
+                              textAlign: "center",
+                              lineHeight: "44px",
+                              fontWeight: 700,
+                              fontSize: 16,
+                              fontFamily: font,
+                              letterSpacing: "0.04em",
+                            }}
+                          >
+                            {initials(branding.systemName)}
+                          </div>
+                        )}
+                      </td>
+                      <td
+                        style={{
+                          verticalAlign: "middle",
+                          borderLeft: isAr
+                            ? "none"
+                            : `1px solid ${HAIRLINE}`,
+                          borderRight: isAr
+                            ? `1px solid ${HAIRLINE}`
+                            : "none",
+                          paddingLeft: isAr ? 0 : 14,
+                          paddingRight: isAr ? 14 : 0,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            margin: 0,
+                            color: INK,
+                            fontSize: 13,
+                            fontWeight: 700,
+                            letterSpacing: "0.18em",
+                            textTransform: "uppercase",
+                            fontFamily: font,
+                            lineHeight: 1.1,
+                          }}
+                        >
+                          {branding.systemName}
+                        </Text>
+                        <Text
+                          style={{
+                            margin: "3px 0 0 0",
+                            color: MUTED,
+                            fontSize: 10,
+                            fontWeight: 500,
+                            letterSpacing: "0.22em",
+                            textTransform: "uppercase",
+                            fontFamily: FONT_MONO,
+                            lineHeight: 1.1,
+                          }}
+                        >
+                          {tagline}
+                        </Text>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
                 <td
+                  align={opp}
                   style={{
                     verticalAlign: "middle",
-                    color: TEXT_PRIMARY,
-                    fontWeight: 700,
-                    fontSize: 15,
-                    letterSpacing: "0.005em",
-                    fontFamily: font,
+                    color: MUTED,
+                    fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: "0.22em",
+                    fontFamily: FONT_MONO,
+                    textTransform: "uppercase",
                   }}
                 >
-                  {branding.systemName}
+                  {date}
                 </td>
               </tr>
             </table>
           </Section>
 
-          {/* Email card */}
+          {/* Heavy rule */}
+          <div
+            style={{
+              height: 2,
+              backgroundColor: RULE_STRONG,
+              lineHeight: "2px",
+              fontSize: 0,
+            }}
+          />
+          {/* Hairline gap */}
+          <div
+            style={{
+              height: 4,
+              fontSize: 0,
+              lineHeight: "4px",
+            }}
+          />
+          <div
+            style={{
+              height: 1,
+              backgroundColor: RULE_STRONG,
+              lineHeight: "1px",
+              fontSize: 0,
+            }}
+          />
+
+          {/* Card */}
           <Section
             style={{
-              backgroundColor: CARD_BG,
-              border: `1px solid ${BORDER}`,
-              borderRadius: 18,
-              overflow: "hidden",
-              boxShadow: "0 1px 2px rgba(11, 18, 32, 0.04)",
+              backgroundColor: CARD,
+              border: `1px solid ${HAIRLINE}`,
+              borderTop: "none",
+              marginTop: 0,
             }}
           >
+            {/* Brand accent bar */}
             <div
               style={{
-                height: 4,
-                background: `linear-gradient(90deg, ${branding.accentColor} 0%, ${branding.primaryColor} 100%)`,
+                height: 6,
+                backgroundColor: branding.primaryColor,
+                lineHeight: "6px",
+                fontSize: 0,
               }}
             />
+
             <div
               style={{
-                padding: "40px 40px 32px 40px",
-                textAlign: locale === "ar" ? "right" : "left",
+                padding: "44px 44px 40px 44px",
+                textAlign: align,
               }}
             >
+              {/* Eyebrow */}
               {eyebrow && (
-                <Text
-                  style={{
-                    margin: "0 0 18px 0",
-                    color: branding.accentColor,
-                    fontSize: 11,
-                    fontWeight: 700,
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    fontFamily: font,
-                  }}
+                <table
+                  role="presentation"
+                  cellPadding={0}
+                  cellSpacing={0}
+                  border={0}
+                  style={{ marginBottom: 22 }}
                 >
-                  {eyebrow}
-                </Text>
+                  <tr>
+                    <td
+                      style={{
+                        verticalAlign: "middle",
+                        paddingRight: isAr ? 0 : 10,
+                        paddingLeft: isAr ? 10 : 0,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 28,
+                          height: 1,
+                          backgroundColor: branding.primaryColor,
+                          lineHeight: "1px",
+                          fontSize: 0,
+                        }}
+                      />
+                    </td>
+                    <td style={{ verticalAlign: "middle" }}>
+                      <Text
+                        style={{
+                          margin: 0,
+                          color: branding.primaryColor,
+                          fontSize: 10,
+                          fontWeight: 700,
+                          letterSpacing: "0.28em",
+                          textTransform: "uppercase",
+                          fontFamily: FONT_MONO,
+                          lineHeight: 1.1,
+                        }}
+                      >
+                        {eyebrow}
+                      </Text>
+                    </td>
+                  </tr>
+                </table>
               )}
 
+              {/* Title */}
               <Text
                 style={{
-                  margin: "0 0 18px 0",
-                  color: TEXT_PRIMARY,
-                  fontSize: 26,
-                  lineHeight: 1.25,
-                  fontWeight: 700,
-                  letterSpacing: "-0.015em",
+                  margin: "0 0 22px 0",
+                  color: INK,
+                  fontSize: 30,
+                  lineHeight: 1.18,
+                  fontWeight: isAr ? 700 : 500,
+                  letterSpacing: isAr ? "-0.005em" : "-0.02em",
                   fontFamily: titleFont,
                 }}
               >
                 {title}
               </Text>
 
+              {/* Greeting */}
               {greeting && (
                 <Text
                   style={{
-                    margin: "0 0 14px 0",
-                    color: TEXT_PRIMARY,
+                    margin: "0 0 12px 0",
+                    color: INK,
                     fontSize: 15,
-                    fontWeight: 500,
+                    fontWeight: 600,
+                    letterSpacing: "0.005em",
                     fontFamily: font,
+                    lineHeight: 1.5,
                   }}
                 >
                   {greeting}
                 </Text>
               )}
 
+              {/* Body */}
               <Text
                 style={{
-                  margin: "0 0 24px 0",
-                  color: TEXT_BODY,
+                  margin: "0 0 28px 0",
+                  color: BODY_INK,
                   fontSize: 15,
-                  lineHeight: 1.7,
+                  lineHeight: 1.72,
                   fontFamily: font,
                 }}
               >
                 {body}
               </Text>
 
+              {/* Highlight insert */}
               {highlightValue && (
-                <div
+                <table
+                  role="presentation"
+                  cellPadding={0}
+                  cellSpacing={0}
+                  border={0}
+                  width="100%"
                   style={{
-                    backgroundColor: "#fafaf7",
-                    border: `1px solid ${BORDER}`,
-                    borderRadius: 12,
-                    padding: "16px 20px",
-                    margin: "0 0 24px 0",
-                    borderLeft:
-                      locale === "ar"
-                        ? `1px solid ${BORDER}`
-                        : `3px solid ${branding.accentColor}`,
-                    borderRight:
-                      locale === "ar"
-                        ? `3px solid ${branding.accentColor}`
-                        : `1px solid ${BORDER}`,
+                    width: "100%",
+                    marginBottom: ctaLabel ? 28 : 8,
+                    backgroundColor: INSERT_BG,
+                    border: `1px solid ${HAIRLINE}`,
                   }}
                 >
-                  {highlightLabel && (
-                    <Text
+                  <tr>
+                    <td
                       style={{
-                        margin: "0 0 4px 0",
-                        color: TEXT_MUTED,
-                        fontSize: 11,
-                        fontWeight: 600,
-                        letterSpacing: "0.14em",
-                        textTransform: "uppercase",
-                        fontFamily: font,
+                        width: 6,
+                        backgroundColor: branding.primaryColor,
+                        lineHeight: "6px",
+                        fontSize: 0,
                       }}
                     >
-                      {highlightLabel}
-                    </Text>
-                  )}
-                  <Text
-                    style={{
-                      margin: 0,
-                      color: TEXT_PRIMARY,
-                      fontSize: 17,
-                      fontWeight: 600,
-                      lineHeight: 1.45,
-                      fontFamily: font,
-                    }}
-                  >
-                    {highlightValue}
-                  </Text>
-                </div>
+                      {" "}
+                    </td>
+                    <td style={{ padding: "18px 22px" }}>
+                      {highlightLabel && (
+                        <Text
+                          style={{
+                            margin: "0 0 6px 0",
+                            color: MUTED,
+                            fontSize: 10,
+                            fontWeight: 700,
+                            letterSpacing: "0.26em",
+                            textTransform: "uppercase",
+                            fontFamily: FONT_MONO,
+                            lineHeight: 1.1,
+                          }}
+                        >
+                          {`[ ${highlightLabel} ]`}
+                        </Text>
+                      )}
+                      <Text
+                        style={{
+                          margin: 0,
+                          color: INK,
+                          fontSize: 17,
+                          fontWeight: 600,
+                          lineHeight: 1.5,
+                          fontFamily: font,
+                          letterSpacing: "-0.005em",
+                        }}
+                      >
+                        {highlightValue}
+                      </Text>
+                    </td>
+                  </tr>
+                </table>
               )}
 
+              {/* CTA */}
               {ctaLabel && ctaUrl && (
                 <table
                   role="presentation"
                   cellPadding={0}
                   cellSpacing={0}
                   border={0}
-                  style={{ marginTop: 8 }}
                 >
                   <tr>
-                    <td>
+                    <td
+                      style={{
+                        backgroundColor: INK,
+                      }}
+                    >
                       <Link
                         href={ctaUrl}
                         style={{
                           display: "inline-block",
-                          backgroundColor: branding.primaryColor,
-                          color: "#ffffff",
+                          color: "#FFFFFF",
                           textDecoration: "none",
                           fontWeight: 600,
-                          padding: "14px 30px",
-                          borderRadius: 999,
+                          padding: "14px 26px",
                           fontFamily: font,
-                          fontSize: 14,
-                          letterSpacing: "0.01em",
+                          fontSize: 13,
+                          letterSpacing: "0.16em",
+                          textTransform: "uppercase",
+                          lineHeight: 1.1,
                         }}
                       >
-                        {ctaLabel}{" "}
-                        <span style={{ fontSize: 16 }}>{arrow}</span>
+                        {ctaLabel}
+                        <span
+                          style={{
+                            display: "inline-block",
+                            paddingLeft: isAr ? 0 : 12,
+                            paddingRight: isAr ? 12 : 0,
+                            fontSize: 14,
+                            color: branding.primaryColor,
+                          }}
+                        >
+                          {arrow}
+                        </span>
                       </Link>
                     </td>
                   </tr>
@@ -325,62 +512,73 @@ export function NotificationEmail(props: NotificationEmailProps) {
           {/* Footer */}
           <Section
             style={{
-              paddingTop: 24,
-              paddingLeft: 8,
-              paddingRight: 8,
-              textAlign: locale === "ar" ? "right" : "left",
+              paddingTop: 28,
+              paddingLeft: 4,
+              paddingRight: 4,
             }}
+            dir={dir}
           >
-            <Hr
-              style={{
-                margin: "0 0 18px 0",
-                border: 0,
-                borderTop: `1px solid ${BORDER}`,
-              }}
-            />
-            <Text
-              style={{
-                margin: "0 0 6px 0",
-                color: TEXT_MUTED,
-                fontSize: 12,
-                lineHeight: 1.6,
-                fontFamily: font,
-              }}
+            <table
+              role="presentation"
+              cellPadding={0}
+              cellSpacing={0}
+              border={0}
+              width="100%"
+              style={{ width: "100%" }}
             >
-              {prefsHint}{" "}
-              <Link
-                href={prefsUrl}
-                style={{
-                  color: TEXT_PRIMARY,
-                  textDecoration: "underline",
-                  fontWeight: 500,
-                }}
-              >
-                {prefsLink}
-              </Link>
-            </Text>
-            <Text
-              style={{
-                margin: 0,
-                color: TEXT_FAINT,
-                fontSize: 11,
-                lineHeight: 1.6,
-                fontFamily: font,
-              }}
-            >
-              © {new Date().getFullYear()} {branding.systemName}
-            </Text>
+              <tr>
+                <td
+                  align={align}
+                  style={{
+                    verticalAlign: "top",
+                    width: "60%",
+                    color: MUTED,
+                    fontSize: 11,
+                    lineHeight: 1.7,
+                    fontFamily: font,
+                  }}
+                >
+                  <Text
+                    style={{
+                      margin: 0,
+                      color: MUTED,
+                      fontSize: 11,
+                      lineHeight: 1.7,
+                      fontFamily: font,
+                    }}
+                  >
+                    {prefsHint}{" "}
+                    <Link
+                      href={prefsUrl}
+                      style={{
+                        color: INK,
+                        textDecoration: "none",
+                        fontWeight: 600,
+                        borderBottom: `1px solid ${INK}`,
+                      }}
+                    >
+                      {prefsLink}
+                    </Link>
+                  </Text>
+                </td>
+                <td
+                  align={opp}
+                  style={{
+                    verticalAlign: "top",
+                    color: FAINT,
+                    fontSize: 10,
+                    letterSpacing: "0.22em",
+                    fontFamily: FONT_MONO,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {`Nº ${branding.systemName} · ${new Date().getFullYear()}`}
+                </td>
+              </tr>
+            </table>
           </Section>
         </Container>
       </Body>
     </Html>
   )
-}
-
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean)
-  if (parts.length === 0) return "•"
-  const first = Array.from(parts[0])[0] ?? ""
-  const second = parts[1] ? Array.from(parts[1])[0] ?? "" : ""
-  return (first + second).toUpperCase()
 }

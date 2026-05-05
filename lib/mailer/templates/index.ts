@@ -37,6 +37,13 @@ const BRANDING_TTL_MS = 60_000
 const DEFAULT_NAME_AR = "وهد"
 const DEFAULT_NAME_EN = "Wahd"
 
+function resolveLogoUrl(dbUrl: string | null | undefined): string | null {
+  if (dbUrl) return dbUrl
+  const base = process.env.APP_URL || process.env.PUBLIC_WEBSITE_URL
+  if (!base) return null
+  return `${base.replace(/\/$/, "")}/email/wahed-logo.png`
+}
+
 async function loadBranding(locale: EmailLocale): Promise<Branding> {
   const now = Date.now()
   if (
@@ -53,18 +60,18 @@ async function loadBranding(locale: EmailLocale): Promise<Branding> {
       systemName:
         (locale === "ar" ? row?.systemNameAr : row?.systemNameEn) ||
         fallbackName,
-      logoUrl: row?.logoSquareUrl ?? null,
-      primaryColor: row?.primaryColor || "#0B1220",
-      accentColor: row?.accentColor || "#C9A961",
+      logoUrl: resolveLogoUrl(row?.logoSquareUrl),
+      primaryColor: row?.primaryColor || "#F2581E",
+      accentColor: row?.accentColor || "#1A1A1A",
     }
     cachedBranding = { value, at: now, locale }
     return value
   } catch {
     return {
       systemName: fallbackName,
-      logoUrl: null,
-      primaryColor: "#0B1220",
-      accentColor: "#C9A961",
+      logoUrl: resolveLogoUrl(null),
+      primaryColor: "#F2581E",
+      accentColor: "#1A1A1A",
     }
   }
 }

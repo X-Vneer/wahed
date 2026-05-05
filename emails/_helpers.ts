@@ -15,10 +15,10 @@ const MESSAGES: Record<EmailLocale, Record<string, unknown>> = {
 }
 
 const PREVIEW_BRANDING = {
-  systemName: { ar: "وهد", en: "Wahd" },
-  logoUrl: null as string | null,
-  primaryColor: "#0B1220",
-  accentColor: "#C9A961",
+  systemName: { ar: "وهد", en: "Wahed" },
+  logoUrl: "/static/wahed-logo.png" as string | null,
+  primaryColor: "#F2581E",
+  accentColor: "#1A1A1A",
 }
 
 const HIGHLIGHT_KEY: Partial<
