@@ -100,9 +100,11 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
   const [pendingFiles, setPendingFiles] = React.useState<PendingFile[]>([])
   const displayNamesRef = React.useRef<Record<string, string>>({})
   const fileInputRef = React.useRef<HTMLInputElement>(null)
-  const uploadToastIdRef = React.useRef<string | null>(null)
+  // Set of toast ids for in-flight uploads. Concurrent uploads each have
+  // their own toast; progress events update all of them with the shared %.
+  const activeToastIdsRef = React.useRef<Set<string>>(new Set())
 
-  const handleUploadComplete = React.useCallback(
+  const applyUploadedFiles = React.useCallback(
     (
       res: Array<{ ufsUrl: string; name: string; size: number; type: string }>
     ) => {
@@ -117,46 +119,21 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
       } else {
         onChange([...value, ...newAttachments])
       }
-      setPendingFiles([])
-      displayNamesRef.current = {}
     },
     [value, onChange, onAdd]
   )
 
   const { startUpload, routeConfig } = useUploadThing(endpoint, {
-    onClientUploadComplete: (res) => {
-      const id = uploadToastIdRef.current
-      if (id) {
-        toast.success(t("successMessage"), { id })
-        uploadToastIdRef.current = null
-      }
-      if (res?.length) {
-        handleUploadComplete(
-          res.map((f) => ({
-            ufsUrl:
-              (f as { ufsUrl?: string }).ufsUrl ??
-              (f as { url?: string }).url ??
-              "",
-            name: f.name,
-            size: f.size,
-            type: f.type,
-          }))
-        )
-      }
-    },
-    onUploadError: () => {
-      const id = uploadToastIdRef.current
-      if (id) {
-        toast.error(t("dialogDescError"), { id })
-        uploadToastIdRef.current = null
-      }
+    // Lifecycle is driven by the per-call startUpload promise in handleSave;
+    // this hook-level callback only logs unexpected errors that the promise
+    // catch may have missed.
+    onUploadError: (error) => {
+      console.error("UploadThing error:", error)
     },
     onUploadProgress: (p) => {
-      const id = uploadToastIdRef.current
-      if (id) {
-        toast.loading(t("uploadingProgress", { progress: Math.round(p) }), {
-          id,
-        })
+      const message = t("uploadingProgress", { progress: Math.round(p) })
+      for (const id of activeToastIdsRef.current) {
+        toast.loading(message, { id })
       }
     },
     uploadProgressGranularity: "fine",
@@ -232,16 +209,37 @@ export function FormFileUpload<E extends keyof OurFileRouter>({
       const name = displayNames[i]?.trim() || f.name
       return new globalThis.File([f], name, { type: f.type })
     })
-    const toastId = `upload-${Date.now()}`
-    uploadToastIdRef.current = toastId
+    const toastId = `upload-${Date.now()}-${Math.random()}`
+    activeToastIdsRef.current.add(toastId)
     toast.loading(t("uploadingProgress", { progress: 0 }), { id: toastId })
+
     // @ts-expect-error -- useUploadThing generic union makes (files, input?) strict for multi-endpoint
-    startUpload(renamedFiles).catch(() => {
-      if (uploadToastIdRef.current === toastId) {
-        toast.error(t("dialogDescError"), { id: toastId })
-        uploadToastIdRef.current = null
-      }
-    })
+    startUpload(renamedFiles)
+      .then((res) => {
+        activeToastIdsRef.current.delete(toastId)
+        toast.success(t("successMessage"), { id: toastId })
+        if (res?.length) {
+          applyUploadedFiles(
+            res.map((f) => ({
+              ufsUrl:
+                (f as { ufsUrl?: string }).ufsUrl ??
+                (f as { url?: string }).url ??
+                "",
+              name: f.name,
+              size: f.size,
+              type: f.type,
+            }))
+          )
+        }
+      })
+      .catch((error: unknown) => {
+        activeToastIdsRef.current.delete(toastId)
+        const message =
+          (error instanceof Error && error.message.trim()) ||
+          t("dialogDescError")
+        toast.error(message, { id: toastId })
+      })
+
     setDialogOpen(false)
     setPendingFiles([])
     displayNamesRef.current = {}

@@ -49,63 +49,41 @@ export async function POST(
       )
     }
 
-    // Get all existing attachments for this project
-    const existingAttachments = await db.projectAttachment.findMany({
-      where: { projectId: id },
-      select: { id: true },
-    })
-
-    // Separate new attachments (without IDs) from existing ones (with IDs)
+    // Append-only: only create rows without ids; never delete here.
+    // Removals go through DELETE /api/projects/{id}/attachments/{attachmentId}.
     const newAttachments = attachments.filter(
       (attachment: { id?: string }) => !attachment.id
-    )
-    const existingAttachmentIds = attachments
-      .filter((attachment: { id?: string }) => attachment.id)
-      .map((attachment: { id: string }) => attachment.id)
+    ) as Array<{
+      fileUrl: string
+      fileName?: string
+      fileType?: string
+      fileSize?: number
+      additionalInfo?: unknown
+    }>
 
-    // Find attachments to delete (existing ones not in the new list)
-    const attachmentsToDelete = existingAttachments.filter(
-      (existing) => !existingAttachmentIds.includes(existing.id)
-    )
-
-    // Delete removed attachments
-    if (attachmentsToDelete.length > 0) {
-      await db.projectAttachment.deleteMany({
-        where: {
-          id: { in: attachmentsToDelete.map((a) => a.id) },
+    if (newAttachments.length === 0) {
+      return NextResponse.json(
+        {
+          message: t("projects.success.attachments_added"),
+          attachments: [],
         },
-      })
+        { status: 201 }
+      )
     }
 
-    // Create new attachments (ones without IDs)
-    if (newAttachments.length > 0) {
-      await db.projectAttachment.createMany({
-        data: newAttachments.map(
-          (attachment: {
-            fileUrl: string
-            fileName?: string
-            fileType?: string
-            fileSize?: number
-            additionalInfo?: unknown
-          }) => ({
-            projectId: id,
-            fileUrl: attachment.fileUrl,
-            fileName: attachment.fileName || null,
-            fileType: attachment.fileType || null,
-            fileSize: attachment.fileSize || null,
-            additionalInfo:
-              attachment.additionalInfo !== undefined &&
-              attachment.additionalInfo !== null
-                ? (attachment.additionalInfo as Prisma.InputJsonValue)
-                : Prisma.JsonNull,
-          })
-        ),
-      })
-    }
-
-    // Fetch all attachments for the project to return in response
-    const createdAttachments = await db.projectAttachment.findMany({
-      where: { projectId: id },
+    const createdAttachments = await db.projectAttachment.createManyAndReturn({
+      data: newAttachments.map((attachment) => ({
+        projectId: id,
+        fileUrl: attachment.fileUrl,
+        fileName: attachment.fileName || null,
+        fileType: attachment.fileType || null,
+        fileSize: attachment.fileSize || null,
+        additionalInfo:
+          attachment.additionalInfo !== undefined &&
+          attachment.additionalInfo !== null
+            ? (attachment.additionalInfo as Prisma.InputJsonValue)
+            : Prisma.JsonNull,
+      })),
     })
 
     // Notify project stakeholders about attachment changes

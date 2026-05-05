@@ -4,34 +4,26 @@ import {
   FormFileUpload,
   type UploadedFileAttachment,
 } from "@/components/form-file-upload"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Spinner } from "@/components/ui/spinner"
-import { ProjectAttachment } from "@/lib/generated/prisma/client"
-import {
-  type Attachment,
-  projectAttachmentsSchema,
-} from "@/lib/schemas/attachment"
 import apiClient from "@/services"
-import { useForm } from "@mantine/form"
 import { useQueryClient } from "@tanstack/react-query"
-import { zod4Resolver } from "mantine-form-zod-resolver"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useMemo, useState } from "react"
 import { toast } from "sonner"
 
-// Extended attachment type that includes optional id for form state
-type AttachmentWithId = Attachment & { id?: string }
-
-type ProjectAttachmentsFormValues = {
-  attachments: AttachmentWithId[]
-  isUploading: boolean
+type ProjectAttachmentInput = {
+  id?: string
+  fileUrl?: string | null
+  fileName?: string | null
+  fileType?: string | null
+  fileSize?: number | null
+  taskId?: string | null
 }
 
 type ProjectAttachmentsProps = {
   projectId: string
-  initialAttachments: Partial<ProjectAttachment>[]
+  initialAttachments: ProjectAttachmentInput[]
 }
 
 export function ProjectAttachments({
@@ -40,124 +32,96 @@ export function ProjectAttachments({
 }: ProjectAttachmentsProps) {
   const t = useTranslations()
   const router = useRouter()
+  const queryClient = useQueryClient()
+  const [isSaving, setIsSaving] = useState(false)
 
-  const form = useForm<ProjectAttachmentsFormValues>({
-    mode: "controlled",
-    validate: zod4Resolver(projectAttachmentsSchema),
-    initialValues: {
-      attachments: [],
-      isUploading: false,
-    },
-  })
+  // Map attachment id -> taskId. Items without a taskId belong to the project
+  // itself; items with one belong to a task and must DELETE via /api/tasks/...
+  const taskIdByAttachmentId = useMemo(() => {
+    const map = new Map<string, string | null>()
+    for (const att of initialAttachments) {
+      if (att.id) map.set(att.id, att.taskId ?? null)
+    }
+    return map
+  }, [initialAttachments])
 
-  // Update form when initialAttachments change
-  useEffect(() => {
-    const attachments: AttachmentWithId[] = initialAttachments
-      .filter((att): att is Partial<ProjectAttachment> & { fileUrl: string } =>
-        Boolean(att.fileUrl)
-      )
-      .map((att) => ({
-        id: att.id,
-        fileUrl: att.fileUrl!,
-        fileName: att.fileName || undefined,
-        fileType: att.fileType || undefined,
-        fileSize: att.fileSize || undefined,
-      }))
-    form.setFieldValue("attachments", attachments)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(initialAttachments)])
-
-  const attachmentsValue: UploadedFileAttachment[] =
-    form.values.attachments.map((att) => ({
+  const value: UploadedFileAttachment[] = initialAttachments
+    .filter((att): att is ProjectAttachmentInput & { fileUrl: string } =>
+      Boolean(att.fileUrl)
+    )
+    .map((att) => ({
+      id: att.id,
       fileUrl: att.fileUrl,
       fileName: att.fileName ?? "",
-      fileType: att.fileType,
-      fileSize: att.fileSize,
+      fileType: att.fileType ?? undefined,
+      fileSize: att.fileSize ?? undefined,
     }))
 
-  const handleAttachmentsChange = (files: UploadedFileAttachment[]) => {
-    const merged: AttachmentWithId[] = files.map((f) => {
-      const existing = form.values.attachments.find(
-        (a) => a.fileUrl === f.fileUrl && a.fileName === f.fileName
-      )
-      return {
-        ...f,
-        id: existing?.id,
-        additionalInfo: existing?.additionalInfo,
-      }
-    })
-    form.setFieldValue("attachments", merged)
+  const refresh = async () => {
+    router.refresh()
+    await queryClient.invalidateQueries({ queryKey: ["projects"] })
   }
 
-  const queryClient = useQueryClient()
-  const handleSubmit = async (values: ProjectAttachmentsFormValues) => {
+  const handleAdd = async (files: UploadedFileAttachment[]) => {
+    setIsSaving(true)
     try {
-      // Send all attachments to the API
-      // The API will handle creating new ones and deleting removed ones
-      // Attachments with IDs are existing, without IDs are new
       await apiClient.post(`/api/projects/${projectId}/attachments`, {
-        attachments: values.attachments.map((att) => ({
-          id: att.id, // Include ID if it exists (for existing attachments)
-          fileUrl: att.fileUrl,
-          fileName: att.fileName,
-          fileType: att.fileType,
-          fileSize: att.fileSize,
-          additionalInfo: att.additionalInfo,
+        attachments: files.map((f) => ({
+          fileUrl: f.fileUrl,
+          fileName: f.fileName,
+          fileType: f.fileType,
+          fileSize: f.fileSize,
         })),
       })
-
-      // Refresh the page to get updated attachments
-      router.refresh()
-
-      queryClient.invalidateQueries({ queryKey: ["projects"] })
-
+      await refresh()
       toast.success(t("projects.success.attachments_added"))
-    } catch (error) {
-      console.error("Error saving attachments:", error)
+    } catch (err) {
+      console.error("Error adding project attachments:", err)
       toast.error(t("projects.form.attachments.uploadError"))
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleRemove = async (file: UploadedFileAttachment) => {
+    if (!file.id) return
+    const taskId = taskIdByAttachmentId.get(file.id) ?? null
+    setIsSaving(true)
+    try {
+      const url = taskId
+        ? `/api/tasks/${taskId}/attachments/${file.id}`
+        : `/api/projects/${projectId}/attachments/${file.id}`
+      await apiClient.delete(url)
+      await refresh()
+      toast.success(t("projects.success.attachments_added"))
+    } catch (err) {
+      console.error("Error deleting attachment:", err)
+      toast.error(t("projects.form.attachments.uploadError"))
+    } finally {
+      setIsSaving(false)
     }
   }
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      <div className="flex flex-col gap-4">
-        <Card>
-          <CardContent>
-            <div className="mb-4">
-              <h3 className="text-lg font-bold">
-                {t("projects.form.attachments.title")}
-              </h3>
-            </div>
+    <Card>
+      <CardContent>
+        <div className="mb-4">
+          <h3 className="text-lg font-bold">
+            {t("projects.form.attachments.title")}
+          </h3>
+        </div>
 
-            <FormFileUpload
-              endpoint="projectAttachmentsUploader"
-              value={attachmentsValue}
-              onChange={handleAttachmentsChange}
-              triggerLabel={t("projects.form.attachments.addDocuments")}
-              multiple
-              disabled={form.submitting}
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent>
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                className={"px-8"}
-                disabled={form.submitting}
-              >
-                {form.submitting ? (
-                  <Spinner className="me-2" />
-                ) : (
-                  t("common.save")
-                )}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </form>
+        <FormFileUpload
+          endpoint="projectAttachmentsUploader"
+          value={value}
+          onChange={() => {}}
+          onAdd={handleAdd}
+          onRemove={handleRemove}
+          triggerLabel={t("projects.form.attachments.addDocuments")}
+          multiple
+          disabled={isSaving}
+        />
+      </CardContent>
+    </Card>
   )
 }
