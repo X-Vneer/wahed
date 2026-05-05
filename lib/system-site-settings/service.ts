@@ -7,7 +7,7 @@ import { emptyToNull } from "@/utils"
 import type { UpdateSystemSiteSettingsInput } from "@/schemas/system-site-settings"
 
 const DEFAULT_CREATE: Prisma.SystemSiteSettingsCreateInput = {
-  systemNameAr: "وحد",
+  systemNameAr: "وهد",
   systemNameEn: "Wahd",
   sidebarVariant: "light",
   defaultLocale: "en",
