@@ -36,23 +36,19 @@ export type NotificationEmailProps = {
 }
 
 const FONT_AR =
-  "'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif"
+  "'IBM Plex Sans Arabic', 'Helvetica Neue', Arial, sans-serif"
 const FONT_EN =
-  "'Helvetica Neue', Helvetica, Arial, sans-serif"
-const FONT_SERIF_EN =
-  "'Iowan Old Style', 'Apple Garamond', 'Baskerville', Garamond, 'Times New Roman', serif"
-const FONT_MONO =
-  "'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace"
+  "'Inter', 'Helvetica Neue', Arial, sans-serif"
 
-const PAPER = "#F1EDE4"
+const PAPER = "#F4F4F5"
 const CARD = "#FFFFFF"
-const HAIRLINE = "#E2DDD1"
-const RULE_STRONG = "#1A1A1A"
-const INK = "#111111"
-const BODY_INK = "#3A3A3A"
-const MUTED = "#8A847A"
-const FAINT = "#BDB7AC"
-const INSERT_BG = "#F8F5EE"
+const INK = "#0B0B0F"
+const BODY_INK = "#52525B"
+const MUTED = "#A1A1AA"
+const SUBTLE = "#71717A"
+const BORDER = "#E4E4E7"
+const INSET = "#FAFAF9"
+const INSET_BORDER = "#EFEFF1"
 
 function formatDate(locale: EmailLocale): string {
   try {
@@ -94,14 +90,9 @@ export function NotificationEmail(props: NotificationEmailProps) {
 
   const isAr = locale === "ar"
   const dir = isAr ? "rtl" : "ltr"
-  const align: "left" | "right" = isAr ? "right" : "left"
-  const opp: "left" | "right" = isAr ? "left" : "right"
   const font = isAr ? FONT_AR : FONT_EN
-  const titleFont = isAr ? FONT_AR : FONT_SERIF_EN
   const arrow = isAr ? "←" : "→"
   const date = formatDate(locale)
-
-  const tagline = isAr ? "العمرانية" : "Urban"
 
   return (
     <Html lang={locale} dir={dir}>
@@ -124,227 +115,165 @@ export function NotificationEmail(props: NotificationEmailProps) {
             maxWidth: 600,
             width: "100%",
             margin: "0 auto",
-            padding: "48px 20px 56px 20px",
+            padding: "32px 16px 40px 16px",
           }}
         >
-          {/* Masthead */}
-          <Section dir={dir} style={{ paddingBottom: 18 }}>
+          {/* Card */}
+          <Section
+            dir={dir}
+            style={{
+              backgroundColor: CARD,
+              border: `1px solid ${BORDER}`,
+              borderRadius: 16,
+              overflow: "hidden",
+            }}
+          >
+            {/* Hero band */}
             <table
               role="presentation"
               cellPadding={0}
               cellSpacing={0}
               border={0}
               width="100%"
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                backgroundColor: branding.primaryColor,
+              }}
             >
               <tr>
                 <td
-                  align={align}
+                  align="center"
                   style={{
-                    verticalAlign: "middle",
-                    width: "60%",
+                    padding: "36px 24px 32px 24px",
+                    textAlign: "center",
                   }}
                 >
+                  {/* Logo / initials in white circle */}
                   <table
                     role="presentation"
                     cellPadding={0}
                     cellSpacing={0}
                     border={0}
+                    align="center"
+                    style={{ margin: "0 auto" }}
                   >
                     <tr>
                       <td
+                        align="center"
                         style={{
+                          width: 60,
+                          height: 60,
+                          backgroundColor: "#FFFFFF",
+                          borderRadius: 30,
+                          textAlign: "center",
                           verticalAlign: "middle",
-                          paddingRight: isAr ? 0 : 14,
-                          paddingLeft: isAr ? 14 : 0,
                         }}
                       >
                         {branding.logoUrl ? (
                           <Img
                             src={branding.logoUrl}
                             alt={branding.systemName}
-                            width="92"
-                            height="52"
+                            width="36"
+                            height="36"
                             style={{
-                              display: "block",
+                              display: "inline-block",
                               border: 0,
                               outline: "none",
                               textDecoration: "none",
                               objectFit: "contain",
+                              verticalAlign: "middle",
                             }}
                           />
                         ) : (
-                          <div
+                          <span
                             style={{
-                              width: 44,
-                              height: 44,
-                              borderRadius: 2,
-                              backgroundColor: branding.primaryColor,
-                              color: "#FFFFFF",
-                              textAlign: "center",
-                              lineHeight: "44px",
+                              display: "inline-block",
+                              color: branding.primaryColor,
                               fontWeight: 700,
-                              fontSize: 16,
+                              fontSize: 18,
                               fontFamily: font,
                               letterSpacing: "0.04em",
+                              lineHeight: "60px",
                             }}
                           >
                             {initials(branding.systemName)}
-                          </div>
+                          </span>
                         )}
-                      </td>
-                      <td
-                        style={{
-                          verticalAlign: "middle",
-                          borderLeft: isAr
-                            ? "none"
-                            : `1px solid ${HAIRLINE}`,
-                          borderRight: isAr
-                            ? `1px solid ${HAIRLINE}`
-                            : "none",
-                          paddingLeft: isAr ? 0 : 14,
-                          paddingRight: isAr ? 14 : 0,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            margin: 0,
-                            color: INK,
-                            fontSize: 13,
-                            fontWeight: 700,
-                            letterSpacing: "0.18em",
-                            textTransform: "uppercase",
-                            fontFamily: font,
-                            lineHeight: 1.1,
-                          }}
-                        >
-                          {branding.systemName}
-                        </Text>
-                        <Text
-                          style={{
-                            margin: "3px 0 0 0",
-                            color: MUTED,
-                            fontSize: 10,
-                            fontWeight: 500,
-                            letterSpacing: "0.22em",
-                            textTransform: "uppercase",
-                            fontFamily: FONT_MONO,
-                            lineHeight: 1.1,
-                          }}
-                        >
-                          {tagline}
-                        </Text>
                       </td>
                     </tr>
                   </table>
-                </td>
-                <td
-                  align={opp}
-                  style={{
-                    verticalAlign: "middle",
-                    color: MUTED,
-                    fontSize: 10,
-                    fontWeight: 600,
-                    letterSpacing: "0.22em",
-                    fontFamily: FONT_MONO,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {date}
+
+                  <Text
+                    style={{
+                      margin: "16px 0 0 0",
+                      color: "#FFFFFF",
+                      fontSize: 16,
+                      fontWeight: 600,
+                      letterSpacing: "0.02em",
+                      fontFamily: font,
+                      lineHeight: 1.2,
+                      textAlign: "center",
+                    }}
+                  >
+                    {branding.systemName}
+                  </Text>
                 </td>
               </tr>
             </table>
-          </Section>
 
-          {/* Heavy rule */}
-          <div
-            style={{
-              height: 2,
-              backgroundColor: RULE_STRONG,
-              lineHeight: "2px",
-              fontSize: 0,
-            }}
-          />
-          {/* Hairline gap */}
-          <div
-            style={{
-              height: 4,
-              fontSize: 0,
-              lineHeight: "4px",
-            }}
-          />
-          <div
-            style={{
-              height: 1,
-              backgroundColor: RULE_STRONG,
-              lineHeight: "1px",
-              fontSize: 0,
-            }}
-          />
-
-          {/* Card */}
-          <Section
-            style={{
-              backgroundColor: CARD,
-              border: `1px solid ${HAIRLINE}`,
-              borderTop: "none",
-              marginTop: 0,
-            }}
-          >
-            {/* Brand accent bar */}
+            {/* Content */}
             <div
               style={{
-                height: 6,
-                backgroundColor: branding.primaryColor,
-                lineHeight: "6px",
-                fontSize: 0,
-              }}
-            />
-
-            <div
-              style={{
-                padding: "44px 44px 40px 44px",
-                textAlign: align,
+                padding: "40px 40px 44px 40px",
+                textAlign: "center",
               }}
             >
-              {/* Eyebrow */}
+              {/* Date */}
+              <Text
+                style={{
+                  margin: 0,
+                  color: MUTED,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  fontFamily: font,
+                  lineHeight: 1,
+                  textAlign: "center",
+                }}
+              >
+                {date}
+              </Text>
+
+              {/* Eyebrow pill */}
               {eyebrow && (
                 <table
                   role="presentation"
                   cellPadding={0}
                   cellSpacing={0}
                   border={0}
-                  style={{ marginBottom: 22 }}
+                  align="center"
+                  style={{ margin: "20px auto 0 auto" }}
                 >
                   <tr>
                     <td
                       style={{
-                        verticalAlign: "middle",
-                        paddingRight: isAr ? 0 : 10,
-                        paddingLeft: isAr ? 10 : 0,
+                        backgroundColor: INSET,
+                        border: `1px solid ${INSET_BORDER}`,
+                        borderRadius: 999,
+                        padding: "7px 14px",
                       }}
                     >
-                      <div
-                        style={{
-                          width: 28,
-                          height: 1,
-                          backgroundColor: branding.primaryColor,
-                          lineHeight: "1px",
-                          fontSize: 0,
-                        }}
-                      />
-                    </td>
-                    <td style={{ verticalAlign: "middle" }}>
                       <Text
                         style={{
                           margin: 0,
                           color: branding.primaryColor,
-                          fontSize: 10,
+                          fontSize: 11,
                           fontWeight: 700,
-                          letterSpacing: "0.28em",
+                          letterSpacing: "0.18em",
                           textTransform: "uppercase",
-                          fontFamily: FONT_MONO,
-                          lineHeight: 1.1,
+                          fontFamily: font,
+                          lineHeight: 1,
                         }}
                       >
                         {eyebrow}
@@ -357,29 +286,56 @@ export function NotificationEmail(props: NotificationEmailProps) {
               {/* Title */}
               <Text
                 style={{
-                  margin: "0 0 22px 0",
+                  margin: "20px 0 0 0",
                   color: INK,
-                  fontSize: 30,
-                  lineHeight: 1.18,
-                  fontWeight: isAr ? 700 : 500,
-                  letterSpacing: isAr ? "-0.005em" : "-0.02em",
-                  fontFamily: titleFont,
+                  fontSize: 28,
+                  lineHeight: 1.22,
+                  fontWeight: 700,
+                  letterSpacing: "-0.02em",
+                  fontFamily: font,
+                  wordBreak: "break-word",
+                  textAlign: "center",
                 }}
               >
                 {title}
               </Text>
 
+              {/* Title-to-body separator */}
+              <table
+                role="presentation"
+                cellPadding={0}
+                cellSpacing={0}
+                border={0}
+                align="center"
+                style={{ margin: "24px auto 0 auto" }}
+              >
+                <tr>
+                  <td
+                    style={{
+                      width: 36,
+                      height: 3,
+                      backgroundColor: branding.primaryColor,
+                      borderRadius: 2,
+                      lineHeight: "3px",
+                      fontSize: 0,
+                    }}
+                  >
+                    {" "}
+                  </td>
+                </tr>
+              </table>
+
               {/* Greeting */}
               {greeting && (
                 <Text
                   style={{
-                    margin: "0 0 12px 0",
+                    margin: "28px 0 0 0",
                     color: INK,
                     fontSize: 15,
                     fontWeight: 600,
-                    letterSpacing: "0.005em",
                     fontFamily: font,
                     lineHeight: 1.5,
+                    textAlign: "center",
                   }}
                 >
                   {greeting}
@@ -389,17 +345,18 @@ export function NotificationEmail(props: NotificationEmailProps) {
               {/* Body */}
               <Text
                 style={{
-                  margin: "0 0 28px 0",
+                  margin: greeting ? "8px 0 0 0" : "28px 0 0 0",
                   color: BODY_INK,
                   fontSize: 15,
-                  lineHeight: 1.72,
+                  lineHeight: 1.7,
                   fontFamily: font,
+                  textAlign: "center",
                 }}
               >
                 {body}
               </Text>
 
-              {/* Highlight insert */}
+              {/* Highlight stack */}
               {highlightValue && (
                 <table
                   role="presentation"
@@ -409,48 +366,48 @@ export function NotificationEmail(props: NotificationEmailProps) {
                   width="100%"
                   style={{
                     width: "100%",
-                    marginBottom: ctaLabel ? 28 : 8,
-                    backgroundColor: INSERT_BG,
-                    border: `1px solid ${HAIRLINE}`,
+                    margin: "28px 0 0 0",
+                    backgroundColor: INSET,
+                    border: `1px solid ${INSET_BORDER}`,
+                    borderRadius: 12,
                   }}
                 >
                   <tr>
                     <td
+                      align="center"
                       style={{
-                        width: 6,
-                        backgroundColor: branding.primaryColor,
-                        lineHeight: "6px",
-                        fontSize: 0,
+                        padding: "20px 24px",
+                        textAlign: "center",
                       }}
                     >
-                      {" "}
-                    </td>
-                    <td style={{ padding: "18px 22px" }}>
                       {highlightLabel && (
                         <Text
                           style={{
-                            margin: "0 0 6px 0",
-                            color: MUTED,
-                            fontSize: 10,
+                            margin: 0,
+                            color: SUBTLE,
+                            fontSize: 11,
                             fontWeight: 700,
-                            letterSpacing: "0.26em",
+                            letterSpacing: "0.18em",
                             textTransform: "uppercase",
-                            fontFamily: FONT_MONO,
-                            lineHeight: 1.1,
+                            fontFamily: font,
+                            lineHeight: 1,
+                            textAlign: "center",
                           }}
                         >
-                          {`[ ${highlightLabel} ]`}
+                          {highlightLabel}
                         </Text>
                       )}
                       <Text
                         style={{
-                          margin: 0,
+                          margin: highlightLabel ? "10px 0 0 0" : 0,
                           color: INK,
                           fontSize: 17,
                           fontWeight: 600,
-                          lineHeight: 1.5,
+                          lineHeight: 1.4,
                           fontFamily: font,
                           letterSpacing: "-0.005em",
+                          textAlign: "center",
+                          wordBreak: "break-word",
                         }}
                       >
                         {highlightValue}
@@ -467,11 +424,14 @@ export function NotificationEmail(props: NotificationEmailProps) {
                   cellPadding={0}
                   cellSpacing={0}
                   border={0}
+                  align="center"
+                  style={{ margin: "32px auto 0 auto" }}
                 >
                   <tr>
                     <td
                       style={{
-                        backgroundColor: INK,
+                        backgroundColor: branding.primaryColor,
+                        borderRadius: 999,
                       }}
                     >
                       <Link
@@ -481,22 +441,22 @@ export function NotificationEmail(props: NotificationEmailProps) {
                           color: "#FFFFFF",
                           textDecoration: "none",
                           fontWeight: 600,
-                          padding: "14px 26px",
+                          padding: "14px 32px",
                           fontFamily: font,
-                          fontSize: 13,
-                          letterSpacing: "0.16em",
-                          textTransform: "uppercase",
+                          fontSize: 14,
+                          letterSpacing: "0.06em",
                           lineHeight: 1.1,
+                          borderRadius: 999,
                         }}
                       >
                         {ctaLabel}
                         <span
                           style={{
                             display: "inline-block",
-                            paddingLeft: isAr ? 0 : 12,
-                            paddingRight: isAr ? 12 : 0,
-                            fontSize: 14,
-                            color: branding.primaryColor,
+                            paddingLeft: isAr ? 0 : 10,
+                            paddingRight: isAr ? 10 : 0,
+                            fontSize: 15,
+                            color: "#FFFFFF",
                           }}
                         >
                           {arrow}
@@ -511,71 +471,47 @@ export function NotificationEmail(props: NotificationEmailProps) {
 
           {/* Footer */}
           <Section
+            dir={dir}
             style={{
               paddingTop: 28,
               paddingLeft: 4,
               paddingRight: 4,
+              textAlign: "center",
             }}
-            dir={dir}
           >
-            <table
-              role="presentation"
-              cellPadding={0}
-              cellSpacing={0}
-              border={0}
-              width="100%"
-              style={{ width: "100%" }}
+            <Text
+              style={{
+                margin: 0,
+                color: SUBTLE,
+                fontSize: 12,
+                lineHeight: 1.7,
+                fontFamily: font,
+                textAlign: "center",
+              }}
             >
-              <tr>
-                <td
-                  align={align}
-                  style={{
-                    verticalAlign: "top",
-                    width: "60%",
-                    color: MUTED,
-                    fontSize: 11,
-                    lineHeight: 1.7,
-                    fontFamily: font,
-                  }}
-                >
-                  <Text
-                    style={{
-                      margin: 0,
-                      color: MUTED,
-                      fontSize: 11,
-                      lineHeight: 1.7,
-                      fontFamily: font,
-                    }}
-                  >
-                    {prefsHint}{" "}
-                    <Link
-                      href={prefsUrl}
-                      style={{
-                        color: INK,
-                        textDecoration: "none",
-                        fontWeight: 600,
-                        borderBottom: `1px solid ${INK}`,
-                      }}
-                    >
-                      {prefsLink}
-                    </Link>
-                  </Text>
-                </td>
-                <td
-                  align={opp}
-                  style={{
-                    verticalAlign: "top",
-                    color: FAINT,
-                    fontSize: 10,
-                    letterSpacing: "0.22em",
-                    fontFamily: FONT_MONO,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {`Nº ${branding.systemName} · ${new Date().getFullYear()}`}
-                </td>
-              </tr>
-            </table>
+              {prefsHint}{" "}
+              <Link
+                href={prefsUrl}
+                style={{
+                  color: INK,
+                  textDecoration: "underline",
+                  fontWeight: 600,
+                }}
+              >
+                {prefsLink}
+              </Link>
+            </Text>
+            <Text
+              style={{
+                margin: "6px 0 0 0",
+                color: MUTED,
+                fontSize: 11,
+                fontFamily: font,
+                textAlign: "center",
+              }}
+            >
+              {`© ${new Date().getFullYear()} ${branding.systemName}`}
+            </Text>
           </Section>
         </Container>
       </Body>
