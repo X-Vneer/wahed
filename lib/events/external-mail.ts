@@ -15,6 +15,7 @@ type EventLite = {
   title: string
   start?: Date | string | null
   location?: string | null
+  meetingUrl?: string | null
 }
 
 type SendExternalEventEmailParams = {
@@ -167,6 +168,15 @@ export async function sendExternalEventEmail({
   const highlightLabel = safeT(t, "highlightLabel", {})
   const highlightValue = params.eventStart || params.eventLocation || ""
 
+  const ctaT = createTranslator({
+    locale,
+    messages: messages as Parameters<typeof createTranslator>[0]["messages"],
+    namespace: "emails.cta",
+  })
+  const meetingUrl =
+    kind === "cancel" ? undefined : event.meetingUrl ?? undefined
+  const ctaLabel = meetingUrl ? safeT(ctaT, "joinMeeting", {}) : undefined
+
   const branding = await loadBranding(locale)
 
   const element = React.createElement(NotificationEmail, {
@@ -177,6 +187,8 @@ export async function sendExternalEventEmail({
     body,
     highlightLabel: highlightValue ? highlightLabel : undefined,
     highlightValue: highlightValue || undefined,
+    ctaLabel: meetingUrl ? ctaLabel : undefined,
+    ctaUrl: meetingUrl,
     branding,
     // External recipients have no settings page; pass empty so the footer link is muted.
     prefsUrl: "",

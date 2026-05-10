@@ -203,6 +203,7 @@ export function EventDialog({
       endTime: `${DefaultEndHour}:00`,
       allDay: false,
       location: "",
+      meetingUrl: "",
       color: "sky" as EventColor,
       attendeeIds: [] as string[],
       externalAttendeeEmails: [] as string[],
@@ -262,6 +263,7 @@ export function EventDialog({
         endTime: formatTimeForInput(end),
         allDay: eventToUse.allDay || false,
         location: eventToUse.location || "",
+        meetingUrl: eventToUse.meetingUrl || "",
         color: (eventToUse.color as EventColor) || "sky",
         attendeeIds: eventToUse.attendees?.map((attendee) => attendee.id) || [],
         externalAttendeeEmails:
@@ -352,6 +354,7 @@ export function EventDialog({
       end,
       allDay: values.allDay,
       location: values.location,
+      meetingUrl: values.meetingUrl,
       color: values.color,
       attendees:
         users.filter((user) => values.attendeeIds.includes(user.id)) || [],
@@ -719,6 +722,18 @@ export function EventDialog({
                       <Input
                         id="location"
                         {...form.getInputProps("location")}
+                      />
+                    </Field>
+
+                    <Field>
+                      <FieldLabel htmlFor="meetingUrl">
+                        {t("meetingUrl")}
+                      </FieldLabel>
+                      <Input
+                        id="meetingUrl"
+                        type="url"
+                        placeholder="https://"
+                        {...form.getInputProps("meetingUrl")}
                       />
                     </Field>
 

@@ -21,6 +21,8 @@ interface CreateNotificationParams {
   relatedType?: "task" | "project" | "contact" | "event"
   /** Override CTA url; falls back to category-default deep link. */
   ctaUrl?: string
+  /** Override the default `emails.{key}.cta` translation for the button label. */
+  ctaLabel?: string
 }
 
 /**
@@ -34,6 +36,7 @@ export async function createNotifications({
   relatedId,
   relatedType,
   ctaUrl,
+  ctaLabel,
 }: CreateNotificationParams) {
   if (userIds.length === 0) return
 
@@ -87,6 +90,7 @@ export async function createNotifications({
         messageParams: messageParams ?? {},
         relatedId,
         ctaUrl,
+        ctaLabel,
       })
     }
   } catch (error) {
@@ -100,12 +104,14 @@ async function dispatchEmails({
   messageParams,
   relatedId,
   ctaUrl,
+  ctaLabel,
 }: {
   userIds: string[]
   category: NotificationCategory
   messageParams: Record<string, string | number>
   relatedId?: string
   ctaUrl?: string
+  ctaLabel?: string
 }) {
   try {
     const users = await db.user.findMany({
@@ -123,6 +129,7 @@ async function dispatchEmails({
             recipientName: user.name,
             params: messageParams,
             ctaUrl,
+            ctaLabel,
           })
           await sendMail({
             to: user.email,

@@ -88,6 +88,8 @@ export type RenderEmailParams = {
   recipientName?: string
   params: Record<string, string | number>
   ctaUrl?: string
+  /** Override the default `emails.{key}.cta` translation. */
+  ctaLabel?: string
 }
 
 const HIGHLIGHT_KEY: Partial<
@@ -138,6 +140,7 @@ export async function renderEmail({
   recipientName,
   params,
   ctaUrl,
+  ctaLabel,
 }: RenderEmailParams): Promise<RenderedEmail> {
   const config = NOTIFICATION_CATEGORY_BY_KEY[category]
   if (!config) throw new Error(`No config for category ${category}`)
@@ -165,7 +168,9 @@ export async function renderEmail({
     ? safeT(t, "greeting", { name: recipientName })
     : ""
   const body = safeT(t, `${key}.body`, params)
-  const cta = ctaUrl ? safeT(t, `${key}.cta`, params) : undefined
+  const cta = ctaUrl
+    ? (ctaLabel ?? safeT(t, `${key}.cta`, params))
+    : undefined
   const preheader = safeT(t, `${key}.preheader`, params)
   const eyebrow = safeT(groupT, config.group, {})
 

@@ -107,6 +107,7 @@ export async function GET(request: NextRequest) {
         ...transformed,
         description: transformed.description ?? undefined,
         location: transformed.location ?? undefined,
+        meetingUrl: transformed.meetingUrl ?? undefined,
         color: transformed.color as CalendarEvent["color"],
         recurrenceEndDate: transformed.recurrenceEndDate ?? undefined,
       }
@@ -187,6 +188,7 @@ export async function POST(request: NextRequest) {
         allDay: data.allDay ?? false,
         color: (data.color || "SKY") as EventColor,
         location: data.location || null,
+        meetingUrl: data.meetingUrl || null,
         isRecurring: data.isRecurring ?? false,
         recurrenceRule: data.recurrenceRule
           ? (data.recurrenceRule as Prisma.InputJsonValue)
@@ -209,6 +211,10 @@ export async function POST(request: NextRequest) {
       include: eventInclude,
     })
 
+    const meetingCta = event.meetingUrl
+      ? { ctaUrl: event.meetingUrl, ctaLabel: t("emails.cta.joinMeeting") }
+      : {}
+
     // Notify attendees they were invited (excluding the creator).
     const inviteeIds = (data.attendeeIds ?? []).filter((id) => id !== userId)
     if (inviteeIds.length > 0) {
@@ -218,6 +224,7 @@ export async function POST(request: NextRequest) {
         messageParams: { eventTitle: event.title },
         relatedId: event.id,
         relatedType: "event",
+        ...meetingCta,
       })
     }
 
@@ -232,6 +239,7 @@ export async function POST(request: NextRequest) {
         messageParams: { eventTitle: event.title },
         relatedId: event.id,
         relatedType: "event",
+        ...meetingCta,
       })
     }
 
@@ -246,6 +254,7 @@ export async function POST(request: NextRequest) {
               title: event.title,
               start: event.start,
               location: event.location,
+              meetingUrl: event.meetingUrl,
             },
             relatedId: event.id,
           })

@@ -1202,6 +1202,7 @@
       "startTime": "Start Time",
       "endTime": "End Time",
       "location": "Location",
+      "meetingUrl": "Meeting URL",
       "etiquette": "Etiquette",
       "attendees": "Attendees",
       "pickDate": "Pick a date",
@@ -1270,7 +1271,8 @@
       "delete_failed": "Failed to delete event",
       "failedToLoad": "Failed to load events"
     },
-    "location": "Location"
+    "location": "Location",
+    "joinMeeting": "Join meeting"
   },
   "events": {
     "errors": {
@@ -2757,6 +2759,9 @@
       "comment": "Comment",
       "from": "From",
       "imported": "Tasks created"
+    },
+    "cta": {
+      "joinMeeting": "Join meeting"
     },
     "task_created": {
       "subject": "New task: {taskTitle}",

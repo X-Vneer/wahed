@@ -30,6 +30,7 @@ export const createEventSchema = z
     allDay: z.boolean().optional().default(false),
     color: EventColorEnum.optional().default("SKY"),
     location: z.string().optional(),
+    meetingUrl: z.string().optional(),
     attendeeIds: z.array(z.string()).optional().default([]),
     externalAttendeeEmails: z
       .array(z.email({ error: "events.errors.external_email_invalid" }))

@@ -11,6 +11,7 @@ export interface CalendarEvent {
   allDay?: boolean
   color?: EventColor
   location?: string
+  meetingUrl?: string
   attendees?: Event["attendees"]
   externalAttendees?: { id: string; email: string }[]
   externalAttendeeEmails?: string[]

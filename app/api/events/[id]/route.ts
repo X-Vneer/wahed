@@ -169,6 +169,9 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
         ...(data.allDay !== undefined && { allDay: data.allDay }),
         ...(data.color !== undefined && { color: data.color as EventColor }),
         ...(data.location !== undefined && { location: data.location || null }),
+        ...(data.meetingUrl !== undefined && {
+          meetingUrl: data.meetingUrl || null,
+        }),
         // Recurrence fields
         ...(data.isRecurring !== undefined && {
           isRecurring: data.isRecurring,
@@ -213,6 +216,10 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
       stillAttending: stillAttendingIds,
     } = attendeeDelta(previousAttendeeIds, currentAttendeeIds, userId)
 
+    const meetingCta = event.meetingUrl
+      ? { ctaUrl: event.meetingUrl, ctaLabel: t("emails.cta.joinMeeting") }
+      : {}
+
     if (newlyInvitedIds.length > 0) {
       await createNotifications({
         userIds: newlyInvitedIds,
@@ -220,6 +227,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
         messageParams: { eventTitle: event.title },
         relatedId: event.id,
         relatedType: "event",
+        ...meetingCta,
       })
     }
 
@@ -230,6 +238,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
         messageParams: { eventTitle: event.title },
         relatedId: event.id,
         relatedType: "event",
+        ...meetingCta,
       })
     }
 
@@ -251,6 +260,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
                 title: event.title,
                 start: event.start,
                 location: event.location,
+                meetingUrl: event.meetingUrl,
               },
               relatedId: event.id,
             })
@@ -263,6 +273,7 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
                 title: event.title,
                 start: event.start,
                 location: event.location,
+                meetingUrl: event.meetingUrl,
               },
               relatedId: event.id,
             })

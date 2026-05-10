@@ -42,6 +42,7 @@ export const transformEvent = (event: EventInclude) => {
     end: event.end,
     allDay: event.allDay,
     location: event.location,
+    meetingUrl: event.meetingUrl,
     createdBy: event.createdBy,
     attendees: event.attendees.map((attendee) => attendee.user),
     externalAttendees: event.externalAttendees.map((a) => ({

@@ -1202,6 +1202,7 @@
       "startTime": "وقت البداية",
       "endTime": "وقت النهاية",
       "location": "الموقع",
+      "meetingUrl": "رابط الاجتماع",
       "etiquette": "اللون",
       "attendees": "الحضور",
       "pickDate": "اختر تاريخ",
@@ -1270,7 +1271,8 @@
       "delete_failed": "فشل في حذف الحدث",
       "failedToLoad": "فشل في تحميل الأحداث"
     },
-    "location": "الموقع"
+    "location": "الموقع",
+    "joinMeeting": "انضم للاجتماع"
   },
   "events": {
     "errors": {
@@ -2757,6 +2759,9 @@
       "comment": "التعليق",
       "from": "من",
       "imported": "المهام المُنشأة"
+    },
+    "cta": {
+      "joinMeeting": "انضم للاجتماع"
     },
     "task_created": {
       "subject": "مهمة جديدة: {taskTitle}",

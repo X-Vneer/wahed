@@ -102,6 +102,19 @@ function EventHoverCardContent({
             <span>{event.location}</span>
           </div>
         )}
+        {event.meetingUrl && (
+          <div className="pt-1">
+            <a
+              href={event.meetingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-primary font-medium underline-offset-2 hover:underline"
+            >
+              {t("joinMeeting")}
+            </a>
+          </div>
+        )}
         {event.description && (
           <div className="pt-1 text-sm text-gray-950">{event.description}</div>
         )}

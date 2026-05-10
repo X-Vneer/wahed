@@ -318,6 +318,7 @@ model Event {
   allDay      Boolean    @default(false)
   color       EventColor @default(SKY)
   location    String?
+  meetingUrl  String?
 
   // Recurrence fields
   isRecurring       Boolean   @default(false)
