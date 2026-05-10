@@ -95,18 +95,23 @@ export const transformProject = (
       taskId: null as string | null,
     })),
     ...visibleTasks.flatMap((t) =>
-      t.taskAttachments.map((a) => ({
-        id: a.id,
-        fileUrl: a.fileUrl,
-        fileName: a.fileName,
-        fileType: a.fileType,
-        fileSize: a.fileSize,
-        additionalInfo: a.additionalInfo,
-        createdAt: a.createdAt,
-        updatedAt: a.updatedAt,
-        projectId: project.id,
-        taskId: a.taskId as string | null,
-      }))
+      t.taskAttachments
+        .filter(
+          (a) =>
+            (a.additionalInfo as { isFinal?: boolean } | null)?.isFinal === true
+        )
+        .map((a) => ({
+          id: a.id,
+          fileUrl: a.fileUrl,
+          fileName: a.fileName,
+          fileType: a.fileType,
+          fileSize: a.fileSize,
+          additionalInfo: a.additionalInfo,
+          createdAt: a.createdAt,
+          updatedAt: a.updatedAt,
+          projectId: project.id,
+          taskId: a.taskId as string | null,
+        }))
     ),
   ]
 

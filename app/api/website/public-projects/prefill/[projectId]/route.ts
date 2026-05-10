@@ -45,6 +45,19 @@ export async function GET(
       include: {
         categories: { select: { id: true } },
         attachments: true,
+        tasks: {
+          select: {
+            taskAttachments: {
+              select: {
+                fileUrl: true,
+                fileName: true,
+                fileType: true,
+                fileSize: true,
+                additionalInfo: true,
+              },
+            },
+          },
+        },
         city: { select: { regionId: true } },
       },
     })
@@ -84,12 +97,47 @@ export async function GET(
         : null,
       categoryIds: project.categories.map((c) => c.id),
       images: project.image ? [project.image] : [],
-      attachments: project.attachments.map((a) => ({
-        fileUrl: a.fileUrl,
-        fileName: a.fileName ?? null,
-        fileType: a.fileType ?? null,
-        fileSize: a.fileSize ?? null,
-      })),
+      // Project attachments + each task's final task attachments. Non-final task
+      // attachments are excluded.
+      attachments: (() => {
+        const seen = new Set<string>()
+        const out: Array<{
+          fileUrl: string
+          fileName: string | null
+          fileType: string | null
+          fileSize: number | null
+        }> = []
+
+        for (const a of project.attachments) {
+          if (seen.has(a.fileUrl)) continue
+          seen.add(a.fileUrl)
+          out.push({
+            fileUrl: a.fileUrl,
+            fileName: a.fileName ?? null,
+            fileType: a.fileType ?? null,
+            fileSize: a.fileSize ?? null,
+          })
+        }
+
+        for (const task of project.tasks) {
+          for (const att of task.taskAttachments) {
+            const isFinal =
+              (att.additionalInfo as { isFinal?: boolean } | null)?.isFinal ===
+              true
+            if (!isFinal) continue
+            if (seen.has(att.fileUrl)) continue
+            seen.add(att.fileUrl)
+            out.push({
+              fileUrl: att.fileUrl,
+              fileName: att.fileName ?? null,
+              fileType: att.fileType ?? null,
+              fileSize: att.fileSize ?? null,
+            })
+          }
+        }
+
+        return out
+      })(),
       suggestedSlug: suggestedSlugFromTitleEn(project.nameEn) || "project",
     }
 
