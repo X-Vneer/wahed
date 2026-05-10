@@ -1,7 +1,7 @@
 "use client"
 
 import { useForm } from "@mantine/form"
-import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react"
+import { RiCalendarLine, RiCloseLine, RiDeleteBinLine } from "@remixicon/react"
 import { format, isBefore } from "date-fns"
 import { ar, enUS } from "date-fns/locale"
 import { zod4Resolver } from "mantine-form-zod-resolver"
@@ -81,6 +81,7 @@ const eventFormSchema = z
       .enum(["sky", "amber", "violet", "rose", "emerald", "orange"])
       .default("sky"),
     attendeeIds: z.array(z.string()).default([]),
+    externalAttendeeEmails: z.array(z.email()).default([]),
     // Recurrence fields
     isRecurring: z.boolean().default(false),
     recurrenceFrequency: z
@@ -158,6 +159,10 @@ export function EventDialog({
   const [startDateOpen, setStartDateOpen] = useState(false)
   const [endDateOpen, setEndDateOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [externalEmailDraft, setExternalEmailDraft] = useState("")
+  const [externalEmailError, setExternalEmailError] = useState<string | null>(
+    null
+  )
 
   const { data: users = [] } = useUsersList()
 
@@ -200,6 +205,7 @@ export function EventDialog({
       location: "",
       color: "sky" as EventColor,
       attendeeIds: [] as string[],
+      externalAttendeeEmails: [] as string[],
       // Recurrence fields
       isRecurring: false,
       recurrenceFrequency: "WEEKLY" as
@@ -258,6 +264,9 @@ export function EventDialog({
         location: eventToUse.location || "",
         color: (eventToUse.color as EventColor) || "sky",
         attendeeIds: eventToUse.attendees?.map((attendee) => attendee.id) || [],
+        externalAttendeeEmails:
+          (eventToUse as { externalAttendeeEmails?: string[] })
+            .externalAttendeeEmails ?? [],
         // Recurrence fields
         isRecurring: isRecurring,
         recurrenceFrequency: (rule?.frequency as "WEEKLY") || "WEEKLY",
@@ -346,6 +355,7 @@ export function EventDialog({
       color: values.color,
       attendees:
         users.filter((user) => values.attendeeIds.includes(user.id)) || [],
+      externalAttendeeEmails: values.externalAttendeeEmails,
       // Recurrence fields
       isRecurring: values.isRecurring,
       recurrenceRule: recurrenceRule as
@@ -989,6 +999,107 @@ export function EventDialog({
                         form.setFieldValue("attendeeIds", value as string[])
                       }}
                     />
+
+                    <Field>
+                      <FieldLabel htmlFor="external-attendee-email">
+                        {t("externalAttendees")}
+                      </FieldLabel>
+                      <div className="flex gap-2">
+                        <Input
+                          id="external-attendee-email"
+                          type="email"
+                          dir="ltr"
+                          placeholder={t("externalAttendeesPlaceholder")}
+                          value={externalEmailDraft}
+                          onChange={(e) => {
+                            setExternalEmailDraft(e.currentTarget.value)
+                            if (externalEmailError) setExternalEmailError(null)
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === ",") {
+                              e.preventDefault()
+                              const candidate = externalEmailDraft.trim().toLowerCase()
+                              if (!candidate) return
+                              const parsed = z.email().safeParse(candidate)
+                              if (!parsed.success) {
+                                setExternalEmailError(
+                                  t("externalAttendeesInvalid")
+                                )
+                                return
+                              }
+                              const current = form.values.externalAttendeeEmails
+                              if (current.includes(candidate)) {
+                                setExternalEmailDraft("")
+                                return
+                              }
+                              form.setFieldValue("externalAttendeeEmails", [
+                                ...current,
+                                candidate,
+                              ])
+                              setExternalEmailDraft("")
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            const candidate = externalEmailDraft.trim().toLowerCase()
+                            if (!candidate) return
+                            const parsed = z.email().safeParse(candidate)
+                            if (!parsed.success) {
+                              setExternalEmailError(t("externalAttendeesInvalid"))
+                              return
+                            }
+                            const current = form.values.externalAttendeeEmails
+                            if (current.includes(candidate)) {
+                              setExternalEmailDraft("")
+                              return
+                            }
+                            form.setFieldValue("externalAttendeeEmails", [
+                              ...current,
+                              candidate,
+                            ])
+                            setExternalEmailDraft("")
+                          }}
+                        >
+                          {tCommon("add")}
+                        </Button>
+                      </div>
+                      {externalEmailError && (
+                        <FieldError
+                          errors={[{ message: externalEmailError }]}
+                        />
+                      )}
+                      {form.values.externalAttendeeEmails.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {form.values.externalAttendeeEmails.map((email) => (
+                            <span
+                              key={email}
+                              className="bg-muted text-foreground inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs"
+                              dir="ltr"
+                            >
+                              {email}
+                              <button
+                                type="button"
+                                aria-label={`Remove ${email}`}
+                                className="text-muted-foreground hover:text-foreground"
+                                onClick={() => {
+                                  form.setFieldValue(
+                                    "externalAttendeeEmails",
+                                    form.values.externalAttendeeEmails.filter(
+                                      (e) => e !== email
+                                    )
+                                  )
+                                }}
+                              >
+                                <RiCloseLine size={12} aria-hidden="true" />
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </Field>
                     <fieldset className="space-y-4">
                       <legend className="text-foreground text-sm leading-none font-medium">
                         {t("etiquette")}

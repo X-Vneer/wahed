@@ -8,6 +8,8 @@ import {
   UserRole,
 } from "@/lib/generated/prisma/enums"
 import { createNotifications, getAdminUserIds } from "@/lib/notifications"
+import { normalizeEmails } from "@/lib/events/attendees"
+import { sendExternalEventEmail } from "@/lib/events/external-mail"
 import {
   eventInclude,
   transformEvent,
@@ -172,6 +174,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Normalize external emails (trim, lowercase, dedupe)
+    const externalEmails = normalizeEmails(data.externalAttendeeEmails ?? [])
+
     // Create event with attendees
     const event: EventInclude = await db.event.create({
       data: {
@@ -195,6 +200,10 @@ export async function POST(request: NextRequest) {
                   userId: attendeeId,
                 })),
               }
+            : undefined,
+        externalAttendees:
+          externalEmails.length > 0
+            ? { create: externalEmails.map((email) => ({ email })) }
             : undefined,
       },
       include: eventInclude,
@@ -224,6 +233,26 @@ export async function POST(request: NextRequest) {
         relatedId: event.id,
         relatedType: "event",
       })
+    }
+
+    // Fire-and-forget external invite emails so a mail failure does not block creation.
+    if (externalEmails.length > 0) {
+      void Promise.allSettled(
+        externalEmails.map((email) =>
+          sendExternalEventEmail({
+            to: email,
+            kind: "invite",
+            event: {
+              title: event.title,
+              start: event.start,
+              location: event.location,
+            },
+            relatedId: event.id,
+          })
+        )
+      ).catch((err) =>
+        console.error("[events] external invite emails failed:", err)
+      )
     }
 
     // Transform event to match CalendarEvent format

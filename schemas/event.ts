@@ -31,6 +31,11 @@ export const createEventSchema = z
     color: EventColorEnum.optional().default("SKY"),
     location: z.string().optional(),
     attendeeIds: z.array(z.string()).optional().default([]),
+    externalAttendeeEmails: z
+      .array(z.email({ error: "events.errors.external_email_invalid" }))
+      .max(100, { error: "events.errors.external_email_too_many" })
+      .optional()
+      .default([]),
     // Recurrence fields
     isRecurring: z.boolean().optional().default(false),
     recurrenceRule: recurrenceRuleSchema.optional(),

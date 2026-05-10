@@ -36,6 +36,9 @@ function transformEvent(apiEvent: ApiEvent): CalendarEvent {
     color: (apiEvent.color?.toLowerCase() || "sky") as CalendarEvent["color"],
     location: apiEvent.location || undefined,
     attendees: apiEvent.attendees || [],
+    externalAttendees: apiEvent.externalAttendees || [],
+    externalAttendeeEmails:
+      apiEvent.externalAttendees?.map((a) => a.email) || [],
   }
 }
 
@@ -131,6 +134,7 @@ export const useCreateEvent = () => {
         color: (event.color?.toUpperCase() || "SKY") as EventColor,
         location: event.location,
         attendeeIds: event.attendees?.map((attendee) => attendee.id) ?? [],
+        externalAttendeeEmails: event.externalAttendeeEmails ?? [],
         // Recurrence fields
         isRecurring: eventWithRecurrence.isRecurring ?? false,
         recurrenceRule: eventWithRecurrence.recurrenceRule,
@@ -238,6 +242,7 @@ export const useUpdateEvent = () => {
         color: (event.color?.toUpperCase() || "SKY") as EventColor,
         location: event.location,
         attendeeIds: event.attendees?.map((attendee) => attendee.id) ?? [],
+        externalAttendeeEmails: event.externalAttendeeEmails ?? [],
         // Recurrence fields
         isRecurring: eventWithRecurrence.isRecurring ?? false,
         recurrenceRule: eventWithRecurrence.recurrenceRule,
@@ -328,25 +333,28 @@ export const useDeleteEvent = () => {
         queryKey: ["events"],
       })
 
-      // Find the event being deleted for potential rollback
-      let deletedEvent: CalendarEvent | undefined
-      queryClient
-        .getQueriesData<CalendarEvent[]>({ queryKey: ["events"] })
-        .forEach(([, data]) => {
-          if (data) {
-            const event = data.find((e) => e.id === eventId)
-            if (event) {
-              deletedEvent = event
-            }
-          }
-        })
+      // The cache holds expanded recurring instances keyed `${originalId}-${ISO}`.
+      // Match by both the original id and any expanded sibling so the whole series
+      // disappears optimistically — refetch via onSettled covers any drift.
+      const originalId = extractOriginalEventId(eventId)
+      const expandedPrefix = `${originalId}-`
+      const matches = (id: string) =>
+        id === originalId || id === eventId || id.startsWith(expandedPrefix)
 
-      // Optimistically remove the event from all event queries
+      // Find the event being deleted for the success toast
+      let deletedEvent: CalendarEvent | undefined
+      previousEvents.forEach(([, data]) => {
+        if (!data) return
+        const found = data.find((e) => matches(e.id))
+        if (found) deletedEvent = found
+      })
+
+      // Optimistically remove the event (and any sibling occurrences) from all queries
       queryClient.setQueriesData<CalendarEvent[]>(
         { queryKey: ["events"] },
         (old) => {
           if (!old) return old
-          return old.filter((event) => event.id !== eventId)
+          return old.filter((event) => !matches(event.id))
         }
       )
 
@@ -360,8 +368,14 @@ export const useDeleteEvent = () => {
           queryClient.setQueryData(queryKey, data)
         })
       }
+      const axiosError = error as {
+        response?: { data?: { error?: string } }
+        message?: string
+      }
       toast.error(
-        (error as Error).message || t("calendar.errors.delete_failed")
+        axiosError?.response?.data?.error ||
+          axiosError?.message ||
+          t("calendar.errors.delete_failed")
       )
     },
     onSuccess: (originalId, eventId, context) => {

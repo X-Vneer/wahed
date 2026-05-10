@@ -20,6 +20,12 @@ export const eventInclude = {
       },
     },
   },
+  externalAttendees: {
+    select: {
+      id: true,
+      email: true,
+    },
+  },
 } satisfies Prisma.EventInclude
 
 export type EventInclude = Prisma.EventGetPayload<{
@@ -38,6 +44,11 @@ export const transformEvent = (event: EventInclude) => {
     location: event.location,
     createdBy: event.createdBy,
     attendees: event.attendees.map((attendee) => attendee.user),
+    externalAttendees: event.externalAttendees.map((a) => ({
+      id: a.id,
+      email: a.email,
+    })),
+    externalAttendeeEmails: event.externalAttendees.map((a) => a.email),
     createdAt: event.createdAt,
     updatedAt: event.updatedAt,
     // Recurrence fields

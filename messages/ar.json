@@ -1227,6 +1227,9 @@
       },
       "attendeesPlaceholder": "ابحث واختر الحضور...",
       "noAttendeesFound": "لم يتم العثور على حضور",
+      "externalAttendees": "حضور خارجيون (بالبريد)",
+      "externalAttendeesPlaceholder": "name@example.com — اضغط Enter للإضافة",
+      "externalAttendeesInvalid": "أدخل بريد إلكتروني صحيح",
       "recurrence": {
         "title": "تكرار",
         "enable": "تكرار هذا الحدث",
@@ -1287,7 +1290,9 @@
       "invalid_attendees": "واحد أو أكثر من الحضور المحددين غير صحيح",
       "invalid_attendee": "حضور غير صحيح",
       "attendee_already_added": "الحضور مضاف بالفعل إلى هذا الحدث",
-      "attendee_not_found": "الحضور غير موجود"
+      "attendee_not_found": "الحضور غير موجود",
+      "external_email_invalid": "أحد عناوين البريد الخارجية غير صحيح",
+      "external_email_too_many": "يمكن إضافة 100 عنوان بريد خارجي كحد أقصى"
     }
   },
   "location": "الموقع",
@@ -2878,6 +2883,21 @@
       "preheader": "تم استلام رسالة جديدة عبر نموذج التواصل.",
       "body": "أرسل {senderName} رسالة: {messagePreview}",
       "cta": "عرض الرسائل"
+    },
+    "externalEvent": {
+      "highlightLabel": "الموعد",
+      "preheader": "{eventTitle} — {eventStart}",
+      "eyebrowInvite": "دعوة لحضور",
+      "eyebrowUpdate": "تحديث الموعد",
+      "eyebrowCancel": "إلغاء الموعد",
+      "subjectInvite": "دعوة: {eventTitle}",
+      "subjectUpdate": "تحديث الموعد: {eventTitle}",
+      "subjectCancel": "إلغاء الموعد: {eventTitle}",
+      "bodyInvite": "تمت دعوتك لـ \"{eventTitle}\" بتاريخ {eventStart}.",
+      "bodyInviteWithLocation": "تمت دعوتك لـ \"{eventTitle}\" بتاريخ {eventStart} في {eventLocation}.",
+      "bodyUpdate": "تم تحديث الموعد \"{eventTitle}\". الموعد الجديد: {eventStart}.",
+      "bodyUpdateWithLocation": "تم تحديث الموعد \"{eventTitle}\". الموعد الجديد: {eventStart} · {eventLocation}.",
+      "bodyCancel": "تم إلغاء الموعد \"{eventTitle}\"."
     }
   },
   "contacts": {

@@ -327,10 +327,23 @@ model Event {
   createdById String
   createdBy   User   @relation("EventCreator", fields: [createdById], references: [id], onDelete: Cascade)
 
-  attendees EventAttendee[]
+  attendees         EventAttendee[]
+  externalAttendees EventExternalAttendee[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model EventExternalAttendee {
+  id      String @id @default(cuid())
+  eventId String
+  email   String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, email])
 }
 
 model EventAttendee {

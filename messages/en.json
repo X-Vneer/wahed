@@ -1227,6 +1227,9 @@
       },
       "attendeesPlaceholder": "Search and select attendees...",
       "noAttendeesFound": "No attendees found",
+      "externalAttendees": "External attendees (by email)",
+      "externalAttendeesPlaceholder": "name@example.com — press Enter to add",
+      "externalAttendeesInvalid": "Enter a valid email address",
       "recurrence": {
         "title": "Repeat",
         "enable": "Repeat this event",
@@ -1287,7 +1290,9 @@
       "invalid_attendees": "One or more selected attendees are invalid",
       "invalid_attendee": "Invalid attendee",
       "attendee_already_added": "Attendee is already added to this event",
-      "attendee_not_found": "Attendee not found"
+      "attendee_not_found": "Attendee not found",
+      "external_email_invalid": "One of the external email addresses is invalid",
+      "external_email_too_many": "You can add at most 100 external email addresses"
     }
   },
   "location": "Location",
@@ -2878,6 +2883,21 @@
       "preheader": "A new contact form was submitted.",
       "body": "{senderName} sent a message: {messagePreview}",
       "cta": "View messages"
+    },
+    "externalEvent": {
+      "highlightLabel": "When",
+      "preheader": "{eventTitle} — {eventStart}",
+      "eyebrowInvite": "You're invited",
+      "eyebrowUpdate": "Event updated",
+      "eyebrowCancel": "Event cancelled",
+      "subjectInvite": "You're invited: {eventTitle}",
+      "subjectUpdate": "Event updated: {eventTitle}",
+      "subjectCancel": "Event cancelled: {eventTitle}",
+      "bodyInvite": "You've been invited to \"{eventTitle}\" on {eventStart}.",
+      "bodyInviteWithLocation": "You've been invited to \"{eventTitle}\" on {eventStart} at {eventLocation}.",
+      "bodyUpdate": "The event \"{eventTitle}\" has been updated. New time: {eventStart}.",
+      "bodyUpdateWithLocation": "The event \"{eventTitle}\" has been updated. New time: {eventStart} · {eventLocation}.",
+      "bodyCancel": "The event \"{eventTitle}\" has been cancelled."
     }
   },
   "contacts": {

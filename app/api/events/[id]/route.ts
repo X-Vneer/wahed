@@ -6,6 +6,8 @@ import {
   UserRole,
 } from "@/lib/generated/prisma/enums"
 import { createNotifications, getEventAttendeeIds } from "@/lib/notifications"
+import { attendeeDelta, normalizeEmails } from "@/lib/events/attendees"
+import { sendExternalEventEmail } from "@/lib/events/external-mail"
 import { updateEventSchema } from "@/schemas/event"
 import {
   eventInclude,
@@ -105,6 +107,12 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
 
     // Capture attendees before the update so we can diff old vs new.
     const previousAttendeeIds = await getEventAttendeeIds(id)
+    const previousExternalEmails = (
+      await db.eventExternalAttendee.findMany({
+        where: { eventId: id },
+        select: { email: true },
+      })
+    ).map((a) => a.email)
 
     // Parse and validate request body
     const body = await request.json()
@@ -182,6 +190,15 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
             })),
           },
         }),
+        // Handle external attendees update
+        ...(data.externalAttendeeEmails !== undefined && {
+          externalAttendees: {
+            deleteMany: {},
+            create: normalizeEmails(data.externalAttendeeEmails).map(
+              (email) => ({ email })
+            ),
+          },
+        }),
       },
       include: eventInclude,
     })) as EventInclude
@@ -191,14 +208,10 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
     const currentAttendeeIds =
       data.attendeeIds !== undefined ? data.attendeeIds : previousAttendeeIds
 
-    const newlyInvitedIds = currentAttendeeIds.filter(
-      (attendeeId) =>
-        attendeeId !== userId && !previousAttendeeIds.includes(attendeeId)
-    )
-    const stillAttendingIds = currentAttendeeIds.filter(
-      (attendeeId) =>
-        attendeeId !== userId && previousAttendeeIds.includes(attendeeId)
-    )
+    const {
+      newlyInvited: newlyInvitedIds,
+      stillAttending: stillAttendingIds,
+    } = attendeeDelta(previousAttendeeIds, currentAttendeeIds, userId)
 
     if (newlyInvitedIds.length > 0) {
       await createNotifications({
@@ -218,6 +231,46 @@ export async function PUT(request: NextRequest, context: DynamicRouteContext) {
         relatedId: event.id,
         relatedType: "event",
       })
+    }
+
+    // External-attendee emails: invites for newly added, update emails for kept.
+    if (data.externalAttendeeEmails !== undefined) {
+      const currentExternalEmails = normalizeEmails(data.externalAttendeeEmails)
+      const {
+        newlyInvited: addedEmails,
+        stillAttending: keptEmails,
+      } = attendeeDelta(previousExternalEmails, currentExternalEmails)
+
+      if (addedEmails.length > 0 || keptEmails.length > 0) {
+        void Promise.allSettled([
+          ...addedEmails.map((email) =>
+            sendExternalEventEmail({
+              to: email,
+              kind: "invite",
+              event: {
+                title: event.title,
+                start: event.start,
+                location: event.location,
+              },
+              relatedId: event.id,
+            })
+          ),
+          ...keptEmails.map((email) =>
+            sendExternalEventEmail({
+              to: email,
+              kind: "update",
+              event: {
+                title: event.title,
+                start: event.start,
+                location: event.location,
+              },
+              relatedId: event.id,
+            })
+          ),
+        ]).catch((err) =>
+          console.error("[events] external update emails failed:", err)
+        )
+      }
     }
 
     return NextResponse.json(transformEvent(event))
@@ -255,14 +308,18 @@ export async function DELETE(
     // Check if event exists and user is the creator or admin
     const existingEvent = await db.event.findUnique({
       where: { id },
-      select: { id: true, createdById: true, title: true },
+      select: {
+        id: true,
+        createdById: true,
+        title: true,
+        externalAttendees: { select: { email: true } },
+      },
     })
 
+    // Idempotent: a stale client double-clicking should not see a 404 toast roll
+    // back the optimistic update. Treat "already gone" as success.
     if (!existingEvent) {
-      return NextResponse.json(
-        { error: t("events.errors.not_found") },
-        { status: 404 }
-      )
+      return NextResponse.json({ success: true })
     }
 
     if (!isAdmin && existingEvent.createdById !== userId) {
@@ -272,24 +329,48 @@ export async function DELETE(
       )
     }
 
-    // Capture attendees + creator before deletion so we can notify them.
+    // Capture attendees + creator + external emails before deletion so we can notify them.
     const attendeeIds = await getEventAttendeeIds(id)
+    const externalEmails = existingEvent.externalAttendees.map((a) => a.email)
 
-    // Delete event (cascade will handle attendees)
-    await db.event.delete({
-      where: { id },
-    })
+    // Delete event (cascade handles attendees + external attendees)
+    await db.event.delete({ where: { id } })
 
-    const notifyIds = [
-      ...new Set([...attendeeIds, existingEvent.createdById]),
-    ].filter((notifyId) => notifyId !== userId)
-    if (notifyIds.length > 0) {
-      await createNotifications({
-        userIds: notifyIds,
-        category: NotificationCategory.EVENT_DELETED,
-        messageParams: { eventTitle: existingEvent.title },
-      })
-    }
+    // Fire-and-forget notifications outside the main try/catch so a dispatch
+    // failure can't surface as a 500 after the delete already succeeded.
+    void (async () => {
+      const notifyIds = [
+        ...new Set([...attendeeIds, existingEvent.createdById]),
+      ].filter((notifyId) => notifyId !== userId)
+      if (notifyIds.length > 0) {
+        try {
+          await createNotifications({
+            userIds: notifyIds,
+            category: NotificationCategory.EVENT_DELETED,
+            messageParams: { eventTitle: existingEvent.title },
+          })
+        } catch (err) {
+          console.error("[events] delete notifications failed:", err)
+        }
+      }
+
+      if (externalEmails.length > 0) {
+        try {
+          await Promise.allSettled(
+            externalEmails.map((email) =>
+              sendExternalEventEmail({
+                to: email,
+                kind: "cancel",
+                event: { title: existingEvent.title },
+                relatedId: id,
+              })
+            )
+          )
+        } catch (err) {
+          console.error("[events] external cancel emails failed:", err)
+        }
+      }
+    })()
 
     return NextResponse.json({ success: true })
   } catch (error) {

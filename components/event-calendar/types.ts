@@ -12,6 +12,8 @@ export interface CalendarEvent {
   color?: EventColor
   location?: string
   attendees?: Event["attendees"]
+  externalAttendees?: { id: string; email: string }[]
+  externalAttendeeEmails?: string[]
 }
 
 export type EventColor =
