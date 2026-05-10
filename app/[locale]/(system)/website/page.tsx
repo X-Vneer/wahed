@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card"
 import PageLoader from "@/components/page-loader"
 import { HeroSectionValues } from "./_components/hero-section-form"
-import { BriefSectionValues } from "./_components/brief-section-form"
 import { AboutSectionValues } from "./about/_components/about-section-form"
 import {
   StatsSectionForm,
@@ -30,14 +29,12 @@ import apiClient from "@/services"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { HeroSectionForm } from "./_components/hero-section-form"
-import { BriefSectionForm } from "./_components/brief-section-form"
 import { AboutSectionForm } from "./about/_components/about-section-form"
 import { PageSeoForm } from "./_components/page-seo-form"
 
 type BilingualHomeContent = {
   ar?: {
     heroSection?: Record<string, unknown>
-    briefSection?: Record<string, unknown>
     aboutSection?: Record<string, unknown>
     statsSection?: Record<string, unknown>
     partnersSection?: Record<string, unknown>
@@ -47,7 +44,6 @@ type BilingualHomeContent = {
   }
   en?: {
     heroSection?: Record<string, unknown>
-    briefSection?: Record<string, unknown>
     aboutSection?: Record<string, unknown>
     statsSection?: Record<string, unknown>
     partnersSection?: Record<string, unknown>
@@ -59,7 +55,6 @@ type BilingualHomeContent = {
 
 type HomeEditorData = {
   heroSection: HeroSectionValues
-  briefSection: BriefSectionValues
   aboutSection: AboutSectionValues
   statsSection: StatsSectionValues
   partnersSection: PartnersSectionValues
@@ -77,8 +72,6 @@ function extractHomeEditorData(content: BilingualHomeContent): HomeEditorData {
       ? value.filter((item): item is string => typeof item === "string")
       : []
 
-  const arBrief = content.ar?.briefSection ?? content.ar?.aboutSection
-  const enBrief = content.en?.briefSection ?? content.en?.aboutSection
   const arPartners = content.ar?.partnersSection
   const enPartners = content.en?.partnersSection
   const arProjects = content.ar?.projectsSection
@@ -95,11 +88,6 @@ function extractHomeEditorData(content: BilingualHomeContent): HomeEditorData {
       descriptionEn: getString(content.en?.heroSection?.description),
       ctaLabelAr: getString(content.ar?.heroSection?.ctaLabel),
       ctaLabelEn: getString(content.en?.heroSection?.ctaLabel),
-    },
-    briefSection: {
-      image: getString(arBrief?.image),
-      contentAr: getString(arBrief?.content),
-      contentEn: getString(enBrief?.content),
     },
     aboutSection: {
       image: getString(content.ar?.aboutSection?.image),
@@ -180,7 +168,6 @@ export default function WebsiteHomePage() {
     en: Record<string, unknown>
     key:
       | "heroSection"
-      | "briefSection"
       | "aboutSection"
       | "statsSection"
       | "partnersSection"
@@ -224,24 +211,6 @@ export default function WebsiteHomePage() {
         description: values.descriptionEn,
         ctaLabel: values.ctaLabelEn,
         backgroundImage: values.backgroundImage,
-      },
-    })
-  }
-
-  const handleBriefSectionSubmit = async ({
-    values,
-  }: {
-    values: BriefSectionValues
-  }) => {
-    await saveSection({
-      key: "briefSection",
-      ar: {
-        image: values.image,
-        content: values.contentAr,
-      },
-      en: {
-        image: values.image,
-        content: values.contentEn,
       },
     })
   }
@@ -402,12 +371,6 @@ export default function WebsiteHomePage() {
         slug="home"
         initialValues={data?.heroSection}
         onSubmit={handleHeroSectionSubmit}
-      />
-
-      <BriefSectionForm
-        slug="home"
-        initialValues={data?.briefSection}
-        onSubmit={handleBriefSectionSubmit}
       />
 
       <AboutSectionForm
