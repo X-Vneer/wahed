@@ -19,6 +19,8 @@ export type PublicProjectFormValues = {
   descriptionEn: string
   shortDescriptionAr: string
   shortDescriptionEn: string
+  eyebrowAr: string
+  eyebrowEn: string
   images: string[]
   isActive: boolean
   isFeatured: boolean
@@ -54,6 +56,8 @@ export function getPublicProjectFormInitialValues(
     descriptionEn: "",
     shortDescriptionAr: "",
     shortDescriptionEn: "",
+    eyebrowAr: "",
+    eyebrowEn: "",
     images: [],
     isActive: true,
     isFeatured: false,

@@ -49,6 +49,8 @@ function editDataToFormValues(
     descriptionEn: data.descriptionEn,
     shortDescriptionAr: data.shortDescriptionAr,
     shortDescriptionEn: data.shortDescriptionEn,
+    eyebrowAr: data.eyebrowAr,
+    eyebrowEn: data.eyebrowEn,
     images: data.images,
     isActive: data.isActive,
     isFeatured: data.isFeatured,

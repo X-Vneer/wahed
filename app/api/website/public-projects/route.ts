@@ -142,6 +142,8 @@ export async function POST(request: NextRequest) {
           descriptionEn: emptyToNull(data.descriptionEn ?? undefined),
           shortDescriptionAr: emptyToNull(data.shortDescriptionAr ?? undefined),
           shortDescriptionEn: emptyToNull(data.shortDescriptionEn ?? undefined),
+          eyebrowAr: emptyToNull(data.eyebrowAr ?? undefined),
+          eyebrowEn: emptyToNull(data.eyebrowEn ?? undefined),
           images: data.images ?? [],
           isActive: data.isActive ?? true,
           isFeatured: data.isFeatured ?? false,

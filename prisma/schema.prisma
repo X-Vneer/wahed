@@ -686,6 +686,8 @@ model PublicProject {
   descriptionEn      String?
   shortDescriptionAr String?
   shortDescriptionEn String?
+  eyebrowAr          String?
+  eyebrowEn          String?
   images             String[]
   isActive           Boolean                   @default(true)
   isFeatured         Boolean                   @default(false)

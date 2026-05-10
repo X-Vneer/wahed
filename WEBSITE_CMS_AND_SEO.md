@@ -431,6 +431,7 @@ Each public project contains:
 | `title` | string | Locale-resolved title |
 | `description` | string \| null | Full description (HTML or plain text) |
 | `shortDescription` | string \| null | Card/preview description |
+| `eyebrow` | string | Locale-resolved eyebrow line shown above the project title (e.g. "تصميم وتنفيذ وهد" / "Designed and executed by Wahd"). Always non-empty — when admin leaves both Ar/En blank, the API falls back to the default credit line. |
 | `images` | string[] | Array of image URLs |
 | `isActive` | boolean | Whether visible on the public site |
 | `status` | object \| null | `{ id, name, color }` — locale-resolved name and hex color from the configurable `PublicProjectStatus` table (separate from internal `ProjectStatus`). System rows have stable IDs: `public-project-status-planning`, `public-project-status-in-progress`, `public-project-status-on-hold`, `public-project-status-completed`, `public-project-status-cancelled`. Custom statuses use CUIDs. |

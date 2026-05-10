@@ -53,10 +53,10 @@ Next.js 16 App Router app, single Postgres DB, locale-aware. It is both an inter
 
 - `PermissionKey` enum in `prisma/schema.prisma` is the source of truth (e.g. `WEBSITE_MANAGEMENT`, `STAFF_MANAGEMENT`, `SYSTEM_SETTINGS_MANAGEMENT`). Mirrored in `config/permissions.ts`.
 - `User.role = ADMIN | STAFF`. **ADMIN bypasses all permission checks** (see `utils/has-permission.ts`).
-- API routes check via `await requirePermission("PERMISSION_KEY")` from `lib/helpers/api.ts` — returns a 403 `NextResponse` or `null`.
+- API routes check via `await requirePermission("PERMISSION_KEY")` from `utils/api.ts` — returns a 403 `NextResponse` or `null`.
 - Client-side: `utils/has-client-permission.ts` + `hooks/use-permission.ts`.
 
-### API helpers (`lib/helpers/api.ts`)
+### API helpers (`utils/api.ts`)
 
 Standard route handler pattern — use these instead of rolling your own:
 

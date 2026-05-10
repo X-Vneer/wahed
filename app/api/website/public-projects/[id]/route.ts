@@ -167,6 +167,8 @@ export async function PUT(
             shortDescriptionEn: emptyToNull(
               data.shortDescriptionEn ?? undefined
             ),
+            eyebrowAr: emptyToNull(data.eyebrowAr ?? undefined),
+            eyebrowEn: emptyToNull(data.eyebrowEn ?? undefined),
             images: data.images ?? [],
             isActive: data.isActive ?? true,
             isFeatured: data.isFeatured ?? false,

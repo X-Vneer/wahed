@@ -255,6 +255,42 @@ export function PublicProjectFormStepBasics({
           {t("websiteCms.projects.publicProjectForm.sections.descriptions")}
         </FieldLegend>
         <div className="grid gap-4 md:grid-cols-2">
+          <Field data-invalid={!!form.errors.eyebrowAr}>
+            <FieldLabel htmlFor="pp-eyebrow-ar">
+              {t("websiteCms.projects.publicProjectForm.fields.eyebrowAr")}
+            </FieldLabel>
+            <Input
+              id="pp-eyebrow-ar"
+              key={form.key("eyebrowAr")}
+              {...form.getInputProps("eyebrowAr")}
+              placeholder={t(
+                "websiteCms.projects.publicProjectForm.placeholders.eyebrowAr"
+              )}
+              aria-invalid={!!form.errors.eyebrowAr}
+            />
+            {form.errors.eyebrowAr ? (
+              <FieldError errors={fieldErr("eyebrowAr")!} />
+            ) : null}
+          </Field>
+          <Field data-invalid={!!form.errors.eyebrowEn}>
+            <FieldLabel htmlFor="pp-eyebrow-en">
+              {t("websiteCms.projects.publicProjectForm.fields.eyebrowEn")}
+            </FieldLabel>
+            <Input
+              id="pp-eyebrow-en"
+              key={form.key("eyebrowEn")}
+              {...form.getInputProps("eyebrowEn")}
+              placeholder={t(
+                "websiteCms.projects.publicProjectForm.placeholders.eyebrowEn"
+              )}
+              aria-invalid={!!form.errors.eyebrowEn}
+            />
+            {form.errors.eyebrowEn ? (
+              <FieldError errors={fieldErr("eyebrowEn")!} />
+            ) : null}
+          </Field>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
           <Field data-invalid={!!form.errors.shortDescriptionAr}>
             <FieldLabel htmlFor="pp-short-ar">
               {t(

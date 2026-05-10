@@ -1,5 +1,8 @@
 import { Prisma } from "@/lib/generated/prisma/client"
 
+const DEFAULT_EYEBROW_AR = "تصميم وتنفيذ وهد"
+const DEFAULT_EYEBROW_EN = "Designed and executed by Wahd"
+
 export const publicProjectInclude = {
   badge: true,
   features: true,
@@ -50,6 +53,9 @@ export const transformPublicProject = (
       project.shortDescriptionEn,
       locale
     ),
+    eyebrow:
+      localized(project.eyebrowAr, project.eyebrowEn, locale) ??
+      (locale === "ar" ? DEFAULT_EYEBROW_AR : DEFAULT_EYEBROW_EN),
     images: project.images,
     isActive: project.isActive,
     isFeatured: project.isFeatured,
@@ -128,6 +134,8 @@ export const transformPublicProjectForEdit = (
     descriptionEn: project.descriptionEn ?? "",
     shortDescriptionAr: project.shortDescriptionAr ?? "",
     shortDescriptionEn: project.shortDescriptionEn ?? "",
+    eyebrowAr: project.eyebrowAr ?? "",
+    eyebrowEn: project.eyebrowEn ?? "",
     images: project.images,
     isActive: project.isActive,
     isFeatured: project.isFeatured,

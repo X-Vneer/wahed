@@ -47,6 +47,8 @@ export const createPublicProjectSchema = z.object({
   shortDescriptionEn: z
     .string()
     .min(1, { error: "shortDescriptionEnRequired" }),
+  eyebrowAr: z.string().optional(),
+  eyebrowEn: z.string().optional(),
   images: z.array(z.string().min(1)).min(5, { error: "imagesMinFive" }),
   isActive: z.boolean().optional().default(true),
   isFeatured: z.boolean().optional().default(false),
@@ -99,6 +101,8 @@ export const publicProjectFormStepSchemas = [
     projectId: true,
     shortDescriptionAr: true,
     shortDescriptionEn: true,
+    eyebrowAr: true,
+    eyebrowEn: true,
     descriptionAr: true,
     descriptionEn: true,
   }),
